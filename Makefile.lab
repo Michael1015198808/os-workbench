@@ -1,0 +1,11 @@
+# **DO NOT MODIFY**
+
+submit:
+	@cd $(dir $(abspath $(lastword $(MAKEFILE_LIST)))) && \
+	  curl -sS 'http://moon.nju.edu.cn/%7ejyy/teach/submit.sh' | bash
+
+git:
+	@git add $(shell find . -name "*.c") $(shell find . -name "*.h") -A --ignore-errors
+	@while (test -e .git/index.lock); do sleep 0.1; done
+	@(hostnamectl && uptime) | git commit -F - -q --author='tracer-nju <tracer@nju.edu.cn>' --no-verify --allow-empty
+	@sync
