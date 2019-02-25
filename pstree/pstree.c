@@ -34,6 +34,9 @@ struct Node{
     struct Proc* proc;
     struct Node* next;
 };
+typedef struct Proc Proc;
+typedef struct List List;
+typedef struct Node Node;
 void add_sonpro(struct List* lp,pid_t ppid){
     if(lp->head==NULL){
         struct Node *tmp=malloc(sizeof(Node));
