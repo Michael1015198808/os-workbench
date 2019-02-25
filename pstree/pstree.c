@@ -20,8 +20,7 @@ int is_digit(char* s){
     }
     return 1;
 }
-void printdir(char *dir, int depth)
-{
+void printdir(char *dir, int depth){
     DIR *dp;
     struct dirent *entry;
     char statp[50],proname[50];
@@ -35,21 +34,18 @@ void printdir(char *dir, int depth)
             //fprintf(statp+strlen(statp),"%s/status",entry_>d_name);
             test((fp=fopen(statp,"r"))!=NULL,"Can not open %s\n",statp);
             fscanf(fp,"Name:\t%s",proname);
-            //pid_t pid;
-            //while(fscanf(fp,"Pid:\t%d",&pid)!=1);
-            //printf("pid:%d\t",pid);
+            pid_t pid;
+            while(fscanf(fp,"Pid:\t%d",&pid)!=1)fgets(fp);
+            printf("pid:%d\t",pid);
             puts(proname);
         }
     }
     closedir(dp);
 }
 
-int main()
-{
-    printf("Directory scan of /proc:\n");
+int main(){
     printdir("/proc",0);
-    printf("done.\n");
-    exit(0);
+    return 0;
 }
 //Copy from https://stackoverflow.com/questions/8149569/scan-a-directory-to-find-files-in-c
 /*int main(int argc, char *argv[]) {
