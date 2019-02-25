@@ -32,7 +32,7 @@ void printdir(char *dir, int depth)
         if(is_digit(entry->d_name)) {
             strcpy(statp,entry->d_name);
             strcat(statp,"status");
-            test((fp=fopen(statp))!=NULL,"r","Can not open %s",statp);
+            test((fp=fopen(statp,"r"))!=NULL,"Can not open %s",statp);
         }
     }
     closedir(dp);
