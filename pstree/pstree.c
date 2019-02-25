@@ -29,6 +29,7 @@ void printdir(char *dir, int depth)
     test(  ((dp = opendir(dir)) != NULL),  "Can not open /proc\n");
     test((chdir(dir)==0),"Can not cd to /proc");
     while((entry = readdir(dp)) != NULL) {
+        puts(entry->d_name);
         if(is_digit(entry->d_name)) {
             strcpy(statp,entry->d_name);
             strcat(statp,"status");
