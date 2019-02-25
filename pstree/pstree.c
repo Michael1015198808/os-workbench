@@ -26,7 +26,7 @@ struct Node;
 struct Proc{
     char* name;
     struct Node* list;
-};
+}*info[30000];
 struct Node{
     struct Proc* proc;
     struct Node* next;
@@ -34,20 +34,18 @@ struct Node{
 void printdir(char *dir, int depth){
     DIR *dp;
     struct dirent *entry;
-    char statp[50],proname[50];
+    char filename[50],proname[50];
     FILE* fp=NULL;
     test(  ((dp = opendir(dir)) != NULL),  "Can not open /proc\n");
     test((chdir(dir)==0),"Can not cd to /proc");
     while((entry = readdir(dp)) != NULL) {
         if(is_digit(entry->d_name)) {
-            strcpy(statp,entry->d_name);
-            strcat(statp,"/status");
-            //fprintf(statp+strlen(statp),"%s/status",entry_>d_name);
-            test((fp=fopen(statp,"r"))!=NULL,"Can not open %s\n",statp);
+            sprintf(filename,"%s%s",entry->d_name,"/status");
+            test((fp=fopen(filename,"r"))!=NULL,"Can not open %s\n",filename);
             fscanf(fp,"Name:\t%s",proname);
-            /*pid_t pid;
+            pid_t pid;
             while(fscanf(fp,"Pid:\t%d",&pid)!=1)fgets(buf,100,fp);
-            printf("pid:%d\t",pid);*/
+            printf("pid:%d\t",pid);
             puts(proname);
         }
     }
