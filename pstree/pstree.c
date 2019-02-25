@@ -36,9 +36,9 @@ void printdir(char *dir, int depth){
             //fprintf(statp+strlen(statp),"%s/status",entry_>d_name);
             test((fp=fopen(statp,"r"))!=NULL,"Can not open %s\n",statp);
             fscanf(fp,"Name:\t%s",proname);
-            pid_t pid;
+            /*pid_t pid;
             while(fscanf(fp,"Pid:\t%d",&pid)!=1)fgets(buf,100,fp);
-            printf("pid:%d\t",pid);
+            printf("pid:%d\t",pid);*/
             puts(proname);
         }
     }
