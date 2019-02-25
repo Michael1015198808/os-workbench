@@ -20,6 +20,8 @@ int is_digit(char* s){
     }
     return 1;
 }
+#define maxn 100
+char buf[maxn];
 void printdir(char *dir, int depth){
     DIR *dp;
     struct dirent *entry;
@@ -35,7 +37,7 @@ void printdir(char *dir, int depth){
             test((fp=fopen(statp,"r"))!=NULL,"Can not open %s\n",statp);
             fscanf(fp,"Name:\t%s",proname);
             pid_t pid;
-            while(fscanf(fp,"Pid:\t%d",&pid)!=1)fgets(fp);
+            while(fscanf(fp,"Pid:\t%d",&pid)!=1)fgets(buf,100,fp);
             printf("pid:%d\t",pid);
             puts(proname);
         }
