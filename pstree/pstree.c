@@ -22,6 +22,14 @@ int is_digit(char* s){
 }
 #define maxn 100
 char buf[maxn];
+struct Proc{
+    char* name;
+    struct Node* list;
+}
+struct Node{
+    struct Proc* proc;
+    struct Node* next;
+}
 void printdir(char *dir, int depth){
     DIR *dp;
     struct dirent *entry;
