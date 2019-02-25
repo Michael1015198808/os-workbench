@@ -67,11 +67,11 @@ void maketree(char *dir){
             info[pid]=malloc(sizeof(Proc));
             info[pid]->name=malloc(strlen(proname)+1);
             strcpy(info[pid]->name,proname);
-            info[pid]->list=malloc(sizeof(List));
-            info[pid]->list->head=info[pid]->list->tail=NULL;
+            //info[pid]->list=malloc(sizeof(List));
+            //info[pid]->list->head=info[pid]->list->tail=NULL;
 
-            while(fscanf(fp,"PPid:\t%d",&ppid)!=1)fgets(buf,100,fp);
-            if(ppid>0){add_sonpro((info[pid]->list),ppid);}
+            //while(fscanf(fp,"PPid:\t%d",&ppid)!=1)fgets(buf,100,fp);
+            //if(ppid>0){add_sonpro((info[pid]->list),ppid);}
         }
     }
     closedir(dp);
