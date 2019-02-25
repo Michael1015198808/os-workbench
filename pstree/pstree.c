@@ -13,7 +13,7 @@ do{\
         assert(0);\
     }\
 }while(0)
-int is_digit(char* s){
+int digit_judge(char* s){
     while((*s)!='\0'){
         if(*s<'0'||*s>'9')return 0;
         ++s;
@@ -25,13 +25,28 @@ char buf[maxn];
 struct Node;
 struct Proc{
     char* name;
-    struct Node* list;
+    struct List* list;
 }*info[30000];
+struct List{
+    struct Node *head,*tail;
+};
 struct Node{
     struct Proc* proc;
     struct Node* next;
 };
-void printdir(char *dir, int depth){
+void add_sonpro(struct List* lp,pid_t ppid){
+    if(lp->head==NULL){
+        struct Node *tmp=malloc(sizeof(Node));
+        lp->head=lp->tail=tmp;
+        tmp->proc=info[ppid];
+        tmp->next=NULL;
+    }else{
+        lp->tail->next=malloc(sizeof(Node));
+        lp->tail->next->proc=info[ppid];
+        lp->tail=lp->tail->next;
+    }
+}
+void maketree(char *dir){
     DIR *dp;
     struct dirent *entry;
     char filename[50],proname[50];
@@ -39,21 +54,32 @@ void printdir(char *dir, int depth){
     test(  ((dp = opendir(dir)) != NULL),  "Can not open /proc\n");
     test((chdir(dir)==0),"Can not cd to /proc");
     while((entry = readdir(dp)) != NULL) {
-        if(is_digit(entry->d_name)) {
+        if(digit_judge(entry->d_name)) {
             sprintf(filename,"%s%s",entry->d_name,"/status");
             test((fp=fopen(filename,"r"))!=NULL,"Can not open %s\n",filename);
             fscanf(fp,"Name:\t%s",proname);
-            pid_t pid;
+
+            pid_t pid,ppid;
             while(fscanf(fp,"Pid:\t%d",&pid)!=1)fgets(buf,100,fp);
-            printf("pid:%d\t",pid);
-            puts(proname);
+            info[pid]=malloc(sizeof(Proc));
+            info[pid]->name=malloc(strlen(proname)+1);
+            strcpy(info[pid]->name,proname);
+            info[pid]->list=malloc(sizeof(List));
+            info[pid]->list->head=info[pid]->list->tail=NULL;
+
+            while(fscanf(fp,"PPid:\t%d",&ppid)!=1)fgets(buf,100,fp);
+            if(ppid>0){add_sonpro(&(info[pid]->list),ppid);}
         }
     }
     closedir(dp);
 }
-
+void print_tree(void){
+    struct Proc *pp=info[1];
+    puts(pp->name);
+}
 int main(){
-    printdir("/proc",0);
+    maketree("/proc");
+    print_tree();
     return 0;
 }
 //Copy from https://stackoverflow.com/questions/8149569/scan-a-directory-to-find-files-in-c
