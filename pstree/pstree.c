@@ -32,6 +32,7 @@ void printdir(char *dir, int depth)
         if(is_digit(entry->d_name)) {
             strcpy(statp,entry->d_name);
             strcat(statp,"/status");
+            //fprintf(statp+strlen(statp),"%s/status",entry_>d_name);
             test((fp=fopen(statp,"r"))!=NULL,"Can not open %s\n",statp);
             fscanf(fp,"Name:\t%s",proname);
             //pid_t pid;
