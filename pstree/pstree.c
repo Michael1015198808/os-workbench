@@ -3,34 +3,38 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <stdlib.h>
-
 #include <dirent.h>
 #include <string.h>
 #include <sys/stat.h>
+#define test(_con,...) \
+do{\
+    if(!(_con)){\
+        fprintf(stderr,__VA_ARGS__);\
+        assert(0);\
+    }\
+}while(0)
+int is_digit(char* s){
+    while((*s)!='\0'){
+        if(*s<'0'||*s>'9')return 0;
+        ++s;
+    }
+    return 1;
+}
 void printdir(char *dir, int depth)
 {
     DIR *dp;
     struct dirent *entry;
-    struct stat statbuf;
-    if((dp = opendir(dir)) == NULL) {
-        fprintf(stderr,"cannot open directory: %s\n", dir);
-        return;
-    }
-    chdir(dir);
+    char statp[50];
+    FILE* fp=NULL;
+    test(  ((dp = opendir(dir)) != NULL),  "Can not open /proc\n");
+    test((chdir(dir)==0),"Can not cd to /proc");
     while((entry = readdir(dp)) != NULL) {
-        lstat(entry->d_name,&statbuf);
-        if(S_ISDIR(statbuf.st_mode)) {
-            /* Found a directory, but ignore . and .. */
-            if(strcmp(".",entry->d_name) == 0 ||
-                strcmp("..",entry->d_name) == 0)
-                continue;
-            printf("%*s%s/\n",depth,"",entry->d_name);
-            /* Recurse at a new indent level */
-            printdir(entry->d_name,depth+4);
+        if(is_digit(entry->d_name)) {
+            strcpy(statp,entry->d_name);
+            strcat(statp,"status");
+            test(fp=fopen(statp,"r"),"Can not open %s",statp);
         }
-        else printf("%*s%s\n",depth,"",entry->d_name);
     }
-    chdir("..");
     closedir(dp);
 }
 
