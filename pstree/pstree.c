@@ -24,7 +24,7 @@ void printdir(char *dir, int depth)
 {
     DIR *dp;
     struct dirent *entry;
-    char statp[50];
+    char statp[50],proname[50];
     FILE* fp=NULL;
     test(  ((dp = opendir(dir)) != NULL),  "Can not open /proc\n");
     test((chdir(dir)==0),"Can not cd to /proc");
@@ -33,6 +33,8 @@ void printdir(char *dir, int depth)
             strcpy(statp,entry->d_name);
             strcat(statp,"/status");
             test((fp=fopen(statp,"r"))!=NULL,"Can not open %s\n",statp);
+            fscanf(fp,"Name:\t%s",proname);
+            puts(proname);
         }
     }
     closedir(dp);
