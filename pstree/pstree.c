@@ -118,6 +118,14 @@ void make_tree(void){
 }
 
 void print_tree(const Proc const *p,char* pattern,int is_first){
+    if(strlen(pattern)>20){
+        printf("\n");
+        fflush(stdout);
+        printf("%s\n",pattern);
+        fflush(stdout);
+        printf("%.*s\n",(int)strlen(pattern)-1,pattern);
+        fflush(stdout);
+    }
     int len=0;
 //For format, DO NOT use PRINTF, use output, and don't use its return value!
 #define output(...) (len+=printf(__VA_ARGS__))
