@@ -23,6 +23,9 @@ int digit_judge(char* s){
 #define maxn 100
 char buf[maxn];
 struct Node;
+struct{
+int :1;
+}print_flag;
 struct Proc{
     char* name;
     struct List* list;
