@@ -115,8 +115,6 @@ void print_tree(const Proc const *p,const char* pattern){
         printf("(%d)",p->pid);
     }
     if(p->son==NULL){
-        putchar('\n');
-        printf("%s",pattern);
         return;
     }
     Proc* current=p->son;
@@ -165,6 +163,7 @@ int main(int argc, char *argv[]) {
     //puts("args handled");
     make_tree();
     print_tree(info[1],"");
+    putchar('\n');
     return 0;
 }
 //Copy from https://stackoverflow.com/questions/8149569/scan-a-directory-to-find-files-in-c
