@@ -31,7 +31,7 @@ struct List{
     struct Node *head,*tail;
 };
 struct Node{
-    struct Proc* proc;
+    struct Proc** procp;
     struct Node* next;
 };
 typedef struct Proc Proc;
@@ -41,16 +41,16 @@ void add_sonpro(List* lp,pid_t ppid){
     if(lp->head==NULL){
         Node *tmp=malloc(sizeof(Node));
         lp->head=lp->tail=tmp;
-        tmp->proc=info[ppid];
+        tmp->procp=&info[ppid];
         tmp->next=NULL;
     }else{
         lp->tail->next=malloc(sizeof(Node));
-        lp->tail->next->proc=info[ppid];
+        lp->tail->next->procp=&info[ppid];
         lp->tail=lp->tail->next;
     }
 }
 void print_proc(Proc** proc){
-    printf("%s(%d)\n",(*proc)->name,(int)(proc-&info[0]));
+    printf("%s(%d)\n",(*proc)->name,(int)(proc-info));
 }
 void maketree(char *dir){
     DIR *dp;
@@ -81,12 +81,12 @@ void maketree(char *dir){
     closedir(dp);
 }
 void print_tree(void){
-    Proc* pp=info[1];
+    Proc** pp=&info[1];
     Node *head=pp->list->head,*tail=pp->list->tail;
-    print_proc(&pp);
+    print_proc(pp);
     if(head==NULL)return;
     while(head!=tail){
-        print_proc(&head->proc);
+        print_proc(head->procp);
         head=head->next;
     }
 }
