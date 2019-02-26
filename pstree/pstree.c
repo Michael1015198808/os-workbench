@@ -7,6 +7,8 @@
 #include <dirent.h>
 #include <string.h>
 #include <sys/stat.h>
+#define IGNORE_PRO_EXIT
+//Ignore the processes that are not existing when open
 #define test(_con,...) \
 do{\
     if(!(_con)){\
@@ -97,7 +99,11 @@ void make_tree(void){
     while((entry = readdir(dp)) != NULL) {
         if(digit_judge(entry->d_name)) {
             sprintf(filename,"%s%s",entry->d_name,"/status");
+#ifdef IGNORE_PRO_EXIT
+            if((fp=fopen(filename,"r"))==NULL)continue;
+#else
             test((fp=fopen(filename,"r"))!=NULL,"Can not open %s\n",filename);
+#endif
             fscanf(fp,"Name:\t%s",proname);
 
             pid_t pid,ppid;
@@ -222,8 +228,10 @@ void show_pids(void){
 void bug_fix_log(void){
 #define BUG(_msg) puts("\33[1;31mbug:" #_msg "\33[0m")
 #define FIX(_msg) puts("\33[1;31mfixed by " #_msg "\33[0m")
-    BUG(There may be process that ppid>pid);
-    FIX(check the initilization of info);
+    BUG("There may be process that ppid>pid");
+    FIX("check the initilization of info");
+    BUG("│ takes more than 1 byte, wipe it cause ? symbol in bash");
+    FIX("Use pointer operation and sprintf to wipe it");
     exit(0);
 }
 
