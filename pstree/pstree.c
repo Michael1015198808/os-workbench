@@ -128,7 +128,7 @@ void print_tree(const Proc const *p,const char* pattern,int is_first){
     Proc* current=p->son;
 
     char new_pattern[200];
-    sprintf(new_pattern,"%s%*s",pattern,len+5,p->son->bro==NULL?"  ":"│");
+    sprintf(new_pattern,"%s%*s",pattern,len+5,p->son->bro==NULL?" ":"│");
 
     //print its sons
     int flag=1;
