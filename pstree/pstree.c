@@ -116,7 +116,7 @@ void make_tree(void){
     }
     closedir(dp);
 }
-static uint32_t bar_len=strlen("│");
+static unsigned int bar_len=strlen("│");
 void print_tree(const Proc const *p,char* pattern,int is_first){
     int len=0;
 //For format, DO NOT use PRINTF, use output, and don't use its return value!
