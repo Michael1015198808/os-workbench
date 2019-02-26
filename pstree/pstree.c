@@ -133,7 +133,7 @@ void print_tree(const Proc const *p,const char* pattern,int is_first){
     //print its sons
     int flag=1;
     while(current!=NULL){
-        print_tree(current,new_pattern,1);
+        print_tree(current,new_pattern,flag);
         flag=0;
         current=current->bro;
     }
