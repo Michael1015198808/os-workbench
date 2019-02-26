@@ -13,7 +13,7 @@
 #define test(_con,_fmt,...) \
 do{\
     if(!(_con)){\
-        fprintf(stderr,"\33[1;31mfixed by " #_fmt "\33[0m",__VA_ARGS__);\
+        fprintf(stderr,"\33[1;31mfixed by " _fmt "\33[0m",__VA_ARGS__);\
         assert(0);\
     }\
 }while(0)
