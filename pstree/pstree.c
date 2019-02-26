@@ -58,7 +58,8 @@ void add_sonpro(Proc** pp,pid_t ppid){
     }
     List* lp=(*pp)->list;
     if(lp->head==NULL){
-        Node *tmp=malloc(sizeof(Node));
+        Node *tmp=NULL;
+        test(tmp=malloc(sizeof(Node)),"malloc size for Node failed!");
         lp->head=lp->tail=tmp;
         tmp->procp=&info[ppid];
         tmp->next=NULL;
@@ -77,13 +78,13 @@ void print_proc(Proc** proc){
     }
 }
 
-void maketree(char *dir){
+void make_tree(void){
     DIR *dp;
     struct dirent *entry;
     char filename[50],proname[50];
     FILE* fp=NULL;
-    test(  ((dp = opendir(dir)) != NULL),  "Can not open /proc\n");
-    test((chdir(dir)==0),"Can not cd to /proc");
+    test(  ((dp = opendir("/proc")) != NULL),  "Can not open /proc\n");
+    test((chdir("/proc")==0),"Can not cd to /proc");
     while((entry = readdir(dp)) != NULL) {
         if(digit_judge(entry->d_name)) {
             sprintf(filename,"%s%s",entry->d_name,"/status");
@@ -92,11 +93,13 @@ void maketree(char *dir){
 
             pid_t pid,ppid;
             while(fscanf(fp,"Pid:\t%d",&pid)!=1)fgets(buf,100,fp);
-            if(info[pid]==NULL)test(info[pid]=malloc(sizeof(Proc)),"malloc size for Proc failed!");
+            if(info[pid]==NULL){
+                test(info[pid]=malloc(sizeof(Proc)),"malloc size for Proc failed!");
+                test(info[pid]->list=malloc(sizeof(List)),"malloc size for List failed!");
+                info[pid]->list->head=info[pid]->list->tail=NULL;
+            }
             info[pid]->name=malloc(strlen(proname)+1);
             strcpy(info[pid]->name,proname);
-            info[pid]->list=malloc(sizeof(List));
-            info[pid]->list->head=info[pid]->list->tail=NULL;
 
             while(fscanf(fp,"PPid:\t%d",&ppid)!=1)fgets(buf,100,fp);
             if(ppid>0){add_sonpro((&info[ppid]),pid);}
@@ -148,7 +151,7 @@ int main(int argc, char *argv[]) {
         }
     }
     //puts("args handled");
-    maketree("/proc");
+    make_tree();
     print_tree();
     return 0;
 }
