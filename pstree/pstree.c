@@ -7,13 +7,13 @@
 #include <dirent.h>
 #include <string.h>
 #include <sys/stat.h>
-//#define IGNORE_PRO_EXIT
+#define IGNORE_PRO_EXIT
 //Ignore the processes that are not existing when open
 //comment it to allow error report
-#define test(_con,_fmt,...) \
+#define test(_con,...) \
 do{\
     if(!(_con)){\
-        fprintf(stderr,"\33[1;31mfixed by " _fmt "\33[0m",__VA_ARGS__);\
+        fprintf(stderr,__VA_ARGS__);\
         assert(0);\
     }\
 }while(0)
