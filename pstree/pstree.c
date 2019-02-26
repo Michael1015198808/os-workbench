@@ -115,6 +115,9 @@ void print_tree(const Proc const *p,const char* pattern,int is_first){
         printf("%.*s",(int)strlen(pattern)-1,pattern);
         if(p->bro!=NULL){printf(" ├─");}
         else{printf(" └─");}
+    }else{
+        if(p->bro!=NULL){printf(" ┬─");}
+        else{printf(" ──");}
     }
     len+=printf("%s",p->name);
     if(print_flag.show_pids){
