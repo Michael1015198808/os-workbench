@@ -49,13 +49,13 @@ void add_sonpro(Proc* pp,pid_t pid){
     if(pp->son==NULL){
         pp->son=info[pid];
     }else{
-        if(cmp(pp->son,info[pid])<=0){
+        if(cmp(pp->son,info[pid])>=0){
             info[pid]->bro=pp->son;
             pp->son=info[pid];
             return;
         }
         Proc *l=pp->son,*r=l->bro;
-        while(r!=NULL&&cmp(r,info[pid])>0){
+        while(r!=NULL&&cmp(r,info[pid])<0){
             l=r;
             r=l->bro;
         };
