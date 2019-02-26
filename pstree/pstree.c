@@ -95,7 +95,7 @@ void print_tree(void){
 }
 struct{
     char* arg;
-    void(*)(void) handler;
+    (void(*)(void)) handler;
 }arg_list{
     {"-V",main}
 }
