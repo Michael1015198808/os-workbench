@@ -135,6 +135,7 @@ void print_tree(const Proc const *p,const char* pattern){
         print_tree(current,new_pattern);
         current=current->bro;
     }
+    printf("%s",pattern);
 }
 void version(void);
 void numeric_sort(void);
