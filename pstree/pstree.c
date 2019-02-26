@@ -186,7 +186,7 @@ int main(int argc, char *argv[]) {
     }
     //puts("args handled");
     make_tree();
-    //print_tree(info[1],"",1);
+    print_tree(info[1],"",1);
     putchar('\n');
     return 0;
 }
