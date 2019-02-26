@@ -125,6 +125,7 @@ void print_tree(const Proc const *p,char* pattern,int is_first){
         fflush(stdout);
         printf("%.*s\n",(int)strlen(pattern)-1,pattern);
         fflush(stdout);
+        exit(0);
     }
     int len=0;
 //For format, DO NOT use PRINTF, use output, and don't use its return value!
