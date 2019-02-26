@@ -97,7 +97,7 @@ void version(void);
 struct{
     char* arg;
     void(*handler)(void);
-}arg_list={
+}arg_list[]={
     {"-V",version}
 };
 int main(int argc, char *argv[]) {
