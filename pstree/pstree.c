@@ -102,7 +102,7 @@ struct{
     {"--version",version}
 };
 int main(int argc, char *argv[]) {
-    int i;
+    /*int i;
     for (i = 0; i < argc; i++) {
         int j;
         for(j=0;j<sizeof(arg_list)/sizeof(arg_list[0]);++j){
@@ -111,7 +111,7 @@ int main(int argc, char *argv[]) {
                 break;
             }
         }
-    }
+    }*/
     maketree("/proc");
     print_tree();
     return 0;
