@@ -121,15 +121,18 @@ void print_tree(const Proc const *p,char* pattern,int is_first){
     int len=0;
 //For format, DO NOT use PRINTF, use output, and don't use its return value!
 #define output(...) (len+=printf(__VA_ARGS__))
-#define print_pattern() printf("%.*s",(int)(strlen(pattern)),pattern);
+
     //print itself
     if(is_first==0){
-        print_pattern();
-        if(p->bro!=NULL){}//printf(" ├─");}
-        else{}//printf(" └─");pattern[strlen(pattern)-1]=' ';}
+        int i=0,j=strlen(pattern);
+        for(i=0;i<j;++i){
+            putchar(pattern[a]);
+        }
+        if(p->bro!=NULL){printf(" ├─");}
+        else{printf(" └─");pattern[strlen(pattern)-1]=' ';}
     }else if(p->pid!=1){
-        if(p->bro!=NULL){}//printf("─┬─");}
-        else{}//printf("───");pattern[strlen(pattern)-1]=' ';}
+        if(p->bro!=NULL){printf("─┬─");}
+        else{printf("───");pattern[strlen(pattern)-1]=' ';}
     }
     len+=printf("%s",p->name);
     if(print_flag.show_pids){
