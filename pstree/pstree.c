@@ -141,6 +141,7 @@ void print_tree(const Proc const *p,char* pattern,int is_first){
 
     char new_pattern[200];
     sprintf(new_pattern,"%s%*s",pattern,len,p->son->bro==NULL?"  ":"│");
+    if(p->pid==1){printf("%d\n",len);*(int*)0=0;}
 
     //print its sons
     int flag=1;
