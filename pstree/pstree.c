@@ -82,7 +82,7 @@ void maketree(char *dir){
 }
 void print_tree(void){
     Proc** pp=&info[1];
-    Node *head=pp->list->head,*tail=pp->list->tail;
+    Node *head=(*pp)->list->head,*tail=(*pp)->list->tail;
     print_proc(pp);
     if(head==NULL)return;
     while(head!=tail){
