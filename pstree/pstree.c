@@ -106,7 +106,7 @@ int main(int argc, char *argv[]) {
         int j;
         for(j=0;j<sizeof(arg_list)/sizeof(arg_list[0]);++j){
             if(!strcmp(arg_list[j].arg_name,argv[i])){
-                arglist[j].handler();
+                arg_list[j].handler();
                 break;
             }
         }
