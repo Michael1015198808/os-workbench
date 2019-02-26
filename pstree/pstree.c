@@ -62,6 +62,14 @@ void add_sonpro(Proc* pp,pid_t pid){
         info[pid]->bro=l->bro;
         l->bro=info[pid];
     }
+    if(pp->pid==1){
+        Proc *pointer=pp->son;
+        while(pointer!=NULL){
+            printf("%s->",pointer->name);
+            pointer=pointer->bro;
+        }
+        putchar('\n');
+    }
 }
 
 void print_proc(Proc** proc){
@@ -176,7 +184,7 @@ int main(int argc, char *argv[]) {
     }
     //puts("args handled");
     make_tree();
-    print_tree(info[1],"",1);
+    //print_tree(info[1],"",1);
     putchar('\n');
     return 0;
 }
