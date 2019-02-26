@@ -122,11 +122,11 @@ void print_tree(const Proc const *p,char* pattern,int is_first){
         printf("\n");
         fflush(stdout);
         printf("%s",pattern);
-        printf(" ├─");}
+        printf(" ├─");
         putchar('\n');
         fflush(stdout);
         printf("%.*s",(int)strlen(pattern)-1,pattern);
-        printf(" ├─");}
+        printf(" ├─");
         putchar('\n');
         fflush(stdout);
         exit(0);
