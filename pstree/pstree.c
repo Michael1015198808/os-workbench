@@ -93,22 +93,20 @@ void print_tree(void){
         head=head->next;
     }
 }
+struct{
+    *char arg;
+    void(*)(void) handler;
+}arg_list{
+    {"-V",main}
+}
 int main(){
+    int i;
+    for (i = 0; i < argc; i++) {
+        assert(argv[i]); // always true
+        printf("argv[%d] = %s\n", i, argv[i]);
+    }
     maketree("/proc");
     print_tree();
     return 0;
 }
 //Copy from https://stackoverflow.com/questions/8149569/scan-a-directory-to-find-files-in-c
-/*int main(int argc, char *argv[]) {
-  printf("Hello, World!\n");
-  int i;
-  for (i = 0; i < argc; i++) {
-    assert(argv[i]); // always true
-    printf("argv[%d] = %s\n", i, argv[i]);
-  }
-  printf("%d\n",getpid());
-  system("ls /proc");
-  getchar();//Give me time to find it in /proc
-  assert(!argv[argc]); // always true
-  return 0;
-}*/
