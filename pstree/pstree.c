@@ -118,27 +118,29 @@ void make_tree(void){
 }
 
 void print_tree(const Proc const *p,char* pattern,int is_first){
-
     int len=0;
+//For format, DO NOT use PRINTF, use output, and don't use its return value!
+#define output(...) (len+=printf(__VA_ARGS__))
+#define make_pattern() printf("%.*s",(int)strlen(pattern)-1,pattern);
     //print itself
     if(is_first==0){
-        printf("%.*s",(int)strlen(pattern)-1,pattern);
-        if(p->bro!=NULL){printf(" ├─");}
-        else{printf(" └─");pattern[strlen(pattern)-1]=' ';}
+        make_pattern();
+        if(p->bro!=NULL){output(" ├─");}
+        else{output(" └─");pattern[strlen(pattern)-1]=' ';}
     }else if(p->pid!=1){
-        if(p->bro!=NULL){printf("─┬─");}
-        else{printf("───");pattern[strlen(pattern)-1]=' ';}
+        if(p->bro!=NULL){output("─┬─");}
+        else{output("───");pattern[strlen(pattern)-1]=' ';}
     }
-    len+=printf("%s",p->name);
+    output("%s",p->name);
     if(print_flag.show_pids){
-        len+=printf("(%d)",p->pid);
+        output("(%d)",p->pid);
     }
 
     if(p->son==NULL){putchar('\n');return;}
     Proc* current=p->son;
 
     char new_pattern[200];
-    sprintf(new_pattern,"%s%*s",pattern,len+4+(p->pid!=1),p->son->bro==NULL?"  ":"│");
+    sprintf(new_pattern,"%s%*s",pattern,len,p->son->bro==NULL?"  ":"│");
 
     //print its sons
     int flag=1;
