@@ -53,7 +53,11 @@ void add_sonpro(List* lp,pid_t ppid){
 }
 
 void print_proc(Proc** proc){
-    printf("%s(%d)\n",(*proc)->name,(int)(proc-info));
+    if(print_flag.show_pids){
+        printf("%s(%d)\n",(*proc)->name,(int)(proc-info));
+    }else{
+        printf("%s\n",(*proc)->name);
+    }
 }
 
 void maketree(char *dir){
