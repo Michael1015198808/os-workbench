@@ -16,9 +16,6 @@ do{\
 }while(0)
 
 int digit_judge(char*);
-int (*cmp)(char*,char*);
-int num(char* s1,char* s2);
-int alpha(char* s1,char* s2);
 #define maxn 100
 char buf[maxn];
 struct Node;
@@ -30,37 +27,36 @@ int show_pids:1;
     0
 };
 struct Proc{
+    pid_t pid;
     char* name;//The name of the Proc
     struct Proc *son;//The first son of the Proc
     //struct Proc *sson;//For speed up
     struct Proc *bro;//The list of son of Proc's father
 }*info[50000];//TODO: dynamic map
-//Proc
-// ^
-// |
-//info[pid]
-// ^
-// |
-//Node--next->Node->Node
-// ^                 ^
-// |                 |
-//head              tail
-//|-------List-------|   name
-//|-------------Proc---------|
+//     bro     bro    bro     bro
+//Proc*-->Proc*-->...-->Proc*|-->NULL(forbidden)
+//  ^                        |
+//  |son                     |
+//  |                        |
+//Proc*                      |
 typedef struct Proc Proc;
 typedef struct List List;
 typedef struct Node Node;
+
+int (*cmp)(Proc*,Proc*);
+int num(Proc*,Proc*);
+int alpha(Proc*,Proc*);
 
 void add_sonpro(Proc* pp,pid_t pid){
     if(pp->son==NULL){
         pp->son=info[pid];
     }else{
         Proc *l=pp->son,*r=l->bro;
-        while(r!=NULL&&cmp(r->name,info[pid]->name)){
+        while(r!=NULL&&cmp(r,info[pid])){
             l=r;
             r=l->bro;
         };
-        info[pid].bro=l->bro;
+        info[pid]->bro=l->bro;
         l->bro=info[pid];
     }
 }
@@ -107,15 +103,10 @@ void make_tree(void){
     closedir(dp);
 }
 
-void print_tree(void){
+void print_tree(const char* pattern){
     Proc** pp=&info[1];
-    Node *head=(*pp)->list->head,*tail=(*pp)->list->tail;
-    print_proc(pp);
-    if(head==NULL)return;
-    while(head!=tail){
-        print_proc(head->procp);
-        head=head->next;
-    }
+    if((*pp)->son==NULL)return;
+    Proc** current=(*pp)->son;
 }
 void version(void);
 void numeric_sort(void);
@@ -136,7 +127,7 @@ struct{
 };
 int main(int argc, char *argv[]) {
     int i;
-    cmp=alpha;
+    cmp=strcmp;
     for (i = 1; i < argc; i++) {
         int j;
         for(j=0;j<sizeof(arg_list)/sizeof(arg_list[0]);++j){
@@ -151,7 +142,7 @@ int main(int argc, char *argv[]) {
     }
     //puts("args handled");
     make_tree();
-    print_tree();
+    print_tree("");
     return 0;
 }
 //Copy from https://stackoverflow.com/questions/8149569/scan-a-directory-to-find-files-in-c
@@ -168,20 +159,11 @@ int digit_judge(char* s){
     }
     return 1;
 }
-int num(char* s1,char* s2){
-    int a,b;
-    sscanf(s1,"%d",&a);
-    sscanf(s2,"%d",&b);
-    return a<b;
+int alpha(Proc* p1,Proc* p2){
+    return strcmp(p1->name,p2->name);
 }
-int alpha(char* s1,char* s2){
-    while((*s1==*s2)&&(*s1!='\0')){
-        ++s1;++s2;
-    }
-    if(s1==s2)return 0;
-    else{
-        return *s1<*s2;
-    }
+int num(Proc* p1,Proc* p2){
+    return p1->pid<p2->pid;
 }
 void numeric_sort(void){
     cmp=num;
