@@ -71,7 +71,7 @@ void maketree(char *dir){
             info[pid]->list->head=info[pid]->list->tail=NULL;
 
             while(fscanf(fp,"PPid:\t%d",&ppid)!=1)fgets(buf,100,fp);
-            if(ppid>0){add_sonpro((info[pid]->list),ppid);}
+            if(ppid>0){add_sonpro((info[ppid]->list),pid);}
             fclose(fp);
         }
     }
