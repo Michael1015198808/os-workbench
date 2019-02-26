@@ -125,7 +125,7 @@ int main(int argc, char *argv[]) {
             }
         }
         if(j>=sizeof(arg_list)/sizeof(arg_list[0])){
-            printf("Unsupported arg(s):%s\n",argv[i]);
+            printf("\33[1;31m]Unsupported arg(s):%s\33[0m]\n",argv[i]);
         }
     }
     //puts("args handled");
