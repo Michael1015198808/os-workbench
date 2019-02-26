@@ -111,6 +111,12 @@ void print_tree(const Proc const *p,const char* pattern){
         putchar('\n');
         printf("%s",pattern);
         return;
+    }else{
+        if(p->son->bro!=NULL){
+            printf("─┬─");
+        }else{
+            printf("───");
+        }
     }
     Proc* current=p->son;
     //print its sons
