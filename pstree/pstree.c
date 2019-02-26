@@ -7,8 +7,9 @@
 #include <dirent.h>
 #include <string.h>
 #include <sys/stat.h>
-#define IGNORE_PRO_EXIT
+//#define IGNORE_PRO_EXIT
 //Ignore the processes that are not existing when open
+//comment it to allow error report
 #define test(_con,...) \
 do{\
     if(!(_con)){\
