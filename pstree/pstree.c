@@ -112,9 +112,10 @@ void print_tree(const Proc const *p,const char* pattern){
     Proc* current=p->son;
     //print its sons
     char *new_pattern[100];
-    fprintf(new_pattern,"%*s",strlen(p->name),parrtern);
+    sprintf(new_pattern,"%*s",strlen(p->name),pattern);
     while(current!=NULL){
-        print_tree(current,pattern);
+        print_tree(current,new_pattern);
+        current=current->bro;
     }
 }
 void version(void);
