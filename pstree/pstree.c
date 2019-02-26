@@ -118,7 +118,7 @@ void print_tree(const Proc const *p,const char* pattern){
         printf("(%d)",p->pid);
     }
 
-    if(p->son==NULL)flag=0;return;
+    if(p->son==NULL){flag=0;return;}
     if(p->son->bro==NULL){
         printf("───");
     }else{
