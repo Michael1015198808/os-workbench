@@ -26,7 +26,7 @@ struct Node;
 struct Proc{
     char* name;
     struct List* list;
-}*info[30000];
+}*info[50000];//TODO: dynamic map
 struct List{
     struct Node *head,*tail;
 };
