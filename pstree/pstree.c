@@ -110,7 +110,7 @@ void print_tree(const Proc const *p,const char* pattern){
     }
 
     char new_pattern[200];
-    sprintf(new_pattern,"%s│%*s",pattern,(int)strlen(p->name)+1," ");
+    sprintf(new_pattern,"%s%*s",pattern,(int)strlen(p->name)+1,"│");
 
     //print itself
     printf("%s",p->name);
@@ -140,6 +140,9 @@ void print_tree(const Proc const *p,const char* pattern){
         }
     return;
 }
+//
+//pattern name --- son
+//pattern          bro
 void version(void);
 void numeric_sort(void);
 void show_pids(void);
