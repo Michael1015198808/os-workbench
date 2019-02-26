@@ -115,7 +115,7 @@ void print_tree(const Proc const *p,const char* pattern){
     //print itself
     if(p->pid!=1){
         printf("%.*s",(int)strlen(pattern)-1,pattern);
-        if(p->bro)printf("├─");
+        if(p->bro!=NULL){printf("├─");}
         else{printf("└─");}
     }
     printf("%s",p->name);
