@@ -113,13 +113,13 @@ void print_tree(const Proc const *p,const char* pattern){
     sprintf(new_pattern,"%s%*s",pattern,(int)strlen(p->name)+4,"│");
 
     //print itself
-    nprintf(stdout,strlen(pattern)-1,"%s",pattern);
+    printf("%.*s",(int)strlen(pattern)-1,pattern);
     printf("%s",p->name);
     if(print_flag.show_pids){
         printf("(%d)",p->pid);
     }
 
-    if(p->son==NULL){flag=0;putchar('\n');return;}
+    if(p->son==NULL){putchar('\n');return;}
     if(p->son->bro==NULL){
         printf("───");
     }else{
