@@ -64,7 +64,6 @@ void maketree(char *dir){
 
             pid_t pid,ppid;
             while(fscanf(fp,"Pid:\t%d",&pid)!=1)fgets(buf,100,fp);
-            printf("%d\n",pid);
             info[pid]=malloc(sizeof(Proc));
             info[pid]->name=malloc(strlen(proname)+1);
             strcpy(info[pid]->name,proname);
