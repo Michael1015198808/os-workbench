@@ -112,7 +112,7 @@ void print_tree(const Proc const *p,const char* pattern){
     Proc* current=p->son;
     //print its sons
     char *new_pattern[100];
-    new_pattern;
+    fprintf(new_pattern,"%*s",strlen(p->name),parrtern);
     while(current!=NULL){
         print_tree(current,pattern);
     }
@@ -182,7 +182,7 @@ void show_pids(void){
 }
 void bug_fix_log(void){
 #define BUG(_msg) puts("\33[1;31mbug:" #_msg "\33[0m")
-#define FIX(_msg) puts("\33[1;31mfixed by" #_msg "\33[0m")
+#define FIX(_msg) puts("\33[1;31mfixed by " #_msg "\33[0m")
     BUG(There may be process that ppid>pid);
     FIX(check the initilization of info);
     exit(0);
