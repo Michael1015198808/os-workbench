@@ -37,9 +37,9 @@ struct Node{
 typedef struct Proc Proc;
 typedef struct List List;
 typedef struct Node Node;
-void add_sonpro(struct List* lp,pid_t ppid){
+void add_sonpro(List* lp,pid_t ppid){
     if(lp->head==NULL){
-        struct Node *tmp=malloc(sizeof(Node));
+        Node *tmp=malloc(sizeof(Node));
         lp->head=lp->tail=tmp;
         tmp->proc=info[ppid];
         tmp->next=NULL;
@@ -79,7 +79,8 @@ void maketree(char *dir){
     closedir(dp);
 }
 void print_tree(void){
-    struct Proc *pp=info[1];
+    Proc *pp=info[1];
+    
     puts(pp->name);
 }
 int main(){
