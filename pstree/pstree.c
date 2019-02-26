@@ -13,18 +13,12 @@ do{\
         assert(0);\
     }\
 }while(0)
-int digit_judge(char* s){
-    while((*s)!='\0'){
-        if(*s<'0'||*s>'9')return 0;
-        ++s;
-    }
-    return 1;
-}
+int digit_judge(char*);
 #define maxn 100
 char buf[maxn];
 struct Node;
 struct{
-int :1;
+enum {numeric,alphabeta}Sort;
 }print_flag;
 struct Proc{
     char* name;
@@ -40,6 +34,7 @@ struct Node{
 typedef struct Proc Proc;
 typedef struct List List;
 typedef struct Node Node;
+
 void add_sonpro(List* lp,pid_t ppid){
     if(lp->head==NULL){
         Node *tmp=malloc(sizeof(Node));
@@ -52,9 +47,11 @@ void add_sonpro(List* lp,pid_t ppid){
         lp->tail=lp->tail->next;
     }
 }
+
 void print_proc(Proc** proc){
     printf("%s(%d)\n",(*proc)->name,(int)(proc-info));
 }
+
 void maketree(char *dir){
     DIR *dp;
     struct dirent *entry;
@@ -83,6 +80,7 @@ void maketree(char *dir){
     }
     closedir(dp);
 }
+
 void print_tree(void){
     Proc** pp=&info[1];
     Node *head=(*pp)->list->head,*tail=(*pp)->list->tail;
@@ -94,12 +92,16 @@ void print_tree(void){
     }
 }
 void version(void);
+void numeric_sort(void);
 struct{
     char* arg_name;
     void(*handler)(void);
 }arg_list[]={
     {"-V",version},
-    {"--version",version}
+    {"--version",version},
+    {"-n",numeric_sort},
+    {"--numeric-sort",numeric_sort},
+    {"\0",NULL}//To make format more beautiful
 };
 int main(int argc, char *argv[]) {
     int i;
@@ -121,4 +123,14 @@ int main(int argc, char *argv[]) {
 void version(void){
     puts("pstree 0.1");
     puts("Copyright (C) 2019-2019 Michael Yan");
+}
+int digit_judge(char* s){
+    while((*s)!='\0'){
+        if(*s<'0'||*s>'9')return 0;
+        ++s;
+    }
+    return 1;
+}
+void numeric_sort(void){
+    print_flag.Sort=numeric;
 }
