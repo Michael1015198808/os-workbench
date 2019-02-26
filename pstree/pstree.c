@@ -93,6 +93,7 @@ void print_tree(void){
         head=head->next;
     }
 }
+int main(int,char**);
 struct{
     char* arg;
     void(*handler)(void);
