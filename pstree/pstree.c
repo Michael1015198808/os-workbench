@@ -115,6 +115,7 @@ void print_tree(const Proc const *p,const char* pattern){
         printf("(%d)",p->pid);
     }
     if(p->son==NULL){
+        putchar('\n');
         return;
     }
     Proc* current=p->son;
