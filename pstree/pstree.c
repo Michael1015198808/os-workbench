@@ -80,7 +80,7 @@ void maketree(char *dir){
 }
 void print_tree(void){
     Proc* pp=info[1];
-    Node* head=pp->list->head,tail=pp->list->tail;
+    Node *head=pp->list->head,*tail=pp->list->tail;
     puts(pp->name);
     if(head==NULL)return;
     while(head!=tail){
