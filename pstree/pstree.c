@@ -121,7 +121,7 @@ void print_tree(const Proc const *p,char* pattern,int is_first){
     }
     len+=printf("%s",p->name);
     if(print_flag.show_pids){
-        /*len+=*/printf("(%d)",p->pid);
+        len+=printf("(%d)",p->pid);
     }
 
     if(p->son==NULL){putchar('\n');return;}
