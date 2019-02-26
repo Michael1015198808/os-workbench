@@ -112,7 +112,7 @@ int main(int argc, char *argv[]) {
             }
         }
     }
-    puts("args handled");
+    //puts("args handled");
     maketree("/proc");
     print_tree();
     return 0;
