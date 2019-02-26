@@ -108,16 +108,12 @@ void make_tree(void){
 }
 
 void print_tree(const Proc const *p,const char* pattern){
-    static int flag=0;
-    if(flag==0){
-        printf("%s",pattern);
-        flag=1;
-    }
 
     char new_pattern[200];
     sprintf(new_pattern,"%s%*s",pattern,(int)strlen(p->name)+4,"│");
 
     //print itself
+    snprintf(stdout,strlen(pattern)-1,"%s",pattern);
     printf("%s",p->name);
     if(print_flag.show_pids){
         printf("(%d)",p->pid);
