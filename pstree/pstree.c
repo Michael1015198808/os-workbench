@@ -19,8 +19,10 @@ char buf[maxn];
 struct Node;
 struct{
 enum {numeric,alphabeta}Sort;
+int show_pids:1;
 }print_flag={
-    alphabeta
+    alphabeta,
+    0
 };
 struct Proc{
     char* name;
@@ -95,6 +97,7 @@ void print_tree(void){
 }
 void version(void);
 void numeric_sort(void);
+void show_pids(void);
 struct{
     char* arg_name;
     void(*handler)(void);
@@ -103,6 +106,8 @@ struct{
     {"--version",version},
     {"-n",numeric_sort},
     {"--numeric-sort",numeric_sort},
+    {"-p",show_pids},
+    {"--show-pids",show_pids},
     {"\0",NULL}//To make format more beautiful
 };
 int main(int argc, char *argv[]) {
@@ -135,4 +140,7 @@ int digit_judge(char* s){
 }
 void numeric_sort(void){
     print_flag.Sort=numeric;
+}
+void show_pids(void){
+    print_flag.show_pids=1;
 }
