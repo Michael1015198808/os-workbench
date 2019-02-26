@@ -154,8 +154,8 @@ void show_pids(void){
     print_flag.show_pids=1;
 }
 void bug_fix_log(void){
-#define BUG(_msg) puts("\33[1;31mbug:" ## _msg ## "\33[0m")
-    BUG("There may be process that ppid>pid");
+#define BUG(_msg) puts("\33[1;31mbug:" #_msg "\33[0m")
+    BUG(There may be process that ppid>pid);
     puts("\33[1;31mfixed by init\33[0m");
 }
 
