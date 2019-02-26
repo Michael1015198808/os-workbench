@@ -98,7 +98,7 @@ struct{
     void(*handler)(void);
 }arg_list{
     {"-V",main}
-}
+};
 int main(int argc, char *argv[]) {
     int i;
     for (i = 0; i < argc; i++) {
