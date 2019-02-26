@@ -238,7 +238,7 @@ void show_pids(void){
 }
 void bug_fix_log(void){
 #define BUG(_msg) puts("\33[1;31mbug:" #_msg "\33[0m")
-#define FIX(_msg) puts("\32[1;31mfixed by " #_msg "\33[0m")
+#define FIX(_msg) puts("\33[1;32mfixed by " #_msg "\33[0m")
     BUG("There may be process that ppid>pid");
     FIX("checking the initilization of info");
     BUG("│ takes more than 1 byte, wipe it cause ? symbol in bash");
