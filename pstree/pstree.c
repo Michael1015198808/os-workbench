@@ -50,7 +50,7 @@ void add_sonpro(List* lp,pid_t ppid){
     }
 }
 void print_proc(Proc* proc){
-    printf("%s(%d)\n",proc->name,(&proc)-info);
+    printf("%s(%ld)\n",proc->name,(&proc)-info);
 }
 void maketree(char *dir){
     DIR *dp;
@@ -83,10 +83,10 @@ void maketree(char *dir){
 void print_tree(void){
     Proc* pp=info[1];
     Node *head=pp->list->head,*tail=pp->list->tail;
-    print_proc(pp->name);
+    print_proc(pp);
     if(head==NULL)return;
     while(head!=tail){
-        print_proc(head->proc->name);
+        print_proc(head->proc);
         head=head->next;
     }
 }
