@@ -19,7 +19,9 @@ char buf[maxn];
 struct Node;
 struct{
 enum {numeric,alphabeta}Sort;
-}print_flag;
+}print_flag={
+    alphabeta;
+};
 struct Proc{
     char* name;
     struct List* list;
