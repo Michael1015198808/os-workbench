@@ -52,11 +52,7 @@ typedef struct Proc Proc;
 typedef struct List List;
 typedef struct Node Node;
 
-void add_sonpro(Proc** pp,pid_t ppid){
-    if(*pp==NULL){
-        test(*pp=malloc(sizeof(Proc)),"malloc size for Proc failed!");
-    }
-    List* lp=(*pp)->list;
+void add_sonpro(List* lp,pid_t ppid){
     if(lp->head==NULL){
         Node *tmp=NULL;
         test(tmp=malloc(sizeof(Node)),"malloc size for Node failed!");
@@ -77,6 +73,11 @@ void print_proc(Proc** proc){
         printf("%s\n",(*proc)->name);
     }
 }
+void init_pid(int pid){
+    test(info[pid]=malloc(sizeof(Proc)),"malloc size for Proc failed!");
+    test(info[pid]->list=malloc(sizeof(List)),"malloc size for List failed!");
+    info[pid]->list->head=info[pid]->list->tail=NULL;
+}
 
 void make_tree(void){
     DIR *dp;
@@ -93,16 +94,15 @@ void make_tree(void){
 
             pid_t pid,ppid;
             while(fscanf(fp,"Pid:\t%d",&pid)!=1)fgets(buf,100,fp);
-            if(info[pid]==NULL){
-                test(info[pid]=malloc(sizeof(Proc)),"malloc size for Proc failed!");
-                test(info[pid]->list=malloc(sizeof(List)),"malloc size for List failed!");
-                info[pid]->list->head=info[pid]->list->tail=NULL;
-            }
+            if(info[pid]==NULL){init_pid(pid);}
             info[pid]->name=malloc(strlen(proname)+1);
             strcpy(info[pid]->name,proname);
 
             while(fscanf(fp,"PPid:\t%d",&ppid)!=1)fgets(buf,100,fp);
-            if(ppid>0){add_sonpro((&info[ppid]),pid);}
+            if(ppid>0){
+                if(info[ppid]==NULL){init_pid(pid);}
+                add_sonpro(&info[ppid].list,pid);
+            }
             fclose(fp);
         }
     }
