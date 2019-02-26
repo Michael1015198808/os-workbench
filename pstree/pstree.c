@@ -101,7 +101,7 @@ void make_tree(void){
             while(fscanf(fp,"PPid:\t%d",&ppid)!=1)fgets(buf,100,fp);
             if(ppid>0){
                 if(info[ppid]==NULL){init_pid(pid);}
-                add_sonpro(&(info[ppid]->list),pid);
+                add_sonpro(info[ppid]->list,pid);
             }
             fclose(fp);
         }
