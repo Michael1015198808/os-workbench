@@ -20,7 +20,7 @@ struct Node;
 struct{
 enum {numeric,alphabeta}Sort;
 }print_flag={
-    alphabeta;
+    alphabeta
 };
 struct Proc{
     char* name;
