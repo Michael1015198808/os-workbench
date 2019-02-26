@@ -99,7 +99,7 @@ struct{
     void(*handler)(void);
 }arg_list[]={
     {"-V",version},
-    {"--version",version},
+    {"--version",version}
 };
 int main(int argc, char *argv[]) {
     int i;
