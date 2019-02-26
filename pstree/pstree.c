@@ -103,10 +103,14 @@ void make_tree(void){
     closedir(dp);
 }
 
-void print_tree(const char* pattern){
-    Proc* pp=info[1];
-    if((*pp)->son==NULL)return;
-    Proc* current=pp->son;
+void print_tree(const Proc const *p,const char* pattern){
+    //print itself
+    if(p->son==NULL)return;
+    Proc* current=p->son;
+    //print its sons
+    while(current!=NULL){
+        print_tree(current,pattern);
+    }
 }
 void version(void);
 void numeric_sort(void);
@@ -127,7 +131,7 @@ struct{
 };
 int main(int argc, char *argv[]) {
     int i;
-    cmp=strcmp;
+    cmp=alpha;
     for (i = 1; i < argc; i++) {
         int j;
         for(j=0;j<sizeof(arg_list)/sizeof(arg_list[0]);++j){
@@ -142,7 +146,7 @@ int main(int argc, char *argv[]) {
     }
     //puts("args handled");
     make_tree();
-    print_tree("");
+    print_tree(info[1],"");
     return 0;
 }
 //Copy from https://stackoverflow.com/questions/8149569/scan-a-directory-to-find-files-in-c
