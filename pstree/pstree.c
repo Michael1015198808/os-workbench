@@ -20,10 +20,8 @@ int digit_judge(char*);
 char buf[maxn];
 struct Node;
 struct{
-enum {numeric,alphabeta}Sort;
 int show_pids:1;
 }print_flag={
-    alphabeta,
     0
 };
 struct Proc{
@@ -106,8 +104,15 @@ void make_tree(void){
 void print_tree(const Proc const *p,const char* pattern){
     //print itself
     if(p->son==NULL)return;
+    printf("%s%s",pattern,p->name);
+    if(print_flag.show_pids){
+        printf("(%d)",p->pid);
+    }
+    putchar('\n');
     Proc* current=p->son;
     //print its sons
+    char *new_pattern[100];
+    new_pattern;
     while(current!=NULL){
         print_tree(current,pattern);
     }
