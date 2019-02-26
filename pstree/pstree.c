@@ -126,10 +126,10 @@ void print_tree(const Proc const *p,char* pattern,int is_first){
     if(is_first==0){
         print_pattern();
         if(p->bro!=NULL){printf(" ├─");}
-        else{printf(" └─");}
+        else{printf(" └─");pattern[strlen(pattern)-1]=' ';}
     }else if(p->pid!=1){
         if(p->bro!=NULL){printf("─┬─");}
-        else{printf("───");}
+        else{printf("───");pattern[strlen(pattern)-1]=' ';}
     }
     len+=printf("%s",p->name);
     if(print_flag.show_pids){
