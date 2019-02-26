@@ -69,6 +69,7 @@ void print_proc(Proc** proc){
 void init_pid(int pid){
     test(info[pid]=malloc(sizeof(Proc)),"malloc size for Proc failed!");
     info[pid]->son=info[pid]->bro=NULL;
+    info[pid]->pid=pid;
 }
 
 void make_tree(void){
@@ -103,7 +104,7 @@ void make_tree(void){
 
 void print_tree(const Proc const *p,const char* pattern){
     //print itself
-    if(p->pid!=0){
+    if(p->pid!=1){
         if(p->bro!=NULL){
             printf("─┬─");
         }else{
