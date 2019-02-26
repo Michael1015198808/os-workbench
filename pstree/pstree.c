@@ -210,7 +210,7 @@ int alpha(Proc* p1,Proc* p2){
     return strcmp(p1->name,p2->name);
 }
 int num(Proc* p1,Proc* p2){
-    return p1->pid<p2->pid;
+    return p1->pid>p2->pid;
 }
 void numeric_sort(void){
     cmp=num;
