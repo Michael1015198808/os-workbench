@@ -121,9 +121,13 @@ void print_tree(const Proc const *p,char* pattern,int is_first){
     if(strlen(pattern)>20){
         printf("\n");
         fflush(stdout);
-        printf("%s\n",pattern);
+        printf("%s",pattern);
+        printf(" ├─");}
+        putchar('\n');
         fflush(stdout);
-        printf("%.*s\n",(int)strlen(pattern)-1,pattern);
+        printf("%.*s",(int)strlen(pattern)-1,pattern);
+        printf(" ├─");}
+        putchar('\n');
         fflush(stdout);
         exit(0);
     }
