@@ -14,7 +14,11 @@ do{\
         assert(0);\
     }\
 }while(0)
+
 int digit_judge(char*);
+int (*cmp)(char*,char*);
+int num(char* s1,char* s2);
+int alpha(char* s1,char* s2);
 #define maxn 100
 char buf[maxn];
 struct Node;
@@ -27,15 +31,10 @@ int show_pids:1;
 };
 struct Proc{
     char* name;//The name of the Proc
-    struct List* list;//The List of son of the Proc
+    struct Proc *son;//The first son of the Proc
+    //struct Proc *sson;//For speed up
+    struct Proc *bro;//The list of son of Proc's father
 }*info[50000];//TODO: dynamic map
-struct List{
-    struct Node *head,*tail;
-};
-struct Node{
-    struct Proc** procp;
-    struct Node* next;
-};
 //Proc
 // ^
 // |
@@ -52,17 +51,17 @@ typedef struct Proc Proc;
 typedef struct List List;
 typedef struct Node Node;
 
-void add_sonpro(List* lp,pid_t ppid){
-    if(lp->head==NULL){
-        Node *tmp=NULL;
-        test(tmp=malloc(sizeof(Node)),"malloc size for Node failed!");
-        lp->head=lp->tail=tmp;
-        tmp->procp=&info[ppid];
-        tmp->next=NULL;
+void add_sonpro(Proc* pp,pid_t pid){
+    if(pp->son==NULL){
+        pp->son=info[pid];
     }else{
-        lp->tail->next=malloc(sizeof(Node));
-        lp->tail->next->procp=&info[ppid];
-        lp->tail=lp->tail->next;
+        Proc *l=pp->son,*r=l->bro;
+        while(r!=NULL&&cmp(r->name,info[pid]->name)){
+            l=r;
+            r=l->bro;
+        };
+        info[pid].bro=l->bro;
+        l->bro=info[pid];
     }
 }
 
@@ -75,8 +74,7 @@ void print_proc(Proc** proc){
 }
 void init_pid(int pid){
     test(info[pid]=malloc(sizeof(Proc)),"malloc size for Proc failed!");
-    test(info[pid]->list=malloc(sizeof(List)),"malloc size for List failed!");
-    info[pid]->list->head=info[pid]->list->tail=NULL;
+    info[pid]->son=info[pid]->bro=NULL;
 }
 
 void make_tree(void){
@@ -101,7 +99,7 @@ void make_tree(void){
             while(fscanf(fp,"PPid:\t%d",&ppid)!=1)fgets(buf,100,fp);
             if(ppid>0){
                 if(info[ppid]==NULL){init_pid(ppid);}
-                add_sonpro(info[ppid]->list,pid);
+                add_sonpro(info[ppid],pid);
             }
             fclose(fp);
         }
@@ -138,6 +136,7 @@ struct{
 };
 int main(int argc, char *argv[]) {
     int i;
+    cmp=alpha;
     for (i = 1; i < argc; i++) {
         int j;
         for(j=0;j<sizeof(arg_list)/sizeof(arg_list[0]);++j){
@@ -169,8 +168,23 @@ int digit_judge(char* s){
     }
     return 1;
 }
+int num(char* s1,char* s2){
+    int a,b;
+    sscanf(s1,"%d",&a);
+    sscanf(s2,"%d",&b);
+    return a<b;
+}
+int alpha(char* s1,char* s2){
+    while((*s1==*s2)&&(*s1!='\0')){
+        ++s1;++s2;
+    }
+    if(s1==s2)return 0;
+    else{
+        return *s1<*s2;
+    }
+}
 void numeric_sort(void){
-    print_flag.Sort=numeric;
+    cmp=num;
 }
 void show_pids(void){
     print_flag.show_pids=1;
