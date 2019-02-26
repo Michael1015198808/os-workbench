@@ -104,9 +104,9 @@ void make_tree(void){
 }
 
 void print_tree(const char* pattern){
-    Proc** pp=&info[1];
+    Proc* pp=info[1];
     if((*pp)->son==NULL)return;
-    Proc** current=(*pp)->son;
+    Proc* current=pp->son;
 }
 void version(void);
 void numeric_sort(void);
