@@ -50,7 +50,7 @@ void add_sonpro(List* lp,pid_t ppid){
     }
 }
 void print_proc(Proc* proc){
-    printf("%s(%ld)\n",proc->name,(&proc)-info);
+    printf("%s(%d)\n",proc->name,(&proc)-info);
 }
 void maketree(char *dir){
     DIR *dp;
