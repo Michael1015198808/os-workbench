@@ -124,11 +124,12 @@ void print_tree(const Proc const *p,const char* pattern,int is_first){
         len+=printf("(%d)",p->pid);
     }
 
-    char new_pattern[200];
-    sprintf(new_pattern,"%s%*s",pattern,len+5,p->son->bro==NULL?" ":"│");
-
     if(p->son==NULL){putchar('\n');return;}
     Proc* current=p->son;
+
+    char new_pattern[200];
+    sprintf(new_pattern,"%s%*s",pattern,len+5,p->son->bro==NULL?"  ":"│");
+
     //print its sons
     int flag=1;
     while(current!=NULL){
