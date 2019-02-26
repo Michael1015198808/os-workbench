@@ -126,7 +126,7 @@ void print_tree(const Proc const *p,char* pattern,int is_first){
     if(is_first==0){
         int i=0,j=strlen(pattern);
         for(i=0;i<j;++i){
-            putchar(pattern[a]);
+            putchar(pattern[i]);
         }
         if(p->bro!=NULL){printf(" ├─");}
         else{printf(" └─");pattern[strlen(pattern)-1]=' ';}
