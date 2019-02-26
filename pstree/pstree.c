@@ -116,13 +116,16 @@ struct{
 };
 int main(int argc, char *argv[]) {
     int i;
-    for (i = 0; i < argc; i++) {
+    for (i = 1; i < argc; i++) {
         int j;
         for(j=0;j<sizeof(arg_list)/sizeof(arg_list[0]);++j){
             if(!strcmp(arg_list[j].arg_name,argv[i])){
                 arg_list[j].handler();
                 break;
             }
+        }
+        if(j>=sizeof(arg_list)/sizeof(arg_list[0])){
+            printf("Unsupported arg(s):%s\n",argv[i]);
         }
     }
     //puts("args handled");
