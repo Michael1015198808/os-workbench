@@ -55,14 +55,14 @@ void add_sonpro(Proc* pp,pid_t pid){
             return;
         }
         Proc *l=pp->son,*r=l->bro;
-        while(r!=NULL&&cmp(r,info[pid])){
+        while(r!=NULL&&cmp(r,info[pid])>0){
             l=r;
             r=l->bro;
         };
         info[pid]->bro=l->bro;
         l->bro=info[pid];
     }
-    if(pp->pid==1){
+    /*if(pp->pid==1){
         Proc *pointer=pp->son;
         while(pointer!=NULL){
             printf("%s->",pointer->name);
@@ -70,6 +70,8 @@ void add_sonpro(Proc* pp,pid_t pid){
         }
         putchar('\n');
     }
+    For debug
+    */
 }
 
 void print_proc(Proc** proc){
