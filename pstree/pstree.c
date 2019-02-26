@@ -79,9 +79,14 @@ void maketree(char *dir){
     closedir(dp);
 }
 void print_tree(void){
-    Proc *pp=info[1];
-    
+    Proc* pp=info[1];
+    Node* head=pp->list->head,tail=pp->list->tail;
     puts(pp->name);
+    if(head==NULL)return;
+    while(head!=tail){
+        puts(head->proc->name);
+        head=head->next;
+    }
 }
 int main(){
     maketree("/proc");
