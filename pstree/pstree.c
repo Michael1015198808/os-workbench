@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <ctype.h>
 #include <assert.h>
 #include <unistd.h>
 #include <sys/types.h>
@@ -25,8 +26,8 @@ int show_pids:1;
     0
 };
 struct Proc{
-    char* name;
-    struct List* list;
+    char* name;//The name of the Proc
+    struct List* list;//The List of son of the Proc
 }*info[50000];//TODO: dynamic map
 struct List{
     struct Node *head,*tail;
@@ -35,11 +36,27 @@ struct Node{
     struct Proc** procp;
     struct Node* next;
 };
+//Proc
+// ^
+// |
+//info[pid]
+// ^
+// |
+//Node--next->Node->Node
+// ^                 ^
+// |                 |
+//head              tail
+//|-------List-------|   name
+//|-------------Proc---------|
 typedef struct Proc Proc;
 typedef struct List List;
 typedef struct Node Node;
 
-void add_sonpro(List* lp,pid_t ppid){
+void add_sonpro(Proc** pp,pid_t ppid){
+    if(*pp==NULL){
+        test(*pp=malloc(sizeof(Proc)),"malloc size for Proc failed!");
+    }
+    List* lp=(*pp)->list;
     if(lp->head==NULL){
         Node *tmp=malloc(sizeof(Node));
         lp->head=lp->tail=tmp;
@@ -75,14 +92,14 @@ void maketree(char *dir){
 
             pid_t pid,ppid;
             while(fscanf(fp,"Pid:\t%d",&pid)!=1)fgets(buf,100,fp);
-            info[pid]=malloc(sizeof(Proc));
+            if(info[pid]==NULL)test(info[pid]=malloc(sizeof(Proc)),"malloc size for Proc failed!");
             info[pid]->name=malloc(strlen(proname)+1);
             strcpy(info[pid]->name,proname);
             info[pid]->list=malloc(sizeof(List));
             info[pid]->list->head=info[pid]->list->tail=NULL;
 
             while(fscanf(fp,"PPid:\t%d",&ppid)!=1)fgets(buf,100,fp);
-            if(ppid>0){add_sonpro((info[ppid]->list),pid);}
+            if(ppid>0){add_sonpro((&info[ppid]),pid);}
             fclose(fp);
         }
     }
@@ -142,7 +159,8 @@ void version(void){
 }
 int digit_judge(char* s){
     while((*s)!='\0'){
-        if(*s<'0'||*s>'9')return 0;
+        if(!is_digit(*s))return 0;
+        //Use library function to improve robustness
         ++s;
     }
     return 1;
