@@ -95,7 +95,7 @@ void print_tree(void){
 }
 void version(void);
 struct{
-    char* arg;
+    char* arg_name;
     void(*handler)(void);
 }arg_list[]={
     {"-V",version}
@@ -103,8 +103,13 @@ struct{
 int main(int argc, char *argv[]) {
     int i;
     for (i = 0; i < argc; i++) {
-        assert(argv[i]); // always true
-        printf("argv[%d] = %s\n", i, argv[i]);
+        int j;
+        for(j=0;j<sizeof(arg_list)/sizeof(arg_list[0]);++j){
+            if(!strcmp(arg_list[j].arg_name,argv[i])){
+                arglist[j].handler();
+                break;
+            }
+        }
     }
     maketree("/proc");
     print_tree();
