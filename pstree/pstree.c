@@ -103,7 +103,7 @@ void make_tree(void){
 
 void print_tree(const Proc const *p,const char* pattern){
     //print itself
-    if(p->pid!=1){
+    if(p->pid!=0){
         if(p->bro!=NULL){
             printf("─┬─");
         }else{
@@ -116,6 +116,7 @@ void print_tree(const Proc const *p,const char* pattern){
     }
     if(p->son==NULL){
         putchar('\n');
+        printf("%s",pattern);
         return;
     }
     Proc* current=p->son;
