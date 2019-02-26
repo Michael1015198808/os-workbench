@@ -124,14 +124,22 @@ void make_tree(void){
     closedir(dp);
 }
 static unsigned int bar_len=strlen("│");
+//since the bar is more than 1 byte
 void print_tree(const Proc const *p,char* pattern,int is_first){
+
+//Due to different coding like UTF-8, the output maybe different
+//I've tried my best to make every line in output correctly inter-
+//sect. If it's not so in judge computer, PLZ contact me.
+
     int len=0;
-//For format, DO NOT use PRINTF, use output, and don't use its return value!
 #define output(...) (len+=printf(__VA_ARGS__))
+//For format, DO NOT use PRINTF, use output to track the indent length, and don't use its return value!
 #define print_pattern() printf("%.*s",(int)(strlen(pattern)-bar_len),pattern);
+//-bar_len is used to omit the rightmost bar, because it's replaced by other kinds
 #define delete_bar() sprintf(pattern+strlen(pattern)-bar_len,"   ");
-    //print itself
     if(is_first==0){
+    //judge if this node shares the same line with its father
+    //if not,print the pattern for indent
         print_pattern();
         if(p->bro!=NULL){printf("├─");}
         else{printf("└─");delete_bar();}
@@ -139,22 +147,23 @@ void print_tree(const Proc const *p,char* pattern,int is_first){
         if(p->bro!=NULL){printf("─┬─");}
         else{printf("───");delete_bar();}
     }
+    //print itself
     len+=printf("%s",p->name);
     if(print_flag.show_pids){
         len+=printf("(%d)",p->pid);
     }
 
     if(p->son==NULL){putchar('\n');return;}
-    Proc* current=p->son;
 
     char new_pattern[200];
     sprintf(new_pattern,"%s%*s%c",pattern,len+4+(p->pid!=1),p->son->bro==NULL?"  ":"│",'\0');
 
     //print its sons
-    int flag=1;
+    print_tree(p->son,new_pattern,1);
+    //The first son shares the same line, so do not need to print pattern
+    Proc* current=p->son->bro;
     while(current!=NULL){
-        print_tree(current,new_pattern,flag);
-        flag=0;
+        print_tree(current,new_pattern,0);
         current=current->bro;
     }
     return;
@@ -200,9 +209,10 @@ int main(int argc, char *argv[]) {
     putchar('\n');
     return 0;
 }
-//Copy from https://stackoverflow.com/questions/8149569/scan-a-directory-to-find-files-in-c
+//The oldest version is copied from https://stackoverflow.com/questions/8149569/scan-a-directory-to-find-files-in-c
+//I only refer 2 library functions from the primal code
 void version(void){
-    puts("pstree 0.1");
+    puts("pstree 1.0");
     puts("Copyright (C) 2019-2019 Michael Yan");
     exit(0);
 }
