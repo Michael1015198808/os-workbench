@@ -98,7 +98,8 @@ struct{
     char* arg_name;
     void(*handler)(void);
 }arg_list[]={
-    {"-V",version}
+    {"-V",version},
+    {"--version",version},
 };
 int main(int argc, char *argv[]) {
     int i;
@@ -117,6 +118,6 @@ int main(int argc, char *argv[]) {
 }
 //Copy from https://stackoverflow.com/questions/8149569/scan-a-directory-to-find-files-in-c
 void version(void){
-    puts("Version: 0.1");
-    puts("support args: -V");
+    puts("pstree 0.1");
+    puts("Copyright (C) 2019-2019 Michael Yan");
 }
