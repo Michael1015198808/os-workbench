@@ -121,7 +121,7 @@ void numeric_sort(void);
 void show_pids(void);
 void bug_fix_log(void);
 struct{
-    char* arg_name;
+    char* arg_name;//char** with int len can't KISS
     void(*handler)(void);
 }arg_list[]={
     {"-V",version},
@@ -156,10 +156,11 @@ int main(int argc, char *argv[]) {
 void version(void){
     puts("pstree 0.1");
     puts("Copyright (C) 2019-2019 Michael Yan");
+    exit(0);
 }
 int digit_judge(char* s){
     while((*s)!='\0'){
-        if(!is_digit(*s))return 0;
+        if(!isdigit(*s))return 0;
         //Use library function to improve robustness
         ++s;
     }
@@ -176,5 +177,6 @@ void bug_fix_log(void){
 #define FIX(_msg) puts("\33[1;31mfixed by" #_msg "\33[0m")
     BUG(There may be process that ppid>pid);
     FIX(check the initilization of info);
+    exit(0);
 }
 
