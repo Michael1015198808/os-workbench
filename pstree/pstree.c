@@ -110,7 +110,7 @@ void print_tree(const Proc const *p,const char* pattern){
     }
 
     char new_pattern[200];
-    sprintf(new_pattern,"%s%*s",pattern,(int)strlen(p->name)+5,"│");
+    sprintf(new_pattern,"%s%*s",pattern,(int)strlen(p->name)+4,"│");
 
     //print itself
     printf("%s",p->name);
