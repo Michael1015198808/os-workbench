@@ -124,7 +124,7 @@ void print_tree(const Proc const *p,char* pattern,int is_first){
 #define print_pattern() printf("%.*s",(int)(strlen(pattern)-bar_len),pattern);
 #define delete_bar() \
     uint32_t i=bar_len,j=strlen(pattern);
-    while(i>0){
+    while(i!=0){
         pattern[j-i]=' ';
         --i;
     }
