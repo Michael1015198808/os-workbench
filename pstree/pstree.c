@@ -62,7 +62,7 @@ void maketree(char *dir){
             test((fp=fopen(filename,"r"))!=NULL,"Can not open %s\n",filename);
             fscanf(fp,"Name:\t%s",proname);
 
-            pid_t pid;//,ppid;
+            pid_t pid,ppid;
             while(fscanf(fp,"Pid:\t%d",&pid)!=1)fgets(buf,100,fp);
             printf("%d\n",pid);
             info[pid]=malloc(sizeof(Proc));
