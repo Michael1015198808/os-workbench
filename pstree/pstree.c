@@ -124,11 +124,11 @@ void print_tree(const Proc const *p,const char* pattern,int is_first){
     }
 
     if(p->son==NULL){putchar('\n');return;}
-    if(p->son->bro==NULL){
+    /*if(p->son->bro==NULL){
         printf("───");
     }else{
         printf("─┬─");
-    }
+    }*/
     Proc* current=p->son;
     //print its sons
     int flag=1;
