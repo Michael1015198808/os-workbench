@@ -121,7 +121,7 @@ void print_tree(const Proc const *p,char* pattern,int is_first){
     int len=0;
 //For format, DO NOT use PRINTF, use output, and don't use its return value!
 #define output(...) (len+=printf(__VA_ARGS__))
-#define print_pattern() printf("%.*s",(int)strlen(pattern)-strlen("│"),pattern);
+#define print_pattern() printf("%.*s",(int)(strlen(pattern)-strlen("│")),pattern);
     //print itself
     if(is_first==0){
         print_pattern();
