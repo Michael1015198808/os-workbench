@@ -109,26 +109,22 @@ void make_tree(void){
 
 void print_tree(const Proc const *p,const char* pattern,int is_first){
 
-    char new_pattern[200];
-    sprintf(new_pattern,"%s%*s",pattern,(int)strlen(p->name)+4,"│");
-
+    int len=0;
     //print itself
     if(is_first!=1){
         printf("%.*s",(int)strlen(pattern)-1,pattern);
         if(p->bro!=NULL){printf(" ├─");}
         else{printf(" └─");}
     }
-    printf("%s",p->name);
+    len+=printf("%s",p->name);
     if(print_flag.show_pids){
-        printf("(%d)",p->pid);
+        len+=printf("(%d)",p->pid);
     }
 
+    char new_pattern[200];
+    sprintf(new_pattern,"%s%*s",pattern,len+4,"│");
+
     if(p->son==NULL){putchar('\n');return;}
-    /*if(p->son->bro==NULL){
-        printf("───");
-    }else{
-        printf("─┬─");
-    }*/
     Proc* current=p->son;
     //print its sons
     int flag=1;
