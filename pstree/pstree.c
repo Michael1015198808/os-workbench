@@ -121,7 +121,7 @@ void make_tree(void){
             fclose(fp);
 
             DIR* tasks;
-            struct dirent task_entry;
+            struct dirent* task_entry;
             sprintf(filename,"%s%s",entry->d_name,"/task");
             test(  ((tasks= opendir(filename)) != NULL),  "Can not open /proc/%s\n",filename);
             while((task_entry = readdir(tasks)) != NULL) {
