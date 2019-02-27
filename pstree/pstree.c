@@ -149,7 +149,6 @@ void make_tree(void){
                     fclose(fp);
                 }
             }
-                exit(0);
         }}
     }
     closedir(dp);
