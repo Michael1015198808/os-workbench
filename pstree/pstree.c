@@ -174,7 +174,7 @@ void print_tree(const Proc const *p,char* pattern,int is_first){
 //For format, DO NOT use PRINTF, use output to track the indent length, and don't use its return value!
 #define print_pattern() printf("%.*s",(int)(strlen(pattern)-bar_len),pattern);
 //-bar_len is used to omit the rightmost bar, because it's replaced by other kinds
-#define delete_bar() sprintf(pattern+strlen(pattern)-bar_len,"   ");
+#define delete_bar() sprintf(pattern+strlen(pattern)-bar_len," ");
     if(is_first==0){
     //judge if this node shares the same line with its father
     //if not,print the pattern for indent
