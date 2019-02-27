@@ -126,7 +126,6 @@ void make_tree(void){
             sprintf(filename,"%s%s",entry->d_name,"/task");
             test(  ((tasks= opendir(filename)) != NULL),  "Can not open /proc/%s\n",filename);
             while((task_entry = readdir(tasks)) != NULL) {if(digit_judge(task_entry->d_name)) {
-                printf("%s%s%s%s\n",entry->d_name,"/task/",task_entry->d_name,"/status");
                 sprintf(filename,"%s%s%s%s",entry->d_name,"/task/",task_entry->d_name,"/status");
 #ifdef IGNORE_PRO_EXIT
                 if((fp=fopen(filename,"r"))==NULL)continue;
@@ -137,14 +136,12 @@ void make_tree(void){
                 pid_t ppid=pid;
                 pid_t pid;
                 while(fscanf(fp,"Pid:\t%d",&pid)!=1)fgets(buf,100,fp);
-                printf("%d\n",pid);
                 if(pid!=ppid){
                     if(info[pid]==NULL){init_pid(pid);}
                     if(info[pid]->name==NULL){
                         info[pid]->name=malloc(strlen(proname)+3);
                         sprintf(info[pid]->name,"{%s}",proname);
                     }
-                    printf("Add (%d,%d)\n",ppid,pid);
                     add_sonpro(info[ppid],pid);
                     fclose(fp);
                 }
