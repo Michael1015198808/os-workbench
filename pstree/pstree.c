@@ -137,8 +137,10 @@ void make_tree(void){
                     pid_t ppid;
                     while(fscanf(fp,"Pid:\t%d",&ppid)!=1)fgets(buf,100,fp);
                     if(info[ppid]==NULL){init_pid(ppid);}
-                    if(info[ppid]->name==NULL)info[ppid]->name=malloc(strlen(proname)+3);
-                    sprintf(info[ppid]->name,"{%s}",proname);
+                    if(info[ppid]->name==NULL){
+                        info[ppid]->name=malloc(strlen(proname)+3);
+                        sprintf(info[ppid]->name,"{%s}",proname);
+                    }
                     fclose(fp);
 
                 }
