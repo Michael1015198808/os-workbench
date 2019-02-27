@@ -152,7 +152,7 @@ void make_tree(void){
     }
     closedir(dp);
 }
-static unsigned int bar_len=strlen("│");
+//static unsigned int bar_len=strlen("│");
 //since the bar is more than 1 byte
 int blank_len[10]={},bar_exist[10]={};
 int depth=-1;
@@ -249,7 +249,7 @@ int main(int argc, char *argv[]) {
     }
     //puts("args handled");
     make_tree();
-    print_tree(info[1],"",1);
+    print_tree(info[1],1);
     putchar('\n');
     return 0;
 }
