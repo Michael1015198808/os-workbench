@@ -24,7 +24,7 @@ int digit_judge(char*);
 char buf[maxn];
 struct Node;
 struct{
-int show_pids:1;
+unsigned int show_pids:1;
 }print_flag={
     0
 };
@@ -58,7 +58,7 @@ void add_sonpro(Proc* pp,pid_t pid){
             pp->son=info[pid];
             return;
         }
-        if(print_flag.show_pids!=1&&cmp(pp->son,info[pid])==0){
+        if(print_flag.show_pids==0&&cmp(pp->son,info[pid])==0){
             ++pp->cnt;
             return;
         }
@@ -67,23 +67,13 @@ void add_sonpro(Proc* pp,pid_t pid){
             l=r;
             r=l->bro;
         };
-        if(print_flag.show_pids!=1&&r!=NULL&&cmp(r,info[pid])==0){
+        if(print_flag.show_pids==0&&r!=NULL&&cmp(r,info[pid])==0){
             ++r->cnt;
             return;
         }
         info[pid]->bro=l->bro;
         l->bro=info[pid];
     }
-    /*if(pp->pid==1){
-        Proc *pointer=pp->son;
-        while(pointer!=NULL){
-            printf("%s->",pointer->name);
-            pointer=pointer->bro;
-        }
-        putchar('\n');
-    }
-    For debug
-    */
 }
 
 void print_proc(Proc** proc){
