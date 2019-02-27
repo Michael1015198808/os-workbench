@@ -67,7 +67,7 @@ void add_sonpro(Proc* pp,pid_t pid){
             l=r;
             r=l->bro;
         };
-        if(print_flag.show_pids==0&&r!=NULL&&pp->cnt!=0&&cmp(r,info[pid])==0){
+        if(print_flag.show_pids==0&&r!=NULL&&r->cnt!=0&&cmp(r,info[pid])==0){
             ++r->cnt;
             return;
         }
