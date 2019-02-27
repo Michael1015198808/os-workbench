@@ -88,6 +88,7 @@ void init_pid(int pid){
     test(info[pid]=malloc(sizeof(Proc)),"malloc size for Proc failed!");
     info[pid]->son=info[pid]->bro=NULL;
     info[pid]->pid=pid;
+    info[pid]->name=NULL;
 }
 
 void make_tree(void){
@@ -110,7 +111,7 @@ void make_tree(void){
             pid_t pid,ppid;
             while(fscanf(fp,"Pid:\t%d",&pid)!=1)fgets(buf,100,fp);
             if(info[pid]==NULL){init_pid(pid);}
-            info[pid]->name=malloc(strlen(proname)+1);
+            if(info[pid]->name==NULL)info[pid]->name=malloc(strlen(proname)+1);
             strcpy(info[pid]->name,proname);
 
             while(fscanf(fp,"PPid:\t%d",&ppid)!=1)fgets(buf,100,fp);
@@ -136,7 +137,7 @@ void make_tree(void){
                     pid_t ppid;
                     while(fscanf(fp,"Pid:\t%d",&ppid)!=1)fgets(buf,100,fp);
                     if(info[ppid]==NULL){init_pid(ppid);}
-                    info[ppid]->name=malloc(strlen(proname)+3);
+                    if(info[ppid]->name==NULL)info[ppid]->name=malloc(strlen(proname)+3);
                     sprintf(info[ppid]->name,"{%s}",proname);
                     fclose(fp);
 
