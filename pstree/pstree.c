@@ -53,9 +53,13 @@ void add_sonpro(Proc* pp,pid_t pid){
     if(pp->son==NULL){
         pp->son=info[pid];
     }else{
-        if(cmp(pp->son,info[pid])>=0){
+        if(cmp(pp->son,info[pid])>0){
             info[pid]->bro=pp->son;
             pp->son=info[pid];
+            return;
+        }
+        if(cmp(pp->son,info[pid])==0){
+            ++pp->cnt;
             return;
         }
         Proc *l=pp->son,*r=l->bro;
@@ -183,11 +187,14 @@ void print_tree(const Proc const *p,char* pattern,int is_first){
     }
     //print itself
     if(p->cnt>1){
-        output("%d*",p->cnt);
+        output("%d*[",p->cnt);
     }
     output("%s",p->name);
     if(print_flag.show_pids){
         output("(%d)",p->pid);
+    }
+    if(p->cnt>1){
+        output("]");
     }
 
     if(p->son==NULL){putchar('\n');return;}
