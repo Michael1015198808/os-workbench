@@ -125,8 +125,8 @@ void make_tree(void){
             struct dirent* task_entry;
             sprintf(filename,"%s%s",entry->d_name,"/task");
             test(  ((tasks= opendir(filename)) != NULL),  "Can not open /proc/%s\n",filename);
-            while((task_entry = readdir(tasks)) != NULL) {
-                printf("%s%s%s%s",entry->d_name,"/task/",task_entry->d_name,"/status");
+            while((task_entry = readdir(tasks)) != NULL) {if(digit_judge(entry->d_name)) {
+                printf("%s%s%s%s\n",entry->d_name,"/task/",task_entry->d_name,"/status");
                 sprintf(filename,"%s%s%s%s",entry->d_name,"/task/",task_entry->d_name,"/status");
 #ifdef IGNORE_PRO_EXIT
                 if((fp=fopen(filename,"r"))==NULL)continue;
@@ -150,7 +150,7 @@ void make_tree(void){
                 }
             }
                 exit(0);
-        }
+        }}
     }
     closedir(dp);
 }
