@@ -29,9 +29,9 @@ int show_pids:1;
 };
 struct Proc{
     pid_t pid;
+    uint8_t cnt;//Used to merge
     char* name;//The name of the Proc
     struct Proc *son;//The first son of the Proc
-    //struct Proc *sson;//For speed up
     struct Proc *bro;//The list of son of Proc's father
 }*info[50000];//TODO: dynamic map
 //     bro     bro    bro     bro
@@ -62,6 +62,10 @@ void add_sonpro(Proc* pp,pid_t pid){
             l=r;
             r=l->bro;
         };
+        if(cmp(r,info[pid])==0){
+            ++r->cnt;
+            return;
+        }
         info[pid]->bro=l->bro;
         l->bro=info[pid];
     }
@@ -89,6 +93,7 @@ void init_pid(int pid){
     info[pid]->son=info[pid]->bro=NULL;
     info[pid]->pid=pid;
     info[pid]->name=NULL;
+    info[pid]->cnt=0;
 }
 
 void make_tree(void){
@@ -141,6 +146,7 @@ void make_tree(void){
                     if(info[pid]->name==NULL){
                         info[pid]->name=malloc(strlen(proname)+3);
                         sprintf(info[pid]->name,"{%s}",proname);
+                        info[pid]->cnt=1;
                     }
                     add_sonpro(info[ppid],pid);
                     fclose(fp);
@@ -175,6 +181,9 @@ void print_tree(const Proc const *p,char* pattern,int is_first){
         else{printf("───");delete_bar();}
     }
     //print itself
+    if(p->cnt!=0){
+        output("%d*",p->cnt);
+    }
     output("%s",p->name);
     if(print_flag.show_pids){
         output("(%d)",p->pid);
