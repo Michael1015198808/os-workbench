@@ -134,13 +134,15 @@ void make_tree(void){
                     test((fp=fopen(filename,"r"))!=NULL,"Can not open %s\n",filename);
 #endif
                     fscanf(fp,"Name:\t%s",proname);
-                    pid_t ppid;
-                    while(fscanf(fp,"Pid:\t%d",&ppid)!=1)fgets(buf,100,fp);
-                    if(info[ppid]==NULL){init_pid(ppid);}
-                    if(info[ppid]->name==NULL){
-                        info[ppid]->name=malloc(strlen(proname)+3);
-                        sprintf(info[ppid]->name,"{%s}",proname);
+                    pid_t ppid=pid;
+                    pid_t pid;
+                    while(fscanf(fp,"Pid:\t%d",&pid)!=1)fgets(buf,100,fp);
+                    if(info[pid]==NULL){init_pid(pid);}
+                    if(info[pid]->name==NULL){
+                        info[pid]->name=malloc(strlen(proname)+3);
+                        sprintf(info[pid]->name,"{%s}",proname);
                     }
+                    add_sonpro(info[ppid],pid);
                     fclose(fp);
 
                 }
