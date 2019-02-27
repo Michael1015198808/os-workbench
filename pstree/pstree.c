@@ -142,6 +142,7 @@ void make_tree(void){
                         info[pid]->name=malloc(strlen(proname)+3);
                         sprintf(info[pid]->name,"{%s}",proname);
                     }
+                    printf("Add (%d,%d)\n",ppid,pid);
                     add_sonpro(info[ppid],pid);
                     fclose(fp);
 
