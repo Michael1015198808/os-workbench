@@ -262,7 +262,11 @@ int alpha(Proc* p1,Proc* p2){
     return strcmp(p1->name,p2->name);
 }
 int num(Proc* p1,Proc* p2){
-    return p1->pid>p2->pid;
+    if(strcmp(p1->name,p2->name)){
+        return p1->pid>p2->pid?1:-1;
+    }else{
+        return 0;
+    }
 }
 void numeric_sort(void){
     cmp=num;
