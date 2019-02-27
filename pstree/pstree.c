@@ -8,6 +8,7 @@
 #include <dirent.h>
 #include <string.h>
 #include <sys/stat.h>
+
 #define IGNORE_PRO_EXIT
 //Ignore the processes that are not existing when open
 //comment it to allow error report
@@ -153,7 +154,9 @@ void make_tree(void){
 }
 static unsigned int bar_len=strlen("│");
 //since the bar is more than 1 byte
-void print_tree(const Proc const *p,char* pattern,int is_first){
+int blank_len[10]={},bar_exist[10]={};
+int depth=-1;
+void print_tree(const Proc const *p,int is_first){
 
 //Due to different coding like UTF-8, the output maybe different
 //I've tried my best to make every line in output correctly inter-
@@ -162,13 +165,21 @@ void print_tree(const Proc const *p,char* pattern,int is_first){
     int len=0;
 #define output(...) (len+=printf(__VA_ARGS__))
 //For format, DO NOT use PRINTF, use output to track the indent length, and don't use its return value!
-#define print_pattern() printf("%.*s",(int)(strlen(pattern)-bar_len),pattern);
 //-bar_len is used to omit the rightmost bar, because it's replaced by other kinds
-#define delete_bar() sprintf(pattern+strlen(pattern)-bar_len," ");
+#define delete_bar() bar_exist[depth]=0;
     if(is_first==0){
     //judge if this node shares the same line with its father
     //if not,print the pattern for indent
-        print_pattern();
+        int i,j;
+        for(i=0;i<depth;++i){
+            for(j=0;j<blank_len[i];++j){
+                putchar(' ');
+            }
+            printf("%s",bar_exist[i]!=0?"│":" ");
+        }
+        for(j=0;j<blank_len[depth];++j){
+            putchar(' ');
+        }
         if(p->bro!=NULL){printf("├─");}
         else{printf("└─");delete_bar();}
     }else if(p->pid!=1){
@@ -189,22 +200,21 @@ void print_tree(const Proc const *p,char* pattern,int is_first){
 
     if(p->son==NULL){putchar('\n');return;}
 
-    char new_pattern[200];
-    sprintf(new_pattern,"%s%*s%c",pattern,len+4+(p->pid!=1),p->son->bro==NULL?"  ":"│",'\0');
 
+    blank_len[++depth]=len;
+    bar_exist[depth]=p->son->bro!=NULL;
     //print its sons
-    print_tree(p->son,new_pattern,1);
+    print_tree(p->son,1);
     //The first son shares the same line, so do not need to print pattern
     Proc* current=p->son->bro;
     while(current!=NULL){
-        print_tree(current,new_pattern,0);
+        bar_exist[depth]=current->bro!=NULL;
+        print_tree(current,0);
         current=current->bro;
     }
+    --depth;
     return;
 }
-//
-//pattern name --- son
-//pattern          bro
 void version(void);
 void numeric_sort(void);
 void show_pids(void);
