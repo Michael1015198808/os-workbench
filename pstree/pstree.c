@@ -182,7 +182,7 @@ void print_tree(const Proc const *p,char* pattern,int is_first){
         else{printf("───");delete_bar();}
     }
     //print itself
-    if(p->cnt!=0){
+    if(p->cnt>1){
         output("%d*",p->cnt);
     }
     output("%s",p->name);
