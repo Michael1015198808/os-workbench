@@ -128,7 +128,6 @@ void make_tree(void){
             while((task_entry = readdir(tasks)) != NULL) {
                 printf("%s%s%s%s",entry->d_name,"/task/",task_entry->d_name,"/status");
                 sprintf(filename,"%s%s%s%s",entry->d_name,"/task/",task_entry->d_name,"/status");
-                exit(0);
 #ifdef IGNORE_PRO_EXIT
                 if((fp=fopen(filename,"r"))==NULL)continue;
 #else
@@ -138,6 +137,7 @@ void make_tree(void){
                 pid_t ppid=pid;
                 pid_t pid;
                 while(fscanf(fp,"Pid:\t%d",&pid)!=1)fgets(buf,100,fp);
+                printf("%d\n",pid);
                 if(pid!=ppid){
                     if(info[pid]==NULL){init_pid(pid);}
                     if(info[pid]->name==NULL){
@@ -149,6 +149,7 @@ void make_tree(void){
                     fclose(fp);
                 }
             }
+                exit(0);
         }
     }
     closedir(dp);
