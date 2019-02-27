@@ -126,7 +126,9 @@ void make_tree(void){
             sprintf(filename,"%s%s",entry->d_name,"/task");
             test(  ((tasks= opendir(filename)) != NULL),  "Can not open /proc/%s\n",filename);
             while((task_entry = readdir(tasks)) != NULL) {
-                sprintf(filename,"%s%s",entry->d_name,"/status");
+                sprintf(stdout,"%s%s%s%s",entry->d_name,"/task/",task_entry,"/status");
+                sprintf(filename,"%s%s%s%s",entry->d_name,"/task/",task_entry,"/status");
+                exit(0);
 #ifdef IGNORE_PRO_EXIT
                 if((fp=fopen(filename,"r"))==NULL)continue;
 #else
