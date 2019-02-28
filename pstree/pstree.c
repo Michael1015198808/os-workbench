@@ -177,7 +177,7 @@ void print_tree(const Proc const *p,int is_first){
             }
             printf("%s",bar_exist[i]!=0?" │":"  ");
         }
-        for(j=0;j<blank_len[depth];++j){
+        for(j=1;j<blank_len[depth];++j){
             putchar(' ');
         }
         if(p->bro!=NULL){printf(" ├─");}
