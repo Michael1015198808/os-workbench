@@ -222,25 +222,34 @@ void bug_fix_log(void);
 struct{
     char* arg_name;//char** with int len can't KISS
     void(*handler)(void);
-}arg_list[]={
-    {"-V",version},
+}two_dash_arg_list[]={
+    //{"-V",version},
     {"--version",version},
-    {"-n",numeric_sort},
+    //{"-n",numeric_sort},
     {"--numeric-sort",numeric_sort},
-    {"-p",show_pids},
+    //{"-p",show_pids},
     {"--show-pids",show_pids},
     {"-log",bug_fix_log},
     {"\0",NULL}//To make format more beautiful
 };
+void(*single_dash_arg_list[26])(void_);
+//ares with -- here
 int main(int argc, char *argv[]) {
     int i;
     cmp=alpha;
     for (i = 1; i < argc; i++) {
         int j;
-        for(j=0;j<sizeof(arg_list)/sizeof(arg_list[0]);++j){
-            if(!strcmp(arg_list[j].arg_name,argv[i])){
-                arg_list[j].handler();
-                break;
+        if(argv[i][0]=='-'){
+            if(argv[i][1]=='-'){
+                //args with --
+                for(j=0;j<sizeof(arg_list)/sizeof(arg_list[0]);++j){
+                    if(!strcmp(arg_list[j].arg_name,argv[i])){
+                        two_dash_arg_list[j].handler();
+                        break;
+                    }
+                }
+            }else{
+                //args with -
             }
         }
         if(j>=sizeof(arg_list)/sizeof(arg_list[0])){
