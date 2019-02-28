@@ -180,8 +180,8 @@ void print_tree(const Proc const *p,int is_first){
         for(j=0;j<blank_len[depth];++j){
             putchar(' ');
         }
-        if(p->bro!=NULL){printf("├─");}
-        else{printf("└─");delete_bar();}
+        if(p->bro!=NULL){printf(" ├─");}
+        else{printf(" └─");delete_bar();}
     }else if(p->pid!=1){
         if(p->bro!=NULL){printf("─┬─");}
         else{printf("───");delete_bar();}
