@@ -76,14 +76,6 @@ void add_sonpro(Proc* pp,pid_t pid){
         l->bro=info[pid];
     }
 }
-
-void print_proc(Proc** proc){
-    if(print_flag.show_pids){
-        printf("%s(%d)\n",(*proc)->name,(int)(proc-info));
-    }else{
-        printf("%s\n",(*proc)->name);
-    }
-}
 void init_pid(int pid){
     test(info[pid]=malloc(sizeof(Proc)),"malloc size for Proc failed!");
     info[pid]->son=info[pid]->bro=NULL;
@@ -273,7 +265,7 @@ int main(int argc, char *argv[]) {
                         }
                         printf("\33[1;31m");
                         putchar(argv[i][l]);
-                        printf("\33[0m\n");
+                        printf("\33[0m");
                         while(++l<=len){
                             putchar(argv[i][l]);
                         }
