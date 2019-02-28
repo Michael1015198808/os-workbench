@@ -177,7 +177,7 @@ void print_tree(const Proc const *p,int is_first){
             }
             printf("%s",bar_exist[i]!=0?" │":"  ");
         }
-        for(j=1;j<blank_len[depth];++j){
+        for(j=0;j<blank_len[depth];++j){
             putchar(' ');
         }
         if(p->bro!=NULL){printf(" ├─");}
@@ -201,7 +201,7 @@ void print_tree(const Proc const *p,int is_first){
     if(p->son==NULL){putchar('\n');return;}
 
 
-    blank_len[++depth]=len;
+    blank_len[++depth]=len+1;
     bar_exist[depth]=p->son->bro!=NULL;
     //print its sons
     print_tree(p->son,1);
