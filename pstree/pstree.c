@@ -223,11 +223,8 @@ struct{
     char* arg_name;//char** with int len can't KISS
     void(*handler)(void);
 }two_dash_arg_list[]={
-    //{"-V",version},
     {"--version",version},
-    //{"-n",numeric_sort},
     {"--numeric-sort",numeric_sort},
-    //{"-p",show_pids},
     {"--show-pids",show_pids},
     {"-log",bug_fix_log},
     {"\0",NULL}//To make format more beautiful
@@ -255,6 +252,10 @@ int main(int argc, char *argv[]) {
                         break;
                     }
                 }
+                if(j==sizeof(two_dash_arg_list)/sizeof(two_dash_arg_list[0])){
+                    printf("\33[1;31mUnsupported arg(s):%s\33[0m\n",argv[i]);
+                    exit(0);
+                }
             }else{
                 int k,len=strlen(argv[i]);//prevent multi-call speed up
                 for(k=1;k<len;++k){
@@ -274,12 +275,14 @@ int main(int argc, char *argv[]) {
                         while(++l<len){
                             putchar(argv[i][l]);
                         }
+                        exit(0);
                     }
                 }
                 //args with -
             }
         }else{
             printf("\33[1;31mUnsupported arg(s):%s\33[0m\n",argv[i]);
+            exit(0);
         }
     }
     //puts("args handled");
