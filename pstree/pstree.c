@@ -201,7 +201,7 @@ void print_tree(const Proc const *p,int is_first){
     if(p->son==NULL){putchar('\n');return;}
 
 
-    blank_len[++depth]=len+pid==1;
+    blank_len[++depth]=len+(p->pid==1);
     bar_exist[depth]=p->son->bro!=NULL;
     //print its sons
     print_tree(p->son,1);
