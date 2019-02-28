@@ -146,7 +146,7 @@ void make_tree(void){
 }
 //static unsigned int bar_len=strlen("│");
 //since the bar is more than 1 byte
-int blank_len[10]={},bar_exist[10]={};
+int blank_len[20]={},bar_exist[20]={};
 int depth=-1;
 void print_tree(const Proc const *p,int is_first){
 
