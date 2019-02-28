@@ -268,13 +268,13 @@ int main(int argc, char *argv[]) {
                     if(j==sizeof(single_dash_arg_list)/sizeof(single_dash_arg_list[0])){
                         printf("Unsupported arg(s):");
                         int l;
-                        for(l=0;l<=k;++l){
+                        for(l=0;l<k;++l){
                             putchar(argv[i][l]);
                         }
                         printf("\33[1;31m");
                         putchar(argv[i][++l]);
                         printf("\33[0m\n");
-                        while(++l<len){
+                        while(++l<=len){
                             putchar(argv[i][l]);
                         }
                         putchar('\n');
