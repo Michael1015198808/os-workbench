@@ -242,8 +242,8 @@ int main(int argc, char *argv[]) {
         if(argv[i][0]=='-'){
             if(argv[i][1]=='-'){
                 //args with --
-                for(j=0;j<sizeof(arg_list)/sizeof(arg_list[0]);++j){
-                    if(!strcmp(arg_list[j].arg_name,argv[i])){
+                for(j=0;j<sizeof(two_dash_arg_list)/sizeof(two_dash_arg_list[0]);++j){
+                    if(!strcmp(two_dash_arg_list[j].arg_name,argv[i])){
                         two_dash_arg_list[j].handler();
                         break;
                     }
