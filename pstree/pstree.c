@@ -261,6 +261,7 @@ int main(int argc, char *argv[]) {
                     for(j=0;j<sizeof(single_dash_arg_list)/sizeof(single_dash_arg_list[0]);++j){
                         if(single_dash_arg_list[j].arg_name==argv[i][k]){
                             single_dash_arg_list[j].handler();
+                            break;
                         }
                     }
                     if(j==sizeof(single_dash_arg_list)/sizeof(single_dash_arg_list[0])){
