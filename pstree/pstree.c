@@ -175,7 +175,7 @@ void print_tree(const Proc const *p,int is_first){
             for(j=0;j<blank_len[i];++j){
                 putchar(' ');
             }
-            printf("%s",bar_exist[i]!=0?"│":"   ");
+            printf("%s",bar_exist[i]!=0?"│ ":"  ");
         }
         for(j=0;j<blank_len[depth];++j){
             putchar(' ');
