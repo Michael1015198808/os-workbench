@@ -8,7 +8,13 @@
 #include <dirent.h>
 #include <string.h>
 #include <sys/stat.h>
-
+/*
+Support args in forms like '-np' or '-n -p'
+and assert properly.
+Two method to handle when scan some process that isn't alive. 
+Perfect format(At least perfect on my PC)
+merge process with same names.
+ */
 #define IGNORE_PRO_EXIT
 //Ignore the processes that are not existing when open
 //comment it to allow error report
