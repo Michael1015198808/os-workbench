@@ -232,13 +232,20 @@ struct{
     {"-log",bug_fix_log},
     {"\0",NULL}//To make format more beautiful
 };
-void(*single_dash_arg_list[26])(void_);
+struct{
+    char arg_name;
+    void(*handler)(void);
+}single_dash_arg_list[]={
+    {'V',version},
+    {'n',numeric_sort},
+    {'p',show_pids}
+};
 //ares with -- here
 int main(int argc, char *argv[]) {
     int i;
     cmp=alpha;
     for (i = 1; i < argc; i++) {
-        int j;
+        int j=1;
         if(argv[i][0]=='-'){
             if(argv[i][1]=='-'){
                 //args with --
@@ -249,10 +256,28 @@ int main(int argc, char *argv[]) {
                     }
                 }
             }else{
+                int k,len=strlen(argv[i]);//prevent multi-call speed up
+                for(k=1;k<len;++k){
+                    for(j=0;j<sizeof(single_dash_arg_list)/sizeof(single_dash_arg_list[0]);++j){
+                        if(single_dash_arg_list[j].arg_name==argv[i][k]){
+                            single_dash_arg_list[j].handler();
+                        }
+                    }
+                    if(j==sizeof(single_dash_arg_list)/sizeof(single_dash_arg_list[0])){
+                        printf("Unsupported arg(s):");
+                        int l;
+                        for(l=0;l<k;++l){
+                            putchar(argv[i][l]);
+                        }
+                        putchar(argv[i][++l]);
+                        while(++l<len){
+                            putchar(argv[i][l]);
+                        }
+                    }
+                }
                 //args with -
             }
-        }
-        if(j>=sizeof(arg_list)/sizeof(arg_list[0])){
+        }else{
             printf("\33[1;31mUnsupported arg(s):%s\33[0m\n",argv[i]);
         }
     }
