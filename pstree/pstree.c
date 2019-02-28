@@ -272,7 +272,7 @@ int main(int argc, char *argv[]) {
                             putchar(argv[i][l]);
                         }
                         printf("\33[1;31m");
-                        putchar(argv[i][++l]);
+                        putchar(argv[i][l]);
                         printf("\33[0m\n");
                         while(++l<=len){
                             putchar(argv[i][l]);
