@@ -73,9 +73,15 @@ void init(void){
   for(int x=0;x<8;++x){
     pixel_t left=((ld-lu)*x)/8+lu;
     pixel_t right=((rd-ru)*x)/8+ru;
+    if(x==0){
+        printf("left:%x right:%x\n",left,right);
+    }
     for (int y=0;y<8;++y){
         pixel_t current=((right-left)*y)/8+left;
+        printf("%x,",current);
         color[x][y]=current;
     }
+    if(x==0)
+    printf("\n");
   }
 }
