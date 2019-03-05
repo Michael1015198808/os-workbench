@@ -2,6 +2,7 @@
 
 void init_screen();
 void splash();
+void init();
 //void read_key();
 typedef uint32_t pixel_t;
 pixel_t color[6][6];
@@ -11,6 +12,7 @@ int main() {
   printf("Hello World from " __ISA__ " program!\n");
   _ioe_init();
   init_screen();
+  init();
   splash();
   while (1) {
     read_key();
@@ -55,10 +57,11 @@ void mono_rect(int x, int y, int w, int h, uint32_t color) {
 }
 
 void splash() {
-  for (int x = 0; x * SIDE <= w; x ++) {
-    for (int y = 0; y * SIDE <= h; y++) {
+#define MARGIN 1
+  for (int x = MARGIN; (x+MARGIN) * SIDE *4 <= w; x ++) {
+    for (int y = MARGIN; (y+MARGIN) * SIDE *4<= h; y++) {
       if ((x & 1) ^ (y & 1)) {
-        mono_rect(x * SIDE, y * SIDE, SIDE, SIDE, 0xffffff); // white
+        mono_rect(x * SIDE*4, y * SIDE*4, SIDE*4, SIDE*4, 0xffffff); // white
       }
     }
   }
