@@ -61,6 +61,9 @@ void splash() {
   for (int x = 0; x<8; x ++) {
     for (int y = 0; y<8; y++) {
       mono_rect((x+MARGIN) * SIDE*3, (y+MARGIN) * SIDE*3, SIDE*3, SIDE*3, color[x][y]); // white
+      printf("x:%d,y:%d,pixel:%x\n",x,y,color[x][y]);
+      int key;
+      while ((key = read_key()) == _KEY_NONE);
     }
   }
 }
