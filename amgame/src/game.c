@@ -7,7 +7,8 @@ void init();
 union pixel{
   uint32_t val;
   struct{
-    uint32_t alpha:8,r:8,g:8,b:8;
+    uint32_t b:8,g:8,r:8,alpha:8;
+    //It seems alpha is useless
   };
 };
 typedef union pixel pixel;
@@ -79,15 +80,11 @@ void init(void){
   pixel rd,ld,ru,lu;
   rd.val=0x00000000;
   ld.val=0x00ff0000;
-  printf("ld.val:%x,alpha:%x,r:%x,g:%x,b:%x\n",ld.val,ld.alpha,ld.r,ld.g,ld.b);
-  while (read_key() == _KEY_NONE);
-  mono_rect(0,0, SIDE*3, SIDE*3, ld.val);
   ru.val=0x0000ff00;
   lu.val=0x000000ff;
   for(int x=0;x<8;++x){
     pixel left=gradient(ld,lu,x);
     pixel right=gradient(rd,ru,x);
-    if(x==0)printf("left:%x,right:%x\n",left.val,right.val);
     for (int y=0;y<8;++y){
       color[x][y]=gradient(left,right,y);
     }
