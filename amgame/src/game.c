@@ -3,7 +3,7 @@
 void init_screen();
 void splash();
 void init();
-static inline void draw_str(char* s,int x,int y,int color);
+static inline void draw_str(char* s,int x,int y,size_t size,int color);
 //void read_key();
 union pixel{
   uint32_t val;
@@ -23,7 +23,7 @@ int main() {
   init_screen();
   init();
   splash();
-  draw_str("Hello, world",0,0,0x3fff00);
+  draw_str("Hello, world",0,0,1,0x3fff00);
   while (1) {
     read_key();
   }
@@ -231,23 +231,23 @@ char font8x8_basic[128][8] = {
     { 0x6E, 0x3B, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},   // U+007E (~)
     { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}    // U+007F
 };
-static inline void draw_character(char ch, int x, int y, int color) {
+static inline void draw_character(char ch, int x, int y,size_t size, int color) {
   int i, j;
   char *p = font8x8_basic[(int)ch];
   for (i = 0; i < 8; i ++) 
     for (j = 0; j < 8; j ++) 
       if ((p[i] >> j) & 1)
-          mono_rect(x+j,y+i,1,1,color);
+          mono_rect(x+j,y+i,size,size,color);
 }
-static inline void draw_str(char* s,int x,int y,int color){
+static inline void draw_str(char* s,int x,int y,size_t size,int color){
     int cur_x=x,cur_y=y;
     for(;*s;++s){
-        draw_character(*s,cur_x,cur_y,color);
+        draw_character(*s,cur_x,cur_y,size,color);
         if(*s=='\n'){
             cur_x=x;
-            cur_y+=8;
+            cur_y+=size<<3;
         }else{
-            cur_x+=8;
+            cur_x+=size<<3;
         }
     }
 }
