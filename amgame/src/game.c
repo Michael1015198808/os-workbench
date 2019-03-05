@@ -5,8 +5,10 @@ void splash();
 void init();
 //void read_key();
 union pixel{
-    uint32_t val;
+  uint32_t val;
+  struct{
     uint32_t alpha:8,r:8,g:8,b:8;
+  };
 };
 typedef union pixel pixel;
 pixel color[8][8];
