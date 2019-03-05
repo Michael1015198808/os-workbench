@@ -1,7 +1,6 @@
 #include <game.h>
 
 void init_screen(void);
-void splash(void);
 void init(void);
 void swap_pixel(void){}
 void draw_cursor(int);
@@ -26,7 +25,6 @@ int main() {
   _ioe_init();
   init_screen();
   init();
-  splash();
   draw_str("Move with arrow keys",0,0,2,0x3fff00);
   draw_str("Select grid with space key",0,16,2,0x3fff00);
   draw_cursor(1);
