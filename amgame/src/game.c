@@ -65,7 +65,8 @@ void splash() {
   }
 }
 void init(void){
-  pixel_t rd=rand(),ld=rand(),ru=rand(),lu=rand();
+  //pixel_t rd=rand(),ld=rand(),ru=rand(),lu=rand();
+  pixel_t rd=0x0000000,ld=0xff0000,ru=0x00ff00,lu=0x0000ff;
   for(int x=0;x<8;++x){
     pixel_t left=((ld-lu)*x)/8+lu;
     pixel_t right=((rd-ru)*x)/8+ru;
