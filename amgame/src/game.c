@@ -99,10 +99,10 @@ void init(void){
       //swap times
       int j,k;
       do{
-        j=rand()%GRID_NUM;
+        j=rand()%(GRID_NUM*GRID_NUM);
       }while(color[j/GRID_NUM][j%GRID_NUM].alpha==1);
       do{
-        k=rand()%GRID_NUM;
+        k=rand()%(GRID_NUM*GRID_NUM);
       }while(color[k/GRID_NUM][k%GRID_NUM].alpha==1);
       pixel temp=color[j/GRID_NUM][j%GRID_NUM];
       color[j/GRID_NUM][j%GRID_NUM]=color[k/GRID_NUM][k%GRID_NUM];
