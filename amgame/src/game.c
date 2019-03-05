@@ -31,8 +31,8 @@ int main() {
     static const char *key_names[] = {
       _KEYS(KEYNAME)
     };
-    if(key!=_KEY_NONE)
-    printf(key_names[key]);
+    if(key!=_KEY_NONE&&(key&0x8000))
+    printf(key_names[key^0x8000]);
   }
   return 0;
 }
