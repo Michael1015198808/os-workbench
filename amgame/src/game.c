@@ -5,7 +5,7 @@ void splash();
 void init();
 //void read_key();
 typedef uint32_t pixel_t;
-pixel_t color[6][6];
+pixel_t color[8][8];
 int main() {
   // Operating system is a C program
   srand(uptime(NULL));
@@ -58,20 +58,20 @@ void mono_rect(int x, int y, int w, int h, uint32_t color) {
 
 void splash() {
 #define MARGIN 1
-  for (int x = MARGIN; (x+MARGIN+1) * SIDE *4 <= w; x ++) {
-    for (int y = MARGIN; (y+MARGIN+1) * SIDE *4<= h; y++) {
-      mono_rect(x * SIDE*4, y * SIDE*4, SIDE*4, SIDE*4, color[x-MARGIN][y-MARGIN]); // white
+  for (int x = 0; (x+2*MARGIN) * SIDE *4 < w; x ++) {
+    for (int y = 0; (y+2*MARGIN) * SIDE *4< h; y++) {
+      mono_rect((x+MARGIN) * SIDE*4, (y+MARGIN) * SIDE*4, SIDE*4, SIDE*4, color[x][y]); // white
     }
   }
 }
 void init(void){
   pixel_t rd=rand(),ld=rand(),ru=rand(),lu=rand();
-  for (int x = MARGIN; (x+MARGIN+1) * SIDE *4 <= w; x ++) {
-    pixel_t left=((ld-lu)*x)/(w/SIDE/4)+lu;
-    pixel_t right=((rd-ru)*x)/(w/SIDE/4)+ru;
-    for (int y = MARGIN; (y+MARGIN+1) * SIDE *4<= h; y++) {
-        pixel_t current=((right-left)*y)/(h/SIDE/4)+left;
-        color[x-MARGIN][y-MARGIN]=current;
+  for(int x=0;x<8;++x){
+    pixel_t left=((ld-lu)*x)/8+lu;
+    pixel_t right=((rd-ru)*x)/8+ru;
+    for (int y=8;y<8;++y){
+        pixel_t current=((right-left)*y)/8+left;
+        color[x][y]=current;
     }
   }
 }
