@@ -28,9 +28,9 @@ int main() {
   splash();
   draw_str("Hello, world",0,0,1,0x3fff00);
   while (1) {
-    draw_cursor(0);
     int key=read_key();
     if(key&0x8000){
+      draw_cursor(0);
       switch(key){
         case _KEY_SPACE:
           choosen[choosen_idx][0]=cursor_x;
@@ -49,8 +49,8 @@ int main() {
         default:
           break;
       }
+      draw_cursor(1);
     }
-    draw_cursor(1);
   }
   return 0;
 }
