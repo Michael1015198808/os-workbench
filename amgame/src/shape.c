@@ -38,4 +38,7 @@ void mono_rect(int x, int y, int w, int h, uint32_t color) {
 void draw_grid(int x,int y){
   extern pixel color[GRID_NUM][GRID_NUM];
   mono_rect((x+MARGIN) * SIDE*3, (y+MARGIN) * SIDE*3, SIDE*3, SIDE*3, color[x][y].val);
+  if(color[x][y].alpha==1){
+      draw_cross(SIDE/2+coor_to_pix(x,y)+SIDE/2,SIDE,0xffffff,0x00000000);
+  }
 }
