@@ -240,7 +240,14 @@ static inline void draw_character(char ch, int x, int y, int color) {
           mono_rect(x+j,y+i,1,1,color);
 }
 static inline void draw_str(char* s,int x,int y,int color){
+    int cur_x=x,cur_y=y;
     for(;*s;++s){
-        draw_character(*s,x,y,color);
+        draw_character(*s,cur_x,cur_y,color);
+        if(*s=='\n'){
+            cur_x=x;
+            cur_y+=8;
+        }else{
+            cur_x+=8;
+        }
     }
 }
