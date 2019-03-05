@@ -43,7 +43,7 @@ int main() {
         default:
           break;
       }
-      printf("%d,%d\n",cursor_x,cursor_y);
+      //printf("%d,%d\n",cursor_x,cursor_y);
       draw_cursor(1);
     }
   }
@@ -90,6 +90,12 @@ void init(void){
       color[x][y]=gradient(left,right,y);
     }
   }
+  for(int i=0;i<20;++i){
+      int j=rand()%36,k=rand()%36;
+      pixel temp=color[j/6][j%6];
+      color[j/6][j%6]=color[k/6][k%6];
+      color[k/6][k%6]=temp;
+  }
   for (int x = 0; x<GRID_NUM; x ++) {
     for (int y = 0; y<GRID_NUM; y++) {
       draw_grid(x,y);
@@ -111,7 +117,6 @@ void draw_cursor(int mode){
   mono_rect((cursor_x+MARGIN) * SIDE*3+SIDE, (cursor_y+MARGIN) * SIDE*3+SIDE, SIDE, SIDE, mode==1?0xffffff:color[cursor_x][cursor_y].val);
 }
 void swap_pixel(void){
-    printf("Swaping pixel!\n");
 #define choosen_color(_idx) color[choosen[_idx][0]][choosen[_idx][1]]
   pixel temp=choosen_color(0);
   choosen_color(0)=choosen_color(1);
