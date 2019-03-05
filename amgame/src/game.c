@@ -110,6 +110,7 @@ void draw_cursor(int mode){
   mono_rect((cursor_x+MARGIN) * SIDE*3+SIDE, (cursor_y+MARGIN) * SIDE*3+SIDE, SIDE, SIDE, mode==1?0xffffff:color[cursor_x][cursor_y].val);
 }
 void swap_pixel(void){
+    printf("Swaping pixel!\n");
 #define choosen_color(_idx) color[choosen[_idx][0]][choosen[_idx][1]]
   pixel temp=choosen_color(0);
   choosen_color(0)=choosen_color(1);
