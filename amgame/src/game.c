@@ -99,7 +99,7 @@ void init(void){
       //swap times
       int j=rand()%36,k=rand()%36;
       while(color[j/6][j%6].alpha==1)j=rand()%36;
-      while(color[k/6][k%6].alpha==1)j=rand()%36;
+      while(color[k/6][k%6].alpha==1)k=rand()%36;
       pixel temp=color[j/6][j%6];
       color[j/6][j%6]=color[k/6][k%6];
       color[k/6][k%6]=temp;
