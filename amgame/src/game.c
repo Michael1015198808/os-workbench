@@ -4,8 +4,13 @@ void init_screen();
 void splash();
 void init();
 //void read_key();
-typedef uint32_t pixel_t;
-pixel_t color[8][8];
+union pixel{
+    uint32_t val;
+    uint32_t alpha:8,r:8,g:8,b:8;
+};
+typedef union pixel pixel;
+pixel color[8][8];
+pixel gradient(pixel,pixel,int);
 int main() {
   // Operating system is a C program
   srand(uptime(NULL));
@@ -60,28 +65,32 @@ void splash() {
 #define MARGIN 1
   for (int x = 0; x<8; x ++) {
     for (int y = 0; y<8; y++) {
-      mono_rect((x+MARGIN) * SIDE*3, (y+MARGIN) * SIDE*3, SIDE*3, SIDE*3, color[x][y]); // white
-      printf("x:%d,y:%d,pixel:%x\n",x,y,color[x][y]);
+      mono_rect((x+MARGIN) * SIDE*3, (y+MARGIN) * SIDE*3, SIDE*3, SIDE*3, color[x][y].val); // white
+      /*printf("x:%d,y:%d,pixel:%x\n",x,y,color[x][y]);
       int key;
-      while ((key = read_key()) == _KEY_NONE);
+      while ((key = read_key()) == _KEY_NONE);*/
     }
   }
 }
 void init(void){
   //pixel_t rd=rand(),ld=rand(),ru=rand(),lu=rand();
-  pixel_t rd=0x0000000,ld=0xff0000,ru=0x00ff00,lu=0x0000ff;
+  pixel rd,ld,ru,lu;
+  rd.val=0x00000000;
+  ld.val=0x00ff0000;
+  ru.val=0x0000ff00;
+  lu.val=0x000000ff;
   for(int x=0;x<8;++x){
-    pixel_t left=((ld-lu)*x)/8+lu;
-    pixel_t right=((rd-ru)*x)/8+ru;
-    if(x==0){
-        printf("left:%x right:%x\n",left,right);
-    }
+    pixel left=gradient(ld,lu,x);
+    pixel right=gradient(rd,ru,x);
     for (int y=0;y<8;++y){
-        pixel_t current=((right-left)*y)/8+left;
-        printf("%x,",current);
-        color[x][y]=current;
+      color[x][y]=gradient(left,right,y);
     }
-    if(x==0)
-    printf("\n");
   }
+}
+pixel gradient(pixel a,pixel b,int i){
+    pixel temp;
+    temp.r=((b.r-a.r)*i)/8+a.r;
+    temp.g=((b.g-a.g)*i)/8+a.g;
+    temp.b=((b.b-a.b)*i)/8+a.b;
+    return temp;
 }
