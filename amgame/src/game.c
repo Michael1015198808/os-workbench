@@ -38,14 +38,14 @@ int main() {
           if(choosen_idx==0){choosen_idx=1;}
           else{choosen_idx=0;swap_pixel();}
           break;
-        case _KEY_DOWN:
-          ++cursor_x;break;
-        case _KEY_UP:
-          --cursor_x;break;
-        case _KEY_LEFT:
-          --cursor_y;break;
         case _KEY_RIGHT:
-          ++cursor_y;break;
+          ++cursor_x;if(cursor_x<0)cursor_x=8;break;
+        case _KEY_LEFT:
+          --cursor_x;if(cursor_x>7)cursor_x=0;break;
+        case _KEY_UP:
+          --cursor_y;if(cursor_y<0)cursor_y=8;break;
+        case _KEY_DOWN:
+          ++cursor_y;if(cursor_y>7)cursor_y=0;break;
         default:
           break;
       }
