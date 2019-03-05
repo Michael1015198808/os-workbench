@@ -41,4 +41,8 @@ void draw_grid(int x,int y){
   if(color[x][y].alpha==1){
       draw_cross(SIDE/2+coor_to_pix(x,y)+SIDE/2,SIDE,0xffffff,0x00000000);
   }
+extern int choosen_idx,choosen[2][2];
+  if(choosen_idx==1&&x==choosen[0][0]&&y==choosen[0][1]){
+    draw_circle(coor_to_pix(x,y),SIDE,0xffffff,0x00000000);
+  }
 }
