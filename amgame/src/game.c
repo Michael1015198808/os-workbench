@@ -2,7 +2,7 @@
 
 void init_screen();
 void splash();
-void init(){return;}
+void init();
 //void read_key();
 typedef uint32_t pixel_t;
 pixel_t color[6][6];
@@ -57,12 +57,23 @@ void mono_rect(int x, int y, int w, int h, uint32_t color) {
 }
 
 void splash() {
-#define MARGIN 2
-  for (int x = MARGIN; (x+MARGIN) * SIDE *4 <= w; x ++) {
-    for (int y = MARGIN; (y+MARGIN) * SIDE *4<= h; y++) {
+#define MARGIN 1
+  for (int x = MARGIN; (x+MARGIN+1) * SIDE *4 <= w; x ++) {
+    for (int y = MARGIN; (y+MARGIN+1) * SIDE *4<= h; y++) {
       if ((x & 1) ^ (y & 1)) {
-        mono_rect(x * SIDE*4, y * SIDE*4, SIDE*4, SIDE*4, 0xffffff); // white
+        mono_rect(x * SIDE*4, y * SIDE*4, SIDE*4, SIDE*4, color[x-MARGIN][y-MARGIN]); // white
       }
+    }
+  }
+}
+void init(void){
+  pixel_t rd=rand(),ld=rand(),ru=rand(),lu=rand();
+  for (int x = MARGIN; (x+MARGIN+1) * SIDE *4 <= w; x ++) {
+    pixel_t left=((ld-lu)*x)/(w/SIDE/4)+lu;
+    pixel_t right=((rd-ru)*x)/(w/SIDE/4)+ru;
+    for (int y = MARGIN; (y+MARGIN+1) * SIDE *4<= h; y++) {
+        pixel_t current=((right-left)*y)/(h/SIDE/4)+left;
+        color[x][y]=current;
     }
   }
 }
