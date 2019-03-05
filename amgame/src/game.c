@@ -28,6 +28,7 @@ int main() {
   init();
   splash();
   draw_str("Hello, world",0,0,1,0x3fff00);
+  draw_cursor(1);
   while (1) {
     int key=read_key();
     if(key&0x8000){
