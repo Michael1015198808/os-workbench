@@ -1,5 +1,6 @@
 #include <game.h>
 void draw_circle(int x,int y,int r,uint32_t fg_color,uint32_t bg_color){
+    x+=r/2;y+=r/2;
     int cur_x=r,cur_y=0;
     for(;cur_x>0;--cur_x){
         while((cur_x*cur_x)+(cur_y*cur_y)<r*r){
