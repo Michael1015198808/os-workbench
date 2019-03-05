@@ -26,6 +26,7 @@ int main() {
       draw_cursor(0);
       switch(key^0x8000){
         case _KEY_SPACE:
+          if(color[cursor_x][cursor_y].alpha==1)break;
           choosen[choosen_idx][0]=cursor_x;
           choosen[choosen_idx][1]=cursor_y;
           draw_circle(cursor_locat,SIDE,0xffffff,0x00000000);
