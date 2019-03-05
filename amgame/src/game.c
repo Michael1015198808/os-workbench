@@ -3,7 +3,7 @@
 void init_screen(void);
 void splash(void);
 void init(void);
-void swap_pixel(void);
+void swap_pixel(void){}
 void draw_cursor(int);
 //void read_key();
 union pixel{
