@@ -141,10 +141,15 @@ void draw_str(char* s,int x,int y,size_t size,int color){
     int cur_x=x,cur_y=y;
     for(;*s;++s){
         draw_character(*s,cur_x,cur_y,size,color);
-        if(*s=='\n'){
+        switch(*s){
+          case '\n':
             cur_x=x;
             cur_y+=size<<3;
-        }else{
+            break;
+          case ' ':
+            cur_x+=size<<2;
+            break;
+          default:
             cur_x+=size<<3;
         }
     }
