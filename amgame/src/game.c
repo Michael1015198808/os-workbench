@@ -2,7 +2,7 @@
 
 void init_screen();
 void splash();
-void init();
+void init(){return;}
 //void read_key();
 typedef uint32_t pixel_t;
 pixel_t color[6][6];
