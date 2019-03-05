@@ -50,6 +50,8 @@ int main() {
           ++cursor_y;if(cursor_y>=GRID_NUM)cursor_y-=GRID_NUM;break;
         case _KEY_UP:
           --cursor_y;if(cursor_y<0)cursor_y+=GRID_NUM;break;
+        case _KEY_Q:
+          return 0;
         default:
           break;
       }
@@ -117,5 +119,5 @@ pixel gradient(pixel a,pixel b,int i){
 void draw_cursor(int mode){
 // 0 for wipe
 // 1 for draw
-  mono_rect((cursor_x+MARGIN) * SIDE*3+SIDE, (cursor_y+MARGIN) * SIDE*3+SIDE, SIDE/2, SIDE/2, mode==1?0xffffff:color[cursor_x][cursor_y].val);
+  mono_rect((cursor_x+MARGIN) * SIDE*3+SIDE, (cursor_y+MARGIN) * SIDE*3+SIDE, SIDE, SIDE, mode==1?0xffffff:color[cursor_x][cursor_y].val);
 }
