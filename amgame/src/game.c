@@ -18,7 +18,7 @@ int main() {
   init();
   draw_str("Move with arrow keys",0,0,2,0x3fff00);
   draw_str("Select grid with space key",0,16,2,0x3fff00);
-  draw_str("Move the tiles to put the colors in order!",0,32,2,0x3fff00);
+  draw_str("Swap the tiles to put the colors in order!",0,32,2,0x3fff00);
   draw_cursor(1);
   while (1) {
     int key=read_key();
@@ -95,7 +95,8 @@ void init(void){
   ld.val|=0x01000000;//to fix
   ru.val|=0x01000000;//specific
   lu.val|=0x01000000;//grids
-  for(int i=0;i<20;++i){
+  for(int i=0;i<100;++i){
+      //swap times
       int j=rand()%36,k=rand()%36;
       while(color[j/6][j%6].alpha==1)j=rand()%36;
       while(color[k/6][k%6].alpha==1)j=rand()%36;
