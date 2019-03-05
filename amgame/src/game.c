@@ -83,29 +83,8 @@ void init_screen() {
   h = info.height;
 }
 
-void mono_rect(int x, int y, int w, int h, uint32_t color) {
-  uint32_t pixels[w * h]; // WARNING: allocated on stack
-  _DEV_VIDEO_FBCTL_t event = {
-    .x = x, .y = y, .w = w, .h = h, .sync = 1,
-    .pixels = pixels,
-  };
-  for (int i = 0; i < w * h; i++) {
-    pixels[i] = color;
-  }
-  _io_write(_DEV_VIDEO, _DEVREG_VIDEO_FBCTL, &event, sizeof(event));
-}
 
-void splash() {
-#define MARGIN 1
-  for (int x = 0; x<GRID_NUM; x ++) {
-    for (int y = 0; y<GRID_NUM; y++) {
-      mono_rect((x+MARGIN) * SIDE*3, (y+MARGIN) * SIDE*3, SIDE*3, SIDE*3, color[x][y].val);
-      /*printf("x:%d,y:%d,pixel:%x\n",x,y,color[x][y]);
-      int key;
-      while ((key = read_key()) == _KEY_NONE);*/
-    }
-  }
-}
+
 void init(void){
   //pixel_t rd=rand(),ld=rand(),ru=rand(),lu=rand();
   pixel rd,ld,ru,lu;
@@ -118,6 +97,12 @@ void init(void){
     pixel right=gradient(rd,ru,x);
     for (int y=0;y<GRID_NUM;++y){
       color[x][y]=gradient(left,right,y);
+    }
+  }
+#define MARGIN 1
+  for (int x = 0; x<GRID_NUM; x ++) {
+    for (int y = 0; y<GRID_NUM; y++) {
+      mono_rect((x+MARGIN) * SIDE*3, (y+MARGIN) * SIDE*3, SIDE*3, SIDE*3, color[x][y].val);
     }
   }
 }
