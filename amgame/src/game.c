@@ -23,7 +23,7 @@ int main() {
   while (1) {
     int key=read_key();
     if(key&0x8000){
-      draw_grid(cursor_locat);
+      draw_grid(cursor_x,cursor_y);
       switch(key^0x8000){
         case _KEY_SPACE:
           if(color[cursor_x][cursor_y].alpha==1)break;
