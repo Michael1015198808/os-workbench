@@ -58,8 +58,8 @@ void mono_rect(int x, int y, int w, int h, uint32_t color) {
 
 void splash() {
 #define MARGIN 1
-  for (int x = 0; (x+2*MARGIN) * SIDE *4 < w; x ++) {
-    for (int y = 0; (y+2*MARGIN) * SIDE *4< h; y++) {
+  for (int x = 0; x<8; x ++) {
+    for (int y = 0; y<8; y++) {
       mono_rect((x+MARGIN) * SIDE*4, (y+MARGIN) * SIDE*4, SIDE*4, SIDE*4, color[x][y]); // white
     }
   }
