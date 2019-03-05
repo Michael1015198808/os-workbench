@@ -31,7 +31,7 @@ int main() {
     int key=read_key();
     if(key&0x8000){
       draw_cursor(0);
-      switch(key){
+      switch(key^0x8000){
         case _KEY_SPACE:
           choosen[choosen_idx][0]=cursor_x;
           choosen[choosen_idx][1]=cursor_y;
