@@ -77,7 +77,7 @@ void init(void){
   pixel rd,ld,ru,lu;
   rd.val=0x00000000;
   ld.val=0x00ff0000;
-  printf("ld.val:%x,r:%x,g:%x,b:%x\n",ld.val,ld.r,ld.g,ld.b);
+  printf("ld.val:%x,alpha:%x,r:%x,g:%x,b:%x\n",ld.val,ld.alpha,ld.r,ld.g,ld.b);
   while (read_key() == _KEY_NONE);
   mono_rect(0,0, SIDE*3, SIDE*3, ld.val);
   ru.val=0x0000ff00;
