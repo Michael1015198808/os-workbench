@@ -24,7 +24,14 @@ int main() {
   splash();
   draw_str("Hello, world",0,0,1,0x3fff00);
   while (1) {
-    read_key();
+    int key;
+    key=read_key();
+  #define KEYNAME(key) \
+    [_KEY_##key] = #key,
+  static const char *key_names[] = {
+    _KEYS(KEYNAME)
+  };
+    printf(key_names[key]);
   }
   return 0;
 }
