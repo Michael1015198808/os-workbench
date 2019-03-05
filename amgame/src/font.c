@@ -135,7 +135,7 @@ static inline void draw_character(char ch, int x, int y,size_t size, int color) 
   for (i = 0; i < 8; i ++) 
     for (j = 0; j < 8; j ++) 
       if ((p[i] >> j) & 1)
-          mono_rect(x+j,y+i,size,size,color);
+          mono_rect(x+j*size,y+i*size,size,size,color);
 }
 void draw_str(char* s,int x,int y,size_t size,int color){
     int cur_x=x,cur_y=y;
