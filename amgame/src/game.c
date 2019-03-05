@@ -23,7 +23,7 @@ int main() {
   while (1) {
     int key=read_key();
     if(key&0x8000){
-      draw_cursor(0);
+      draw_grid(cursor_locat);
       switch(key^0x8000){
         case _KEY_SPACE:
           if(color[cursor_x][cursor_y].alpha==1)break;
@@ -107,9 +107,6 @@ void init(void){
   for (int x = 0; x<GRID_NUM; x ++) {
     for (int y = 0; y<GRID_NUM; y++) {
       draw_grid(x,y);
-      if(color[x][y].alpha==1){
-          draw_cross(SIDE/2+coor_to_pix(x,y)+SIDE/2,SIDE,0xffffff,0x00000000);
-      }
       //mono_rect((x+MARGIN) * SIDE*3, (y+MARGIN) * SIDE*3, SIDE*3, SIDE*3, color[x][y].val);
     }
   }
