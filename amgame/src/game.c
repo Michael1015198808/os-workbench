@@ -95,7 +95,7 @@ void init(void){
   ld.val|=0x01000000;//to fix
   ru.val|=0x01000000;//specific
   lu.val|=0x01000000;//grids
-  for(int i=0;i<20;++i){
+  for(int i=0;i<0;++i){
       int j=rand()%36,k=rand()%36;
       while(color[j/6][j%6].alpha==1)j=rand()%36;
       while(color[k/6][k%6].alpha==1)j=rand()%36;
