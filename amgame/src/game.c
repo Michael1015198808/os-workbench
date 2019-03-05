@@ -108,7 +108,7 @@ void init(void){
     for (int y = 0; y<GRID_NUM; y++) {
       draw_grid(x,y);
       if(color[x][y].alpha==1){
-          draw_cross(SIDE+coor_to_pix(x,y)+SIDE,SIDE,0xffffff,0x00000000);
+          draw_cross(SIDE/2+coor_to_pix(x,y)+SIDE/2,SIDE,0xffffff,0x00000000);
       }
       //mono_rect((x+MARGIN) * SIDE*3, (y+MARGIN) * SIDE*3, SIDE*3, SIDE*3, color[x][y].val);
     }
