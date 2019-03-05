@@ -6,15 +6,10 @@ void draw_circle(int x,int y,int r,uint32_t fg_color,uint32_t bg_color){
         while((cur_x*cur_x)+(cur_y*cur_y)<r*r){
             --cur_y;
         }
-        mono_rect(x+cur_x,y+cur_y,1,1,fg_color);
-        mono_rect(x-cur_x,y+cur_y,1,1,fg_color);
-        mono_rect(x+cur_x,y-cur_y,1,1,fg_color);
-        mono_rect(x-cur_x,y-cur_y,1,1,fg_color);
-        ++cur_y;
-        mono_rect(x+cur_x,y+cur_y+1,1,1,fg_color);
-        mono_rect(x-cur_x,y+cur_y+1,1,1,fg_color);
-        mono_rect(x+cur_x,y-cur_y+1,1,1,fg_color);
-        mono_rect(x-cur_x,y-cur_y+1,1,1,fg_color);
+        mono_rect(x+cur_x,y+cur_y,2,2,fg_color);
+        mono_rect(x-cur_x,y+cur_y,2,2,fg_color);
+        mono_rect(x+cur_x,y-cur_y,2,2,fg_color);
+        mono_rect(x-cur_x,y-cur_y,2,2,fg_color);
     }
     mono_rect(x,y+r,1,1,fg_color);
     mono_rect(x,y-r,1,1,fg_color);
