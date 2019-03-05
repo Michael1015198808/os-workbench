@@ -27,7 +27,8 @@ int main() {
   init_screen();
   init();
   splash();
-  draw_str("Hello, world",0,0,1,0x3fff00);
+  draw_str("Move with arrow keys",0,0,2,0x3fff00);
+  draw_str("Select grid with space key",0,16,2,0x3fff00);
   draw_cursor(1);
   while (1) {
     int key=read_key();
