@@ -3,6 +3,7 @@
 void init_screen();
 void splash();
 void read_key();
+typedef uint32_t pixel[1][1];
 
 int main() {
   // Operating system is a C program
