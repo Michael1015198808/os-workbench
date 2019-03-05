@@ -82,6 +82,7 @@ void init(void){
   for(int x=0;x<8;++x){
     pixel left=gradient(ld,lu,x);
     pixel right=gradient(rd,ru,x);
+    if(x==0)printf("left:%x,right:%x\n",left.val,right.val);
     for (int y=0;y<8;++y){
       color[x][y]=gradient(left,right,y);
     }
@@ -89,6 +90,7 @@ void init(void){
 }
 pixel gradient(pixel a,pixel b,int i){
     pixel temp;
+    temp.val=0;
     temp.r=((b.r-a.r)*i)/8+a.r;
     temp.g=((b.g-a.g)*i)/8+a.g;
     temp.b=((b.b-a.b)*i)/8+a.b;
