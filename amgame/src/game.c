@@ -40,13 +40,13 @@ int main() {
           else{choosen_idx=0;swap_pixel();}
           break;
         case _KEY_RIGHT:
-          ++cursor_x;if(cursor_x>=GRID_NUM)cursor_x+=GRID_NUM;break;
+          ++cursor_x;if(cursor_x>=GRID_NUM)cursor_x-=GRID_NUM;break;
         case _KEY_LEFT:
-          --cursor_x;if(cursor_x<0)cursor_x-=GRID_NUM;break;
-        case _KEY_UP:
-          --cursor_y;if(cursor_y<0)cursor_y+=GRID_NUM;break;
+          --cursor_x;if(cursor_x<0)cursor_x+=GRID_NUM;break;
         case _KEY_DOWN:
           ++cursor_y;if(cursor_y>=GRID_NUM)cursor_y-=GRID_NUM;break;
+        case _KEY_UP:
+          --cursor_y;if(cursor_y<0)cursor_y+=GRID_NUM;break;
         default:
           break;
       }
