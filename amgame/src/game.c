@@ -26,11 +26,12 @@ int main() {
   while (1) {
     int key;
     key=read_key();
-  #define KEYNAME(key) \
-    [_KEY_##key] = #key,
-  static const char *key_names[] = {
-    _KEYS(KEYNAME)
-  };
+    #define KEYNAME(key) \
+      [_KEY_##key] = #key,
+    static const char *key_names[] = {
+      _KEYS(KEYNAME)
+    };
+    if(key!=_KEY_NONE)
     printf(key_names[key]);
   }
   return 0;
