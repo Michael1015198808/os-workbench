@@ -14,6 +14,8 @@ union pixel{
 };
 typedef union pixel pixel;
 #define GRID_NUM 8
+#define MARGIN 1
+#define cursor_locat ((cursor_x+MARGIN) * SIDE*3+SIDE),((cursor_y+MARGIN) * SIDE*3+SIDE)
 pixel color[GRID_NUM][GRID_NUM];
 pixel gradient(pixel,pixel,int);
 int choosen[2][2],choosen_idx=0;
@@ -36,6 +38,7 @@ int main() {
         case _KEY_SPACE:
           choosen[choosen_idx][0]=cursor_x;
           choosen[choosen_idx][1]=cursor_y;
+          draw_circle(cursor_locat,SIDE,0xffffff,0x00000000);
           if(choosen_idx==0){choosen_idx=1;}
           else{choosen_idx=0;swap_pixel();}
           break;
@@ -97,7 +100,6 @@ void init(void){
       color[x][y]=gradient(left,right,y);
     }
   }
-#define MARGIN 1
   for (int x = 0; x<GRID_NUM; x ++) {
     for (int y = 0; y<GRID_NUM; y++) {
       mono_rect((x+MARGIN) * SIDE*3, (y+MARGIN) * SIDE*3, SIDE*3, SIDE*3, color[x][y].val);
@@ -115,5 +117,5 @@ pixel gradient(pixel a,pixel b,int i){
 void draw_cursor(int mode){
 // 0 for wipe
 // 1 for draw
-  mono_rect((cursor_x+MARGIN) * SIDE*3+SIDE, (cursor_y+MARGIN) * SIDE*3+SIDE, SIDE, SIDE, mode==1?0xffffff:color[cursor_x][cursor_y].val);
+  mono_rect((cursor_x+MARGIN) * SIDE*3+SIDE, (cursor_y+MARGIN) * SIDE*3+SIDE, SIDE/2, SIDE/2, mode==1?0xffffff:color[cursor_x][cursor_y].val);
 }
