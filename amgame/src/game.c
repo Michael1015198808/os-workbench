@@ -60,7 +60,7 @@ void splash() {
 #define MARGIN 1
   for (int x = 0; x<8; x ++) {
     for (int y = 0; y<8; y++) {
-      mono_rect((x+MARGIN) * SIDE*4, (y+MARGIN) * SIDE*4, SIDE*4, SIDE*4, color[x][y]); // white
+      mono_rect((x+MARGIN) * SIDE*3, (y+MARGIN) * SIDE*3, SIDE*3, SIDE*3, color[x][y]); // white
     }
   }
 }
