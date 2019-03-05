@@ -71,7 +71,7 @@ void init(void){
     pixel_t right=((rd-ru)*x)/(w/SIDE/4)+ru;
     for (int y = MARGIN; (y+MARGIN+1) * SIDE *4<= h; y++) {
         pixel_t current=((right-left)*y)/(h/SIDE/4)+left;
-        color[x][y]=current;
+        color[x-MARGIN][y-MARGIN]=current;
     }
   }
 }
