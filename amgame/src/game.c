@@ -7,12 +7,8 @@ typedef uint32_t pixel_t;
 pixel_t color[6][6];
 int main() {
   // Operating system is a C program
-  uint32_t temp=0;
-  srand(temp=uptime(NULL));
-  printf("Hello World from " __ISA__ " program!\n");
   srand(uptime(NULL));
-  printf("Uptime:%d\n",temp);
-  _ioe_init();
+  printf("Hello World from " __ISA__ " program!\n");
   _ioe_init();
   init_screen();
   splash();
