@@ -90,8 +90,14 @@ void init(void){
       color[x][y]=gradient(left,right,y);
     }
   }
+  rd.val|=0x01000000;//Use alpha=1
+  ld.val|=0x01000000;//to fix
+  ru.val|=0x01000000;//specific
+  lu.val|=0x01000000;//grids
   for(int i=0;i<20;++i){
       int j=rand()%36,k=rand()%36;
+      while(color[j/6][j%6].alpha==1)j=rand()%36;
+      while(color[k/6][k%6].alpha==1)j=rand()%36;
       pixel temp=color[j/6][j%6];
       color[j/6][j%6]=color[k/6][k%6];
       color[k/6][k%6]=temp;
