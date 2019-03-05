@@ -24,6 +24,7 @@ int main() {
   init();
   splash();
   draw_str("Hello, world",0,0,1,0x3fff00);
+  draw_str("\0\1\2",0,16,2,0x3fff00);
   while (1) {
     read_key();
   }
