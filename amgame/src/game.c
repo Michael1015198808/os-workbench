@@ -1,8 +1,10 @@
 #include <game.h>
 
-void init_screen();
-void splash();
-void init();
+void init_screen(void);
+void splash(void);
+void init(void);
+void swap_pixel(void);
+void draw_cursor(int);
 //void read_key();
 union pixel{
   uint32_t val;
@@ -14,6 +16,8 @@ union pixel{
 typedef union pixel pixel;
 pixel color[8][8];
 pixel gradient(pixel,pixel,int);
+int choosen[2][2],choosen_idx=0;
+int cursor_x=0,cursor_y=0;
 int main() {
   // Operating system is a C program
   srand(uptime(NULL));
@@ -24,15 +28,29 @@ int main() {
   splash();
   draw_str("Hello, world",0,0,1,0x3fff00);
   while (1) {
-    int key;
-    key=read_key();
-    #define KEYNAME(key) \
-      [_KEY_##key] = #key,
-    static const char *key_names[] = {
-      _KEYS(KEYNAME)
-    };
-    if(key!=_KEY_NONE&&(key&0x8000))
-    printf(key_names[key^0x8000]);
+    draw_cursor(0);
+    int key=read_key();
+    if(key&0x8000){
+      switch(key){
+        case _KEY_SPACE:
+          choosen[choosen_idx][0]=cursor_x;
+          choosen[choosen_idx][1]=cursor_y;
+          if(choosen_idx==0){choosen_idx=1;}
+          else{choosen_idx=0;swap_pixel();}
+          break;
+        case _KEY_DOWN:
+          ++cursor_x;break;
+        case _KEY_UP:
+          --cursor_x;break;
+        case _KEY_LEFT:
+          --cursor_y;break;
+        case _KEY_RIGHT:
+          ++cursor_y;break;
+        default:
+          break;
+      }
+    }
+    draw_cursor(1);
   }
   return 0;
 }
@@ -107,5 +125,8 @@ pixel gradient(pixel a,pixel b,int i){
     temp.b=((b.b-a.b)*i)/8+a.b;
     return temp;
 }
-
-
+void draw_cursor(int mode){
+// 0 for wipe
+// 1 for draw
+  mono_rect((cursor_x+MARGIN) * SIDE*3+SIDE, (cursor_y+MARGIN) * SIDE*3+SIDE, SIDE, SIDE, mode==1?0xffffff:color[cursor_x][cursor_y].val);
+}
