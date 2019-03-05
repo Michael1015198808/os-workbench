@@ -14,7 +14,8 @@ union pixel{
   };
 };
 typedef union pixel pixel;
-pixel color[8][8];
+#define GRID_NUM 8
+pixel color[GRID_NUM][GRID_NUM];
 pixel gradient(pixel,pixel,int);
 int choosen[2][2],choosen_idx=0;
 int cursor_x=0,cursor_y=0;
@@ -39,13 +40,13 @@ int main() {
           else{choosen_idx=0;swap_pixel();}
           break;
         case _KEY_RIGHT:
-          ++cursor_x;if(cursor_x<0)cursor_x+=8;break;
+          ++cursor_x;if(cursor_x>=GRID_NUM)cursor_x+=GRID_NUM;break;
         case _KEY_LEFT:
-          --cursor_x;if(cursor_x>7)cursor_x-=8;break;
+          --cursor_x;if(cursor_x<0)cursor_x-=GRID_NUM;break;
         case _KEY_UP:
-          --cursor_y;if(cursor_y<0)cursor_y+=8;break;
+          --cursor_y;if(cursor_y<0)cursor_y+=GRID_NUM;break;
         case _KEY_DOWN:
-          ++cursor_y;if(cursor_y>7)cursor_y-=8;break;
+          ++cursor_y;if(cursor_y>=GRID_NUM)cursor_y-=GRID_NUM;break;
         default:
           break;
       }
@@ -94,8 +95,8 @@ void mono_rect(int x, int y, int w, int h, uint32_t color) {
 
 void splash() {
 #define MARGIN 1
-  for (int x = 0; x<8; x ++) {
-    for (int y = 0; y<8; y++) {
+  for (int x = 0; x<GRID_NUM; x ++) {
+    for (int y = 0; y<GRID_NUM; y++) {
       mono_rect((x+MARGIN) * SIDE*3, (y+MARGIN) * SIDE*3, SIDE*3, SIDE*3, color[x][y].val);
       /*printf("x:%d,y:%d,pixel:%x\n",x,y,color[x][y]);
       int key;
@@ -110,10 +111,10 @@ void init(void){
   ld.val=0x00ff0000;//Left  Down
   ru.val=0x0000ff00;//Right Up
   lu.val=0x000000ff;//Left  Up
-  for(int x=0;x<8;++x){
+  for(int x=0;x<GRID_NUM;++x){
     pixel left=gradient(ld,lu,x);
     pixel right=gradient(rd,ru,x);
-    for (int y=0;y<8;++y){
+    for (int y=0;y<GRID_NUM;++y){
       color[x][y]=gradient(left,right,y);
     }
   }
@@ -121,9 +122,9 @@ void init(void){
 pixel gradient(pixel a,pixel b,int i){
     pixel temp;
     temp.val=0;
-    temp.r=((b.r-a.r)*i)/8+a.r;
-    temp.g=((b.g-a.g)*i)/8+a.g;
-    temp.b=((b.b-a.b)*i)/8+a.b;
+    temp.r=((b.r-a.r)*i)/GRID_NUM+a.r;
+    temp.g=((b.g-a.g)*i)/GRID_NUM+a.g;
+    temp.b=((b.b-a.b)*i)/GRID_NUM+a.b;
     return temp;
 }
 void draw_cursor(int mode){
