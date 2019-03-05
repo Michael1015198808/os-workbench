@@ -2,20 +2,9 @@
 
 void init_screen(void);
 void init(void);
-void swap_pixel(void){}
+void swap_pixel(void);
 void draw_cursor(int);
 //void read_key();
-union pixel{
-  uint32_t val;
-  struct{
-    uint32_t b:8,g:8,r:8,alpha:8;
-    //It seems alpha is useless
-  };
-};
-typedef union pixel pixel;
-#define GRID_NUM 8
-#define MARGIN 1
-#define cursor_locat ((cursor_x+MARGIN) * SIDE*3+SIDE),((cursor_y+MARGIN) * SIDE*3+SIDE)
 pixel color[GRID_NUM][GRID_NUM];
 pixel gradient(pixel,pixel,int);
 int choosen[2][2],choosen_idx=0;
@@ -102,7 +91,8 @@ void init(void){
   }
   for (int x = 0; x<GRID_NUM; x ++) {
     for (int y = 0; y<GRID_NUM; y++) {
-      mono_rect((x+MARGIN) * SIDE*3, (y+MARGIN) * SIDE*3, SIDE*3, SIDE*3, color[x][y].val);
+      draw_grid(x,y);
+      //mono_rect((x+MARGIN) * SIDE*3, (y+MARGIN) * SIDE*3, SIDE*3, SIDE*3, color[x][y].val);
     }
   }
 }
@@ -118,4 +108,10 @@ void draw_cursor(int mode){
 // 0 for wipe
 // 1 for draw
   mono_rect((cursor_x+MARGIN) * SIDE*3+SIDE, (cursor_y+MARGIN) * SIDE*3+SIDE, SIDE, SIDE, mode==1?0xffffff:color[cursor_x][cursor_y].val);
+}
+void swap_pixel(void){
+#define choosen_color(_idx) color[choosen[_idx][0]][choosen[_idx][1]]
+  pixel temp=choosen_color(0);
+  choosen_color(0)=choosen_color(1);
+  choosen_color(1)=temp;
 }
