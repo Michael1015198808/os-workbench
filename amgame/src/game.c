@@ -115,5 +115,6 @@ void swap_pixel(void){
   pixel temp=choosen_color(0);
   choosen_color(0)=choosen_color(1);
   choosen_color(1)=temp;
-  draw_grid(cursor_locat);
+  draw_grid(choosen[0][0],choosen[0][1]);
+  draw_grid(cursor_x,cursor_y);
 }
