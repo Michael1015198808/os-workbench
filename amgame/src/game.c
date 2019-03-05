@@ -97,12 +97,16 @@ void init(void){
   color[7][0].alpha=1;//grids
   for(int i=0;i<100;++i){
       //swap times
-      int j=rand()%36,k=rand()%36;
-      while(color[j/6][j%6].alpha==1)j=rand()%36;
-      while(color[k/6][k%6].alpha==1)k=rand()%36;
-      pixel temp=color[j/6][j%6];
-      color[j/6][j%6]=color[k/6][k%6];
-      color[k/6][k%6]=temp;
+      int j,k;
+      do{
+        j=rand()%GRID_NUM;
+      }while(color[j/GRID_NUM][j%GRID_NUM].alpha==1);
+      do{
+        k=rand()%GRID_NUM;
+      }while(color[k/GRID_NUM][k%GRID_NUM].alpha==1);
+      pixel temp=color[j/GRID_NUM][j%GRID_NUM];
+      color[j/GRID_NUM][j%GRID_NUM]=color[k/GRID_NUM][k%GRID_NUM];
+      color[k/GRID_NUM][k%GRID_NUM]=temp;
   }
   for (int x = 0; x<GRID_NUM; x ++) {
     for (int y = 0; y<GRID_NUM; y++) {
