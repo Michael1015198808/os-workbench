@@ -49,6 +49,7 @@ int main() {
         default:
           break;
       }
+      printf("%d,%d\n",cursor_x,cursor_y);
       draw_cursor(1);
     }
   }
