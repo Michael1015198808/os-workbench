@@ -57,7 +57,7 @@ void mono_rect(int x, int y, int w, int h, uint32_t color) {
 }
 
 void splash() {
-#define MARGIN 1
+#define MARGIN 2
   for (int x = MARGIN; (x+MARGIN) * SIDE *4 <= w; x ++) {
     for (int y = MARGIN; (y+MARGIN) * SIDE *4<= h; y++) {
       if ((x & 1) ^ (y & 1)) {
