@@ -91,10 +91,10 @@ void init(void){
       color[x][y]=gradient(left,right,y);
     }
   }
-  rd.val|=0x01000000;//Use alpha=1
-  ld.val|=0x01000000;//to fix
-  ru.val|=0x01000000;//specific
-  lu.val|=0x01000000;//grids
+  rd.alpha=1;//Use alpha=1
+  ld.alpha=1;//to fix
+  ru.alpha=1;//specific
+  lu.alpha=1;//grids
   for(int i=0;i<100;++i){
       //swap times
       int j=rand()%36,k=rand()%36;
