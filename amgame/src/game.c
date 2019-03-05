@@ -65,7 +65,7 @@ void splash() {
 #define MARGIN 1
   for (int x = 0; x<8; x ++) {
     for (int y = 0; y<8; y++) {
-      mono_rect((x+MARGIN) * SIDE*3, (y+MARGIN) * SIDE*3, SIDE*3, SIDE*3, color[x][y].val); // white
+      mono_rect((x+MARGIN) * SIDE*3, (y+MARGIN) * SIDE*3, SIDE*3, SIDE*3, color[x][y].val);
       /*printf("x:%d,y:%d,pixel:%x\n",x,y,color[x][y]);
       int key;
       while ((key = read_key()) == _KEY_NONE);*/
@@ -77,6 +77,9 @@ void init(void){
   pixel rd,ld,ru,lu;
   rd.val=0x00000000;
   ld.val=0x00ff0000;
+  printf("ld.val:%x,r:%x,g:%x,b:%x\n",ld.val,ld.r,ld.g,ld.b);
+  while (read_key() == _KEY_NONE);
+  mono_rect(0,0, SIDE*3, SIDE*3, ld.val);
   ru.val=0x0000ff00;
   lu.val=0x000000ff;
   for(int x=0;x<8;++x){
