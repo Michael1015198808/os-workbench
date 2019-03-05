@@ -38,7 +38,7 @@ int main() {
         case _KEY_SPACE:
           choosen[choosen_idx][0]=cursor_x;
           choosen[choosen_idx][1]=cursor_y;
-          draw_circle(cursor_locat,(SIDE*3)/2,0xffffff,0x00000000);
+          draw_circle(cursor_locat,SIDE,0xffffff,0x00000000);
           if(choosen_idx==0){choosen_idx=1;}
           else{choosen_idx=0;swap_pixel();}
           break;
@@ -50,8 +50,6 @@ int main() {
           ++cursor_y;if(cursor_y>=GRID_NUM)cursor_y-=GRID_NUM;break;
         case _KEY_UP:
           --cursor_y;if(cursor_y<0)cursor_y+=GRID_NUM;break;
-        case _KEY_Q:
-          return 0;
         default:
           break;
       }
