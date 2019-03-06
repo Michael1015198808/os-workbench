@@ -70,10 +70,6 @@ int main() {
             case _KEY_H:
               print_flag=!print_flag;
               break;
-            case _KEY_P:
-              for(key=0;key<(GRID_NUM*GRID_NUM);++key){
-                if(idx[0][key]!=key){printf("%d\n",key);break;}
-              }
             default:
               break;
           }
@@ -184,7 +180,8 @@ void swap_pixel(void){
   for(i=0;i<(1<<6);++i){
       if(idx[0][i]!=i)break;
   }
-  if(i==1<<6){
+  printf("%d\n",i);
+  if(i==(1<<6)){
     stat=GAME_WIN;
     draw_str("You Win!\npress r to restart",0,0,2,0x3fff00);
   }
