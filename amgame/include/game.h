@@ -6,7 +6,7 @@
 #define MARGIN 2
 #define cursor_locat ((cursor_x+MARGIN) * SIDE*3+SIDE),((cursor_y+MARGIN) * SIDE*3+SIDE)
 #define coor_to_pix(_x,_y) ((_x+MARGIN) * SIDE*3+SIDE),((_y+MARGIN) * SIDE*3+SIDE)
-#define SIDE 16
+#define SIDE w/40
 union pixel{
   uint32_t val;
   struct{
@@ -16,6 +16,7 @@ union pixel{
 };
 typedef union pixel pixel;
 
+int w,h;
 //shape.c
 void draw_cross(int x,int y,int len,uint32_t fg_color,uint32_t bg_color);
 void draw_circle(int x,int y,int r,uint32_t fg_color,uint32_t bg_color);
