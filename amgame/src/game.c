@@ -4,6 +4,7 @@ void init_screen(void);
 void init(void);
 void swap_pixel(void);
 void draw_cursor(int);
+static enum{GAME_PLAYING,GAME_PAUSE,GAME_WIN}stat;
 //void read_key();
 pixel color[GRID_NUM][GRID_NUM];
 pixel gradient(pixel,pixel,int);
@@ -25,37 +26,48 @@ int main() {
   while (1) {
     int key=read_key();
     if(key&0x8000){
-      draw_grid(cursor_x,cursor_y);
-      int print_flag=1;
-      switch(key^0x8000){
-        case _KEY_SPACE:
-          if(color[cursor_x][cursor_y].alpha==1)break;
-          draw_circle(cursor_locat,SIDE,0xffffff,0x00000000);
-          if(choosen_idx==0){choosen_idx=1;choosen[0]=cursor_x;choosen[1]=cursor_y;}
-          else{choosen_idx=0;swap_pixel();}
+      switch(stat){
+        case GAME_PLAYING:
+          draw_grid(cursor_x,cursor_y);
+          int print_flag=1;
+          switch(key^0x8000){
+            case _KEY_SPACE:
+              if(color[cursor_x][cursor_y].alpha==1)break;
+              draw_circle(cursor_locat,SIDE,0xffffff,0x00000000);
+              if(choosen_idx==0){choosen_idx=1;choosen[0]=cursor_x;choosen[1]=cursor_y;}
+              else{choosen_idx=0;swap_pixel();}
+              break;
+            case _KEY_RIGHT:
+              ++cursor_x;if(cursor_x>=GRID_NUM)cursor_x-=GRID_NUM;break;
+            case _KEY_LEFT:
+              --cursor_x;if(cursor_x<0)cursor_x+=GRID_NUM;break;
+            case _KEY_DOWN:
+              ++cursor_y;if(cursor_y>=GRID_NUM)cursor_y-=GRID_NUM;break;
+            case _KEY_UP:
+              --cursor_y;if(cursor_y<0)cursor_y+=GRID_NUM;break;
+            case _KEY_H:
+              /*if(cursor_x-idx[(cursor_x<<3)+cursor_y])
+              draw_arrow(cursor_x,cursor_y,~(color[cursor_x][cursor_y].val),direc);*/
+              print_flag=0;
+              printf("%d,%d\n",idx[cursor_x][cursor_y]>>3,idx[cursor_x][cursor_y]&7);
+              break;
+            default:
+              break;
+          }
+          if(print_flag==1){
+              draw_cursor(1);
+          }
+        break;
+        case GAME_WIN:
+          if(key==(_KEY_R|0x8000)){
+            init();
+          }
           break;
-        case _KEY_RIGHT:
-          ++cursor_x;if(cursor_x>=GRID_NUM)cursor_x-=GRID_NUM;break;
-        case _KEY_LEFT:
-          --cursor_x;if(cursor_x<0)cursor_x+=GRID_NUM;break;
-        case _KEY_DOWN:
-          ++cursor_y;if(cursor_y>=GRID_NUM)cursor_y-=GRID_NUM;break;
-        case _KEY_UP:
-          --cursor_y;if(cursor_y<0)cursor_y+=GRID_NUM;break;
-        case _KEY_H:
-          /*if(cursor_x-idx[(cursor_x<<3)+cursor_y])
-          draw_arrow(cursor_x,cursor_y,~(color[cursor_x][cursor_y].val),direc);*/
-          print_flag=0;
-          printf("%d,%d\n",idx[cursor_x][cursor_y]>>3,idx[cursor_x][cursor_y]&7);
-          break;
+        case GAME_PAUSE:
         default:
-          break;
+          printf("\nStat not handle!\n");
+          return 0;
       }
-      if(print_flag==1){
-          draw_cursor(1);
-      }
-      //printf("%d,%d\n",cursor_x,cursor_y);
-      
     }
   }
   return 0;
@@ -88,6 +100,7 @@ void init_screen() {
 
 
 void init(void){
+  stat=GAME_PLAYING;
   //pixel_t rd=rand(),ld=rand(),ru=rand(),lu=rand();
   pixel rd,ld,ru,lu;
   rd.val=0x00000000;//Right Down
@@ -151,4 +164,12 @@ void swap_pixel(void){
   idx[cursor_x][cursor_y]=temp;}
   draw_grid(choosen[0],choosen[1]);
   draw_grid(cursor_x,cursor_y);
+  int i;
+  for(i=0;i<1<<6;++i){
+      if(idx[0][i]!=i)break;
+  }
+  if(i==1<<6){
+    stat=GAME_WIN;
+    draw_str("You Win!\npress r to restart",0,0,2,0x3fff00);
+  }
 }
