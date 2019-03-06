@@ -180,7 +180,7 @@ void swap_pixel(void){
   for(i=0;i<(1<<6);++i){
       if(idx[0][i]!=i)break;
   }
-  printf("%d\n",i);
+  printf("%d,%d,%d\n",i,(GRID_NUM*GRID_NUM),i==(GRID_NUM*GRID_NUM));
   if(i==(GRID_NUM*GRID_NUM)){
     stat=GAME_WIN;
     *(int*)0=0;
