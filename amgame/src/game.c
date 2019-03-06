@@ -45,7 +45,7 @@ int main() {
           draw_arrow(cursor_x,cursor_y,0x7f3f3f,ARROW_LEFT);
           break;
         case _KEY_G:
-          draw_arrow(cursor_x,cursor_y,0xffffff,ARROW_UP);
+          draw_arrow(cursor_x,cursor_y,0x7f3f3f,ARROW_UP);
           break;
         default:
           break;
