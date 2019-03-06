@@ -1,4 +1,5 @@
 #include <game.h>
+static pixel gradient(pixel,pixel,int);
 void init_screen(void);
 void swap_pixel(void);
 static int next_key(void);
@@ -9,15 +10,20 @@ void update(void){
     operate(next_key());
 }
 void init(void){
+//initialization
   cursor_x=0,cursor_y=0;
   choosen_idx=0;
   stat=GAME_PLAYING;
-  //pixel_t rd=rand(),ld=rand(),ru=rand(),lu=rand();
   pixel rd,ld,ru,lu;
   rd.val=0x00000000;//Right Down
   ld.val=0x00ff0000;//Left  Down
   ru.val=0x0000ff00;//Right Up
   lu.val=0x000000ff;//Left  Up
+  color[0][0].alpha=1;//Use alpha=1
+  color[GRID_NUM-1][GRID_NUM-1].alpha=1;//to fix
+  color[0][GRID_NUM-1].alpha=1;//specific
+  color[GRID_NUM-1][0].alpha=1;//grids
+//fill colors and indexes
   for(int x=0;x<GRID_NUM;++x){
     pixel left=gradient(ld,lu,x);
     pixel right=gradient(rd,ru,x);
@@ -26,42 +32,51 @@ void init(void){
       idx[x][y]=(x<<3)+y;
     }
   }
-  color[0][0].alpha=1;//Use alpha=1
-  color[GRID_NUM-1][GRID_NUM-1].alpha=1;//to fix
-  color[0][GRID_NUM-1].alpha=1;//specific
-  color[GRID_NUM-1][0].alpha=1;//grids
+//draw help
+  draw_str("Move with arrow keys\n"
+           "Select grid with space key\n"
+           "Swap the tiles to put the colors in order!\n",0,0,2,0x3fff00);
+  draw_str("Press h for hint",0,h-2*8,2,0x3fff00);
+//random shuffle
   for(int i=0;i<50;++i){
-      //swap times
       int j,k;
+      //prevent shuffle fixed grids
       do{
         j=rand()%(GRID_NUM*GRID_NUM);
       }while(color[j/GRID_NUM][j%GRID_NUM].alpha==1);
       do{
         k=rand()%(GRID_NUM*GRID_NUM);
       }while(color[k/GRID_NUM][k%GRID_NUM].alpha==1);
+
+      //swap color
       {pixel temp=color[j/GRID_NUM][j%GRID_NUM];
       color[j/GRID_NUM][j%GRID_NUM]=color[k/GRID_NUM][k%GRID_NUM];
       color[k/GRID_NUM][k%GRID_NUM]=temp;}
+      //swap index
       {uint8_t temp=idx[j/GRID_NUM][j%GRID_NUM];
       idx[j/GRID_NUM][j%GRID_NUM]=idx[k/GRID_NUM][k%GRID_NUM];
       idx[k/GRID_NUM][k%GRID_NUM]=temp;}
   }
+//print colors
   for (int x = 0; x<GRID_NUM; x ++) {
     for (int y = 0; y<GRID_NUM; y++) {
       draw_grid(x,y);
-      //mono_rect((x+MARGIN) * SIDE*3, (y+MARGIN) * SIDE*3, SIDE*3, SIDE*3, color[x][y].val);
     }
   }
 }
 void swap_pixel(void){
+//swap color
   {pixel temp=color[choosen[0]][choosen[1]];
   color[choosen[0]][choosen[1]]=color[cursor_x][cursor_y];
   color[cursor_x][cursor_y]=temp;}
+//swap index
   {uint8_t temp=idx[choosen[0]][choosen[1]];
   idx[choosen[0]][choosen[1]]=idx[cursor_x][cursor_y];
   idx[cursor_x][cursor_y]=temp;}
+//redraw
   draw_grid(choosen[0],choosen[1]);
   draw_grid(cursor_x,cursor_y);
+//win judge
   int i;
   for(i=0;i<(1<<6);++i){
       if(i>=(1<<6))break;
@@ -74,7 +89,7 @@ void swap_pixel(void){
   }
 }
 
-pixel gradient(pixel a,pixel b,int i){
+static pixel gradient(pixel a,pixel b,int i){
     pixel temp;
     temp.val=0;
     temp.r=((b.r-a.r)*i)/GRID_NUM+a.r;
@@ -128,7 +143,8 @@ static int next_key(void){
         old_time=uptime();
         return old_key=new_key;
     }else{
-        if(uptime()-old_time>30){
+    //delay for same key pressing
+        if(uptime()-old_time>50){
             old_time=uptime();
             return old_key=new_key;
         }else{

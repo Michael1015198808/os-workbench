@@ -19,7 +19,6 @@ typedef union pixel pixel;
 int w,h;
 enum{GAME_PLAYING,GAME_PAUSE,GAME_WIN}stat;
 pixel color[GRID_NUM][GRID_NUM];
-pixel gradient(pixel,pixel,int);
 int choosen[2],choosen_idx;
 uint8_t idx[GRID_NUM][GRID_NUM];
 int cursor_x,cursor_y;
@@ -38,7 +37,6 @@ void init(void);
 void update(void);
 
 //draw.c
-
 void init_screen();
 void print_instr();
 
