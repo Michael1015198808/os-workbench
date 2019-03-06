@@ -29,7 +29,7 @@ void draw_cross(int x,int y,int len,uint32_t fg_color,uint32_t bg_color){
     }
 }
 void mono_rect(int x, int y, int w, int h, uint32_t color) {
-  uint32_t pixels[w * h]; 
+  uint32_t pixels[w * h];
   _DEV_VIDEO_FBCTL_t event = {
     .x = x, .y = y, .w = w, .h = h, .sync = 1,
     .pixels = pixels,
