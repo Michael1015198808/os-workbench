@@ -140,7 +140,7 @@ static int next_key(void){
     static int old_key=_KEY_NONE,old_time=0;
     int new_key=read_key();
     if(new_key!=_KEY_NONE){
-        printf("%d,%d",new_key,old_key);
+        printf("%d,%d\n",new_key,old_key);
     }
     if(new_key!=old_key){
         old_time=uptime();
