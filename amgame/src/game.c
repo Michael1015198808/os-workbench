@@ -71,8 +71,8 @@ int main() {
               print_flag=!print_flag;
               break;
             case _KEY_P:
-              for(int i=0;i<GRID_NUM*GRID_NUM;++i){
-                  printf("%d\n",i);
+              for(int i=0;i<(GRID_NUM*GRID_NUM);++i){
+                  if(idx[0][i]!=i){printf("%d\n",i);break;}
               }
             default:
               break;
