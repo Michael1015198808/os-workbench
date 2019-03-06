@@ -147,7 +147,7 @@ void draw_str(char* s,int x,int y,size_t size,int color){
             cur_y+=size*6;
             break;
           case ' ':
-            cur_x+=size*3;
+            cur_x+=size*6;
             break;
           default:
             cur_x+=size*6;
