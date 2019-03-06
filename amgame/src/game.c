@@ -176,7 +176,7 @@ void swap_pixel(void){
   idx[cursor_x][cursor_y]=temp;}
   draw_grid(choosen[0],choosen[1]);
   draw_grid(cursor_x,cursor_y);
-  int i;
+  unsigned int i;
   for(i=0;i<(1<<6);++i){
       if(idx[0][i]!=i)break;
   }
