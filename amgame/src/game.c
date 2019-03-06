@@ -14,7 +14,7 @@ int main() {
   // Operating system is a C program
   srand(uptime(NULL));
   printf("Hello World from " __ISA__ " program!\n");
-  _ioe_init();
+  //_ioe_init();
   init_screen();
   init();
   draw_str("Move with arrow keys\nSelect grid with space key",0,0,2,0x3fff00);
