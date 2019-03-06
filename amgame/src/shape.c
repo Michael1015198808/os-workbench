@@ -85,6 +85,6 @@ void draw_cursor(int mode){
 void draw_tick(int x,int y,int color){
   int i;
   for(i=0;i<3;++i){
-    mono_rect((x+MARGIN) * SIDE*3+(SIDE*5+i)/4, (y+MARGIN) * SIDE*3+(SIDE*3+i)/4, SIDE/4, (SIDE*3)/4, color);
+    mono_rect((x+MARGIN) * SIDE*3+((4+i)*SIDE)/4, (y+MARGIN) * SIDE*3+((5+i)*SIDE)/4, SIDE/4, (SIDE*3)/4, color);
   }
 }
