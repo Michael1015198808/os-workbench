@@ -22,7 +22,7 @@ pixel color[GRID_NUM][GRID_NUM];
 pixel gradient(pixel,pixel,int);
 int choosen[2],choosen_idx;
 uint8_t idx[GRID_NUM][GRID_NUM];
-int cursor_x=0,cursor_y=0;
+int cursor_x,cursor_y;
 //shape.c
 void draw_cross(int x,int y,int len,uint32_t fg_color,uint32_t bg_color);
 void draw_circle(int x,int y,int r,uint32_t fg_color,uint32_t bg_color);
