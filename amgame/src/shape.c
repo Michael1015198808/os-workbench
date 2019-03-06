@@ -1,4 +1,6 @@
 #include <game.h>
+extern pixel color[GRID_NUM][GRID_NUM];
+extern int cursor_x,cursor_y;
 void draw_circle(int x,int y,int r,uint32_t fg_color,uint32_t bg_color){
     x+=r/2;y+=r/2;
     int cur_x=r,cur_y=0;
@@ -36,7 +38,6 @@ void mono_rect(int x, int y, int w, int h, uint32_t color) {
   _io_write(_DEV_VIDEO, _DEVREG_VIDEO_FBCTL, &event, sizeof(event));
 }
 void draw_grid(int x,int y){
-  extern pixel color[GRID_NUM][GRID_NUM];
   mono_rect((x+MARGIN) * SIDE*3, (y+MARGIN) * SIDE*3, SIDE*3, SIDE*3, color[x][y].val);
   if(color[x][y].alpha==1){
       draw_cross(SIDE/2+coor_to_pix(x,y)+SIDE/2,SIDE,0xffffff,0x00000000);
@@ -63,4 +64,17 @@ void draw_arrow(int x,int y,int color,Direc direc){
       mono_rect((x+MARGIN) * SIDE*3+(direc&1?(10-i):(2+i))*SIDE/4, (y+MARGIN) * SIDE*3+((5+i)*SIDE)/4, SIDE/4, SIDE/4, color);
     }
   }
+}
+void draw_cursor(int mode){
+// 0 for wipe
+// 1 for draw
+  static uint8_t is_black=1;
+  mono_rect(
+    (cursor_x+MARGIN) * SIDE*3+SIDE,
+    (cursor_y+MARGIN) * SIDE*3+SIDE,
+    SIDE,
+    SIDE,
+    mode==0?color[cursor_x][cursor_y].val:
+    (is_black==1?0xffffff:0x000000));
+  is_black=!is_black;
 }

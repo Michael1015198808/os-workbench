@@ -3,7 +3,6 @@
 void init_screen(void);
 void init(void);
 void swap_pixel(void);
-void draw_cursor(int);
 static enum{GAME_PLAYING,GAME_PAUSE,GAME_WIN}stat;
 //void read_key();
 pixel color[GRID_NUM][GRID_NUM];
@@ -159,11 +158,7 @@ pixel gradient(pixel a,pixel b,int i){
     temp.b=((b.b-a.b)*i)/GRID_NUM+a.b;
     return temp;
 }
-void draw_cursor(int mode){
-// 0 for wipe
-// 1 for draw
-  mono_rect((cursor_x+MARGIN) * SIDE*3+SIDE, (cursor_y+MARGIN) * SIDE*3+SIDE, SIDE, SIDE, mode==1?0xffffff:color[cursor_x][cursor_y].val);
-}
+
 void swap_pixel(void){
   {pixel temp=color[choosen[0]][choosen[1]];
   color[choosen[0]][choosen[1]]=color[cursor_x][cursor_y];
