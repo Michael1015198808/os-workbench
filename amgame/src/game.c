@@ -25,7 +25,7 @@ int main() {
   while (1) {
     do{
      new_time=uptime();
-    }while(new_time-old_time<100);
+    }while(new_time-old_time<50);
     old_time=new_time;
     if(print_flag==1){
         draw_cursor(1);
