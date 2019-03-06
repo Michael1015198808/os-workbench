@@ -91,9 +91,9 @@ void draw_tick(int x,int y,int color){
       SIDE/4,
       SIDE/4, color);
   }
-  for(i=0;i<6;++i){
+  for(i=0;i<7;++i){
     mono_rect(
-      (x+MARGIN) * SIDE*3+((5+i)*SIDE)/4,
+      (x+MARGIN) * SIDE*3+((5+i)*SIDE)/5,
       (y+MARGIN) * SIDE*3+((9-i)*SIDE)/4,
       SIDE/4,
       SIDE/4, color);
