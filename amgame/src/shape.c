@@ -36,8 +36,8 @@ void mono_rect(int x, int y, int w, int h, uint32_t color) {
   for (int i = 0; i < w * h; i++) {
     pixels[i] = color;
   }
-  printf("Mark\n");
   _io_write(_DEV_VIDEO, _DEVREG_VIDEO_FBCTL, &event, sizeof(event));
+  printf("Mark\n");
 }
 void draw_grid(int x,int y){
   mono_rect((x+MARGIN) * SIDE*3, (y+MARGIN) * SIDE*3, SIDE*3, SIDE*3, color[x][y].val);
