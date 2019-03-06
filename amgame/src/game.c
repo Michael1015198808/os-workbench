@@ -24,11 +24,9 @@ int main() {
   draw_str("Swap the tiles to put the colors in order!",0,32,2,0x3fff00);
   draw_str("Press h for hint",0,h-2*8,2,0x3fff00);
   while (1) {
-      printf("%d\n",old_time);
     do{
      new_time=uptime();
-     printf("%d\n",new_time);
-    }while(new_time<(old_time+10));
+    }while(new_time<(old_time+1));
     old_time=new_time;
     if(print_flag==1){
         draw_cursor(1);
