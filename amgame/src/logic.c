@@ -9,6 +9,8 @@ void update(void){
     operate(next_key());
 }
 void init(void){
+  cursor_x=0,cursor_y=0;
+  choosen_idx=0;
   stat=GAME_PLAYING;
   //pixel_t rd=rand(),ld=rand(),ru=rand(),lu=rand();
   pixel rd,ld,ru,lu;

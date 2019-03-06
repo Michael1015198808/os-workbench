@@ -20,7 +20,7 @@ int w,h;
 enum{GAME_PLAYING,GAME_PAUSE,GAME_WIN}stat;
 pixel color[GRID_NUM][GRID_NUM];
 pixel gradient(pixel,pixel,int);
-int choosen[2],choosen_idx=0;
+int choosen[2],choosen_idx;
 uint8_t idx[GRID_NUM][GRID_NUM];
 int cursor_x=0,cursor_y=0;
 //shape.c
