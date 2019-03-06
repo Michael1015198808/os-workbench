@@ -35,7 +35,7 @@ int main() {
       }
       int8_t delta_x=(idx[help_x][help_y]>>3)-cursor_x,
               delta_y=(idx[help_x][help_y]&7 )-cursor_y;
-      Direc direc;
+      Direc direc=0;
       if(delta_x!=0||delta_y!=0){
         if(delta_x>0){direc=ARROW_RIGHT;}
         else if(delta_x<0){direc=ARROW_LEFT;}
