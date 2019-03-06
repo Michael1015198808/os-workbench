@@ -1,0 +1,136 @@
+#include <game.h>
+void init_screen(void);
+void swap_pixel(void);
+static int next_key(void);
+static void operate(int);
+int print_flag=1;
+void update(void){
+    print_instr();
+    operate(next_key());
+}
+void init(void){
+  stat=GAME_PLAYING;
+  //pixel_t rd=rand(),ld=rand(),ru=rand(),lu=rand();
+  pixel rd,ld,ru,lu;
+  rd.val=0x00000000;//Right Down
+  ld.val=0x00ff0000;//Left  Down
+  ru.val=0x0000ff00;//Right Up
+  lu.val=0x000000ff;//Left  Up
+  for(int x=0;x<GRID_NUM;++x){
+    pixel left=gradient(ld,lu,x);
+    pixel right=gradient(rd,ru,x);
+    for (int y=0;y<GRID_NUM;++y){
+      color[x][y]=gradient(left,right,y);
+      idx[x][y]=(x<<3)+y;
+    }
+  }
+  color[0][0].alpha=1;//Use alpha=1
+  color[GRID_NUM-1][GRID_NUM-1].alpha=1;//to fix
+  color[0][GRID_NUM-1].alpha=1;//specific
+  color[GRID_NUM-1][0].alpha=1;//grids
+  for(int i=0;i<50;++i){
+      //swap times
+      int j,k;
+      do{
+        j=rand()%(GRID_NUM*GRID_NUM);
+      }while(color[j/GRID_NUM][j%GRID_NUM].alpha==1);
+      do{
+        k=rand()%(GRID_NUM*GRID_NUM);
+      }while(color[k/GRID_NUM][k%GRID_NUM].alpha==1);
+      {pixel temp=color[j/GRID_NUM][j%GRID_NUM];
+      color[j/GRID_NUM][j%GRID_NUM]=color[k/GRID_NUM][k%GRID_NUM];
+      color[k/GRID_NUM][k%GRID_NUM]=temp;}
+      {uint8_t temp=idx[j/GRID_NUM][j%GRID_NUM];
+      idx[j/GRID_NUM][j%GRID_NUM]=idx[k/GRID_NUM][k%GRID_NUM];
+      idx[k/GRID_NUM][k%GRID_NUM]=temp;}
+  }
+  for (int x = 0; x<GRID_NUM; x ++) {
+    for (int y = 0; y<GRID_NUM; y++) {
+      draw_grid(x,y);
+      //mono_rect((x+MARGIN) * SIDE*3, (y+MARGIN) * SIDE*3, SIDE*3, SIDE*3, color[x][y].val);
+    }
+  }
+}
+void swap_pixel(void){
+  {pixel temp=color[choosen[0]][choosen[1]];
+  color[choosen[0]][choosen[1]]=color[cursor_x][cursor_y];
+  color[cursor_x][cursor_y]=temp;}
+  {uint8_t temp=idx[choosen[0]][choosen[1]];
+  idx[choosen[0]][choosen[1]]=idx[cursor_x][cursor_y];
+  idx[cursor_x][cursor_y]=temp;}
+  draw_grid(choosen[0],choosen[1]);
+  draw_grid(cursor_x,cursor_y);
+  int i;
+  for(i=0;i<(1<<6);++i){
+      if(i>=(1<<6))break;
+      if(idx[0][i]!=i)break;
+  }
+  if(i==(GRID_NUM*GRID_NUM)){
+    stat=GAME_WIN;
+    *(int*)0=0;
+    draw_str("You Win!\npress r to restart",0,0,2,0x3fff00);
+  }
+}
+
+pixel gradient(pixel a,pixel b,int i){
+    pixel temp;
+    temp.val=0;
+    temp.r=((b.r-a.r)*i)/GRID_NUM+a.r;
+    temp.g=((b.g-a.g)*i)/GRID_NUM+a.g;
+    temp.b=((b.b-a.b)*i)/GRID_NUM+a.b;
+    return temp;
+}
+
+static void operate(int key){
+    if(key&0x8000){
+      switch(stat){
+        case GAME_PLAYING:
+          draw_grid(cursor_x,cursor_y);
+          switch(key^0x8000){
+            case _KEY_SPACE:
+              if(color[cursor_x][cursor_y].alpha==1)break;
+              draw_circle(cursor_locat,w/40,0xffffff,0x00000000);
+              if(choosen_idx==0){choosen_idx=1;choosen[0]=cursor_x;choosen[1]=cursor_y;}
+              else{choosen_idx=0;swap_pixel();}
+              break;
+            case _KEY_RIGHT:
+              ++cursor_x;if(cursor_x>=GRID_NUM)cursor_x-=GRID_NUM;break;
+            case _KEY_LEFT:
+              --cursor_x;if(cursor_x<0)cursor_x+=GRID_NUM;break;
+            case _KEY_DOWN:
+              ++cursor_y;if(cursor_y>=GRID_NUM)cursor_y-=GRID_NUM;break;
+            case _KEY_UP:
+              --cursor_y;if(cursor_y<0)cursor_y+=GRID_NUM;break;
+            case _KEY_H:
+              print_flag=!print_flag;
+              break;
+            default:
+              break;
+          }
+        break;
+        case GAME_WIN:
+          if(key==(_KEY_R|0x8000)){
+            init();
+          }
+          break;
+        case GAME_PAUSE:
+        default:
+          printf("\nStat not handle!\n");
+      }
+    }
+}
+static int next_key(void){
+    static int old_key=_KEY_NONE,old_time=0;
+    int new_key=read_key();
+    if(new_key!=old_key){
+        old_time=uptime();
+        return old_key=new_key;
+    }else{
+        if(uptime()-old_time>30){
+            old_time=uptime();
+            return old_key=new_key;
+        }else{
+            return _KEY_NONE;
+        }
+    }
+}
