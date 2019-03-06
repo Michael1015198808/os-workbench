@@ -19,10 +19,6 @@ void init(void){
   ld.val=0x00ff0000;//Left  Down
   ru.val=0x0000ff00;//Right Up
   lu.val=0x000000ff;//Left  Up
-  color[0][0].alpha=1;//Use alpha=1
-  color[GRID_NUM-1][GRID_NUM-1].alpha=1;//to fix
-  color[0][GRID_NUM-1].alpha=1;//specific
-  color[GRID_NUM-1][0].alpha=1;//grids
 //fill colors and indexes
   for(int x=0;x<GRID_NUM;++x){
     pixel left=gradient(ld,lu,x);
@@ -32,6 +28,11 @@ void init(void){
       idx[x][y]=(x<<3)+y;
     }
   }
+//fix grids
+  color[0][0].alpha=1;//Use alpha=1
+  color[GRID_NUM-1][GRID_NUM-1].alpha=1;//to fix
+  color[0][GRID_NUM-1].alpha=1;//specific
+  color[GRID_NUM-1][0].alpha=1;//grids
 //draw help
   draw_str("Move with arrow keys\n"
            "Select grid with space key\n"
