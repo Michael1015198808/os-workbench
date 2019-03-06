@@ -8,7 +8,7 @@ static enum{GAME_PLAYING,GAME_PAUSE,GAME_WIN}stat;
 pixel color[GRID_NUM][GRID_NUM];
 pixel gradient(pixel,pixel,int);
 int choosen[2],choosen_idx=0;
-uint8_t idx[8][8];
+uint8_t idx[GRID_NUM][GRID_NUM];
 int cursor_x=0,cursor_y=0,print_flag=1;
 int main() {
   // Operating system is a C program
@@ -132,9 +132,9 @@ void init(void){
     }
   }
   color[0][0].alpha=1;//Use alpha=1
-  color[7][7].alpha=1;//to fix
-  color[0][7].alpha=1;//specific
-  color[7][0].alpha=1;//grids
+  color[GRID_NUM-1][GRID_NUM-1].alpha=1;//to fix
+  color[0][GRID_NUM-1].alpha=1;//specific
+  color[GRID_NUM-1][0].alpha=1;//grids
   for(int i=0;i<1;++i){
       //swap times
       int j,k;

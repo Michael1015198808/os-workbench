@@ -2,7 +2,7 @@
 #include <amdev.h>
 #include <klib.h>
 
-#define GRID_NUM 8
+#define GRID_NUM 6
 #define MARGIN 1
 #define cursor_locat ((cursor_x+MARGIN) * SIDE*3+SIDE),((cursor_y+MARGIN) * SIDE*3+SIDE)
 #define coor_to_pix(_x,_y) ((_x+MARGIN) * SIDE*3+SIDE),((_y+MARGIN) * SIDE*3+SIDE)
