@@ -176,11 +176,13 @@ void swap_pixel(void){
   idx[cursor_x][cursor_y]=temp;}
   draw_grid(choosen[0],choosen[1]);
   draw_grid(cursor_x,cursor_y);
-  unsigned int i;
+  int i;
   for(i=0;i<(1<<6);++i){
       if(idx[0][i]!=i)break;
   }
-  printf("%d,%d,%d\n",i,(GRID_NUM*GRID_NUM),i==(GRID_NUM*GRID_NUM));
+  for(i=0;;++i){
+    if(i==(GRID_NUM*GRID_NUM)){printf("%d\n",i);*(int*)0=0;}
+  }
   if(i==(GRID_NUM*GRID_NUM)){
     stat=GAME_WIN;
     *(int*)0=0;
