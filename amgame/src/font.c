@@ -145,7 +145,7 @@ void draw_str(char* s,int x,int y,size_t size,int color){
         switch(*s){
           case '\n':
             cur_x=x;
-            cur_y+=size*7;
+            cur_y+=size*8;
             break;
           case ' ':
             cur_x+=size*7;
@@ -155,7 +155,7 @@ void draw_str(char* s,int x,int y,size_t size,int color){
         }
         if(cur_x>w){
             cur_x=x;
-            cur_y+=size*7;
+            cur_y+=size*8;
         }
     }
 }
