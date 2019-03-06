@@ -82,3 +82,9 @@ void draw_cursor(int mode){
       is_white=!is_white;
   }
 }
+void draw_tick(int x,int y,int color){
+  int i;
+  for(i=0;i<3;++i){
+    mono_rect((x+MARGIN) * SIDE*3+(SIDE*5+i)/4, (y+MARGIN) * SIDE*3+(SIDE*3+i)/4, SIDE/4, (SIDE*3)/4, color);
+  }
+}
