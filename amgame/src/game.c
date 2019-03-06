@@ -19,14 +19,13 @@ int main() {
   _ioe_init();
   init_screen();
   init();
-  draw_str("Move with arrow keys\nSelect grid with space key",0,0,1,0x3fff00);
-  draw_str("Select grid with space key",0,16,1,0x3fff00);
-  draw_str("Swap the tiles to put the colors in order!",0,32,1,0x3fff00);
-  draw_str("Press h for hint",0,h-2*8,1,0x3fff00);
+  draw_str("Move with arrow keys\nSelect grid with space key",0,0,2,0x3fff00);
+  draw_str("Swap the tiles to put the colors in order!",0,32,2,0x3fff00);
+  draw_str("Press h for hint",0,h-2*8,2,0x3fff00);
   while (1) {
     do{
      new_time=uptime();
-    }while(new_time-old_time<25);
+    }while(new_time-old_time<100);
     old_time=new_time;
     if(print_flag==1){
         draw_cursor(1);
