@@ -20,6 +20,7 @@ int main() {
   draw_str("Move with arrow keys\nSelect grid with space key",0,0,2,0x3fff00);
   //draw_str("Select grid with space key",0,16,2,0x3fff00);
   draw_str("Swap the tiles to put the colors in order!",0,32,2,0x3fff00);
+  draw_str("Press h for hint",0,80,2,0x3fff00);
   draw_cursor(1);
   while (1) {
     int key=read_key();
@@ -40,6 +41,9 @@ int main() {
           ++cursor_y;if(cursor_y>=GRID_NUM)cursor_y-=GRID_NUM;break;
         case _KEY_UP:
           --cursor_y;if(cursor_y<0)cursor_y+=GRID_NUM;break;
+        case _KEY_H:
+          draw_arrow(cursor_x,cursor_y,0xffffff,ARROW_UP);
+          break;
         default:
           break;
       }
@@ -129,7 +133,6 @@ void draw_cursor(int mode){
   mono_rect((cursor_x+MARGIN) * SIDE*3+SIDE, (cursor_y+MARGIN) * SIDE*3+SIDE, SIDE, SIDE, mode==1?0xffffff:color[cursor_x][cursor_y].val);
 }
 void swap_pixel(void){
-  printf("Swaping pixels\n");
   pixel temp=color[choosen[0]][choosen[1]];
   color[choosen[0]][choosen[1]]=color[cursor_x][cursor_y];
   color[cursor_x][cursor_y]=temp;
