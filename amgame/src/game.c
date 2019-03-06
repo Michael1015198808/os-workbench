@@ -142,7 +142,7 @@ void init(void){
   color[GRID_NUM-1][GRID_NUM-1].alpha=1;//to fix
   color[0][GRID_NUM-1].alpha=1;//specific
   color[GRID_NUM-1][0].alpha=1;//grids
-  for(int i=0;i<1;++i){
+  for(int i=0;i<50;++i){
       //swap times
       int j,k;
       do{
