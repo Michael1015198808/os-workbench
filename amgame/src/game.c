@@ -50,8 +50,8 @@ int main() {
                 int8_t delta_x=(idx[cursor_x][cursor_y]>>3)-cursor_x,
                         delta_y=(idx[cursor_x][cursor_y]&7 )-cursor_y;
                 Direc direc;
-                if(delta_x>0){direc=ARROW_LEFT;}
-                else if(delta_x<0){direc=ARROW_RIGHT;}
+                if(delta_x>0){direc=ARROW_RIGHT;}
+                else if(delta_x<0){direc=ARROW_LEFT;}
                 else if(delta_y>0){direc=ARROW_DOWN;}
                 else if(delta_y<0){direc=ARROW_UP;}
                 else{break;}
