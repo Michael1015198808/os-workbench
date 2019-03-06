@@ -19,7 +19,9 @@ int main() {
   init();
   draw_str("Move with arrow keys\nSelect grid with space key",0,0,2,0x3fff00);
   //draw_str("Select grid with space key",0,16,2,0x3fff00);
+  printf("Mark\n");
   draw_str("Swap the tiles to put the colors in order!",0,32,2,0x3fff00);
+  printf("Mark\n");
   draw_str("Press h for hint",0,450,2,0x3fff00);
   while (1) {
     if(print_flag==1){
