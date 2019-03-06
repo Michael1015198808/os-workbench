@@ -8,6 +8,7 @@ int print_flag=1;
 void update(void){
     print_instr();
     int key=next_key();
+    if(key!=0)
     printf("%d,",key);
     operate(key);
 }
