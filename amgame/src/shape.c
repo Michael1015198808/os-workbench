@@ -68,13 +68,17 @@ void draw_arrow(int x,int y,int color,Direc direc){
 void draw_cursor(int mode){
 // 0 for wipe
 // 1 for draw
-  static uint8_t is_black=1;
+  static uint32_t old_time=0,new_time,is_white=1;
+  new_time=uptime();
   mono_rect(
     (cursor_x+MARGIN) * SIDE*3+SIDE,
     (cursor_y+MARGIN) * SIDE*3+SIDE,
     SIDE,
     SIDE,
     mode==0?color[cursor_x][cursor_y].val:
-    (is_black&8?0xffffff:0x000000));
-  ++is_black;
+    (is_white?0xffffff:0x000000));
+  if(new_time-old_time>100){
+      old_time=new_time;
+      is_white=!is_white;
+  }
 }

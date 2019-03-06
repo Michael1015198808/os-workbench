@@ -43,7 +43,6 @@ int main() {
         else if(delta_y<0){direc=ARROW_UP;}
         draw_arrow(cursor_x,cursor_y,~(color[help_x][help_y].val),direc);
       }
-      
       //printf("%d,%d\n",idx[help_x][help_y]>>3,idx[help_x][help_y]&7);
     }
     int key=read_key();
