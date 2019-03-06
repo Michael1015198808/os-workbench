@@ -34,13 +34,13 @@ int main() {
           else{choosen_idx=0;swap_pixel();}
           break;
         case _KEY_RIGHT:
-          ++cursor_x;if(cursor_x>=GRID_NUM)cursor_x-=GRID_NUM;break;
+          ++cursor_x;if(cursor_x>=GRID_NUM)cursor_x-=GRID_NUM;draw_cursor(1);break;
         case _KEY_LEFT:
-          --cursor_x;if(cursor_x<0)cursor_x+=GRID_NUM;break;
+          --cursor_x;if(cursor_x<0)cursor_x+=GRID_NUM;draw_cursor(1);break;
         case _KEY_DOWN:
-          ++cursor_y;if(cursor_y>=GRID_NUM)cursor_y-=GRID_NUM;break;
+          ++cursor_y;if(cursor_y>=GRID_NUM)cursor_y-=GRID_NUM;draw_cursor(1);break;
         case _KEY_UP:
-          --cursor_y;if(cursor_y<0)cursor_y+=GRID_NUM;break;
+          --cursor_y;if(cursor_y<0)cursor_y+=GRID_NUM;draw_cursor(1);break;
         case _KEY_H:
           draw_arrow(cursor_x,cursor_y,0x7f3f3f,ARROW_LEFT);
           break;
@@ -51,7 +51,7 @@ int main() {
           break;
       }
       //printf("%d,%d\n",cursor_x,cursor_y);
-      draw_cursor(1);
+      
     }
   }
   return 0;
