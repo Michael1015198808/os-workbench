@@ -42,7 +42,7 @@ int main() {
         case _KEY_UP:
           --cursor_y;if(cursor_y<0)cursor_y+=GRID_NUM;draw_cursor(1);break;
         case _KEY_H:
-          draw_arrow(cursor_x,cursor_y,~(color[cursor_x][cursor_y].val),ARROW_LEFT);
+          draw_arrow(cursor_x,cursor_y,~(color[cursor_x][cursor_y].val),ARROW_DOWN);
           break;
         default:
           break;
