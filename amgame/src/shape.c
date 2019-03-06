@@ -2,6 +2,7 @@
 extern pixel color[GRID_NUM][GRID_NUM];
 extern int cursor_x,cursor_y;
 extern int choosen_idx,choosen[2];
+
 void draw_circle(int x,int y,int r,uint32_t fg_color,uint32_t bg_color){
     x+=r/2;y+=r/2;
     int cur_x=r,cur_y=0;

@@ -17,10 +17,10 @@ int main() {
   _ioe_init();
   init_screen();
   init();
-  draw_str("Move with arrow keys\nSelect grid with space key",0,0,SIDE,0x3fff00);
+  draw_str("Move with arrow keys\nSelect grid with space key",0,0,2,0x3fff00);
   //draw_str("Select grid with space key",0,16,2,0x3fff00);
-  draw_str("Swap the tiles to put the colors in order!",0,32,SIDE,0x3fff00);
-  draw_str("Press h for hint",0,450,SIDE,0x3fff00);
+  draw_str("Swap the tiles to put the colors in order!",0,32,2,0x3fff00);
+  draw_str("Press h for hint",0,450,2,0x3fff00);
   while (1) {
     if(print_flag==1){
         draw_cursor(1);
@@ -153,7 +153,6 @@ void init(void){
   }
   for (int x = 0; x<GRID_NUM; x ++) {
     for (int y = 0; y<GRID_NUM; y++) {
-      printf("%d,%d\n",x,y);
       draw_grid(x,y);
       //mono_rect((x+MARGIN) * SIDE*3, (y+MARGIN) * SIDE*3, SIDE*3, SIDE*3, color[x][y].val);
     }

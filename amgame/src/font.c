@@ -1,4 +1,5 @@
 #include <game.h>
+extern int w,h;
 char font8x8_basic[128][8] = {
     { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},   // U+0000 (nul)
     { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},   // U+0001
@@ -138,7 +139,6 @@ static inline void draw_character(char ch, int x, int y,size_t size, int color) 
           mono_rect(x+j*size,y+i*size,size,size,color);
 }
 void draw_str(char* s,int x,int y,size_t size,int color){
-    size/=16;
     int cur_x=x,cur_y=y;
     for(;*s;++s){
         draw_character(*s,cur_x,cur_y,size,color);
@@ -152,6 +152,10 @@ void draw_str(char* s,int x,int y,size_t size,int color){
             break;
           default:
             cur_x+=size*7;
+        }
+        if(cur_x>w){
+            cur_x=x;
+            cur_y+=size*7;
         }
     }
 }
