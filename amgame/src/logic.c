@@ -37,7 +37,7 @@ void init(void){
   draw_str("Move with arrow keys\n"
            "Select with space key\n",0,0,2,0x3fff00);
   draw_str("Swap to put the colors in order!\n",0,h-2*8,2,0x3fff00);
-  draw_str("Press h",w,2*8,2,0x3fff00);
+  draw_str("Press h",w,0,2,0x3fff00);
 //random shuffle
   for(int i=0;i<50;++i){
       int j,k;
