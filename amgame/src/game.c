@@ -19,9 +19,10 @@ int main() {
   _ioe_init();
   init_screen();
   init();
-  draw_str("Move with arrow keys\nSelect grid with space key\n"
-            "Swap the tiles to put the colors in order!\n"
-            "Press h for hint",0,0,2,0x3fff00);
+  draw_str("Move with arrow keys\n"
+           "Select grid with space key\n"
+           "Swap the tiles to put the colors in order!\n",0,0,2,0x3fff00);
+  draw_str("Press h for hint",0,h-2*8,2,0x3fff00);
   while (1) {
     do{
      new_time=uptime();
