@@ -87,7 +87,7 @@ void draw_tick(int x,int y,int color){
   for(i=0;i<3;++i){
     mono_rect(
       (x+MARGIN) * SIDE*3+((2+i)*SIDE)/4,
-      (y+MARGIN) * SIDE*3+((6+i)*SIDE)/5,
+      (y+MARGIN) * SIDE*3+((8+i)*SIDE)/5,
       SIDE/4,
       SIDE/4, color);
   }
