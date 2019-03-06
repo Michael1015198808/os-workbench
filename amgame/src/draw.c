@@ -7,6 +7,7 @@ void init_screen() {
   h = info.height;
 }
 void print_instr(){
+    //print cursor or assistant arrow
     if(print_flag==1){
         draw_cursor(1);
     }else{
