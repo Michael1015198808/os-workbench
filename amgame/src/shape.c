@@ -50,8 +50,8 @@ void draw_arrow(int x,int y,int color,Direc direc){
   int i;
   printf("%d\n",direc);
   if(direc&2){
-    for(i=0;i<3;++i){
-      mono_rect((x+MARGIN) * SIDE*3+(i+1)*SIDE/2, (y+MARGIN) * SIDE*3+SIDE/2, SIDE/2, SIDE/2, color);
+    for(i=0;i<4;++i){
+      mono_rect((x+MARGIN) * SIDE*3+(i+1)*SIDE/2, (y+MARGIN) * SIDE*3+SIDE, SIDE/2, SIDE/2, color);
     }
   }else{
     *(int*)0=0;
