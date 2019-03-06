@@ -45,6 +45,7 @@ int main() {
           draw_arrow(cursor_x,cursor_y,~(color[cursor_x][cursor_y].val),ARROW_DOWN);
           break;
         default:
+          draw_cursor(1);
           break;
       }
       //printf("%d,%d\n",cursor_x,cursor_y);
