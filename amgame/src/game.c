@@ -8,6 +8,7 @@ void draw_cursor(int);
 pixel color[GRID_NUM][GRID_NUM];
 pixel gradient(pixel,pixel,int);
 int choosen[2][2],choosen_idx=0;
+uint32_t idx[8][8];
 int cursor_x=0,cursor_y=0;
 int main() {
   // Operating system is a C program
@@ -89,6 +90,7 @@ void init(void){
     pixel right=gradient(rd,ru,x);
     for (int y=0;y<GRID_NUM;++y){
       color[x][y]=gradient(left,right,y);
+      idx[x][y]=(x<<3)+y;
     }
   }
   color[0][0].alpha=1;//Use alpha=1
