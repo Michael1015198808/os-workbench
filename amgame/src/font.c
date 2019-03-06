@@ -153,6 +153,7 @@ void draw_str(char* s,int x,int y,size_t size,int color){
           default:
             cur_x+=size*7;
         }
+        printf("%d,",cur_x);
         if(cur_x>w){
             cur_x=x;
             cur_y+=size*7;
