@@ -144,13 +144,13 @@ void draw_str(char* s,int x,int y,size_t size,int color){
         switch(*s){
           case '\n':
             cur_x=x;
-            cur_y+=size<<3;
+            cur_y+=size<<2;
             break;
           case ' ':
             cur_x+=size<<2;
             break;
           default:
-            cur_x+=size<<3;
+            cur_x+=size<<2;
         }
     }
 }
