@@ -36,7 +36,7 @@ void init(void){
 //draw help
   draw_str("Move with arrow keys\n"
            "Select with space key\n",0,0,2,0x3fff00);
-  draw_str("Swap to\nput the\ncolors in\n order!",w-16*8,8*8,2,0x3fff00);
+  draw_str("Swap to\nput the\ncolors in\norder!",w-16*8,8*8,2,0x3fff00);
   draw_str("Press h for hints",0,h-2*8,2,0x3fff00);
 //random shuffle
   for(int i=0;i<50;++i){
