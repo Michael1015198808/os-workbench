@@ -1,6 +1,7 @@
 #include <game.h>
 extern pixel color[GRID_NUM][GRID_NUM];
 extern int cursor_x,cursor_y;
+extern int choosen_idx,choosen[2];
 void draw_circle(int x,int y,int r,uint32_t fg_color,uint32_t bg_color){
     x+=r/2;y+=r/2;
     int cur_x=r,cur_y=0;
@@ -32,22 +33,21 @@ void mono_rect(int x, int y, int w, int h, uint32_t color) {
     .x = x, .y = y, .w = w, .h = h, .sync = 1,
     .pixels = pixels,
   };
-  printf("Mark");
   for (int i = 0; i < w * h; i++) {
     pixels[i] = color;
   }
   _io_write(_DEV_VIDEO, _DEVREG_VIDEO_FBCTL, &event, sizeof(event));
-  printf("Mark\n");
 }
 void draw_grid(int x,int y){
   mono_rect((x+MARGIN) * SIDE*3, (y+MARGIN) * SIDE*3, SIDE*3, SIDE*3, color[x][y].val);
+  printf("Mark");
   if(color[x][y].alpha==1){
       draw_cross(SIDE/2+coor_to_pix(x,y)+SIDE/2,SIDE,0xffffff,0x00000000);
   }
-extern int choosen_idx,choosen[2];
   if(choosen_idx==1&&x==choosen[0]&&y==choosen[1]){
     draw_circle(coor_to_pix(x,y),SIDE,0xffffff,0x00000000);
   }
+  printf("Mark\n");
 }
 void draw_arrow(int x,int y,int color,Direc direc){
   int i;
