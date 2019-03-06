@@ -15,8 +15,8 @@ int main() {
   srand(uptime(NULL));
   printf("Hello World from " __ISA__ " program!\n");
   _ioe_init();
-  printf("Mark1\n");
   init_screen();
+  printf("Mark1\n");
   init();
   draw_str("Move with arrow keys\nSelect grid with space key",0,0,2,0x3fff00);
   //draw_str("Select grid with space key",0,16,2,0x3fff00);
