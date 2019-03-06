@@ -38,6 +38,7 @@ void init(void){
            "Select with space key\n",0,0,2,0x3fff00);
   draw_str("Move with arrow keys\n"
            "Select with space key\n",0,0,2,0x3fff00);
+  draw_str("Swap\n",0,h-2*8,2,0x3fff00);
   //draw_str("Swap to put the colors in order!\n",0,h-2*8,2,0x3fff00);
   //draw_str("Press h",0,0,2,0x3fff00);
 //random shuffle
