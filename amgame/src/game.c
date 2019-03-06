@@ -7,7 +7,7 @@ void draw_cursor(int);
 //void read_key();
 pixel color[GRID_NUM][GRID_NUM];
 pixel gradient(pixel,pixel,int);
-int choosen[2][2],choosen_idx=0;
+int choosen[2],choosen_idx=0;
 uint32_t idx[8][8];
 int cursor_x=0,cursor_y=0;
 int main() {
@@ -28,8 +28,8 @@ int main() {
       switch(key^0x8000){
         case _KEY_SPACE:
           if(color[cursor_x][cursor_y].alpha==1)break;
-          choosen[choosen_idx][0]=cursor_x;
-          choosen[choosen_idx][1]=cursor_y;
+          choosen[0]=cursor_x;
+          choosen[1]=cursor_y;
           draw_circle(cursor_locat,SIDE,0xffffff,0x00000000);
           if(choosen_idx==0){choosen_idx=1;}
           else{choosen_idx=0;swap_pixel();}
@@ -131,10 +131,10 @@ void draw_cursor(int mode){
   mono_rect((cursor_x+MARGIN) * SIDE*3+SIDE, (cursor_y+MARGIN) * SIDE*3+SIDE, SIDE, SIDE, mode==1?0xffffff:color[cursor_x][cursor_y].val);
 }
 void swap_pixel(void){
-#define choosen_color(_idx) color[choosen[_idx][0]][choosen[_idx][1]]
-  pixel temp=choosen_color(0);
-  choosen_color(0)=choosen_color(1);
-  choosen_color(1)=temp;
-  draw_grid(choosen[0][0],choosen[0][1]);
+#define choosen_color(_idx) 
+  pixel temp=color[choosen[0]][choosen[1]];
+  color[choosen[0]][choosen[1]]=color[cursor_x][cursor_y];
+  color[cursor_x][cursor_y]=temp;
+  draw_grid(choosen[0],choosen[1]);
   draw_grid(cursor_x,cursor_y);
 }
