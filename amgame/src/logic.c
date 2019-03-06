@@ -138,18 +138,14 @@ static void operate(int key){
 }
 static int next_key(void){
     static int old_key=_KEY_NONE,old_time=0;
-    int new_key=read_key();
-    //if(new_key!=_KEY_NONE){
-        printf("%d,%d\n",new_key,old_key);
-    //}
-    if(new_key!=old_key){
-        old_time=uptime();
-        old_key=new_key;
-        return old_key;
-    }else{
+    int new_key=read_key(),new_time=uptime();
     //delay for same key pressing
-        if(uptime()-old_time>50){
-            old_time=uptime();
+    if(new_time-old_time>50){
+        old_time=new_time;
+        return old_key=new_key;
+    }else{
+        if(new_key!=old_key&&new_key!=_KEY_NONE){
+            old_time=new_time;
             return old_key=new_key;
         }else{
             return _KEY_NONE;
