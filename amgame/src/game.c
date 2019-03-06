@@ -22,6 +22,7 @@ int main() {
   draw_str("Swap the tiles to put the colors in order!",0,32,2,0x3fff00);
   draw_str("Press h for hint",0,480,2,0x3fff00);
   draw_cursor(1);
+  int direc=0;
   while (1) {
     int key=read_key();
     if(key&0x8000){
@@ -42,7 +43,9 @@ int main() {
         case _KEY_UP:
           --cursor_y;if(cursor_y<0)cursor_y+=GRID_NUM;draw_cursor(1);break;
         case _KEY_H:
-          draw_arrow(cursor_x,cursor_y,~(color[cursor_x][cursor_y].val),ARROW_DOWN);
+          ++direc;
+          if(direc==4)direc=0;
+          draw_arrow(cursor_x,cursor_y,~(color[cursor_x][cursor_y].val),direc);
           break;
         default:
           draw_cursor(1);
