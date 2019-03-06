@@ -34,7 +34,7 @@ void init(void){
   color[0][GRID_NUM-1].alpha=1;//specific
   color[GRID_NUM-1][0].alpha=1;//grids
 //draw help
-  draw_str("Move with arrow keys & Select with space key\n"
+  draw_str("Move with arrow keys \n Select with space key\n"
            "Swap the tiles to put the colors in order!\n",0,0,2,0x3fff00);
   draw_str("Press h for hint",0,h-2*8,2,0x3fff00);
 //random shuffle
