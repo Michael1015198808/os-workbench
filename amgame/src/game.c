@@ -115,9 +115,12 @@ void init(void){
       do{
         k=rand()%(GRID_NUM*GRID_NUM);
       }while(color[k/GRID_NUM][k%GRID_NUM].alpha==1);
-      pixel temp=color[j/GRID_NUM][j%GRID_NUM];
+      {pixel temp=color[j/GRID_NUM][j%GRID_NUM];
       color[j/GRID_NUM][j%GRID_NUM]=color[k/GRID_NUM][k%GRID_NUM];
-      color[k/GRID_NUM][k%GRID_NUM]=temp;
+      color[k/GRID_NUM][k%GRID_NUM]=temp;}
+      {uint8_t temp=idx[j/GRID_NUM][j%GRID_NUM];
+      idx[j/GRID_NUM][j%GRID_NUM]=idx[k/GRID_NUM][k%GRID_NUM];
+      idx[k/GRID_NUM][k%GRID_NUM]=temp;}
   }
   for (int x = 0; x<GRID_NUM; x ++) {
     for (int y = 0; y<GRID_NUM; y++) {
