@@ -46,10 +46,19 @@ int main() {
             case _KEY_UP:
               --cursor_y;if(cursor_y<0)cursor_y+=GRID_NUM;break;
             case _KEY_H:
-              /*if(cursor_x-idx[(cursor_x<<3)+cursor_y])
-              draw_arrow(cursor_x,cursor_y,~(color[cursor_x][cursor_y].val),direc);*/
+              {
+                uint8_t delta_x=(idx[cursor_x][cursor_y]>>3)-cursor_x,
+                        delta_y=(idx[cursor_x][cursor_y]&7 )-cursor_y;
+                Direc direc;
+                if(delta_x>0){direc=ARROW_RIGHT;}
+                else if(delta_x<0){direc=ARROW_LEFT;}
+                else if(delta_y>0){direc=ARROW_UP;}
+                else if(delta_y<0){direc=ARROW_DOWN;}
+                else{break;}
+                draw_arrow(cursor_x,cursor_y,~(color[cursor_x][cursor_y].val),direc);
+                printf("%d,%d\n",idx[cursor_x][cursor_y]>>3,idx[cursor_x][cursor_y]&7);
+              }
               print_flag=0;
-              printf("%d,%d\n",idx[cursor_x][cursor_y]>>3,idx[cursor_x][cursor_y]&7);
               break;
             default:
               break;
