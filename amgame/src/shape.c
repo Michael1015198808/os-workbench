@@ -53,8 +53,8 @@ void draw_arrow(int x,int y,int color,Direc direc){
   if(direc&2){
       mono_rect((x+MARGIN) * SIDE*3+(SIDE*5)/4, (y+MARGIN) * SIDE*3+(SIDE*3)/4, SIDE/2, (SIDE*3)/2, color);
     for(i=1;i<4;++i){
-      mono_rect((x+MARGIN) * SIDE*3+((direc&1?6:2)-i)*SIDE/4, (y+MARGIN) * SIDE*3+((10-i)*SIDE)/4, SIDE/4, SIDE/4, color);
-      mono_rect((x+MARGIN) * SIDE*3+((direc&1?5:1)+i)*SIDE/4, (y+MARGIN) * SIDE*3+((10-i)*SIDE)/4, SIDE/4, SIDE/4, color);
+      mono_rect((x+MARGIN) * SIDE*3+(6-i)*SIDE/4, (y+MARGIN) * SIDE*3+((direc&1?(10-i):(2+i))*SIDE)/4, SIDE/4, SIDE/4, color);
+      mono_rect((x+MARGIN) * SIDE*3+(5+i)*SIDE/4, (y+MARGIN) * SIDE*3+((direc&1?(10-i):(2+i))*SIDE)/4, SIDE/4, SIDE/4, color);
     }
   }else{
       mono_rect((x+MARGIN) * SIDE*3+(SIDE*3)/4, (y+MARGIN) * SIDE*3+(SIDE*5)/4, (SIDE*3)/2, SIDE/2, color);
