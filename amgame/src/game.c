@@ -72,7 +72,7 @@ int main() {
               break;
             case _KEY_P:
               for(int i=0;i<(1<<6);++i){
-                  if(idx[0][i]!=i){printf("%d,%d,%d\n",i,i/8,i%8);break;}
+                  if(idx[0][i]!=i){printf("%d,%d,%d,%d,%d\n",i,1<<6,i<(1<<6),i/8,i%8);break;}
               }
             default:
               break;
@@ -139,7 +139,7 @@ void init(void){
   color[7][7].alpha=1;//to fix
   color[0][7].alpha=1;//specific
   color[7][0].alpha=1;//grids
-  for(int i=0;i<5;++i){
+  for(int i=0;i<1;++i){
       //swap times
       int j,k;
       do{
