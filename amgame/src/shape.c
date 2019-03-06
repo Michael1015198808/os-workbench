@@ -32,6 +32,7 @@ void mono_rect(int x, int y, int w, int h, uint32_t color) {
     .x = x, .y = y, .w = w, .h = h, .sync = 1,
     .pixels = pixels,
   };
+  printf("Mark1\n");
   for (int i = 0; i < w * h; i++) {
     pixels[i] = color;
   }
