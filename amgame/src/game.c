@@ -20,7 +20,7 @@ int main() {
   draw_str("Move with arrow keys\nSelect grid with space key",0,0,2,0x3fff00);
   //draw_str("Select grid with space key",0,16,2,0x3fff00);
   draw_str("Swap the tiles to put the colors in order!",0,32,2,0x3fff00);
-  draw_str("Press h for hint",0,80,2,0x3fff00);
+  draw_str("Press h for hint",0,200,2,0x3fff00);
   draw_cursor(1);
   while (1) {
     int key=read_key();
@@ -43,6 +43,9 @@ int main() {
           --cursor_y;if(cursor_y<0)cursor_y+=GRID_NUM;break;
         case _KEY_H:
           draw_arrow(cursor_x,cursor_y,0xffffff,ARROW_LEFT);
+          break;
+        case _KEY_G:
+          draw_arrow(cursor_x,cursor_y,0xffffff,ARROW_UP);
           break;
         default:
           break;
