@@ -47,7 +47,7 @@ int main() {
               --cursor_y;if(cursor_y<0)cursor_y+=GRID_NUM;break;
             case _KEY_H:
               {
-                uint8_t delta_x=(idx[cursor_x][cursor_y]>>3)-cursor_x,
+                int8_t delta_x=(idx[cursor_x][cursor_y]>>3)-cursor_x,
                         delta_y=(idx[cursor_x][cursor_y]&7 )-cursor_y;
                 Direc direc;
                 if(delta_x>0){direc=ARROW_LEFT;}
