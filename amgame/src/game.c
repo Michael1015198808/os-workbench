@@ -70,6 +70,10 @@ int main() {
             case _KEY_H:
               print_flag=!print_flag;
               break;
+            case _KEY_P:
+              for(int i=0;i<(1<<6);++i){
+                  if(idx[0][i]!=i){printf("%d,%d\n",i/8,i%8);break;}
+              }
             default:
               break;
           }
@@ -135,7 +139,7 @@ void init(void){
   color[7][7].alpha=1;//to fix
   color[0][7].alpha=1;//specific
   color[7][0].alpha=1;//grids
-  for(int i=0;i<100;++i){
+  for(int i=0;i<5;++i){
       //swap times
       int j,k;
       do{
@@ -177,7 +181,7 @@ void swap_pixel(void){
   draw_grid(choosen[0],choosen[1]);
   draw_grid(cursor_x,cursor_y);
   int i;
-  for(i=0;i<1<<6;++i){
+  for(i=0;i<(1<<6);++i){
       if(idx[0][i]!=i)break;
   }
   if(i==1<<6){
