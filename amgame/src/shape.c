@@ -49,8 +49,8 @@ extern int choosen_idx,choosen[2];
 }
 void draw_arrow(int x,int y,int color,Direc direc){
   int i;
-  char* s[]={"left","right","up","down"};
-  printf("%s\n",s[direc]);
+  /*char* s[]={"left","right","up","down"};
+  printf("%s\n",s[direc]);*/
   if(direc&2){
       mono_rect((x+MARGIN) * SIDE*3+(SIDE*5)/4, (y+MARGIN) * SIDE*3+(SIDE*3)/4, SIDE/2, (SIDE*3)/2, color);
     for(i=1;i<4;++i){
