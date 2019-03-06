@@ -3,6 +3,7 @@
 void init_screen(void);
 void init(void);
 void swap_pixel(void);
+int w,h;
 static enum{GAME_PLAYING,GAME_PAUSE,GAME_WIN}stat;
 //void read_key();
 pixel color[GRID_NUM][GRID_NUM];
@@ -20,7 +21,7 @@ int main() {
   draw_str("Move with arrow keys\nSelect grid with space key",0,0,2,0x3fff00);
   draw_str("Select grid with space key",0,16,2,0x3fff00);
   draw_str("Swap the tiles to put the colors in order!",0,32,2,0x3fff00);
-  draw_str("Press h for hint",0,450,2,0x3fff00);
+  draw_str("Press h for hint",0,h-2*8,2,0x3fff00);
   while (1) {
     if(print_flag==1){
         draw_cursor(1);
@@ -104,7 +105,6 @@ int main() {
   }
 }*/
 
-int w, h;
 
 void init_screen() {
   _DEV_VIDEO_INFO_t info = {0};
