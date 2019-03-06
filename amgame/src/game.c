@@ -36,14 +36,15 @@ int main() {
       int8_t delta_x=(idx[help_x][help_y]>>3)-cursor_x,
               delta_y=(idx[help_x][help_y]&7 )-cursor_y;
       Direc direc;
-      if(delta_x>0){direc=ARROW_RIGHT;}
-      else if(delta_x<0){direc=ARROW_LEFT;}
-      else if(delta_y>0){direc=ARROW_DOWN;}
-      else if(delta_y<0){direc=ARROW_UP;}
-      else{goto tag;}
-      draw_arrow(cursor_x,cursor_y,~(color[help_x][help_y].val),direc);
+      if(delta_x!=0||delta_y!=0){
+        if(delta_x>0){direc=ARROW_RIGHT;}
+        else if(delta_x<0){direc=ARROW_LEFT;}
+        else if(delta_y>0){direc=ARROW_DOWN;}
+        else if(delta_y<0){direc=ARROW_UP;}
+        draw_arrow(cursor_x,cursor_y,~(color[help_x][help_y].val),direc);
+      }
+      
       //printf("%d,%d\n",idx[help_x][help_y]>>3,idx[help_x][help_y]&7);
-tag:;
     }
     int key=read_key();
     if(key&0x8000){
