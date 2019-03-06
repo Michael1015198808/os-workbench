@@ -53,7 +53,8 @@ int main() {
       }
       //printf("%d,%d\n",idx[help_x][help_y]>>3,idx[help_x][help_y]&7);
     }
-    int key=read_key();
+    int key=_KEY_NONE,temp_key;
+    while((temp_key=read_key())!=_KEY_NONE)key=temp_key;
     if(key&0x8000){
       switch(stat){
         case GAME_PLAYING:
