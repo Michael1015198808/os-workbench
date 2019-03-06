@@ -13,7 +13,7 @@ uint8_t idx[GRID_NUM][GRID_NUM];
 int cursor_x=0,cursor_y=0,print_flag=1;
 int main() {
   // Operating system is a C program
-  uint32_t old_time=uptime(NULL),new_time=0;
+  uint32_t old_time=uptime(NULL),new_time=0,read_flag=0;
   srand(old_time);
   printf("Hello World from " __ISA__ " program!\n");
   _ioe_init();
@@ -26,7 +26,7 @@ int main() {
     do{
      new_time=uptime();
     }while(new_time-old_time<50);
-    old_time=new_time;
+    old_time=new_time;read_flag=!read_flag;
     if(print_flag==1){
         draw_cursor(1);
     }else{
@@ -52,6 +52,7 @@ int main() {
       }
       //printf("%d,%d\n",idx[help_x][help_y]>>3,idx[help_x][help_y]&7);
     }
+    if(!read_flag)continue;
     int key=_KEY_NONE,temp_key;
     while((temp_key=read_key())!=_KEY_NONE)key=temp_key;
     if(key&0x8000){
