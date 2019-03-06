@@ -7,11 +7,7 @@ static void operate(int);
 int print_flag=1;
 void update(void){
     print_instr();
-    int key=next_key();
-    if(key!=0){
-    printf("%d\n",key);
-    }
-    operate(key);
+    operate(next_key());
 }
 void init(void){
 //initialization
@@ -143,6 +139,9 @@ static void operate(int key){
 static int next_key(void){
     static int old_key=_KEY_NONE,old_time=0;
     int new_key=read_key();
+    if(new_key!=_KEY_NONE){
+        printf("%d,%d",new_key,old_key);
+    }
     if(new_key!=old_key){
         old_time=uptime();
         return old_key=new_key;
