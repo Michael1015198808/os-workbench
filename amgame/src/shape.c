@@ -49,7 +49,7 @@ extern int choosen_idx,choosen[2];
 void draw_arrow(int x,int y,int color,Direc direc){
   int i;
   printf("%d\n",direc);
-  if(direc&1){
+  if(direc&2){
     for(i=0;i<3;++i){
       mono_rect((x+MARGIN) * SIDE*3+i*SIDE/2, (y+MARGIN) * SIDE*3, SIDE/2, SIDE/2, color);
     }
