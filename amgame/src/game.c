@@ -153,6 +153,7 @@ void init(void){
   }
   for (int x = 0; x<GRID_NUM; x ++) {
     for (int y = 0; y<GRID_NUM; y++) {
+      printf("%d,%d\n",x,y);
       draw_grid(x,y);
       //mono_rect((x+MARGIN) * SIDE*3, (y+MARGIN) * SIDE*3, SIDE*3, SIDE*3, color[x][y].val);
     }
