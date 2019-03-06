@@ -178,10 +178,8 @@ void swap_pixel(void){
   draw_grid(cursor_x,cursor_y);
   int i;
   for(i=0;i<(1<<6);++i){
+      if(i>=(1<<6))break;
       if(idx[0][i]!=i)break;
-  }
-  for(i=0;;++i){
-    if(i==(GRID_NUM*GRID_NUM)){printf("%d\n",i);*(int*)0=0;}
   }
   if(i==(GRID_NUM*GRID_NUM)){
     stat=GAME_WIN;
