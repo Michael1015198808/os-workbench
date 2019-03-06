@@ -7,7 +7,9 @@ static void operate(int);
 int print_flag=1;
 void update(void){
     print_instr();
-    operate(next_key());
+    int key=next_key();
+    printf("%d,",key);
+    operate(key);
 }
 void init(void){
 //initialization
