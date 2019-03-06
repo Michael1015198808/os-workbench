@@ -3,17 +3,12 @@
 void init_screen(void);
 void init(void);
 void swap_pixel(void);
-int w,h;
-static enum{GAME_PLAYING,GAME_PAUSE,GAME_WIN}stat;
-//void read_key();
-pixel color[GRID_NUM][GRID_NUM];
-pixel gradient(pixel,pixel,int);
 int choosen[2],choosen_idx=0;
 uint8_t idx[GRID_NUM][GRID_NUM];
 int cursor_x=0,cursor_y=0,print_flag=1;
 int main() {
   // Operating system is a C program
-  uint32_t old_time=uptime(NULL),new_time=0,read_flag=0;
+  uint32_t old_time=uptime(NULL),new_time=0;
   srand(old_time);
   printf("Hello World from " __ISA__ " program!\n");
   _ioe_init();
@@ -24,10 +19,7 @@ int main() {
            "Swap the tiles to put the colors in order!\n",0,0,2,0x3fff00);
   draw_str("Press h for hint",0,h-2*8,2,0x3fff00);
   while (1) {
-    do{
-     new_time=uptime();
-    }while(new_time-old_time<40);
-    old_time=new_time;read_flag=!read_flag;
+    old_time=new_time;
     if(print_flag==1){
         draw_cursor(1);
     }else{
@@ -53,9 +45,7 @@ int main() {
       }
       //printf("%d,%d\n",idx[help_x][help_y]>>3,idx[help_x][help_y]&7);
     }
-    if(!read_flag)continue;
-    int key=_KEY_NONE,temp_key;
-    while((temp_key=read_key())!=_KEY_NONE)key=temp_key;
+    int key=read_key();
     if(key&0x8000){
       switch(stat){
         case GAME_PLAYING:
