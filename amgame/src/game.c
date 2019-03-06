@@ -181,8 +181,9 @@ void swap_pixel(void){
       if(idx[0][i]!=i)break;
   }
   printf("%d\n",i);
-  if(i==(1<<6)){
+  if(i==(GRID_NUM*GRID_NUM)){
     stat=GAME_WIN;
+    *(int*)0=0;
     draw_str("You Win!\npress r to restart",0,0,2,0x3fff00);
   }
 }
