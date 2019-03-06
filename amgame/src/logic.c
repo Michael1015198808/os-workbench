@@ -144,7 +144,8 @@ static int next_key(void){
     }
     if(new_key!=old_key){
         old_time=uptime();
-        return old_key=new_key;
+        old_key=new_key;
+        return old_key;
     }else{
     //delay for same key pressing
         if(uptime()-old_time>50){
