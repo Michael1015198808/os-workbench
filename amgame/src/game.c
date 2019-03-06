@@ -71,9 +71,8 @@ int main() {
               print_flag=!print_flag;
               break;
             case _KEY_P:
-              printf("%d\n",1<<6);
               for(int i=0;i<(1<<6);++i){
-                  if(idx[0][i]!=i){printf("%d,%d\n",i/8,i%8);break;}
+                  if(idx[0][i]!=i){printf("%d,%d,%d\n",i,i/8,i%8);break;}
               }
             default:
               break;
