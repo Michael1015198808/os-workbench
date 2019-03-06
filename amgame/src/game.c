@@ -9,7 +9,7 @@ pixel color[GRID_NUM][GRID_NUM];
 pixel gradient(pixel,pixel,int);
 int choosen[2],choosen_idx=0;
 uint8_t idx[8][8];
-int cursor_x=0,cursor_y=0;
+int cursor_x=0,cursor_y=0,print_flag=1;
 int main() {
   // Operating system is a C program
   srand(uptime(NULL));
@@ -21,14 +21,26 @@ int main() {
   //draw_str("Select grid with space key",0,16,2,0x3fff00);
   draw_str("Swap the tiles to put the colors in order!",0,32,2,0x3fff00);
   draw_str("Press h for hint",0,450,2,0x3fff00);
-  draw_cursor(1);
   while (1) {
+    if(print_flag==1){
+        draw_cursor(1);
+    }else{
+      int8_t delta_x=(idx[cursor_x][cursor_y]>>3)-cursor_x,
+              delta_y=(idx[cursor_x][cursor_y]&7 )-cursor_y;
+      Direc direc;
+      if(delta_x>0){direc=ARROW_RIGHT;}
+      else if(delta_x<0){direc=ARROW_LEFT;}
+      else if(delta_y>0){direc=ARROW_DOWN;}
+      else if(delta_y<0){direc=ARROW_UP;}
+      else{break;}
+      draw_arrow(cursor_x,cursor_y,~(color[cursor_x][cursor_y].val),direc);
+      printf("%d,%d\n",idx[cursor_x][cursor_y]>>3,idx[cursor_x][cursor_y]&7);
+    }
     int key=read_key();
     if(key&0x8000){
       switch(stat){
         case GAME_PLAYING:
           draw_grid(cursor_x,cursor_y);
-          int print_flag=1;
           switch(key^0x8000){
             case _KEY_SPACE:
               if(color[cursor_x][cursor_y].alpha==1)break;
@@ -45,25 +57,10 @@ int main() {
             case _KEY_UP:
               --cursor_y;if(cursor_y<0)cursor_y+=GRID_NUM;break;
             case _KEY_H:
-              {
-                int8_t delta_x=(idx[cursor_x][cursor_y]>>3)-cursor_x,
-                        delta_y=(idx[cursor_x][cursor_y]&7 )-cursor_y;
-                Direc direc;
-                if(delta_x>0){direc=ARROW_RIGHT;}
-                else if(delta_x<0){direc=ARROW_LEFT;}
-                else if(delta_y>0){direc=ARROW_DOWN;}
-                else if(delta_y<0){direc=ARROW_UP;}
-                else{break;}
-                draw_arrow(cursor_x,cursor_y,~(color[cursor_x][cursor_y].val),direc);
-                printf("%d,%d\n",idx[cursor_x][cursor_y]>>3,idx[cursor_x][cursor_y]&7);
-              }
-              print_flag=0;
+              print_flag=!print_flag;
               break;
             default:
               break;
-          }
-          if(print_flag==1){
-              draw_cursor(1);
           }
         break;
         case GAME_WIN:
@@ -176,4 +173,5 @@ void swap_pixel(void){
     stat=GAME_WIN;
     draw_str("You Win!\npress r to restart",0,0,2,0x3fff00);
   }
+  print_flag=1;
 }
