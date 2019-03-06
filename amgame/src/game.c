@@ -71,7 +71,7 @@ int main() {
               print_flag=!print_flag;
               break;
             case _KEY_P:
-              for(int i=0;i<(1<<6);++i){
+              for(int i=0;i<GRID_NUM*GRID_NUM;++i){
                   if(idx[0][i]!=i){printf("%d,%d,%d,%d,%d\n",i,1<<6,i<(1<<6),i/8,i%8);break;}
               }
             default:
