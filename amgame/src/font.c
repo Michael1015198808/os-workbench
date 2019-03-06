@@ -144,6 +144,7 @@ void draw_str(char* s,int x,int y,size_t size,int color){
         draw_character(*s,cur_x,cur_y,size,color);
         switch(*s){
           case '\n':
+            if(cur_x==x)break;
             cur_x=x;
             cur_y+=size*8;
             break;
