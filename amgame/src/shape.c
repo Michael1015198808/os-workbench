@@ -75,6 +75,6 @@ void draw_cursor(int mode){
     SIDE,
     SIDE,
     mode==0?color[cursor_x][cursor_y].val:
-    (is_black==1?0xffffff:0x000000));
-  is_black=!is_black;
+    (is_black&4?0xffffff:0x000000));
+  ++is_black;
 }
