@@ -42,6 +42,8 @@ int main() {
         else if(delta_y>0){direc=ARROW_DOWN;}
         else if(delta_y<0){direc=ARROW_UP;}
         draw_arrow(cursor_x,cursor_y,~(color[help_x][help_y].val),direc);
+      }else{
+        draw_tick(cursor_x,cursor_y,0xffffff);
       }
       //printf("%d,%d\n",idx[help_x][help_y]>>3,idx[help_x][help_y]&7);
     }
