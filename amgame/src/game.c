@@ -184,5 +184,4 @@ void swap_pixel(void){
     stat=GAME_WIN;
     draw_str("You Win!\npress r to restart",0,0,2,0x3fff00);
   }
-  print_flag=1;
 }
