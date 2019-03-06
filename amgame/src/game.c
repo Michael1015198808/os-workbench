@@ -13,7 +13,8 @@ uint8_t idx[GRID_NUM][GRID_NUM];
 int cursor_x=0,cursor_y=0,print_flag=1;
 int main() {
   // Operating system is a C program
-  srand(uptime(NULL));
+  uint32_t old_time=uptime(NULL),new_time=0;
+  srand(old_time);
   printf("Hello World from " __ISA__ " program!\n");
   _ioe_init();
   init_screen();
@@ -23,6 +24,10 @@ int main() {
   draw_str("Swap the tiles to put the colors in order!",0,32,2,0x3fff00);
   draw_str("Press h for hint",0,h-2*8,2,0x3fff00);
   while (1) {
+    do{
+     new_time=uptime();
+    }while(new_time<(old_time+100));
+    old_time=new_time;
     if(print_flag==1){
         draw_cursor(1);
     }else{
