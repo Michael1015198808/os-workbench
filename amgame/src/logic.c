@@ -80,9 +80,9 @@ void swap_pixel(void){
   if((i==GRID_NUM)&&(j==GRID_NUM)){
     stat=GAME_WIN;
     for(int k=0;k<6;++k){
-        mono_rect(w/2+((k<<2)-11)*SIDE,h/2-SIDE,SIDE*3,SIDE*4,0xffffff);
+        mono_rect(w/2+(k-11)*SIDE,h/2-(SIDE*3)/2,SIDE*3,SIDE*6,0xffffff);
     }
-    draw_str("You Win!\npress r to restart\nToo simple?\nEdit include/game.h",w/2-SIDE*10,h/2-SIDE/2,SIDE/8,0x3fff00);
+    draw_str("You Win!\npress r to restart\n\nToo simple?\nEdit include/game.h",w/2-SIDE*10,h/2-SIDE,SIDE/8,0x3fff00);
   }
 }
 
