@@ -7,7 +7,8 @@ int main() {
   init_screen();
   init();
   while (1) {
-    update();
+    print_instr();
+    operate(next_key());
   }
   return 0;
 }

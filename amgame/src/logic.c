@@ -2,13 +2,8 @@
 static pixel gradient(pixel,pixel,int);
 void init_screen(void);
 void swap_pixel(void);
-static int next_key(void);
-static void operate(int);
+void operate(int);
 int print_flag=1;
-void update(void){
-    print_instr();
-    operate(next_key());
-}
 void init(void){
 //initialization
   cursor_x=0,cursor_y=0;
@@ -99,7 +94,7 @@ static pixel gradient(pixel a,pixel b,int i){
     return temp;
 }
 
-static void operate(int key){
+void operate(int key){
     if(key&0x8000){
       switch(stat){
         case GAME_PLAYING:
@@ -137,7 +132,7 @@ static void operate(int key){
       }
     }
 }
-static int next_key(void){
+int next_key(void){
     static int old_key=_KEY_NONE,old_time=0;
     int new_key=read_key(),new_time=uptime();
     //delay for same key pressing

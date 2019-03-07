@@ -34,7 +34,8 @@ void draw_cursor(int);
 
 //logic.c
 void init(void);
-void update(void);
+void operate(int);
+int next_key();
 
 //draw.c
 void init_screen();
