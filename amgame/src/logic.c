@@ -71,7 +71,6 @@ void swap_pixel(void){
 //redraw
   draw_grid(choosen[0],choosen[1]);
   draw_grid(cursor_x,cursor_y);
-//win judge
   int i,j;
   for(i=0;i<GRID_NUM;++i){
       for(j=0;j<GRID_NUM;++j){
@@ -79,8 +78,8 @@ void swap_pixel(void){
       }
   }
   if((i==GRID_NUM)&&(j==GRID_NUM)){
-    //stat=GAME_WIN;
-    draw_str("You Win!\npress r to restart",h/2-SIDE/4,w/2-SIDE*5,SIDE/8,0x3fff00);
+    stat=GAME_WIN;
+    draw_str("You Win!\npress r to restart",h/2-SIDE/4,w/2-SIDE*7,SIDE/8,0x3fff00);
   }
 }
 
