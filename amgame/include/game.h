@@ -7,6 +7,7 @@
 #define cursor_locat ((cursor_x+MARGIN) * SIDE*3+SIDE),((cursor_y+MARGIN) * SIDE*3+SIDE)
 #define coor_to_pix(_x,_y) ((_x+MARGIN) * SIDE*3+SIDE),((_y+MARGIN) * SIDE*3+SIDE)
 #define SIDE w/40
+#define SHUFFLE_TIMES 2
 union pixel{
   uint32_t val;
   struct{

@@ -33,7 +33,7 @@ void init(void){
   draw_str("Swap to\nput the\ncolors\nin order!",w-14*8,8*8,SIDE/8,0x3fff00);
   draw_str("Press h for hints",0,h-2*8,SIDE/8,0x3fff00);
 //random shuffle
-  for(int i=0;i<5;++i){
+  for(int i=0;i<SHUFFLE_TIMES;++i){
       int j,k;
       //prevent shuffle fixed grids
       do{
@@ -72,12 +72,13 @@ void swap_pixel(void){
   draw_grid(choosen[0],choosen[1]);
   draw_grid(cursor_x,cursor_y);
 //win judge
-  int i;
-  for(i=0;i<(1<<6);++i){
-      if(i>=(1<<6))break;
-      if(idx[0][i]!=i)break;
+  int i,j;
+  for(i=0;i<GRID_NUM;++i){
+      for(j=0;j<GRID_NUM;++j){
+          if(idx[i][j]!=(i*GRID_NUM+j))break;
+      }
   }
-  if(i==(GRID_NUM*GRID_NUM)){
+  if(i==GRID_NUM&&j==GRID_NUM){
     stat=GAME_WIN;
     *(int*)0=0;
     draw_str("You Win!\npress r to restart",0,0,SIDE/8,0x3fff00);
