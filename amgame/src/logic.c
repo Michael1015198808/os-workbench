@@ -33,7 +33,7 @@ void init(void){
   draw_str("Swap to\nput the\ncolors\nin order!",w-14*8,8*8,2,0x3fff00);
   draw_str("Press h for hints",0,h-2*8,2,0x3fff00);
 //random shuffle
-  for(int i=0;i<50;++i){
+  for(int i=0;i<5;++i){
       int j,k;
       //prevent shuffle fixed grids
       do{
