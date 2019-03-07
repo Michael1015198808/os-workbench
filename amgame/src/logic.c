@@ -78,7 +78,7 @@ void swap_pixel(void){
           if(idx[i][j]!=(i*GRID_NUM+j))break;
       }
   }
-  //printf("%d,%d\n",i,j);
+  printf("%d,%d\n",i,j);
   if((i==GRID_NUM)&&(j==GRID_NUM)){
     //stat=GAME_WIN;
     draw_str("You Win!\npress r to restart",h/2-SIDE/4,w/2-SIDE*5,SIDE/8,0x3fff00);
