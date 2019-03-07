@@ -122,7 +122,7 @@ void operate(int key){
                   int i,j;
                   for(i=0;i<GRID_NUM;++i){
                       for(j=0;j<GRID_NUM;++j){
-                          printf("%d,",idx[i][j]);
+                          printf("%d,",idx[j][i]);
                       }
                       printf("\n");
                   }
