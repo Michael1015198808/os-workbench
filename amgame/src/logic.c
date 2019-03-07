@@ -117,6 +117,16 @@ void operate(int key){
             case _KEY_H:
               print_flag=!print_flag;
               break;
+            case _KEY_T:
+              {
+                  int i,j;
+                  for(i=0;i<GRID_NUM;++i){
+                      for(j=0;j<GRID_NUM;++j){
+                          printf("%d,",idx[i][j]);
+                      }
+                      printf("\n");
+                  }
+              }
             default:
               break;
           }
