@@ -79,7 +79,7 @@ void swap_pixel(void){
   }
   if((i==GRID_NUM)&&(j==GRID_NUM)){
     stat=GAME_WIN;
-    mono_rect(w/2-SIDE*10,h/2-SIDE,SIDE*10,SIDE*3,0xffffff);
+    mono_rect(w/2-SIDE*12,h/2-SIDE/4,SIDE*10,SIDE*2,0xffffff);
     draw_str("You Win!\npress r to restart",w/2-SIDE*10,h/2-SIDE/2,SIDE/8,0x3fff00);
   }
 }
