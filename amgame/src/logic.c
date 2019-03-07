@@ -2,7 +2,6 @@
 static pixel gradient(pixel,pixel,int);
 void init_screen(void);
 void swap_pixel(void);
-void operate(int);
 int print_flag=1;
 void init(void){
 //initialization
