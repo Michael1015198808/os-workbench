@@ -80,7 +80,6 @@ void swap_pixel(void){
   }
   if(i==GRID_NUM&&j==GRID_NUM){
     stat=GAME_WIN;
-    *(int*)0=0;
     draw_str("You Win!\npress r to restart",0,0,SIDE/8,0x3fff00);
   }
 }
