@@ -29,9 +29,9 @@ void init(void){
   color[GRID_NUM-1][0].alpha=1;//grids
 //draw help
   draw_str("Move with arrow keys\n"
-           "Select with space key\n",0,0,2,0x3fff00);
-  draw_str("Swap to\nput the\ncolors\nin order!",w-14*8,8*8,2,0x3fff00);
-  draw_str("Press h for hints",0,h-2*8,2,0x3fff00);
+           "Select with space key\n",0,0,SIDE/8,0x3fff00);
+  draw_str("Swap to\nput the\ncolors\nin order!",w-14*8,8*8,SIDE/8,0x3fff00);
+  draw_str("Press h for hints",0,h-2*8,SIDE/8,0x3fff00);
 //random shuffle
   for(int i=0;i<5;++i){
       int j,k;
@@ -80,7 +80,7 @@ void swap_pixel(void){
   if(i==(GRID_NUM*GRID_NUM)){
     stat=GAME_WIN;
     *(int*)0=0;
-    draw_str("You Win!\npress r to restart",0,0,2,0x3fff00);
+    draw_str("You Win!\npress r to restart",0,0,SIDE/8,0x3fff00);
   }
 }
 
