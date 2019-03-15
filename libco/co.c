@@ -4,6 +4,11 @@
 #include <setjmp.h>
 #include "co.h"
 
+#if defined(__i386__)
+  #define SP "%%esp"
+#elif defined(__x86_64__)
+  #define SP "%%rsp"
+#endif
 #define set_sp(__target) asm volatile("mov %0," SP : : "g"(__target));
 #define get_sp(__target) asm volatile("mov " SP",%0" : "=g"(__target) :);
 #define MAX_ROUTINES 100
