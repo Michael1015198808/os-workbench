@@ -20,7 +20,7 @@ struct co {
     uint8_t stack[STACK_SIZE];
     jmp_buf tar_buf;
     uint8_t alive;
-}routines[MAX_ROUTINES] __attribute((aligned(16))),*current;
+}routines[MAX_ROUTINES] /*__attribute((aligned(16)))*/,*current;
 
 static int pool[MAX_ROUTINES];
 //pool[0,idx) records indexes of
