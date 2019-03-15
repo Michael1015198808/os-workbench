@@ -47,13 +47,9 @@ void co_init() {
 static void *__stack_backup=NULL;
 static jmp_buf ret_buf;
 struct co* co_start(const char *name, func_t func, void *arg) {
-    log();
   get_sp(__stack_backup);
-    log();
   current=new_co();
-    log();
   set_sp(current->stack+STACK_SIZE);
-    log();
   if(!setjmp(ret_buf)){
       func(arg);
   }
@@ -62,6 +58,7 @@ struct co* co_start(const char *name, func_t func, void *arg) {
 }
 
 void co_yield() {
+    line();
     int val=setjmp(current->tar_buf);
     if(val==0){
         longjmp(__stack_backup,1);
