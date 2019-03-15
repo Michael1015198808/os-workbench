@@ -4,6 +4,7 @@
 #include <setjmp.h>
 #include "co.h"
 
+#define log() printf("Line %d:\n",__LINE__)
 #if defined(__i386__)
   #define SP "%%esp"
 #elif defined(__x86_64__)
@@ -46,9 +47,13 @@ void co_init() {
 static void *__stack_backup=NULL;
 static jmp_buf ret_buf;
 struct co* co_start(const char *name, func_t func, void *arg) {
+    log();
   get_sp(__stack_backup);
+    log();
   current=new_co();
+    log();
   set_sp(current->stack+STACK_SIZE);
+    log();
   if(!setjmp(ret_buf)){
       func(arg);
   }
