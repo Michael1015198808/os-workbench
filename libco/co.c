@@ -51,6 +51,7 @@ static jmp_buf ret_buf;
 struct co* co_start(const char *name, func_t func, void *arg) {
   get_sp(__stack_backup);
   current=new_co();
+  printf("%s\n",name);
   set_sp(current->stack+STACK_SIZE);
   if(!setjmp(ret_buf)){
       func(arg);
