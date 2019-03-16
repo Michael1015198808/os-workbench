@@ -64,8 +64,8 @@ struct co* co_start(const char *name, func_t func, void *arg) {
     set_sp(stack_top);
     func(arg);
     set_sp(__stack_backup);
+    current->alive=0;
     printf("Program finishs\n");
-    while(1);
   }
   set_sp(__stack_backup);
   return current;
@@ -83,6 +83,7 @@ void co_yield() {
 void co_wait(struct co *thd) {
   setjmp(ret_buf);
   while(thd->alive){
+      current=thd;
       longjmp(thd->tar_buf,1);
   }
 }
