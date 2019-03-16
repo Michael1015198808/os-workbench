@@ -24,7 +24,7 @@ struct co {
     //stack should provide room for entry parameters
     func_t func;
     void *arg;
-    jmp_buf tar_buf,sys_buf;
+    jmp_buf tar_buf;
 #define CO_ALIVE 1
 #define CO_RUNNING 2
     uint8_t stat;
@@ -69,20 +69,14 @@ struct co* co_start(const char *name, func_t func, void *arg) {
   current->stack_top=stack_top;
   current->func=func;
   current->arg=arg;
-  return current;
+  if(!setjmp(current->tar_buf)){
+    return current;
+  }else{
+      current->func(current->arg);
+  }
 }
 
-#define run_co(_co) \
-  current=_co; \
-  if(!(_co->stat&CO_ALIVE)) \
-    fprintf(stderr,"Run a dead coroutine!\n");fflush(stderr); \
-  if(_co->stat&CO_RUNNING){ \
-    longjmp(_co->tar_buf,1); \
-  }else{ \
-    _co->stat|=CO_RUNNING; \
-    set_sp(_co->stack_top); \
-    _co->func(_co->arg); \
-  }
+
 void co_yield() {
     int val=setjmp(current->tar_buf);
     if(val==0){
@@ -94,20 +88,11 @@ void co_yield() {
 }
 
 void co_wait(struct co *thd) {
-  get_sp(thd->sys_buf);
+  get_sp(__stack_backup);
   while(thd->stat&CO_ALIVE){
-    if(thd->stat&CO_RUNNING){ 
-      longjmp(thd->tar_buf,1); 
-    }else{ 
-      thd->stat|=CO_RUNNING; 
-      mov_to(thd,thd->stack_top);
-      set_sp(thd->stack_top); 
-      thd->func(thd->arg);
-      printf("Finish\n");
-      thd->stat=0;
-    }
+    longjmp(thd->tar_buf,1); 
   }
-  set_sp(thd->sys_buf);
+  set_sp(__stack_backup);
   thd->stat=0;
 }
 
