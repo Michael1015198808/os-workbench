@@ -53,12 +53,18 @@ struct co* co_start(const char *name, func_t func, void *arg) {
   current=new_co();
   void *new_stack=current->stack+STACK_SIZE-sizeof(void*);
   printf("%p\n",new_stack);
-  asm volatile("mov    0x20080e(" SP "),%rax;");//For compile test
+  //asm volatile("mov    0x20080e(" SP "),%rax;");//For compile test
   /*asm volatile("mov (" SP ")," AX ";"
                "mov " AX ",(%0);"
           : "=g"(new_stack)
           :
           : AX);*/
+  asm ("movl %1, %%eax; 
+              movl %%eax, %0;"
+             :"=r"(b)        /* output */
+             :"r"(a)         /* input */
+             :"%eax"         /* clobbered register */
+             );
   set_sp(new_stack);
   log();
   if(!setjmp(ret_buf)){
