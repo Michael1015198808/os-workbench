@@ -10,7 +10,7 @@
   #define AX "%%eax"
 #elif defined(__x86_64__)
   #define SP "%%rsp"
-  #define AX "%%eax"
+  #define AX "%%rax"
 #endif
 #define set_sp(__target) asm volatile("mov %0," SP : : "g"(__target));
 #define get_sp(__target) asm volatile("mov " SP",%0" : "=g"(__target) :);
@@ -53,6 +53,7 @@ struct co* co_start(const char *name, func_t func, void *arg) {
   current=new_co();
   void *new_stack=current->stack+STACK_SIZE-sizeof(void*);
   printf("%p\n",new_stack);
+  asm volatile("mov    0x20080e(%rip),%rax");//For compile test
   asm volatile("mov (" SP ")," AX ";"
                "mov " AX ",(%0);"
           : "=g"(new_stack)
