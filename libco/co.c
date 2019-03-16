@@ -74,7 +74,6 @@ struct co* co_start(const char *name, func_t func, void *arg) {
 void co_yield() {
     int val=setjmp(current->tar_buf);
     if(val==0){
-        set_sp(__stack_backup);
         longjmp(ret_buf,1);
     }else{
         return;
@@ -82,12 +81,9 @@ void co_yield() {
 }
 
 void co_wait(struct co *thd) {
-  get_sp(__stack_backup);
   setjmp(ret_buf);
   while(thd->alive){
-      set_sp(thd->stack_top);
       longjmp(thd->tar_buf,1);
   }
-  set_sp(__stack_backup);
 }
 
