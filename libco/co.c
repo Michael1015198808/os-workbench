@@ -55,6 +55,7 @@ void co_init() {
 void *__stack_backup=NULL;
 static jmp_buf ret_buf;
 struct co* co_start(const char *name, func_t func, void *arg) {
+  get_sp(__stack_backup);
   current=new_co();
   uint8_t* stack_top=current->stack+STACK_SIZE;
   stack_top-=sizeof(void*)+((void*)&name)-__stack_backup;
@@ -102,6 +103,7 @@ void co_wait(struct co *thd) {
     if(thd->stat&CO_RUNNING){ 
       longjmp(thd->tar_buf,1); 
     }else{ 
+      get_sp(__stack_backup);
       thd->stat|=CO_RUNNING; 
       mov_to(thd,thd->stack_top);
       set_sp(thd->stack_top); 
