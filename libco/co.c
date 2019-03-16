@@ -68,7 +68,6 @@ struct co* co_start(const char *name, func_t func, void *arg) {
   current->stack_top=stack_top;
   current->func=func;
   current->arg=arg;
-  longjmp(ret_buf,1);
   return current;
 }
 
