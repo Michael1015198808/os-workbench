@@ -7,8 +7,10 @@
 #define log() printf("Line %d:\n",__LINE__)
 #if defined(__i386__)
   #define SP "%%esp"
+  #define AX "%%eax"
 #elif defined(__x86_64__)
   #define SP "%%rsp"
+  #define AX "%%rax"
 #endif
 #define set_sp(__target) asm volatile("mov %0," SP : : "g"(__target));
 #define get_sp(__target) asm volatile("mov " SP",%0" : "=g"(__target) :);
@@ -51,9 +53,11 @@ struct co* co_start(const char *name, func_t func, void *arg) {
   current=new_co();
   void *new_stack=current->stack+STACK_SIZE-sizeof(void*);
   printf("%p\n",new_stack);
-  asm volatile("mov (" SP "),(%0)"
+  asm volatile("mov (" SP ")," AX ";"
+               "mov " AX ",(%0);"
           : "=g"(new_stack)
-          : );
+          :
+          : AX);
   set_sp(new_stack);
   log();
   if(!setjmp(ret_buf)){
