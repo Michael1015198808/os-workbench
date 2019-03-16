@@ -53,7 +53,8 @@ struct co* co_start(const char *name, func_t func, void *arg) {
   current=new_co();
   uintptr_t temp;
   asm volatile("mov (" SP") ,%0" : "=g"(temp) :);
-  //asm volatile("mov %0," SP : : "g"());
+  printf("%p\n",temp);
+  asm volatile("mov %0," SP : : "g"());
   set_sp(current->stack+STACK_SIZE);
   if(!setjmp(ret_buf)){
       func(arg);
