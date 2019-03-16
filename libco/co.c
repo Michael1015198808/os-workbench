@@ -104,6 +104,8 @@ void co_wait(struct co *thd) {
       mov_to(thd,thd->stack_top);
       set_sp(thd->stack_top); 
       thd->func(thd->arg);
+      printf("Finish\n");
+      the->stat=0;
     }
   }
   set_sp(__stack_backup);
