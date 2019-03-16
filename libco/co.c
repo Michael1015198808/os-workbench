@@ -60,9 +60,9 @@ struct co* co_start(const char *name, func_t func, void *arg) {
           :
           : AX);*/
   asm ("movl %1, %%eax; "
-              "movl %%eax, %0;"
-             :"=r"(b)        /* output */
-             :"r"(a)         /* input */
+       "movl %%eax, %0;"
+             :"=r"(new_stack)        /* output */
+             :"r"(SP)         /* input */
              :"%eax"         /* clobbered register */
              );
   set_sp(new_stack);
