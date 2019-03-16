@@ -46,6 +46,8 @@ void co_init() {
             (void*)routines[0].args_space==
             (void*)(routines[0].stack+STACK_SIZE)){
         fprintf(stderr,"The compiler doesn't allocate space as it should do");
+        fprintf(stderr,"Top of stack%p\n",routines[0].args_space);
+        fprintf(stderr,"Entry para %p\n",routines[0].args_space);
         fflush(stderr);
         exit(1);
     }
