@@ -50,15 +50,15 @@ void *__stack_backup=NULL;
 static jmp_buf ret_buf;
 struct co* co_start(const char *name, func_t func, void *arg) {
   get_sp(__stack_backup);
-  current=new_co();
-  uint8_t* stack_top=current->stack+STACK_SIZE;
-  stack_top-=((void*)&name)-__stack_backup;
-  *(uintptr_t*)(stack_top+(((void*)&name)-__stack_backup))=(uintptr_t)name;
-  *(uintptr_t*)(stack_top+(((void*)&func)-__stack_backup))=(uintptr_t)func;
-  *(uintptr_t*)(stack_top+(((void*)&arg)-__stack_backup))=(uintptr_t)arg;
-  set_sp(stack_top);
   if(!setjmp(ret_buf)){
-      func(arg);
+    current=new_co();
+    uint8_t* stack_top=current->stack+STACK_SIZE;
+    stack_top-=sizeof(void*)+((void*)&name)-__stack_backup;
+    *(uintptr_t*)(stack_top+(((void*)&name)-__stack_backup))=(uintptr_t)name;
+    *(uintptr_t*)(stack_top+(((void*)&func)-__stack_backup))=(uintptr_t)func;
+    *(uintptr_t*)(stack_top+(((void*)&arg )-__stack_backup))=(uintptr_t)arg;
+    set_sp(stack_top);
+    func(arg);
   }
   set_sp(__stack_backup);
   return current;
