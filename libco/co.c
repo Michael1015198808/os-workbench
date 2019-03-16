@@ -65,6 +65,7 @@ struct co* co_start(const char *name, func_t func, void *arg) {
     func(arg);
     set_sp(__stack_backup);
     printf("Program finishs\n");
+    while(1);
   }
   set_sp(__stack_backup);
   return current;
