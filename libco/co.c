@@ -78,9 +78,12 @@ void co_yield() {
 }
 
 void co_wait(struct co *thd) {
-    while(thd->alive){
-        set_sp(thd->stack_top);
-        longjmp(thd->tar_buf,1);
-    }
+  get_sp(__stack_backup);
+  setjmp(ret_buf);
+  while(thd->alive){
+      set_sp(thd->stack_top);
+      longjmp(thd->tar_buf,1);
+  }
+  set_sp(__stack_backup);
 }
 
