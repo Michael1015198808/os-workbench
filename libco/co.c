@@ -53,9 +53,9 @@ struct co* co_start(const char *name, func_t func, void *arg) {
   current=new_co();
   uint8_t* stack_top=current->stack+STACK_SIZE;
   stack_top-=((void*)&name)-__stack_backup;
-  *(uintptr_t*)(stack_top+(((void*)&name)-__stack_backup))=name;
-  *(uintptr_t*)(stack_top+(((void*)&func)-__stack_backup))=func;
-  *(uintptr_t*)(stack_top+(((void*)&arg)-__stack_backup))=arg;
+  *(uintptr_t*)(stack_top+(((void*)&name)-__stack_backup))=(uintptr_t)name;
+  *(uintptr_t*)(stack_top+(((void*)&func)-__stack_backup))=(uintptr_t)func;
+  *(uintptr_t*)(stack_top+(((void*)&arg)-__stack_backup))=(uintptr_t)arg;
   set_sp(stack_top);
   if(!setjmp(ret_buf)){
       func(arg);
