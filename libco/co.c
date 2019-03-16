@@ -49,11 +49,12 @@ static jmp_buf ret_buf;
 struct co* co_start(const char *name, func_t func, void *arg) {
   get_sp(__stack_backup);
   current=new_co();
-  printf("%p\n",current->stack+STACK_SIZE-sizeof(void*));
+  void *new_stack=current->stack+STACK_SIZE-sizeof(void*)
+  printf("%p\n",new_stack);
   asm volatile("mov (" SP "),(%0)"
-          : "=g"(current->stack+STACK_SIZE-sizeof(void*))
+          : "=g"(new_stack)
           : );
-  set_sp(current->stack+STACK_SIZE-sizeof(void*));
+  set_sp(new_stack);
   log();
   if(!setjmp(ret_buf)){
       func(arg);
