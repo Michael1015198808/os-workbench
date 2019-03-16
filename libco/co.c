@@ -65,6 +65,7 @@ struct co* co_start(const char *name, func_t func, void *arg) {
   mov_to(name,stack_top);
   mov_to(func,stack_top);
   mov_to(arg,stack_top);
+  mov_to(_new_co,stack_top);
 
   _new_co->stack_top=stack_top;
   _new_co->func=func;
