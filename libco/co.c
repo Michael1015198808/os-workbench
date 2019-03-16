@@ -72,8 +72,9 @@ struct co* co_start(const char *name, func_t func, void *arg) {
   if(!setjmp(current->tar_buf)){
     return current;
   }else{
-      current->func(current->arg);
+    current->func(current->arg);
   }
+  return NULL;
 }
 
 
