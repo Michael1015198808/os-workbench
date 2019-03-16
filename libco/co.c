@@ -99,7 +99,6 @@ void co_wait(struct co *thd) {
     if(thd->stat&CO_RUNNING){ 
       longjmp(thd->tar_buf,1); 
     }else{ 
-      get_sp(__stack_backup);
       thd->stat|=CO_RUNNING; 
       mov_to(thd,thd->stack_top);
       set_sp(thd->stack_top); 
