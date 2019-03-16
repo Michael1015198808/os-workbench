@@ -20,6 +20,8 @@ struct co {
 #define KB *(1<<10)
 #define STACK_SIZE (4 KB)
     uint8_t stack[STACK_SIZE];
+    void * stack_top;
+    //stack should provide room for entry parameters
     jmp_buf tar_buf;
     uint8_t alive;
 }routines[MAX_ROUTINES] /*__attribute((aligned(16)))*/,*current;
@@ -57,6 +59,7 @@ struct co* co_start(const char *name, func_t func, void *arg) {
     *(uintptr_t*)(stack_top+(((void*)&name)-__stack_backup))=(uintptr_t)name;
     *(uintptr_t*)(stack_top+(((void*)&func)-__stack_backup))=(uintptr_t)func;
     *(uintptr_t*)(stack_top+(((void*)&arg )-__stack_backup))=(uintptr_t)arg;
+    current->stack_top=stack_top;
     set_sp(stack_top);
     func(arg);
   }
@@ -75,5 +78,9 @@ void co_yield() {
 }
 
 void co_wait(struct co *thd) {
+    while(thd->alive){
+        set_sp(thd->stack_top);
+        longjmp(thd->tar_buf,1);
+    }
 }
 
