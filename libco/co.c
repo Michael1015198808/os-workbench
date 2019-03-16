@@ -64,9 +64,9 @@ struct co* co_start(const char *name, func_t func, void *arg) {
   get_sp(__stack_backup);
   current=new_co();
   //asm volatile("mov 0x0("SP"),%0;": "=g"(current->args_space[0]):);
-  current->args_space[0]=func;
+  current->args_space[0]=(uintptr_t)func;
   //asm volatile("mov %1("SP"),%0;": "=g"(current->args_space[1]):"n"(sizeof(void*)));
-  current->args_space[1]=arg;
+  current->args_space[1]=(uintptr_t)arg;
   set_sp(current->args_space);
   if(!setjmp(ret_buf)){
       func(arg);
