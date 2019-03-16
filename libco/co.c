@@ -24,7 +24,7 @@ struct co {
     //stack should provide room for entry parameters
     func_t func;
     void *arg;
-    jmp_buf tar_buf;
+    jmp_buf tar_buf,sys_buf;
 #define CO_ALIVE 1
 #define CO_RUNNING 2
     uint8_t stat;
@@ -94,7 +94,7 @@ void co_yield() {
 }
 
 void co_wait(struct co *thd) {
-  get_sp(__stack_backup);
+  get_sp(thd->sys_buf);
   while(thd->stat&CO_ALIVE){
     if(thd->stat&CO_RUNNING){ 
       longjmp(thd->tar_buf,1); 
@@ -107,7 +107,7 @@ void co_wait(struct co *thd) {
       thd->stat=0;
     }
   }
-  set_sp(__stack_backup);
+  set_sp(thd->sys_buf);
   thd->stat=0;
 }
 
