@@ -105,7 +105,7 @@ void co_wait(struct co *thd) {
       set_sp(thd->stack_top); 
       thd->func(thd->arg);
       printf("Finish\n");
-      the->stat=0;
+      thd->stat=0;
     }
   }
   set_sp(__stack_backup);
