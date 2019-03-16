@@ -74,9 +74,9 @@ struct co* co_start(const char *name, func_t func, void *arg) {
 
 #define run_co(_co) \
   current=_co; \
-  if(!(_co->stat&&CO_ALIVE)) \
+  if(!(_co->stat&CO_ALIVE)) \
     fprintf(stderr,"Run a dead coroutine!\n");fflush(stderr); \
-  if(_co->stat&&CO_RUNNING){ \
+  if(_co->stat&CO_RUNNING){ \
     longjmp(_co->tar_buf,1); \
   }else{ \
     _co->stat|=CO_RUNNING; \
@@ -95,7 +95,7 @@ void co_yield() {
 void co_wait(struct co *thd) {
   get_sp(__stack_backup);
   setjmp(ret_buf);
-  while(thd->alive){
+  while(thd->stat&CO_ALIVE){
       run_co(thd);
   }
   set_sp(__stack_backup);
