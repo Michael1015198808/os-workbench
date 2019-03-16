@@ -69,7 +69,9 @@ struct co* co_start(const char *name, func_t func, void *arg) {
   current->stack_top=stack_top;
   current->func=func;
   current->arg=arg;
+  set_sp(stack_top);
   if(!setjmp(current->tar_buf)){
+    set_sp(__stack_backup);
     return current;
   }else{
     current->func(current->arg);
