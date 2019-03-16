@@ -81,7 +81,7 @@ struct co* co_start(const char *name, func_t func, void *arg) {
   }else{ \
     _co->stat|=CO_RUNNING; \
     set_sp(_co->stack_top); \
-    _co->func(_co->arg) \
+    _co->func(_co->arg); \
   }
 void co_yield() {
     int val=setjmp(current->tar_buf);
