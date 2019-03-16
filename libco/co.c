@@ -30,7 +30,6 @@ struct co {
     uint8_t stat;
 }routines[MAX_ROUTINES] /*__attribute((aligned(16)))*/,*current;
 
-static void run_co()
 static int pool[MAX_ROUTINES];
 //pool[0,idx) records indexes of
 //available space for routines.
