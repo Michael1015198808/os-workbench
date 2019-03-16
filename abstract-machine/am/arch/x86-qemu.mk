@@ -20,4 +20,5 @@ image:
 	@cat ${AM_HOME}/am/src/x86/qemu/boot/mbr $(BINARY).o > $(BINARY)
 
 run:
-	@qemu-system-i386 -serial stdio -smp 2 -accel tcg $(BINARY)
+	@qemu-system-i386 -serial stdio -smp 2 $(BINARY)
+#	@qemu-system-i386 -serial stdio -smp 2 -accel tcg $(BINARY)

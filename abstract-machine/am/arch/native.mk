@@ -14,3 +14,5 @@ image:
 
 run:
 	$(BINARY)
+gdb:
+	gdb $(BINARY)

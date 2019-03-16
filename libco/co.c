@@ -64,7 +64,6 @@ struct co* co_start(const char *name, func_t func, void *arg) {
     set_sp(stack_top);
     func(arg);
     current->alive=0;
-    printf("Program finishs\n");
     longjmp(ret_buf,1);
   }
   set_sp(__stack_backup);
