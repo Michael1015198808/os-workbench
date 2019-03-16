@@ -60,7 +60,7 @@ struct co* co_start(const char *name, func_t func, void *arg) {
   if(!setjmp(ret_buf)){
       func(arg);
   }
-  //set_sp(__stack_backup);
+  set_sp(__stack_backup);
   return current;
 }
 
