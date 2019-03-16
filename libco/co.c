@@ -63,7 +63,8 @@ static jmp_buf ret_buf;
 struct co* co_start(const char *name, func_t func, void *arg) {
   get_sp(__stack_backup);
   current=new_co();
-  asm volatile("mov ("SP"),%0;": "=g"(current->args_space[0]):);
+  asm volatile("mov $0x0("SP"),%0;": "=g"(current->args_space[0]):);
+  asm volatile("mov $0x8("SP"),%0;": "=g"(current->args_space[1]):);
   set_sp(current->args_space);
   if(!setjmp(ret_buf)){
       func(arg);
