@@ -53,7 +53,7 @@ void co_init() {
 }
 
 void *__stack_backup=NULL;
-//static jmp_buf ret_buf;
+static jmp_buf ret_buf;
 struct co* co_start(const char *name, func_t func, void *arg) {
   get_sp(__stack_backup);
   current=new_co();
@@ -75,6 +75,7 @@ struct co* co_start(const char *name, func_t func, void *arg) {
     return current;
   }else{
     current->func(current->arg);
+    longjmp(ret_buf);
   }
   return NULL;
 }
@@ -92,6 +93,7 @@ void co_yield() {
 
 void co_wait(struct co *thd) {
   get_sp(__stack_backup);
+  setjmp(ret_buf);
   while(thd->stat&CO_ALIVE){
     longjmp(thd->tar_buf,1); 
   }
