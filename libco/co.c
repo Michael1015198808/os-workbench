@@ -50,7 +50,7 @@ struct co* co_start(const char *name, func_t func, void *arg) {
   get_sp(__stack_backup);
   current=new_co();
   printf("%p\n",current->stack+STACK_SIZE-sizeof(void*));
-  asm volatile("mov $0x8(" SP "),(%1)"
+  asm volatile("mov (" SP "),(%0)"
           : "=g"(current->stack+STACK_SIZE-sizeof(void*))
           : );
   set_sp(current->stack+STACK_SIZE-sizeof(void*));
