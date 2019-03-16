@@ -95,7 +95,15 @@ void co_wait(struct co *thd) {
   get_sp(__stack_backup);
   setjmp(ret_buf);
   while(thd->stat&CO_ALIVE){
-      run_co(thd);
+    if(!(thd->stat&CO_ALIVE)) 
+      fprintf(stderr,"Run a dead coroutine!\n");fflush(stderr); 
+    if(thd->stat&CO_RUNNING){ 
+      longjmp(thd->tar_buf,1); 
+    }else{ 
+      thd->stat|=CO_RUNNING; 
+      set_sp(thd->stack_top); 
+      thd->func(thd->arg);
+    }
   }
   set_sp(__stack_backup);
   thd->stat=0;
