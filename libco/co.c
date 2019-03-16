@@ -20,7 +20,7 @@ struct co {
 #define KB *(1<<10)
 #define STACK_SIZE (4 KB)
     uint8_t stack[STACK_SIZE];
-    uintptr_t args_space[2];
+    //uintptr_t args_space[2];
     //compiler will allocate space as I declare
     //Use args_space[idx] to make assignment easier
     jmp_buf tar_buf;
@@ -42,7 +42,7 @@ struct co* new_co(){
     return &routines[pool[idx]];
 }
 void co_init() {
-    if(
+    /*if(
             (void*)routines[0].args_space!=
             (void*)(routines[0].stack+STACK_SIZE)){
         fprintf(stderr,"The compiler doesn't allocate space as it should do\n");
@@ -50,7 +50,7 @@ void co_init() {
         fprintf(stderr,"Entry para %p\n",routines[0].args_space);
         fflush(stderr);
         exit(1);
-    }
+    }*/
     int i;
     for(i=0;i<MAX_ROUTINES;++i){
         pool[i]=i;
@@ -63,11 +63,10 @@ static jmp_buf ret_buf;
 struct co* co_start(const char *name, func_t func, void *arg) {
   get_sp(__stack_backup);
   current=new_co();
-  //asm volatile("mov 0x0("SP"),%0;": "=g"(current->args_space[0]):);
   current->args_space[0]=(uintptr_t)func;
   //asm volatile("mov %1("SP"),%0;": "=g"(current->args_space[1]):"n"(sizeof(void*)));
   current->args_space[1]=(uintptr_t)arg;
-  set_sp(current->args_space);
+  set_sp(current->);
   if(!setjmp(ret_buf)){
       func(arg);
   }

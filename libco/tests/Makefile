@@ -1,4 +1,4 @@
-.PHONY: test libco
+.PHONY: test libco gdb
 
 test: libco-test-64 libco-test-32
 	@echo "==== TEST 64 bit ===="
@@ -10,10 +10,14 @@ libco:
 	@cd .. && make -s
 
 libco-test-64: main.c libco
-	gcc -I.. -L.. -m64 main.c -o libco-test-64 -lco-64
+	gcc -g -I.. -L.. -m64 main.c -o libco-test-64 -lco-64
 
 libco-test-32: main.c libco
-	gcc -I.. -L.. -m32 main.c -o libco-test-32 -lco-32
+	gcc -g -I.. -L.. -m32 main.c -o libco-test-32 -lco-32
 
 clean:
 	rm -f libco-test-32 libco-test-64
+
+gdb: libco-test-64
+	gdb --init-command=gdbinit ./libco-test-64
+	
