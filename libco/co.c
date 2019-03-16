@@ -61,8 +61,8 @@ void co_yield() {
     int val=setjmp(current->tar_buf);
     log();
     if(val==0){
-    log();
-        longjmp(__stack_backup,1);
+        set_sp(__stack_backup);
+        longjmp(ret_buf,1);
     }else{
         return;
     }
