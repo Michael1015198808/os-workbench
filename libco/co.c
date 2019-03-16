@@ -61,9 +61,9 @@ struct co* co_start(const char *name, func_t func, void *arg) {
   //Calculate the space for entry parameters
 #define mov_to(_para,_stack) \
   *(uintptr_t*)(_stack+(((void*)&_para)-__stack_backup))=(uintptr_t)_para;
-  mov_between(name,stack_top);
-  mov_between(func,stack_top);
-  mov_between(arg,stack_top);
+  mov_to(name,stack_top);
+  mov_to(func,stack_top);
+  mov_to(arg,stack_top);
 
   current->stack_top=stack_top;
   current->func=func;
@@ -103,7 +103,7 @@ void co_wait(struct co *thd) {
       longjmp(thd->tar_buf,1); 
     }else{ 
       thd->stat|=CO_RUNNING; 
-      mov_between(thd,thd->stack_top);
+      mov_to(thd,thd->stack_top);
       set_sp(thd->stack_top); 
       thd->func(thd->arg);
     }
