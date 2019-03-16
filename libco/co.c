@@ -58,9 +58,10 @@ struct co* co_start(const char *name, func_t func, void *arg) {
 }
 
 void co_yield() {
-    log();
     int val=setjmp(current->tar_buf);
+    log();
     if(val==0){
+    log();
         longjmp(__stack_backup,1);
     }else{
         return;
