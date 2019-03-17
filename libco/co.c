@@ -15,6 +15,7 @@
 #define set_sp(__target) asm volatile("mov %0," SP : : "g"(__target));
 #define get_sp(__target) asm volatile("mov " SP",%0" : "=g"(__target) :);
 #define MAX_ROUTINES 100
+#define until(_condition) while(!(_condition))
 
 struct co {
 #define KB *(1<<10)
@@ -85,7 +86,11 @@ struct co* co_start(const char *name, func_t func, void *arg) {
 void co_yield() {
     int val=setjmp(current->tar_buf);
     if(val==0){
-        //longjmp(ret_buf,1);
+        int next_co;
+        do{
+            next_co=rand()%MAX_ROUTINES;
+        }until(routines[next_co].stat&CO_ALIVE);
+        longjmp(routines[next_co].tar_buf,1);
         return;
     }else{
         return;
