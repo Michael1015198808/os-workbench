@@ -91,6 +91,7 @@ void co_yield() {
             next_co=rand()%MAX_ROUTINES;
         }until(routines[next_co].stat&CO_ALIVE);
         printf("Goto %d\n",next_co);
+        current=&routines[next_co];
         longjmp(routines[next_co].tar_buf,1);
         return;
     }else{
