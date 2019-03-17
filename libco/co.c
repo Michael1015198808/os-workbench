@@ -56,8 +56,8 @@ void *__stack_backup=NULL;
 static jmp_buf ret_buf;
 struct co* co_start(const char *name, func_t func, void *arg) {
   get_sp(__stack_backup);
-  struct co* _new_co=new_co();
-  uint8_t* stack_top=_new_co->stack+STACK_SIZE;
+  current=new_co();
+  uint8_t* stack_top=current->stack+STACK_SIZE;
   stack_top-=sizeof(void*)+((void*)&name)-__stack_backup;
   //Calculate the space for entry parameters
 #define mov_to(_para,_stack) \
@@ -65,20 +65,17 @@ struct co* co_start(const char *name, func_t func, void *arg) {
   mov_to(name,stack_top);
   mov_to(func,stack_top);
   mov_to(arg,stack_top);
-  mov_to(_new_co,stack_top);
 
-  _new_co->stack_top=stack_top;
-  _new_co->func=func;
-  _new_co->arg=arg;
+  current->stack_top=stack_top;
+  current->func=func;
+  current->arg=arg;
   set_sp(stack_top);
-  if(!setjmp(_new_co->tar_buf)){
-    current=_new_co;
-    _new_co->func(_new_co->arg);
+  if(!setjmp(current->tar_buf)){
     set_sp(__stack_backup);
-    return _new_co;
+    return current;
   }else{
-    _new_co->func(_new_co->arg);
-    _new_co->stat&=!CO_ALIVE;
+    current->func(current->arg);
+    current->stat&=!CO_ALIVE;
     longjmp(ret_buf,1);
   }
   return NULL;
