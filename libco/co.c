@@ -75,7 +75,7 @@ struct co* co_start(const char *name, func_t func, void *arg) {
     return current;
   }else{
     current->func(current->arg);
-    current->stat&=!CO_ALIVE;
+    current->stat&=~CO_ALIVE;
     longjmp(ret_buf,1);
   }
   return NULL;
