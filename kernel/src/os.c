@@ -19,8 +19,6 @@ static void hello() {
 
 static void os_run() {
   hello();
-  int system(const char *command);
-  system("echo 1");
   _intr_write(1);
   while (1) {
     _yield();
