@@ -8,14 +8,14 @@ intptr_t atomic_xchg(volatile intptr_t *addr,
   return result;
 }
 intptr_t locked = 0;
-void lock(intptr_t locked) {
+void lock(intptr_t* locked) {
   while (1) {
-    intptr_t value = atomic_xchg(&locked, 1);
+    intptr_t value = atomic_xchg(locked, 1);
     if (value == 0) {
       break;
     }
   }
 }
-void unlock(intptr_t locked) {
-  atomic_xchg(&locked, 0);
+void unlock(intptr_t* locked) {
+  atomic_xchg(locked, 0);
 }
