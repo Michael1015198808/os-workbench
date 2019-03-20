@@ -15,6 +15,7 @@ static void hello() {
 
 static void os_run() {
   hello();
+  system("echo 1");
   _intr_write(1);
   while (1) {
     _yield();
