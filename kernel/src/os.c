@@ -5,12 +5,15 @@ static void os_init() {
   pmm->init();
 }
 
+
 static void hello() {
   /*for (const char *ptr = "Hello from CPU #"; *ptr; ptr++) {
     _putc(*ptr);
   }
   _putc("12345678"[_cpu()]); _putc('\n');*/
+  lock(&lk);
   printf("Hello from CPU #%d\n",_cpu());
+  unlock(&lk);
 }
 
 static void os_run() {
