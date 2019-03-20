@@ -6,6 +6,7 @@ static void os_init() {
 }
 
 
+intptr_t lk=0;
 static void hello() {
   /*for (const char *ptr = "Hello from CPU #"; *ptr; ptr++) {
     _putc(*ptr);
