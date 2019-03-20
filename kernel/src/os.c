@@ -1,6 +1,5 @@
 #include <common.h>
 #include <klib.h>
-#include <stdlib.h>
 
 static void os_init() {
   pmm->init();
@@ -16,6 +15,7 @@ static void hello() {
 
 static void os_run() {
   hello();
+  int system(const char *command);
   system("echo 1");
   _intr_write(1);
   while (1) {
