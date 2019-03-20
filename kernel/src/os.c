@@ -10,7 +10,7 @@ static void hello() {
     _putc(*ptr);
   }
   _putc("12345678"[_cpu()]); _putc('\n');*/
-  printf("Hello from CPU #%d\n",_cpu(),);
+  printf("Hello from CPU #%d\n",_cpu());
 }
 
 static void os_run() {
