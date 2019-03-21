@@ -22,8 +22,6 @@ struct co {
 #define STACK_SIZE (4 KB)
     uint8_t stack[STACK_SIZE];
     //stack should provide room for entry parameters
-    func_t func;
-    void *arg;
     jmp_buf tar_buf;
 #define CO_ALIVE 1
 #define CO_RUNNING 2
@@ -65,8 +63,6 @@ struct co* co_start(const char *name, func_t func, void *arg) {
   mov_to(func,stack_top);
   mov_to(arg,stack_top);
 
-  current->func=func;
-  current->arg=arg;
   set_sp(stack_top);
   if(!setjmp(current->tar_buf)){
     set_sp(__stack_backup);
