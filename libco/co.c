@@ -55,8 +55,12 @@ static jmp_buf ret_buf;
 struct co* co_start(const char *name, func_t func, void *arg) {
   get_sp(__stack_backup);
   current=new_co();
-  uint8_t* stack_top=current->stack+STACK_SIZE/2;
-  //Calculate the space for entry parameters
+  uint8_t*
+      stack_top=current->stack
+                +STACK_SIZE
+                -STACK_SIZE/4;
+  //Space for entry parameters and other things
+  //I used &name-__stack_backup to get the extra space, but failed
 #define mov_to(_para,_stack) \
   *(uintptr_t*)(_stack+(((void*)&_para)-__stack_backup))=(uintptr_t)_para;
   mov_to(name,stack_top);
