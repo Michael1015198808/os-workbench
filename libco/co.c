@@ -73,7 +73,7 @@ struct co* co_start(const char *name, func_t func, void *arg) {
     set_sp(__stack_backup);
     return current;
   }else{
-    current->func(current->arg);
+    func(arg);
     current->stat&=~CO_ALIVE;
     longjmp(ret_buf,1);
   }
