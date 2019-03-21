@@ -58,7 +58,7 @@ struct co* co_start(const char *name, func_t func, void *arg) {
   get_sp(__stack_backup);
   current=new_co();
   uint8_t* stack_top=current->stack+STACK_SIZE;
-  stack_top-=sizeof(void*)+((void*)&name)-__stack_backup;
+  stack_top-=sizeof(void*)+((void*)&name)-(uintptr_t)__stack_backup;
   //Calculate the space for entry parameters
 #define mov_to(_para,_stack) \
   *(uintptr_t*)(_stack+(((void*)&_para)-__stack_backup))=(uintptr_t)_para;
