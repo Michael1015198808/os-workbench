@@ -21,7 +21,6 @@ struct co {
 #define KB *(1<<10)
 #define STACK_SIZE (4 KB)
     uint8_t stack[STACK_SIZE];
-    void * stack_top;
     //stack should provide room for entry parameters
     func_t func;
     void *arg;
@@ -67,7 +66,6 @@ struct co* co_start(const char *name, func_t func, void *arg) {
   mov_to(func,stack_top);
   mov_to(arg,stack_top);
 
-  current->stack_top=stack_top;
   current->func=func;
   current->arg=arg;
   set_sp(stack_top);
