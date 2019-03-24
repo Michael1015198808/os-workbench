@@ -26,7 +26,7 @@ struct co {
 #define CO_ALIVE 1
 #define CO_RUNNING 2
     uint8_t stat;
-}routines[MAX_ROUTINES] /*__attribute((aligned(16)))*/,*current;
+}routines[MAX_ROUTINES] __attribute__((aligned(16))),*current;
 
 static int pool[MAX_ROUTINES];
 //pool[0,idx) records indexes of
