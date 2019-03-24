@@ -15,10 +15,10 @@ static void pmm_init() {
   pm_start = (uintptr_t)_heap.start;
   pm_end   = (uintptr_t)_heap.end;
   for(i=0;i<_ncpu();++i){
-      free_list[i]=pm_start;
-      free_list[i]->next=&free_list[i];
-      free_list[i]->size=1KB-sizeof(struct header);
-      pm_start+=1KB;
+      free_list[i]=(void*)pm_start;
+      free_list[i]->next= free_list[i];
+      free_list[i]->size=1 KB-sizeof(struct header);
+      pm_start+=1 KB;
   }
 }
 
