@@ -13,7 +13,8 @@ static void hello() {
   _putc("12345678"[_cpu()]); _putc('\n');*/
   //My printf is thread-safe
   //while(1){
-    printf("Hello from CPU #%d for the %d-th time\n",_cpu(),++cnt);
+    //printf("Hello from CPU #%d for the %d-th time\n",_cpu(),++cnt);
+    printf("Hello from CPU #%d\n",_cpu());
   //}
 }
 
