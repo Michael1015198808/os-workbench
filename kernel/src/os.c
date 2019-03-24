@@ -6,13 +6,11 @@ static void os_init() {
 }
 
 
-intptr_t lk=0;
 static void hello() {
-  /*for (const char *ptr = "Hello from CPU #"; *ptr; ptr++) {
+  for (const char *ptr = "Hello from CPU #"; *ptr; ptr++) {
     _putc(*ptr);
   }
-  _putc("12345678"[_cpu()]); _putc('\n');*/
-  printf("Hello from CPU #%d\n",_cpu());
+  _putc("12345678"[_cpu()]); _putc('\n');
 }
 
 static void os_run() {
