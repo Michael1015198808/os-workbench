@@ -17,7 +17,7 @@ static void pmm_init() {
   pm_end   = (uintptr_t)_heap.end;
   for(i=0;i<cpu_cnt;++i){
       free_list[i]=(void*)pm_start;
-      free_list[i]->next=(header*)&(free_list.space);
+      free_list[i]->next=(header*)&(free_list[i]->space);
       free_list[i]->size=0;//Sentinel
       header *head=free_list[i]->next;
       head->next=free_list[i];//Circular
@@ -38,7 +38,7 @@ static void *kalloc(size_t size) {
   do{
     if(p->size>=size){
       if(p->size-size>16){
-        tail=p;
+        tail=(uint8_t*)p;
         tail+=p->size;
         tail-=size;//Get to the tail
         ret=(header*)tail;
@@ -54,6 +54,7 @@ static void *kalloc(size_t size) {
   }while(p!=free_list[cpu_id]);
   //TODO: ask os for one more page
   //return kalloc(size);
+  return prevp;//Prevent compile error
 }
 
 static void kfree(void *ptr) {
