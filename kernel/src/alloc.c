@@ -12,7 +12,7 @@ static void pmm_init() {
 struct header{
     struct header *next;
     unsigned size;
-}*free_list[4]__attribute__={};
+}*free_list[4]={};
 #define KB *(1<<10)
 static void *kalloc(size_t size) {
   return NULL;
