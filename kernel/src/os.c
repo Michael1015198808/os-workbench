@@ -5,7 +5,7 @@ static void os_init() {
   pmm->init();
 }
 
-//volatile static __thread int cnt=0;
+volatile static _Thread_local int cnt=0;
 static void hello() {
   /*for (const char *ptr = "Hello from CPU #"; *ptr; ptr++) {
     _putc(*ptr);
