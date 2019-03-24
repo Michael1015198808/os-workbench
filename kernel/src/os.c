@@ -5,16 +5,16 @@ static void os_init() {
   pmm->init();
 }
 
-__thread int cnt=0;
+//__thread int cnt=0;
 static void hello() {
   /*for (const char *ptr = "Hello from CPU #"; *ptr; ptr++) {
     _putc(*ptr);
   }
   _putc("12345678"[_cpu()]); _putc('\n');*/
   //My printf is thread-safe
-  while(1){
+  //while(1){
     printf("Hello from CPU #%d for the %d-th time\n",_cpu(),++cnt);
-  }
+  //}
 }
 
 static void os_run() {
