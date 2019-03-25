@@ -96,10 +96,12 @@ static void kfree(void *ptr) {
 void show_free_list(void){
     int cpu_id=_cpu();
     header *p=free_list[cpu_id];
+    printf("Free list:\n");
     do{
         printf("%p:%x\n",p,p->size);
         p=p->next;
     }while(p!=free_list[cpu_id]);
+    printf("\n");
 }
 
 MODULE_DEF(pmm) {
