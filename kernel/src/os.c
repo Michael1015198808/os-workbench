@@ -35,8 +35,8 @@ void show_free_list(void);
             show_free_list();
             //printf("%d\n",size);
         //}
-        printf("%d:need size:%x\n",i,size);
         space[temp]=pmm->alloc(size);
+        printf("%d:need size:%x,get at %p\n",i,size,space[temp]);
         show_free_list();
     }
     for(i=0;i<10;++i){
