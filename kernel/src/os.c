@@ -23,6 +23,9 @@ void show_free_list(void);
     int rorder[10],i;
     void *space[10];
     for(i=0;i<10;++i){
+        rorder[i]=i;//init
+    }
+    for(i=0;i<10;++i){
         int p=rand()%10,q=rand()%10;//shuffle
         int temp=rorder[p];
         rorder[p]=rorder[q];
