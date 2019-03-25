@@ -52,8 +52,8 @@ static void *kalloc(size_t size) {
           tail=(uint8_t*)p;
           tail+=p->size;
           tail-=size;//Get to the tail
-          printf("%p\n",ret);
           ret=(header*)tail;
+          printf("%p\n",ret);
           ret->size=size;//record size for free
           p->size-=size;//Shrink current space
           return &(ret->space);
