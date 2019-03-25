@@ -56,6 +56,7 @@ static void *kalloc(size_t size) {
           printf("%p\n",ret);
           ret->size=size;//record size for free
           p->size-=size;//Shrink current space
+          printf("%p\n",&(ret->space));
           return &(ret->space);
         }else{
           prevp->next=p->next;//"delete" p
