@@ -21,6 +21,7 @@ void test(){
     void *p[4];
 void show_free_list(void);
     show_free_list();
+    int i;
     for(i=0;i<4;++i){
         p[i]=pmm->alloc(4);
     }
