@@ -40,6 +40,7 @@ void show_free_list(void);
     for(i=0;i<10;++i){
         printf("free:%p\n",space[i]);
         pmm->free(space[i]);
+        show_free_list();
     }
     show_free_list();
 }
