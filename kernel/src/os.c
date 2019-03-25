@@ -20,31 +20,20 @@ static void hello() {
 void test(){
 void show_free_list(void);
     show_free_list();
-    int rorder[10],i;
     void *space[10];
+    int i;
     for(i=0;i<10;++i){
-        rorder[i]=i;//init
-    }
-    for(i=0;i<10;++i){
-        int p=rand()%10,q=rand()%10;//shuffle
-        int temp=rorder[p];
-        rorder[p]=rorder[q];
-        rorder[q]=temp;
         space[i]=pmm->alloc(rand()%100);
-        show_free_list();
+    }
+    for(i=0;i<100;++i){
+        int temp=rand()%10;
+        pmm->free(space[temp]);
+        space[temp]=pmm->alloc(rand()%100);
     }
     for(i=0;i<10;++i){
-        printf("%p\n",space[i]);
-    }
-    for(i=0;i<10;++i){
-        printf("%d\n",rorder[i]);
-    }
-    for(i=0;i<10;++i){
-        pmm->free(space[rorder[i]]);//free in random order
-        show_free_list();
+        pmm->free(space[temp]);
     }
     show_free_list();
-
 }
 
 static void os_run() {
