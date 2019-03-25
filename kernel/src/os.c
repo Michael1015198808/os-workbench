@@ -17,15 +17,20 @@ static void hello() {
     printf("Hello from CPU #%d\n",_cpu());
   //}
 }
-void test(){
 void show_free_list(void);
+uintptr_t cnt_free_list(void);
+int cnt_space=0;
+void test(){
     show_free_list();
     void *space[10];
     int i;
     for(i=0;i<10;++i){
-        space[i]=pmm->alloc(rand()%100);
+        int temp=rand()%100;
+        space[i]=pmm->alloc(temp);
+        cnt_space+=temp;
     }
     for(i=0;i<100;++i){
+        printf("total size:%d\n",cnt_space+cnt_free_list());
         int temp=rand()%10;
         pmm->free(space[temp]);
         int size=rand()%100;
@@ -36,6 +41,7 @@ void show_free_list(void);
             //printf("%d\n",size);
         //}
         space[temp]=pmm->alloc(size);
+        cnt_space+=size;
         printf("%d:need size:%x,get at %p\n",i,size,space[temp]);
         show_free_list();
     }

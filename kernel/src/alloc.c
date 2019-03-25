@@ -72,6 +72,7 @@ static void *kalloc(size_t size) {
   return prevp;//Prevent compile error
 }
 
+int cnt_space;
 static void kfree(void *ptr) {
   int cpu_id=_cpu();//Call once
   header *p=free_list[cpu_id]->next,
@@ -80,6 +81,7 @@ static void kfree(void *ptr) {
   if(to_free->size> 1 KB){
     //TODO: fancy algorithm
   }
+  cnt_space-=to_free->size;
   while((uintptr_t)ptr>(uintptr_t)&(p->space)&&(p->next!=free_list[cpu_id])){
     prevp=p;
     p=p->next;
@@ -113,6 +115,15 @@ void show_free_list(void){
         p=p->next;
     }while(p!=free_list[cpu_id]);
     printf("\n");
+}
+uintptr_t cnt_free_list(void){
+    uintptr_t ret=0;
+    header *p=free_list[cpu_id];
+    do{
+        ret+=p->size;
+        p=p->next;
+    }while(p!=free_list[cpu_id]);
+    return ret;
 }
 
 MODULE_DEF(pmm) {
