@@ -26,10 +26,10 @@ void show_free_list(void);
         space[i]=pmm->alloc(rand()%100);
     }
     for(i=0;i<100;++i){
-        printf("%d\n",i);
         int temp=rand()%10;
         pmm->free(space[temp]);
         int size=rand()%100;
+        printf("%d:need size:%x,free:%p\n",i,size,space[temp]);
         //if(i>73){
             //printf("%p\n",space[temp]);
             show_free_list();
