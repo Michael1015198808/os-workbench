@@ -25,7 +25,7 @@ static void pmm_init() {
       free_list[i]->size=0;//Sentinel
       header *head=free_list[i]->next;
       head->next=free_list[i];//Circular
-      head->size=1 KB-sizeof(header)*2;
+      head->size=1 KB-sizeof(header)*3;
       pm_start+=1 KB;
       if(((void*)head)+head->size+sizeof(header)!=(void*)pm_start){
           printf("result%p\nactual%p\n",
