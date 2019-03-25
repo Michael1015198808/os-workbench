@@ -21,16 +21,16 @@ void test(){
 void show_free_list(void);
     show_free_list();
     int rorder[10],i;
-    void *p[10];
+    void *space[10];
     for(i=0;i<10;++i){
         int p=rand()%10,q=rand()%10;//shuffle
         int temp=rorder[p];
         rorder[p]=rorder[q];
         rorder[q]=temp;
-        p[0]=pmm->alloc(rand()%100);
+        space[0]=pmm->alloc(rand()%100);
     }
     for(i=0;i<10;++i){
-        free(p[rorder[i]]);//free in random order
+        free(space[rorder[i]]);//free in random order
     }
     show_free_list();
 
