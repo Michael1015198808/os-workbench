@@ -76,7 +76,7 @@ static void kfree(void *ptr) {
   if(to_free->size> 1 KB){
     //TODO: fancy algorithm
   }
-  while((uintptr_t)ptr>(uintptr_t)&(p->space)){
+  while((uintptr_t)ptr>(uintptr_t)&(p->space)&&(p->next!=free_list[cpu_id])){
     prevp=p;
     p=p->next;
   }
