@@ -18,12 +18,17 @@ static void hello() {
   //}
 }
 void test(){
-    pmm->alloc(4);
-    pmm->alloc(4);
-    pmm->alloc(4);
-    pmm->alloc(4);
+    show_free_list();
+    void *p[4];
 void show_free_list(void);
     show_free_list();
+    for(i=0;i<4;++i){
+        p[i]=pmm->alloc(4);
+    }
+    show_free_list();
+    free(p[1]);
+    show_free_list();
+
 }
 
 static void os_run() {
