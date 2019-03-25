@@ -26,7 +26,7 @@ void show_free_list(void);
         p[i]=pmm->alloc(4);
     }
     show_free_list();
-    free(p[1]);
+    pmm->free(p[1]);
     show_free_list();
 
 }
