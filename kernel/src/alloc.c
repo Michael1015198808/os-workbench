@@ -16,11 +16,11 @@ static void pmm_init() {
   int i,cpu_cnt=_ncpu();
   pm_start = (uintptr_t)_heap.start;
   printf("%x\n",pm_start);
-  pm_start = ~pm_start;
+  pm_start = -pm_start;
   printf("%x\n",pm_start);
   pm_start&= -((uintptr_t)0x10);
   printf("%x\n",pm_start);
-  pm_start = ~pm_start;
+  pm_start = -pm_start;
   printf("%x\n",pm_start);
   pm_end   = (uintptr_t)_heap.end;
   for(i=0;i<cpu_cnt;++i){
