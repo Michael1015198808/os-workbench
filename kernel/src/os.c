@@ -38,6 +38,7 @@ void show_free_list(void);
         space[temp]=pmm->alloc(size);
     }
     for(i=0;i<10;++i){
+        printf("free:%p\n",space[i]);
         pmm->free(space[i]);
     }
     show_free_list();
