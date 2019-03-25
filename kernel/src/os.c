@@ -28,9 +28,14 @@ void show_free_list(void);
         rorder[p]=rorder[q];
         rorder[q]=temp;
         space[0]=pmm->alloc(rand()%100);
+        show_free_list();
+    }
+    for(i=0;i<10;++i){
+        printf("%d\n",rorder[i]);
     }
     for(i=0;i<10;++i){
         pmm->free(space[rorder[i]]);//free in random order
+        show_free_list();
     }
     show_free_list();
 
