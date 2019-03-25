@@ -29,7 +29,7 @@ void show_free_list(void);
         printf("%d\n",i);
         int temp=rand()%10;
         pmm->free(space[temp]);
-        if(i==75){
+        if(i>73){
             printf("%d\n",temp);
             show_free_list();
         }
