@@ -87,7 +87,7 @@ static void kfree(void *ptr) {
     p=p->next;
   }
   //*prevp---*to_free---*p
-  if(((uintptr_t)to_free)==((uintptr_t)prevp)+prevp->size){
+  if(((uintptr_t)to_free)==((uintptr_t)&prevp->space)+prevp->size){
     prevp->size+=sizeof(header)+to_free->size;
     if(((uintptr_t)to_free)+to_free->size!=((uintptr_t)prevp)+prevp->size){
         printf("to_free%p,len:%x\n prevp%p,len:%x\n",to_free,to_free->size,prevp,prevp->size);
@@ -97,7 +97,7 @@ static void kfree(void *ptr) {
     to_free->next=prevp->next;
     prevp->next=to_free;
   }
-  if(((uintptr_t)p)==((uintptr_t)to_free)+to_free->size){
+  if(((uintptr_t)p)==((uintptr_t)&to_free->space)+to_free->size){
     to_free->next=p->next;
     to_free->size+=sizeof(header)+p->size;
   }
