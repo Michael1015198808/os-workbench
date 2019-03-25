@@ -80,7 +80,7 @@ static void kfree(void *ptr) {
     prevp=p;
     p=p->next;
   }
-  printf("free:%p\nheader:%p",ptr,to_free);
+  printf("free:%p\nheader:%p\n",ptr,to_free);
   //*prevp---*to_free---*p
   if(((uintptr_t)to_free)==((uintptr_t)prevp)+prevp->size){
     prevp->size+=sizeof(header)+to_free->size;
