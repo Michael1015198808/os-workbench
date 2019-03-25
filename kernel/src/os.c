@@ -18,10 +18,10 @@ static void hello() {
   //}
 }
 void test(){
-    ppm->alloc(4);
-    ppm->alloc(4);
-    ppm->alloc(4);
-    ppm->alloc(4);
+    pmm->alloc(4);
+    pmm->alloc(4);
+    pmm->alloc(4);
+    pmm->alloc(4);
 void show_free_list(void);
     show_free_list();
 }
