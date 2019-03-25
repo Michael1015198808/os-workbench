@@ -82,7 +82,7 @@ static void kfree(void *ptr) {
     prevp=p;
     p=p->next;
   }
-  if((uintptr_t)ptr<=(uintptr_t)&(p->space)&&p->next==free_list[cpu_id]){
+  if((uintptr_t)ptr>(uintptr_t)&(p->space)&&p->next==free_list[cpu_id]){
     prevp=p;
     p=p->next;
   }
