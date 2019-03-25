@@ -72,7 +72,7 @@ static void kfree(void *ptr) {
   int cpu_id=_cpu();//Call once
   header *p=free_list[cpu_id]->next,
          *prevp=free_list[cpu_id],
-         *to_free=(header*)&(ptr-sizeof(header));
+         *to_free=(header*)(ptr-sizeof(header));
   if(to_free->size> 1 KB){
     //TODO: fancy algorithm
   }
