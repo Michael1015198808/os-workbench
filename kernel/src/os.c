@@ -34,6 +34,9 @@ void show_free_list(void);
         show_free_list();
     }
     for(i=0;i<10;++i){
+        printf("%p\n",space[i]);
+    }
+    for(i=0;i<10;++i){
         printf("%d\n",rorder[i]);
     }
     for(i=0;i<10;++i){
