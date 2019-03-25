@@ -21,7 +21,7 @@ static void pmm_init() {
   pm_end   = (uintptr_t)_heap.end;
   for(i=0;i<cpu_cnt;++i){
       free_list[i]=(void*)pm_start;
-      free_list[i]->next=(header*)&(free_list[i]->space);
+      free_list[i]->next=(header*)(free_list[i]+2);//bias to avoid being merged
       free_list[i]->size=0;//Sentinel
       header *head=free_list[i]->next;
       head->next=free_list[i];//Circular
