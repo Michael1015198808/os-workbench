@@ -102,7 +102,7 @@ void show_free_list(void){
     header *p=free_list[cpu_id];
     printf("Free list:\n");
     do{
-        printf("%p:%x\n",p,p->size);
+        printf("[%p,%p):%x\n",p,((void*)p)+p->size,p->size);
         p=p->next;
     }while(p!=free_list[cpu_id]);
     printf("\n");
