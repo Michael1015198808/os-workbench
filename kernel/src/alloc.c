@@ -18,7 +18,7 @@ static void pmm_init() {
   printf("%x\n",pm_start);
   pm_start = ~pm_start;
   printf("%x\n",pm_start);
-  pm_start&= ~((uintptr_t)0x10);
+  pm_start&= -((uintptr_t)0x10);
   printf("%x\n",pm_start);
   pm_start = ~pm_start;
   printf("%x\n",pm_start);
