@@ -91,8 +91,8 @@ static void kfree(void *ptr) {
     }
     to_free=prevp;//Merge to_free with prevp
   }else{
-    to_free->next=p->next;
-    p->next=to_free;
+    to_free->next=prevp->next;
+    prevp->next=to_free;
   }
   if(((uintptr_t)p)==((uintptr_t)to_free)+to_free->size){
     to_free->next=p->next;
