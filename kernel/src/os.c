@@ -18,15 +18,20 @@ static void hello() {
   //}
 }
 void test(){
-    void *p[4];
 void show_free_list(void);
     show_free_list();
-    int i;
-    for(i=0;i<4;++i){
-        p[i]=pmm->alloc(4);
+    int rorder[10],i;
+    void *p[10];
+    for(i=0;i<10;++i){
+        int p=rand()%10,q=rand()%10;//shuffle
+        int temp=rorder[p];
+        rorder[p]=rorder[q];
+        rorder[q]=temp;
+        p[0]=pmm->alloc(rand()%100);
     }
-    show_free_list();
-    pmm->free(p[1]);
+    for(i=0;i<10;++i){
+        free(p[rorder[i]]);//free in random order
+    }
     show_free_list();
 
 }
