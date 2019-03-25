@@ -9,7 +9,7 @@ struct header{
     uintptr_t size;
     struct{}space;//space doesn't take any storage
     //directly return &space
-}*free_list[4]={};
+}static *free_list[4]={};
 typedef struct header header;
 
 static void pmm_init() {
@@ -92,6 +92,15 @@ static void kfree(void *ptr) {
     to_free->next=p->next;
     to_free->size+=sizeof(header)+p->size;
   }
+}
+void show_free_list(void){
+    int cpu_id=_cpu();
+    header *p=free_list[cpu_id],*prevp=NULL;
+    do{
+        printf("%p:%x\n",p,p->size);
+        prevp=p;
+        p=p->next;
+    }while(p!=free_list[cpu_id]);
 }
 
 MODULE_DEF(pmm) {

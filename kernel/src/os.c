@@ -17,10 +17,19 @@ static void hello() {
     printf("Hello from CPU #%d\n",_cpu());
   //}
 }
+void test(){
+    ppm->alloc(4);
+    ppm->alloc(4);
+    ppm->alloc(4);
+    ppm->alloc(4);
+void show_free_list(void);
+    show_free_list();
+}
 
 static void os_run() {
+  hello();
   if(_cpu()==0){
-    hello();
+      test();
   }
   _intr_write(1);
   while (1) {
