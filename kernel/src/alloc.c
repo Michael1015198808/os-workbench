@@ -117,6 +117,7 @@ void show_free_list(void){
     printf("\n");
 }
 uintptr_t cnt_free_list(void){
+    int cpu_id=_cpu();
     uintptr_t ret=0;
     header *p=free_list[cpu_id];
     do{
