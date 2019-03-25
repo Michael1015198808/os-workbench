@@ -29,13 +29,15 @@ void show_free_list(void);
         int temp=rand()%10;
         pmm->free(space[temp]);
         int size=rand()%100;
-        printf("%d:need size:%x,free:%p\n",i,size,space[temp]);
+        printf("%d:free:%p\n",i,space[temp]);
         //if(i>73){
             //printf("%p\n",space[temp]);
             show_free_list();
             //printf("%d\n",size);
         //}
+        printf("%d:need size:%x\n",i,size);
         space[temp]=pmm->alloc(size);
+        show_free_list();
     }
     for(i=0;i<10;++i){
         printf("free:%p\n",space[i]);

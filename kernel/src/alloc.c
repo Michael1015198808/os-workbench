@@ -28,6 +28,8 @@ static void pmm_init() {
       head->size=1 KB-sizeof(header)*3;
       pm_start+=1 KB;
       if(((void*)head)+head->size+sizeof(header)!=(void*)pm_start){
+          printf("%s:%d:\n",__FILE__,__LINE__);
+          printf("Page init fails!\n");
           printf("result%p\nactual%p\n",
                   ((void*)head)+head->size+sizeof(header),
                   (void*)pm_start);
