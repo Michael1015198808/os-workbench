@@ -19,7 +19,9 @@ static void hello() {
 }
 
 static void os_run() {
-  hello();
+  if(_cpu()==0){
+    hello();
+  }
   _intr_write(1);
   while (1) {
     _yield();
