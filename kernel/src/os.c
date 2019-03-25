@@ -18,7 +18,6 @@ static void hello() {
   //}
 }
 void test(){
-    show_free_list();
     void *p[4];
 void show_free_list(void);
     show_free_list();
