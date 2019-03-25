@@ -31,7 +31,7 @@ void show_free_list(void);
         space[temp]=pmm->alloc(rand()%100);
     }
     for(i=0;i<10;++i){
-        pmm->free(space[temp]);
+        pmm->free(space[i]);
     }
     show_free_list();
 }
