@@ -45,18 +45,7 @@ void show(){
     show_free_list();
     show_free_list();
 }
-void big_size_test(void){
-    void *p[100];
-    int i;
-    for(i=0;i<100;++i){
-        p[i]=pmm->alloc(4 << 10);
-    }
-    //show_free_pages();
-    for(i=0;i<100;++i){
-        pmm->free(p[i]);
-    }
-    show_free_pages();
-}
+
 static void os_run() {
   hello();
   if(_cpu()==0){
