@@ -86,10 +86,10 @@ static void pmm_init() {
   }
   int a[10];
   for(i=0;i<10;++i){
-      disable(a[i],0);
+      disable(a[i]=(rand()%2048)+2048,0);
   }
   for(i=0;i<10;++i){
-      enable(a[i]=(rand()%2048)+2048,0);
+      enable(a[i],0);
   }
   show_free_pages();
   while(1);//test
