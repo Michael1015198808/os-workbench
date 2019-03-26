@@ -69,8 +69,8 @@ static void pmm_init() {
       free_list[i].next->next=&free_list[i];
       free_list[i].next->size=8 KB -sizeof(header);
   }
-  for(i=4;i<(pm_end-pm_start)/(8 KB)&&i<=(1<<11);++i){
-    enable((1<<11)+i,0);
+  for(i=cpu_cnt;i<(pm_end-pm_start)/(8 KB)&&i<=(1<<11);++i){
+    enable((1<<11)-1+i,0);
   }
   for(i=0;i<=(1<<12);++i){
       printf("%d:%3x\n",i,pages[i]);
