@@ -13,26 +13,20 @@ struct header{
 typedef struct header header;
 #define align(_A,_B) (_A+=(_B)-(_A&((_B)-1)))
 
-uint32_t pages[64];
+uint16_t pages[1<<10];
+void *bias;
 static void pmm_init() {
   int i,cpu_cnt=_ncpu();
   pm_start = (uintptr_t)_heap.start;
-  pm_start+=(1 KB)-(pm_start&((1 KB)-1));
+  align(pm_start,8 KB);
   pm_end   = (uintptr_t)_heap.end;
   printf("%x,%x\n",pm_start,pm_end);
   printf("%d\n",(pm_end-pm_start)/(8 KB));
-  for(i=0;i<cpu_cnt;++i){
-      free_list[i].next=(void*)pm_start;
-      free_list[i].size=0;//Sentinel
-      header *head=free_list[i].next;
-      head->next=&free_list[i];//Circular
-      head->size=8 KB-sizeof(header);
-      pm_start+=8 KB;
-  }
+
 }
 
 static void *kalloc(size_t size) {
-  size+=0x10-(size&(0x10-1));
+  align(size,0x10);
   int cpu_id=_cpu();//Call once
   uint8_t *tail=NULL;
   header *p=free_list[cpu_id].next,*prevp=&free_list[cpu_id],*ret;
