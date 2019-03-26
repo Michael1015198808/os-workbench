@@ -69,11 +69,11 @@ static void big_page_free(header *s){
     int idx=2047+
     (((uintptr_t)s)-((uintptr_t)bias))
     /PG_SIZE;
-    do{
+    while(s->size>PG_SIZE){
         enable(++idx,0);
-        printf("%d\n",idx);
         s->size-=PG_SIZE;
-    }while(s->size>PG_SIZE);
+    }
+    enable(++idx,0);
 }
 static void pmm_init() {
   int i,cpu_cnt=_ncpu();
