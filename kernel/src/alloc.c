@@ -70,7 +70,6 @@ static void big_page_free(header *s){
     (((uintptr_t)s)-((uintptr_t)bias))
     /PG_SIZE;
     while(s->size>PG_SIZE){
-        printf("%d\n",idx);
         enable(++idx,0);
         s->size-=PG_SIZE;
     }
@@ -141,6 +140,7 @@ static void kfree(void *ptr) {
          *to_free=(header*)(ptr-sizeof(header));
   if(to_free->size> PG_SIZE/2){
     big_page_free(to_free);
+    return;
   }
   while((uintptr_t)ptr>(uintptr_t)&(p->space)&&p!=&free_list[cpu_id]){
     prevp=p;
