@@ -74,9 +74,11 @@ void show(){
 
 static void os_run() {
   hello();
-  show_free_list();
-  alloc_test();
-  show_free_list();
+  if(_cpu()==0){
+    show_free_list();
+    alloc_test();
+    show_free_list();
+  }
   //show();
   _intr_write(1);
   while (1) {
