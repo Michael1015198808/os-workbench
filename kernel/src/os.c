@@ -48,6 +48,7 @@ void show(){
 static void os_run() {
   hello();
   if(_cpu()==0){
+      show_free_list();
       test();
       //show();
   }
