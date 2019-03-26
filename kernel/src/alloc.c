@@ -43,9 +43,8 @@ static void* big_page_alloc(uintptr_t shift){
     pthread_mutex_lock(&kalloc_lock);
     printf("Get the lock\n");
     int idx=1,level=12;
-    while(level!=shift){
+    while(--level!=shift){
         printf("%d\n",idx);
-        --level;
         int left=idx<<1,right=left+1;
         if(pages[left]&(1<<shift)){
             idx=left;
