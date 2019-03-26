@@ -38,27 +38,23 @@ static void* test_ptrs[MAX_CPU][test_ptr_nr];
 static void alloc_test() {
 
   for (int i = 0; i < test_ptr_nr; i++) {
-    if((i&15)==0)printf("%d\n",i);
     test_ptrs[_cpu()][i] = pmm->alloc(1 << 12);
   }
   for (int i = 0; i < test_ptr_nr; i++) {
-    if((i&15)==0)printf("%d\n",i);
     pmm->free(test_ptrs[_cpu()][i]);
   }
 
   for (int i = 0; i < test_ptr_nr; i++) {
-    if((i&15)==0)printf("%d\n",i);
     test_ptrs[_cpu()][i] = pmm->alloc(1 << 2);
   }
   for (int i = 0; i < test_ptr_nr; i++) {
-    if((i&15)==0)printf("%d\n",i);
     pmm->free(test_ptrs[_cpu()][test_ptr_nr - i - 1]);
   }
 
   for (int i = 0; i < test_ptr_nr; i++) {
-    if((i&15)==0)printf("%d\n",i);
     test_ptrs[_cpu()][i] = pmm->alloc(1 << 14);
   }
+  printf("Last part\n");
   for (int i = 0; i < test_ptr_nr; i++) {
     if((i&15)==0)printf("%d\n",i);
     pmm->free(test_ptrs[_cpu()][i]);
