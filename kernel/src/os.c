@@ -77,7 +77,7 @@ void show(){
 
 static void os_run() {
   hello();
-  test();
+  alloc_test();
   show_free_list();
   //show();
   _intr_write(1);
