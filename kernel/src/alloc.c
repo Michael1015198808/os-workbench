@@ -15,7 +15,7 @@ typedef struct header header;
 
 uint16_t pages[(1<<12)+1]={};
 void *bias;
-static void show_free_pages(void){
+void show_free_pages(void){
   int i;
   for(i=1;i<(1<<12);++i){
       printf("%4d:%2x\n",i,pages[i]);
@@ -36,14 +36,9 @@ void disable(int idx,uintptr_t shift){
     if(idx==0)return;
     pages[idx]&=~(1<<shift);
     if(pages[idx>>1]&(1<<(shift+1))){
-        if(idx==2049)printf("wrong way!\n");
          disable(idx>>1,shift+1);
     }else{
-        if(idx==2049){
-            printf("%d,%d\n",idx^1,shift);
-        }
         if(!(pages[idx^1]&(1<<shift))){
-            if(idx==2049){printf("Call disabl(1024)");}
             disable(idx>>1,shift);
         }
     }
@@ -68,6 +63,7 @@ static void* big_page_alloc(uintptr_t shift){
     disable(idx,shift);
     pthread_mutex_unlock(&kalloc_lock);
     printf("%d\n",idx);
+    printf("%d\n",((idx<<shift)&((1<<12)-1)));
     while(1);//test
     return bias+
         ((idx<<shift)&((1<<12)-1));
@@ -87,12 +83,7 @@ static void pmm_init() {
   for(i=cpu_cnt;i<(pm_end-pm_start)/(8 KB)&&i<(1<<11);++i){
     enable((1<<11)+i,0);
   }
-  enable(2048,0);
-  enable(2049,0);
-  disable(2048,0);
-  disable(2049,0);
-  disable(2050,0);
-  show_free_pages();
+  big_page_alloc(0);
   while(1);//test
 }
 
