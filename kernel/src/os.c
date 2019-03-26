@@ -36,21 +36,22 @@ void test(){
     show_free_list();
 }
 void show(){
+    void *space[10];
+    int i;
     show_free_list();
-    pmm->alloc(16);
+    for(i=0;i<10;++i){
+        space[i]=pmm->alloc(16);
+    }
     show_free_list();
-    pmm->alloc(16);
+    pmm->space
     show_free_list();
-    pmm->alloc(16);
-    show_free_list();
-    pmm->alloc(16);
     show_free_list();
 }
 static void os_run() {
   hello();
   if(_cpu()==0){
-      //test();
-      show();
+      test();
+      //show();
   }
   _intr_write(1);
   while (1) {
