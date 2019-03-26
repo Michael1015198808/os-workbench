@@ -36,6 +36,7 @@ void disable(int idx,uintptr_t shift){
     if(idx==0)return;
     pages[idx]&=~(1<<shift);
     if(pages[idx>>1]&(1<<shift)){
+        if(idx==2049)printf("wrong way!\n");
          disable(idx>>1,shift+1);
     }else{
         if(idx==2049){
