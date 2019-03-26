@@ -69,9 +69,9 @@ static void big_page_free(header *s){
     int idx=2047+
     (((uintptr_t)s)-((uintptr_t)bias))
     /PG_SIZE;
-    printf("%d\n",idx);
     do{
         enable(++idx,0);
+        printf("%d\n",idx);
         s->size-=PG_SIZE;
     }while(s->size>PG_SIZE);
 }
