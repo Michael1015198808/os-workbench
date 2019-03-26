@@ -18,19 +18,18 @@ static void hello() {
   //}
 }
 void test(){
-    void *space[10];
+    void *space[1000];
     show_free_list();
     int i;
-    for(i=0;i<10;++i){
-        int temp=rand()%100;
-        space[i]=pmm->alloc(temp);
+    for(i=0;i<1000;++i){
+        space[i]=pmm->alloc(rand()%((1<<10)-1));
     }
     for(i=0;i<1000;++i){
         int temp=rand()%10;
         pmm->free(space[temp]);
-        space[temp]=pmm->alloc(rand()%100);
+        space[temp]=pmm->alloc(rand()&((1<<10)-1));
     }
-    for(i=0;i<10;++i){
+    for(i=0;i<1000;++i){
         pmm->free(space[i]);
     }
     show_free_list();
