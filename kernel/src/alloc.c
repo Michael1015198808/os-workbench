@@ -52,12 +52,18 @@ static void* big_page_alloc(uintptr_t shift){
         ((idx<<shift)&((1<<12)-1));
 }
 static void pmm_init() {
-  int i;
+  int i,cpu_cnt=_ncpu();
   pm_start = (uintptr_t)_heap.start;
   align(pm_start,8 KB);
   pm_end   = (uintptr_t)_heap.end;
   bias=(void*)pm_start;
-  for(i=0;i<(pm_end-pm_start)/(8 KB)&&i<=(1<<11);++i){
+  for(i=0;i<cpu_cnt;++i){
+      free_list[i].next=(void*)(pm_start+i*8 KB);
+      free_list[i].size=0;
+      free_list[i].next->next=&free_list[i];
+      free_list[i].next->size=8 KB -sizeof(header);
+  }
+  for(i=4;i<(pm_end-pm_start)/(8 KB)&&i<=(1<<11);++i){
     enable((1<<11)+i,0);
   }
 }
