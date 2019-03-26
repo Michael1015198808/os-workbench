@@ -48,10 +48,10 @@ void show(){
 static void os_run() {
   hello();
   if(_cpu()==0){
-      show_free_list();
-      test();
-      show_free_list();
-      pmm->alloc(8 << 10);
+      //test();
+      pmm->alloc(4 << 10);
+      pmm->alloc(4 << 10);
+      show_free_pages();
       //show();
   }
   _intr_write(1);

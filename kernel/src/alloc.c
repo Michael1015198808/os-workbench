@@ -44,30 +44,34 @@ void disable(int idx,uintptr_t shift){
         }
     }
 }
+static pthread_mutex_t alloc_lock=PTHREAD_MUTEX_INITIALIZER;
 static void* big_page_alloc(uintptr_t shift){
-    static pthread_mutex_t kalloc_lock=PTHREAD_MUTEX_INITIALIZER;
-    printf("Start big_page_alloc\n");
-    pthread_mutex_lock(&kalloc_lock);
-    printf("Get the lock\n");
+    pthread_mutex_lock(&alloc_lock);
     int idx=1,level=12;
     while(--level!=shift){
-        printf("%d\n",idx);
         int left=idx<<1,right=left+1;
         if(pages[left]&(1<<shift)){
             idx=left;
         }else if(pages[right]&(1<<shift)){
             idx=right;
         }else{
+            printf("No space left!\n");
+            while(1);
             return NULL;//No space
         }
     }
     disable(idx,shift);
-    pthread_mutex_unlock(&kalloc_lock);
-    printf("%d\n",idx);
-    printf("%d\n",((idx<<shift)&((1<<11)-1)));
-    while(1);//test
+    pthread_mutex_unlock(&alloc_lock);
     return bias+
         ((idx<<shift)&((1<<11)-1))*PG_SIZE;
+}
+static void big_page_free(header *s){
+    int idx=2047+
+    ((uintptr_t)s-bias)/PG_SIZE;
+    while(s->size>PG_SIZE){
+        enable(++idx,0);
+        s->size-=PG_SIZE;
+    }
 }
 static void pmm_init() {
   int i,cpu_cnt=_ncpu();
@@ -84,17 +88,6 @@ static void pmm_init() {
   for(i=cpu_cnt;i<(pm_end-pm_start)/(PG_SIZE)&&i<(1<<11);++i){
     enable((1<<11)+i,0);
   }
-  int a[1000];
-  enable(2048,0);
-  enable(2049,0);
-  for(i=0;i<1000;++i){
-      disable(a[i]=(rand()%2048)+2048,0);
-  }
-  for(i=0;i<1000;++i){
-      enable(a[i],0);
-  }
-  show_free_pages();
-  while(1);//test
 }
 
 static void *kalloc(size_t size) {
@@ -102,9 +95,17 @@ static void *kalloc(size_t size) {
   int cpu_id=_cpu();//Call once
   uint8_t *tail=NULL;
   header *p=free_list[cpu_id].next,*prevp=&free_list[cpu_id],*ret;
-  if(size> PG_SIZE){
-      big_page_alloc(0);//test
-    //TODO:Fancy algorithm
+  if(size> PG_SIZE/2){
+      size+=sizeof(header);
+      int shift=0;
+      size/=PG_SIZE;
+      while(size>0){
+          size>>=1;
+          ++shift;
+      }
+      void *ret=big_page_alloc(shift);
+      ret->size=size;
+      return &(ret->space);
   }else{
     do{
       if(p->size>=size){
@@ -125,9 +126,10 @@ static void *kalloc(size_t size) {
       p=p->next;
     }while(p!=&free_list[cpu_id]);
   }
-  big_page_alloc(0);
-  //No space
-  return NULL;//No space
+  prevp->next=big_page_alloc(0);//ask for a new page
+  prevp->next->next=p;
+  prevp->next->size=PG_SIZE-sizeof(header);
+  return kalloc(size);
 }
 
 static void kfree(void *ptr) {
@@ -136,8 +138,8 @@ static void kfree(void *ptr) {
   header *p=free_list[cpu_id].next,
          *prevp=&free_list[cpu_id],
          *to_free=(header*)(ptr-sizeof(header));
-  if(to_free->size> PG_SIZE){
-    //TODO: fancy algorithm
+  if(to_free->size> PG_SIZE/2){
+    big_page_free(to_free);
   }
   while((uintptr_t)ptr>(uintptr_t)&(p->space)&&p!=&free_list[cpu_id]){
     prevp=p;
