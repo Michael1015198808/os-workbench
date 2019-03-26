@@ -35,11 +35,22 @@ void test(){
     }
     show_free_list();
 }
-
+void show(){
+    show_free_list();
+    pmm->alloc(16);
+    show_free_list();
+    pmm->alloc(16);
+    show_free_list();
+    pmm->alloc(16);
+    show_free_list();
+    pmm->alloc(16);
+    show_free_list();
+}
 static void os_run() {
   hello();
   if(_cpu()==0){
-      test();
+      //test();
+      show();
   }
   _intr_write(1);
   while (1) {
