@@ -30,7 +30,7 @@ void test(){
         cnt_space+=temp;
         printf("need size:%x,get at %p\n",temp,space[i]);
     }
-    for(i=0;i<91;++i){
+    for(i=0;i<90;++i){
         printf("total size:%d\n",cnt_space+cnt_free_list());
         int temp=rand()%10;
         pmm->free(space[temp]);
