@@ -28,7 +28,7 @@ void test(){
         int temp=rand()%100;
         space[i]=pmm->alloc(temp);
         cnt_space+=temp;
-        printf("%d:need size:%x,get at %p\n",temp,space[i]);
+        printf("need size:%x,get at %p\n",temp,space[i]);
     }
     for(i=0;i<100;++i){
         printf("total size:%d\n",cnt_space+cnt_free_list());
