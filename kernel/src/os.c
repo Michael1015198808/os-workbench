@@ -43,6 +43,7 @@ static void alloc_test() {
   for (int i = 0; i < test_ptr_nr; i++) {
     pmm->free(test_ptrs[_cpu()][i]);
   }
+  printf("CPU #%d pass test 1\n",_cpu());
 
   for (int i = 0; i < test_ptr_nr; i++) {
     test_ptrs[_cpu()][i] = pmm->alloc(1 << 2);
@@ -50,6 +51,7 @@ static void alloc_test() {
   for (int i = 0; i < test_ptr_nr; i++) {
     pmm->free(test_ptrs[_cpu()][test_ptr_nr - i - 1]);
   }
+  printf("CPU #%d pass test 2\n",_cpu());
 
   for (int i = 0; i < test_ptr_nr; i++) {
     test_ptrs[_cpu()][i] = pmm->alloc(1 << 14);
@@ -57,6 +59,7 @@ static void alloc_test() {
   for (int i = 0; i < test_ptr_nr; i++) {
     pmm->free(test_ptrs[_cpu()][i]);
   }
+  printf("CPU #%d pass test 3\n",_cpu());
 
 }
 void show(){
