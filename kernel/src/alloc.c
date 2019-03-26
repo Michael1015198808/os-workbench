@@ -29,6 +29,7 @@ static void pmm_init() {
 }
 
 static void *kalloc(size_t size) {
+  size=-((-size)&0x16);
   int cpu_id=_cpu();//Call once
   uint8_t *tail=NULL;
   header *p=free_list[cpu_id].next,*prevp=&free_list[cpu_id],*ret;
