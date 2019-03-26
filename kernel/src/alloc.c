@@ -79,6 +79,9 @@ static void pmm_init() {
       free_list[i].next->next=&free_list[i];
       free_list[i].next->size=8 KB -sizeof(header);
   }
+  for(i=cpu_cnt;i<(pm_end-pm_start)/(8 KB)&&i<(1<<11);++i){
+    enable((1<<11)+i,0);
+  }
   show_free_pages();
   enable(2048,0);
   show_free_pages();
