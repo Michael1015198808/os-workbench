@@ -12,6 +12,7 @@ struct header{
 }static free_list[4]={};//Sentinels
 typedef struct header header;
 #define align(_A,_B) (_A+=(_B)-(_A&((_B)-1)))
+#define PG_SIZE (8 KB)
 
 uint16_t pages[(1<<12)+1]={};
 void *bias;
@@ -66,24 +67,31 @@ static void* big_page_alloc(uintptr_t shift){
     printf("%d\n",((idx<<shift)&((1<<11)-1)));
     while(1);//test
     return bias+
-        ((idx<<shift)&((1<<11)-1));
+        ((idx<<shift)&((1<<11)-1))*PG_SIZE;
 }
 static void pmm_init() {
   int i,cpu_cnt=_ncpu();
   pm_start = (uintptr_t)_heap.start;
-  align(pm_start,8 KB);
+  align(pm_start,PG_SIZE);
   pm_end   = (uintptr_t)_heap.end;
   bias=(void*)pm_start;
   for(i=0;i<cpu_cnt;++i){
-      free_list[i].next=(void*)(pm_start+i*8 KB);
+      free_list[i].next=(void*)(pm_start+i*PG_SIZE);
       free_list[i].size=0;
       free_list[i].next->next=&free_list[i];
-      free_list[i].next->size=8 KB -sizeof(header);
+      free_list[i].next->size=PG_SIZE -sizeof(header);
   }
-  for(i=cpu_cnt;i<(pm_end-pm_start)/(8 KB)&&i<(1<<11);++i){
+  for(i=cpu_cnt;i<(pm_end-pm_start)/(PG_SIZE)&&i<(1<<11);++i){
     enable((1<<11)+i,0);
   }
-  big_page_alloc(0);
+  int a[10];
+  for(i=0;i<10;++i){
+      disable(a[i],0);
+  }
+  for(i=0;i<10;++i){
+      enable(a[i]=(rand()%2048)+2048,0);
+  }
+  show_free_pages();
   while(1);//test
 }
 
@@ -92,7 +100,7 @@ static void *kalloc(size_t size) {
   int cpu_id=_cpu();//Call once
   uint8_t *tail=NULL;
   header *p=free_list[cpu_id].next,*prevp=&free_list[cpu_id],*ret;
-  if(size> 8 KB){
+  if(size> PG_SIZE){
       big_page_alloc(0);//test
     //TODO:Fancy algorithm
   }else{
@@ -126,7 +134,7 @@ static void kfree(void *ptr) {
   header *p=free_list[cpu_id].next,
          *prevp=&free_list[cpu_id],
          *to_free=(header*)(ptr-sizeof(header));
-  if(to_free->size> 8 KB){
+  if(to_free->size> PG_SIZE){
     //TODO: fancy algorithm
   }
   while((uintptr_t)ptr>(uintptr_t)&(p->space)&&p!=&free_list[cpu_id]){
