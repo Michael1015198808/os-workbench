@@ -51,7 +51,7 @@ static void os_run() {
       show_free_list();
       test();
       show_free_list();
-      pmm->alloc(8 << 10)
+      pmm->alloc(8 << 10);
       //show();
   }
   _intr_write(1);
