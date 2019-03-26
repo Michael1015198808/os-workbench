@@ -3,6 +3,8 @@
 #include <kernel.h>
 #include <nanos.h>
 
+#define DEBUG
+//Comment the line above after testing
 #ifdef DEBUG
 void show_free_list(void);
 uintptr_t cnt_free_list(void);
