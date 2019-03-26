@@ -140,6 +140,7 @@ static void kfree(void *ptr) {
          *prevp=&free_list[cpu_id],
          *to_free=(header*)(ptr-sizeof(header));
   if(to_free->size> PG_SIZE/2){
+      printf("%x\n",to_free->size);
     big_page_free(to_free);
   }
   while((uintptr_t)ptr>(uintptr_t)&(p->space)&&p!=&free_list[cpu_id]){
@@ -147,7 +148,6 @@ static void kfree(void *ptr) {
     p=p->next;
   }
   //*prevp---*to_free---*p
-  //---x---------x-------x
   if(((uintptr_t)to_free)==((uintptr_t)&prevp->space)+prevp->size){
     prevp->size+=sizeof(header)+to_free->size;
     to_free=prevp;//Merge to_free with prevp
