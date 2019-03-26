@@ -19,7 +19,9 @@ void enable(int idx,uintptr_t shift){
     if(idx==1)return;
     pages[idx]|=1<<shift;
     if(pages[idx>>1]&(1<<shift)){
-        enable(idx>>1,shift+1);
+        if(!(pages[idx>>1]&(1<<(shift+1)))){
+            enable(idx>>1,shift+1);
+        }
     }else{
         enable(idx>>1,shift);
     }
@@ -28,7 +30,9 @@ void disable(int idx,uintptr_t shift){
     if(idx==1)return;
     pages[idx]&=~(1<<shift);
     if(pages[idx>>1]&(1<<shift)){
-        disable(idx>>1,shift+1);
+        if(pages[idx>>1]&(1<<(shift+1))){
+             disable(idx>>1,shift+1);
+        }
     }else{
         disable(idx>>1,shift);
     }
