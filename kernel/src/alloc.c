@@ -16,7 +16,7 @@ typedef struct header header;
 uint16_t pages[1<<10];
 void *bias;
 static void pmm_init() {
-  int i,cpu_cnt=_ncpu();
+  //int i,cpu_cnt=_ncpu();
   pm_start = (uintptr_t)_heap.start;
   align(pm_start,8 KB);
   pm_end   = (uintptr_t)_heap.end;
