@@ -43,7 +43,6 @@ void show(){
         space[i]=pmm->alloc(16);
     }
     show_free_list();
-    pmm->space
     show_free_list();
     show_free_list();
 }
