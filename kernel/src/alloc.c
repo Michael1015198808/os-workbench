@@ -54,7 +54,7 @@ static void pmm_init() {
   pm_start = (uintptr_t)_heap.start;
   align(pm_start,8 KB);
   pm_end   = (uintptr_t)_heap.end;
-  bias=pm_start;
+  bias=(void*)pm_start;
   for(i=0;i<(pm_end-pm_start)/(8 KB)&&i<=(1<<11);++i){
     enable((1<<11)+i,0);
   }
