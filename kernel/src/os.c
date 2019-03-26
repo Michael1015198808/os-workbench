@@ -32,7 +32,7 @@ void test(){
         pmm->free(space[i]);
     }
 }
-#define test_ptr_nr 1024
+#define test_ptr_nr 256
 #define MAX_CPU 2
 static void* test_ptrs[MAX_CPU][test_ptr_nr];
 static void alloc_test() {
