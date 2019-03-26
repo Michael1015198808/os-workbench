@@ -38,7 +38,11 @@ void disable(int idx,uintptr_t shift){
     if(pages[idx>>1]&(1<<shift)){
          disable(idx>>1,shift+1);
     }else{
+        if(idx==2049){
+            printf("%d,%d\n",idx^1,shift);
+        }
         if(!(pages[idx^1]&(1<<shift))){
+            if(idx==2049){printf("Call disabl(1024)");}
             disable(idx>>1,shift);
         }
     }
