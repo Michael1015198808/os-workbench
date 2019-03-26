@@ -139,8 +139,8 @@ static void kfree(void *ptr) {
   header *p=free_list[cpu_id].next,
          *prevp=&free_list[cpu_id],
          *to_free=(header*)(ptr-sizeof(header));
-  if(to_free->size> PG_SIZE/2){
       printf("%x\n",to_free->size);
+  if(to_free->size> PG_SIZE/2){
     big_page_free(to_free);
   }
   while((uintptr_t)ptr>(uintptr_t)&(p->space)&&p!=&free_list[cpu_id]){
