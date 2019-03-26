@@ -12,9 +12,12 @@ int printf(const char *fmt, ...) {
     int i,n=vsnprintf(buf,-1,fmt,ap);
     assert(n<MAX);
 #undef MAX
+    static pthread_mutex_t putc_lock=PTHREAD_MUTEX_INITIALIZER;
+    pthread_mutex_lock(&putc_lock);
     for(i=0;i<n;++i){
         _putc(buf[i]);
     }
+    pthread_mutex_unlock(&putc_lock);
     return i;
 }
 
@@ -35,8 +38,17 @@ int snprintf(char *out, size_t n, const char *fmt, ...) {
 }
 //Added by Michael
 //Should work as an assistant.
-static int vsnprintf(char *out, size_t n, const char *fmt, va_list ap){
-#define output(A) if(cnt<n-1){out[cnt++]=A;}else{va_end(ap);out[cnt]='\0';return cnt;}
+
+//Wrapped by vsnprintf
+inline static int vsnprintf_real(char *out, size_t n, const char *fmt, va_list ap){
+#define output(A) \
+    if(cnt<n-1){ \
+        out[cnt++]=A; \
+    }else{ \
+        va_end(ap); \
+        out[cnt]='\0'; \
+        return cnt; \
+    }
     size_t cnt=0;
     int i=0;
     double d;
@@ -140,10 +152,12 @@ static int vsnprintf(char *out, size_t n, const char *fmt, va_list ap){
                 default:
                     if (*p < '0' || *p > '9') {
                         output(*p);
-                        printf("%%%c not realized.\n");
+                        char *s="Not realized";
+                        size_t len=strlen(s);
+                        for(i=0;i<len;++i){
+                            output(s[i]);
+                        }
                         assert(0);
-                        cnt+=vsprintf(out+cnt,"not realized\n",ap);
-                        break;
                     }
             }
         //}while(0);
@@ -154,3 +168,12 @@ static int vsnprintf(char *out, size_t n, const char *fmt, va_list ap){
 #undef output
 }
 #endif
+
+//work as a wrapper 
+static int vsnprintf(char *out, size_t n, const char *fmt, va_list ap){
+    static pthread_mutex_t io_lock=PTHREAD_MUTEX_INITIALIZER;
+    pthread_mutex_lock(&io_lock);
+    int ret=vsnprintf_real(out,n,fmt,ap);
+    pthread_mutex_unlock(&io_lock);
+    return ret;
+}
