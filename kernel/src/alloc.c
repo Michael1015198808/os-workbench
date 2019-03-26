@@ -21,16 +21,42 @@ void enable(int idx,uintptr_t shift){
         enable(idx>>1,shift+1);
     }
 }
+void disable(int idx,uintptr_t shift){
+    pages[idx]&=~(1<<shift);
+    if(!(pages[idx^1]&(1<<shift))){
+        disable(idx>>1,shift+1);
+    }
+}
+static void* big_page_alloc(uintptr_t shift){
+    static pthread_mutex_t kalloc_lock=PTHREAD_MUTEX_INITIALIZER;
+    pthread_mutex_lock(&kalloc_lock);
+    int idx=1,level=12;
+    while(level!=shift){
+        printf("%d\n",idx);
+        --level;
+        int left=idx<<1,right=left+1;
+        if(pages[left]&(1<<shift)){
+            idx=left;
+        }else if(pages[right]&(1<<shift)){
+            idx=right;
+        }else{
+            return NULL;//No space
+        }
+    }
+    disable(idx,shift);
+    pthread_mutex_unlock(&kalloc_lock);
+    while(1);//test
+    return bias+
+        ((idx<<shift)&((1<<12)-1));
+}
 static void pmm_init() {
   int i;
   pm_start = (uintptr_t)_heap.start;
   align(pm_start,8 KB);
   pm_end   = (uintptr_t)_heap.end;
+  bias=pm_start;
   for(i=0;i<(pm_end-pm_start)/(8 KB)&&i<=(1<<11);++i){
     enable((1<<11)+i,0);
-  }
-  for(i=0;i<=(1<<12);++i){
-      printf("%d:%x\n",i,pages[i]);
   }
 }
 
@@ -40,10 +66,7 @@ static void *kalloc(size_t size) {
   uint8_t *tail=NULL;
   header *p=free_list[cpu_id].next,*prevp=&free_list[cpu_id],*ret;
   if(size> 8 KB){
-    static pthread_mutex_t kalloc_lock;
-    pthread_mutex_lock(&kalloc_lock);
     //TODO:Fancy algorithm
-    pthread_mutex_unlock(&kalloc_lock);
   }else{
     do{
       if(p->size>=size){
@@ -64,6 +87,8 @@ static void *kalloc(size_t size) {
       p=p->next;
     }while(p!=&free_list[cpu_id]);
   }
+  big_page_alloc(0);
+  //No space
   return NULL;//No space
 }
 
