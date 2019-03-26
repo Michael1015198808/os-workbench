@@ -49,7 +49,7 @@ void big_size_test(void){
     void *p[100];
     int i;
     for(i=0;i<100;++i){
-        p=pmm->alloc(4 << 10);
+        p[i]=pmm->alloc(4 << 10);
     }
     show_free_pages();
     for(i=0;i<100;++i){
