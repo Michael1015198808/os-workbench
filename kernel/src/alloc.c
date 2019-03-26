@@ -85,6 +85,8 @@ static void pmm_init() {
     enable((1<<11)+i,0);
   }
   int a[1000];
+  enable(2048,0);
+  enable(2049,0);
   for(i=0;i<1000;++i){
       disable(a[i]=(rand()%2048)+2048,0);
   }
