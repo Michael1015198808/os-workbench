@@ -29,7 +29,9 @@ void disable(int idx,uintptr_t shift){
 }
 static void* big_page_alloc(uintptr_t shift){
     static pthread_mutex_t kalloc_lock=PTHREAD_MUTEX_INITIALIZER;
+    printf("Start big_page_alloc\n");
     pthread_mutex_lock(&kalloc_lock);
+    printf("Get the lock\n");
     int idx=1,level=12;
     while(level!=shift){
         printf("%d\n",idx);
