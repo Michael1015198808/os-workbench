@@ -25,7 +25,6 @@ void test(){
         space[i]=pmm->alloc(temp);
     }
     for(i=0;i<1000;++i){
-        printf("%d\n",i);
         int temp=rand()%10;
         pmm->free(space[temp]);
         space[temp]=pmm->alloc(rand()%100);
@@ -51,6 +50,8 @@ static void os_run() {
   if(_cpu()==0){
       show_free_list();
       test();
+      show_free_list();
+      pmm->alloc(8 KB)
       //show();
   }
   _intr_write(1);

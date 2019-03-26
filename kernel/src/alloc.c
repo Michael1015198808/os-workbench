@@ -74,6 +74,7 @@ static void *kalloc(size_t size) {
   uint8_t *tail=NULL;
   header *p=free_list[cpu_id].next,*prevp=&free_list[cpu_id],*ret;
   if(size> 8 KB){
+      big_page_alloc(0);//test
     //TODO:Fancy algorithm
   }else{
     do{
