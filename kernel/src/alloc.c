@@ -55,10 +55,8 @@ static void *kalloc(size_t size) {
           tail+=p->size;
           tail-=size;//Get to the tail
           ret=(header*)tail;
-          //printf("%p\n",ret);
           ret->size=size;//record size for free
           p->size-=size+sizeof(header);//Shrink current space
-          //printf("%p\n",&(ret->space));
           return &(ret->space);
         }else{
           prevp->next=p->next;//"delete" p
@@ -69,11 +67,12 @@ static void *kalloc(size_t size) {
       p=p->next;
     }while(p!=free_list[cpu_id]);
   }
-  return prevp;//Prevent compile error
+  return NULL;//No space
 }
 
 int cnt_space;
 static void kfree(void *ptr) {
+  if(ptr==NULL)return;
   int cpu_id=_cpu();//Call once
   header *p=free_list[cpu_id]->next,
          *prevp=free_list[cpu_id],
