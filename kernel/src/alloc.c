@@ -20,6 +20,7 @@ static void pmm_init() {
   pm_start+=(1 KB)-(pm_start&((1 KB)-1));
   pm_end   = (uintptr_t)_heap.end;
   printf("%x,%x\n",pm_start,pm_end);
+  printf("%d\n",(pm_end-pm_start)/(8 KB));
   for(i=0;i<cpu_cnt;++i){
       free_list[i].next=(void*)pm_start;
       free_list[i].size=0;//Sentinel
