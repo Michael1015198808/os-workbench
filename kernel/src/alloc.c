@@ -67,7 +67,7 @@ static void* big_page_alloc(uintptr_t shift){
 }
 static void big_page_free(header *s){
     int idx=2047+
-    ((uintptr_t)s-bias)/PG_SIZE;
+    (((uintptr_t)s)-bias)/PG_SIZE;
     while(s->size>PG_SIZE){
         enable(++idx,0);
         s->size-=PG_SIZE;
@@ -103,7 +103,7 @@ static void *kalloc(size_t size) {
           size>>=1;
           ++shift;
       }
-      void *ret=big_page_alloc(shift);
+      header *ret=big_page_alloc(shift);
       ret->size=size;
       return &(ret->space);
   }else{
