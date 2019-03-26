@@ -84,6 +84,7 @@ static void pmm_init() {
   }
   enable(2048,0);
   enable(2049,0);
+  disable(2048,0);
   show_free_pages();
   while(1);//test
 }
