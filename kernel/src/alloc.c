@@ -99,9 +99,9 @@ static void *kalloc(size_t size) {
   if(size> PG_SIZE/2){
       size+=sizeof(header);
       int shift=0;
-      size/=PG_SIZE;
-      while(size>0){
-          size>>=1;
+      int temp=size/PG_SIZE;
+      while(temp>0){
+          temp>>=1;
           ++shift;
       }
       header *ret=big_page_alloc(shift);
