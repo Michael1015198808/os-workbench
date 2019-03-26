@@ -51,7 +51,7 @@ void big_size_test(void){
     for(i=0;i<100;++i){
         p[i]=pmm->alloc(4 << 10);
     }
-    show_free_pages();
+    //show_free_pages();
     for(i=0;i<100;++i){
         pmm->free(p[i]);
     }
