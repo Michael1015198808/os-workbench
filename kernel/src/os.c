@@ -19,6 +19,7 @@ static void hello() {
 }
 void test(){
     void *space[10];
+    show_free_list();
     int i;
     for(i=0;i<10;++i){
         int temp=rand()%100;
@@ -32,6 +33,7 @@ void test(){
     for(i=0;i<10;++i){
         pmm->free(space[i]);
     }
+    show_free_list();
 }
 void show(){
     void *space[10];
@@ -49,8 +51,7 @@ void show(){
 static void os_run() {
   hello();
   if(_cpu()==0){
-      //test();
-      big_size_test();
+      test();
       //show();
   }
   _intr_write(1);

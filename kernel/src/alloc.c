@@ -163,7 +163,7 @@ static void kfree(void *ptr) {
 void show_free_list(void){
     int cpu_id=_cpu();
     header *p=&free_list[cpu_id];
-    printf("Free list:\n");
+    printf("Free list of CPU:#%d:\n",cpu_id);
     do{
         printf("[%p,%p):%x\n",p,((void*)p)+p->size,p->size);
         p=p->next;
