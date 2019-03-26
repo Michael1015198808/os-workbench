@@ -84,11 +84,11 @@ static void pmm_init() {
   for(i=cpu_cnt;i<(pm_end-pm_start)/(PG_SIZE)&&i<(1<<11);++i){
     enable((1<<11)+i,0);
   }
-  int a[10];
-  for(i=0;i<10;++i){
+  int a[1000];
+  for(i=0;i<1000;++i){
       disable(a[i]=(rand()%2048)+2048,0);
   }
-  for(i=0;i<10;++i){
+  for(i=0;i<1000;++i){
       enable(a[i],0);
   }
   show_free_pages();
