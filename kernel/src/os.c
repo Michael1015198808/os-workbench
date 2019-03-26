@@ -19,9 +19,9 @@ static void hello() {
 }
 void test(){
     show_free_list();
-    void *space[1000];
+    void *space[100];
     int i;
-    for(i=0;i<1000;++i){
+    for(i=0;i<100;++i){
         printf("%d\n",i);
         space[i]=pmm->alloc(rand()%((1<<10)-1));
     }
@@ -31,7 +31,7 @@ void test(){
         pmm->free(space[temp]);
         space[temp]=pmm->alloc(rand()&((1<<10)-1));
     }
-    for(i=0;i<1000;++i){
+    for(i=0;i<100;++i){
         pmm->free(space[i]);
     }
     show_free_list();
