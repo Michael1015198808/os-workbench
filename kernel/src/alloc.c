@@ -82,12 +82,10 @@ static void pmm_init() {
   pm_end   = (uintptr_t)_heap.end;
   bias=(void*)pm_start;
   for(i=0;i<cpu_cnt;++i){
-      free_list[i].next=(void*)(pm_start+i*PG_SIZE);
+      free_list[i].next=&free_list[i];
       free_list[i].size=0;
-      free_list[i].next->next=&free_list[i];
-      free_list[i].next->size=PG_SIZE -sizeof(header);
   }
-  for(i=cpu_cnt;i<(pm_end-pm_start)/(PG_SIZE)&&i<(1<<11);++i){
+  for(i=0;i<(pm_end-pm_start)/(PG_SIZE)&&i<(1<<11);++i){
     enable((1<<11)+i,0);
   }
 }
