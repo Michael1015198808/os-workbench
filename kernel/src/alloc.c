@@ -16,7 +16,7 @@ typedef struct header header;
 uint16_t pages[(1<<12)+1]={};
 void *bias;
 void enable(int idx,uintptr_t shift){
-    if(idx==1)return;
+    if(idx==0)return;
     pages[idx]|=1<<shift;
     if(pages[idx>>1]&(1<<shift)){
         if(pages[idx^1]&(1<<shift)){
@@ -27,7 +27,7 @@ void enable(int idx,uintptr_t shift){
     }
 }
 void disable(int idx,uintptr_t shift){
-    if(idx==1)return;
+    if(idx==0)return;
     pages[idx]&=~(1<<shift);
     if(pages[idx>>1]&(1<<shift)){
         if(pages[idx>>1]&(1<<(shift+1))){
