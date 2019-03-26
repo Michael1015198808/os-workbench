@@ -32,6 +32,32 @@ void test(){
         pmm->free(space[i]);
     }
 }
+#define test_ptr_nr 1024
+static void* test_ptrs[MAX_CPU][test_ptr_nr];
+static void alloc_test() {
+
+  for (int i = 0; i < test_ptr_nr; i++) {
+    test_ptrs[_cpu()][i] = pmm->alloc(1 << 12);
+  }
+  for (int i = 0; i < test_ptr_nr; i++) {
+    pmm->free(test_ptrs[_cpu()][i]);
+  }
+
+  for (int i = 0; i < test_ptr_nr; i++) {
+    test_ptrs[_cpu()][i] = pmm->alloc(1 << 2);
+  }
+  for (int i = 0; i < test_ptr_nr; i++) {
+    pmm->free(test_ptrs[_cpu()][test_ptr_nr - i - 1]);
+  }
+
+  for (int i = 0; i < test_ptr_nr; i++) {
+    test_ptrs[_cpu()][i] = pmm->alloc(1 << 14);
+  }
+  for (int i = 0; i < test_ptr_nr; i++) {
+    pmm->free(test_ptrs[_cpu()][i]);
+  }
+
+}
 void show(){
     void *space[10];
     int i;
@@ -48,7 +74,7 @@ void show(){
 static void os_run() {
   hello();
   show_free_list();
-  test();
+  alloc_test();
   show_free_list();
   //show();
   _intr_write(1);
