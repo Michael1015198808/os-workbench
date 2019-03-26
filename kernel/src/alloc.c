@@ -16,6 +16,7 @@ typedef struct header header;
 uint16_t pages[(1<<12)+1]={};
 void *bias;
 static void show_free_pages(void){
+  int i;
   for(i=0;i<=(1<<12);++i){
       printf("%4d:%2x\n",i,pages[i]);
   }
