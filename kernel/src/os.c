@@ -47,7 +47,9 @@ void show(){
 
 static void os_run() {
   hello();
+  show_free_list();
   test();
+  show_free_list();
   //show();
   _intr_write(1);
   while (1) {
