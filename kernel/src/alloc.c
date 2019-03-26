@@ -17,6 +17,9 @@ uint16_t pages[(1<<12)+1]={};
 void *bias;
 void enable(int idx,uintptr_t shift){
     pages[idx]|=1<<shift;
+    if(pages[idx>>1]&(1<<shift)){
+        enable(idx>>1,shift);
+    }
     if(pages[idx^1]&(1<<shift)){
         enable(idx>>1,shift+1);
     }
@@ -65,6 +68,9 @@ static void pmm_init() {
   }
   for(i=4;i<(pm_end-pm_start)/(8 KB)&&i<=(1<<11);++i){
     enable((1<<11)+i,0);
+  }
+  for(i=0;i<=(1<<12);++i){
+      printf("%d:%3x\n",i,pages[i]);
   }
 }
 
