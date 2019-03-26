@@ -69,10 +69,10 @@ static void big_page_free(header *s){
     int idx=2047+
     (((uintptr_t)s)-((uintptr_t)bias))
     /PG_SIZE;
-    while(s->size>PG_SIZE){
+    do{
         enable(++idx,0);
         s->size-=PG_SIZE;
-    }
+    }while(s->size>PG_SIZE);
 }
 static void pmm_init() {
   int i,cpu_cnt=_ncpu();
@@ -140,7 +140,6 @@ static void kfree(void *ptr) {
          *prevp=&free_list[cpu_id],
          *to_free=(header*)(ptr-sizeof(header));
   if(to_free->size> PG_SIZE/2){
-      printf("%x\n",to_free->size);
     big_page_free(to_free);
   }
   while((uintptr_t)ptr>(uintptr_t)&(p->space)&&p!=&free_list[cpu_id]){
