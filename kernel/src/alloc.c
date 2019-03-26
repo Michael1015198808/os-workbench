@@ -84,10 +84,11 @@ static void pmm_init() {
   }
   show_free_pages();
   enable(2048,0);
+  printf("\nDeviding line\n\n");
   show_free_pages();
   enable(2049,0);
+  printf("\nDeviding line\n\n");
   show_free_pages();
-  *(int*)0=0;
 }
 
 static void *kalloc(size_t size) {
