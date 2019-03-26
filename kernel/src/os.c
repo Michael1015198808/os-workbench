@@ -23,13 +23,11 @@ void test(){
     for(i=0;i<10;++i){
         int temp=rand()%100;
         space[i]=pmm->alloc(temp);
-        show_free_list();
     }
     for(i=0;i<1000;++i){
         int temp=rand()%10;
         pmm->free(space[temp]);
-        int size=rand()%100;
-        space[temp]=pmm->alloc(size);
+        space[temp]=pmm->alloc(rand()%100);
     }
     for(i=0;i<10;++i){
         pmm->free(space[i]);

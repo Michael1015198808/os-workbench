@@ -11,7 +11,9 @@ struct header{
     //directly return &space
 }static free_list[4]={};//Sentinels
 typedef struct header header;
+#define align(_A,_B) (_A+=(_B)-(_A&((_B)-1)))
 
+uint32_t pages[64];
 static void pmm_init() {
   int i,cpu_cnt=_ncpu();
   pm_start = (uintptr_t)_heap.start;
@@ -23,8 +25,8 @@ static void pmm_init() {
       free_list[i].size=0;//Sentinel
       header *head=free_list[i].next;
       head->next=&free_list[i];//Circular
-      head->size=1 KB-sizeof(header);
-      pm_start+=1 KB;
+      head->size=8 KB-sizeof(header);
+      pm_start+=8 KB;
   }
 }
 
@@ -33,7 +35,7 @@ static void *kalloc(size_t size) {
   int cpu_id=_cpu();//Call once
   uint8_t *tail=NULL;
   header *p=free_list[cpu_id].next,*prevp=&free_list[cpu_id],*ret;
-  if(size> 1 KB){
+  if(size> 8 KB){
     static pthread_mutex_t kalloc_lock;
     pthread_mutex_lock(&kalloc_lock);
     //TODO:Fancy algorithm
@@ -67,7 +69,7 @@ static void kfree(void *ptr) {
   header *p=free_list[cpu_id].next,
          *prevp=&free_list[cpu_id],
          *to_free=(header*)(ptr-sizeof(header));
-  if(to_free->size> 1 KB){
+  if(to_free->size> 8 KB){
     //TODO: fancy algorithm
   }
   while((uintptr_t)ptr>(uintptr_t)&(p->space)&&p!=&free_list[cpu_id]){
