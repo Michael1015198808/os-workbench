@@ -33,6 +33,7 @@ void test(){
     for(i=0;i<10;++i){
         pmm->free(space[i]);
     }
+    show_free_list();
 }
 
 static void os_run() {

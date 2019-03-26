@@ -3,6 +3,6 @@
 #include <kernel.h>
 #include <nanos.h>
 
-void lock(intptr_t* locked) ;
-void unlock(intptr_t* locked) ;
+void show_free_list(void);
+uintptr_t cnt_free_list(void);
 #endif
