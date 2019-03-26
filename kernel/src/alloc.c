@@ -56,6 +56,7 @@ static void* big_page_alloc(uintptr_t shift){
     }
     disable(idx,shift);
     pthread_mutex_unlock(&kalloc_lock);
+    printf("%d\n",idx);
     while(1);//test
     return bias+
         ((idx<<shift)&((1<<12)-1));
