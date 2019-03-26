@@ -66,7 +66,7 @@ static void* big_page_alloc(uintptr_t shift){
     printf("%d\n",((idx<<shift)&((1<<12)-1)));
     while(1);//test
     return bias+
-        ((idx<<shift)&((1<<12)-1));
+        ((idx<<shift)&((1<<11)-1));
 }
 static void pmm_init() {
   int i,cpu_cnt=_ncpu();
