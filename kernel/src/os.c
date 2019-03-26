@@ -18,15 +18,12 @@ static void hello() {
   //}
 }
 void test(){
-    show_free_list();
     void *space[100];
     int i;
     for(i=0;i<100;++i){
-        printf("%d\n",i);
         space[i]=pmm->alloc(rand()%((1<<10)-1));
     }
     for(i=0;i<1000;++i){
-        printf("%d\n",i);
         int temp=rand()%10;
         pmm->free(space[temp]);
         space[temp]=pmm->alloc(rand()&((1<<10)-1));
@@ -34,7 +31,6 @@ void test(){
     for(i=0;i<100;++i){
         pmm->free(space[i]);
     }
-    show_free_list();
 }
 void show(){
     void *space[10];
@@ -51,10 +47,8 @@ void show(){
 
 static void os_run() {
   hello();
-  if(_cpu()==0){
-      test();
-      //show();
-  }
+  test();
+  //show();
   _intr_write(1);
   while (1) {
     _yield();
