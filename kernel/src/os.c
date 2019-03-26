@@ -20,9 +20,11 @@ static void hello() {
 void test(){
     void *space[10];
     int i;
+    show_free_list();
     for(i=0;i<10;++i){
         int temp=rand()%100;
         space[i]=pmm->alloc(temp);
+        show_free_list();
     }
     for(i=0;i<1000;++i){
         int temp=rand()%10;
