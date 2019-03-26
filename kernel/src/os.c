@@ -36,7 +36,7 @@ void test(){
     show_free_list();
 }
 void show(){
-    void *space[10];
+    volatile void *space[10];
     int i;
     show_free_list();
     for(i=0;i<10;++i){
