@@ -15,6 +15,11 @@ typedef struct header header;
 
 uint16_t pages[(1<<12)+1]={};
 void *bias;
+static void show_free_pages(void){
+  for(i=0;i<=(1<<12);++i){
+      printf("%4d:%2x\n",i,pages[i]);
+  }
+}
 void enable(int idx,uintptr_t shift){
     if(idx==0)return;
     pages[idx]|=1<<shift;
@@ -73,12 +78,12 @@ static void pmm_init() {
       free_list[i].next->next=&free_list[i];
       free_list[i].next->size=8 KB -sizeof(header);
   }
-  for(i=cpu_cnt;i<(pm_end-pm_start)/(8 KB)&&i<(1<<11);++i){
-    enable((1<<11)+i,0);
-  }
-  for(i=0;i<=(1<<12);++i){
-      printf("%4d:%2x\n",i,pages[i]);
-  }
+  show_free_pages();
+  enable(2048,0);
+  show_free_pages();
+  enable(2049,0);
+  show_free_pages();
+  *(int*)0=0;
 }
 
 static void *kalloc(size_t size) {
