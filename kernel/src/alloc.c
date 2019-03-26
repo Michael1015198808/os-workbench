@@ -66,6 +66,7 @@ static void* big_page_alloc(uintptr_t shift){
         ((idx<<shift)&((1<<11)-1))*PG_SIZE;
 }
 static void big_page_free(header *s){
+    pthread_mutex_lock(&alloc_lock);
     int idx=2047+
     (((uintptr_t)s)-((uintptr_t)bias))
     /PG_SIZE;
@@ -74,6 +75,7 @@ static void big_page_free(header *s){
         s->size-=PG_SIZE;
     }
     enable(++idx,0);
+    pthread_mutex_unlock(&alloc_lock);
 }
 static void pmm_init() {
   int i,cpu_cnt=_ncpu();
