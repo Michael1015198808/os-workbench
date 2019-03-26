@@ -15,10 +15,9 @@ typedef struct header header;
 static void pmm_init() {
   int i,cpu_cnt=_ncpu();
   pm_start = (uintptr_t)_heap.start;
-  pm_start = -pm_start;
-  pm_start&= -((uintptr_t)0x10);
-  pm_start = -pm_start;
+  pm_start = -((-pm_start)&0x16);
   pm_end   = (uintptr_t)_heap.end;
+  printf("%x,%x\n",pm_start,pm_end);
   for(i=0;i<cpu_cnt;++i){
       free_list[i].next=(void*)pm_start;
       free_list[i].size=0;//Sentinel
