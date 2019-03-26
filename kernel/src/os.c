@@ -22,6 +22,7 @@ void test(){
     void *space[1000];
     int i;
     for(i=0;i<1000;++i){
+        printf("%d\n",i);
         space[i]=pmm->alloc(rand()%((1<<10)-1));
     }
     for(i=0;i<1000;++i){
