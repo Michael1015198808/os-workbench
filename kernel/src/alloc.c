@@ -13,7 +13,7 @@ struct header{
 typedef struct header header;
 #define align(_A,_B) (_A+=(_B)-(_A&((_B)-1)))
 
-uint16_t pages[1<<12+1]={};
+uint16_t pages[(1<<12)+1]={};
 void *bias;
 void enable(int idx,uintptr_t shift){
     pages[idx]|=1<<shift;
@@ -22,7 +22,7 @@ void enable(int idx,uintptr_t shift){
     }
 }
 static void pmm_init() {
-  int i,cpu_cnt=_ncpu();
+  int i;
   pm_start = (uintptr_t)_heap.start;
   align(pm_start,8 KB);
   pm_end   = (uintptr_t)_heap.end;
