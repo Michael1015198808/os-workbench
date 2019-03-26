@@ -9,7 +9,7 @@ struct header{
     uintptr_t size;
     struct{}space;//space doesn't take any storage
     //directly return &space
-}static *free_list[4]={};
+}static free_list[4]={};//Sentinels
 typedef struct header header;
 
 static void pmm_init() {
@@ -20,28 +20,19 @@ static void pmm_init() {
   pm_start = -pm_start;
   pm_end   = (uintptr_t)_heap.end;
   for(i=0;i<cpu_cnt;++i){
-      free_list[i]=(void*)pm_start;
-      free_list[i]->next=(header*)(free_list[i]+2);//bias to avoid being merged
-      free_list[i]->size=0;//Sentinel
-      header *head=free_list[i]->next;
-      head->next=free_list[i];//Circular
-      head->size=1 KB-sizeof(header)*3;
+      free_list[i].next=(void*)pm_start;
+      free_list[i].size=0;//Sentinel
+      header *head=free_list[i].next;
+      head->next=&free_list[i];//Circular
+      head->size=1 KB-sizeof(header);
       pm_start+=1 KB;
-      if(((void*)head)+head->size+sizeof(header)!=(void*)pm_start){
-          printf("%s:%d:\n",__FILE__,__LINE__);
-          printf("Page init fails!\n");
-          printf("result%p\nactual%p\n",
-                  ((void*)head)+head->size+sizeof(header),
-                  (void*)pm_start);
-          assert(0);
-      }
   }
 }
 
 static void *kalloc(size_t size) {
   int cpu_id=_cpu();//Call once
   uint8_t *tail=NULL;
-  header *p=free_list[cpu_id]->next,*prevp=free_list[cpu_id],*ret;
+  header *p=free_list[cpu_id].next,*prevp=&free_list[cpu_id],*ret;
   if(size> 1 KB){
     static pthread_mutex_t kalloc_lock;
     pthread_mutex_lock(&kalloc_lock);
@@ -65,36 +56,28 @@ static void *kalloc(size_t size) {
       }
       prevp=p;
       p=p->next;
-    }while(p!=free_list[cpu_id]);
+    }while(p!=&free_list[cpu_id]);
   }
   return NULL;//No space
 }
 
-int cnt_space;
 static void kfree(void *ptr) {
   if(ptr==NULL)return;
   int cpu_id=_cpu();//Call once
-  header *p=free_list[cpu_id]->next,
-         *prevp=free_list[cpu_id],
+  header *p=free_list[cpu_id].next,
+         *prevp=&free_list[cpu_id],
          *to_free=(header*)(ptr-sizeof(header));
   if(to_free->size> 1 KB){
     //TODO: fancy algorithm
   }
-  cnt_space-=to_free->size;
-  while((uintptr_t)ptr>(uintptr_t)&(p->space)&&(p->next!=free_list[cpu_id])){
-    prevp=p;
-    p=p->next;
-  }
-  if((uintptr_t)ptr>(uintptr_t)&(p->space)&&p->next==free_list[cpu_id]){
+  while((uintptr_t)ptr>(uintptr_t)&(p->space)&&p!=&free_list[cpu_id]){
     prevp=p;
     p=p->next;
   }
   //*prevp---*to_free---*p
+  //---x---------x-------x
   if(((uintptr_t)to_free)==((uintptr_t)&prevp->space)+prevp->size){
     prevp->size+=sizeof(header)+to_free->size;
-    if(((uintptr_t)to_free)+to_free->size!=((uintptr_t)prevp)+prevp->size){
-        printf("to_free%p,len:%x\n prevp%p,len:%x\n",to_free,to_free->size,prevp,prevp->size);
-    }
     to_free=prevp;//Merge to_free with prevp
   }else{
     to_free->next=prevp->next;
@@ -107,22 +90,22 @@ static void kfree(void *ptr) {
 }
 void show_free_list(void){
     int cpu_id=_cpu();
-    header *p=free_list[cpu_id];
+    header *p=&free_list[cpu_id];
     printf("Free list:\n");
     do{
         printf("[%p,%p):%x\n",p,((void*)p)+p->size,p->size);
         p=p->next;
-    }while(p!=free_list[cpu_id]);
+    }while(p!=&free_list[cpu_id]);
     printf("\n");
 }
 uintptr_t cnt_free_list(void){
     int cpu_id=_cpu();
     uintptr_t ret=0;
-    header *p=free_list[cpu_id];
+    header *p=&free_list[cpu_id];
     do{
         ret+=p->size;
         p=p->next;
-    }while(p!=free_list[cpu_id]);
+    }while(p!=&free_list[cpu_id]);
     return ret;
 }
 
