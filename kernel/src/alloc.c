@@ -82,9 +82,7 @@ static void pmm_init() {
   for(i=cpu_cnt;i<(pm_end-pm_start)/(8 KB)&&i<(1<<11);++i){
     enable((1<<11)+i,0);
   }
-  show_free_pages();
   enable(2048,0);
-  printf("\nDeviding line\n\n");
   show_free_pages();
   enable(2049,0);
   printf("\nDeviding line\n\n");
