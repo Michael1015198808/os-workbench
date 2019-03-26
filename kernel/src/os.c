@@ -35,8 +35,8 @@ void test(){
     }
     show_free_list();
 }
-void show(){
-    void *volatile space[10];
+/*void show(){
+    void *space[10];
     int i;
     show_free_list();
     for(i=0;i<10;++i){
@@ -45,7 +45,7 @@ void show(){
     show_free_list();
     show_free_list();
     show_free_list();
-}
+}*/
 static void os_run() {
   hello();
   if(_cpu()==0){
