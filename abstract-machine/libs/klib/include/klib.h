@@ -24,6 +24,10 @@
 #define vsprintf my_vsprintf
 #define sprintf my_sprintf
 #define snprintf my_snprintf
+
+#define pthread_mutex_t my_pthread_mutex_t
+#define pthread_mutex_lock my_pthread_mutex_lock
+#define pthread_mutex_unlock my_pthread_mutex_unlock
 #endif
 
 #ifdef __cplusplus
@@ -62,6 +66,7 @@ int snprintf(char* s, size_t n, const char* format, ...);
 int vsprintf(char *str, const char *format, va_list ap);
 
 // pthread.h
+#undef pthread_mutex_t
 typedef uintptr_t pthread_mutex_t;
 #define PTHREAD_MUTEX_INITIALIZER 0
 void pthread_mutex_lock(pthread_mutex_t* locked);

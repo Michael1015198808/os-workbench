@@ -32,37 +32,7 @@ void test(){
         pmm->free(space[i]);
     }
 }
-#define test_ptr_nr 64
-#define MAX_CPU 4
-static void* test_ptrs[MAX_CPU][test_ptr_nr];
-void alloc_test() {
 
-  for (int i = 0; i < test_ptr_nr; i++) {
-    test_ptrs[_cpu()][i] = pmm->alloc(1 << 12);
-  }
-  for (int i = 0; i < test_ptr_nr; i++) {
-    pmm->free(test_ptrs[_cpu()][i]);
-  }
-  printf("CPU #%d pass test 1\n",_cpu());
-  //return;
-
-  for (int i = 0; i < test_ptr_nr; i++) {
-    test_ptrs[_cpu()][i] = pmm->alloc(1 << 2);
-  }
-  for (int i = 0; i < test_ptr_nr; i++) {
-    pmm->free(test_ptrs[_cpu()][test_ptr_nr - i - 1]);
-  }
-  printf("CPU #%d pass test 2\n",_cpu());
-
-  for (int i = 0; i < test_ptr_nr; i++) {
-    test_ptrs[_cpu()][i] = pmm->alloc(1 << 14);
-  }
-  for (int i = 0; i < test_ptr_nr; i++) {
-    pmm->free(test_ptrs[_cpu()][i]);
-  }
-  printf("CPU #%d pass test 3\n",_cpu());
-
-}
 void show(){
     void *space[10];
     int i;
@@ -78,7 +48,7 @@ void show(){
 
 static void os_run() {
   hello();
-  alloc_test();
+  test();
   show_free_list();
   //show();
   _intr_write(1);
