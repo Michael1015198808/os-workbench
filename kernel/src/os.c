@@ -44,6 +44,7 @@ void alloc_test() {
     pmm->free(test_ptrs[_cpu()][i]);
   }
   printf("CPU #%d pass test 1\n",_cpu());
+  return;
 
   for (int i = 0; i < test_ptr_nr; i++) {
     test_ptrs[_cpu()][i] = pmm->alloc(1 << 2);
