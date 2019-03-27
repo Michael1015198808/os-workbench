@@ -66,7 +66,6 @@ int snprintf(char* s, size_t n, const char* format, ...);
 int vsprintf(char *str, const char *format, va_list ap);
 
 // pthread.h
-#undef pthread_mutex_t
 typedef uintptr_t pthread_mutex_t;
 #define PTHREAD_MUTEX_INITIALIZER 0
 void pthread_mutex_lock(pthread_mutex_t* locked);
