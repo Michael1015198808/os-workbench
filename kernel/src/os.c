@@ -37,7 +37,6 @@ void test(){
 static void* test_ptrs[MAX_CPU][test_ptr_nr];
 void alloc_test() {
 
-    return;
   for (int i = 0; i < test_ptr_nr; i++) {
     test_ptrs[_cpu()][i] = pmm->alloc(1 << 12);
   }
