@@ -101,14 +101,17 @@ static void test_2() {
     struct co *thd2 = co_start("producer-2", producer, queue);
     struct co *thd3 = co_start("consumer-1", consumer, queue);
     struct co *thd4 = co_start("consumer-2", consumer, queue);
+    co_cnt();
 
     co_wait(thd1);
     co_wait(thd2);
+    co_cnt();
 
     g_running = 0;
 
     co_wait(thd3);
     co_wait(thd4);
+    co_cnt();
 
     while (!q_is_empty(queue)) {
         do_consume(queue);
