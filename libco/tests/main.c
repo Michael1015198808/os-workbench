@@ -32,8 +32,8 @@ static void test_1() {
     struct co *thd1 = co_start("thread-1", work, "X");
     struct co *thd2 = co_start("thread-2", work, "Y");
 
-    co_wait(thd2);
     co_wait(thd1);
+    co_wait(thd2);
 
     printf("\n");
 }
@@ -102,13 +102,13 @@ static void test_2() {
     struct co *thd3 = co_start("consumer-1", consumer, queue);
     struct co *thd4 = co_start("consumer-2", consumer, queue);
 
-    co_wait(thd3);
-    co_wait(thd4);
     co_wait(thd1);
     co_wait(thd2);
 
     g_running = 0;
 
+    co_wait(thd3);
+    co_wait(thd4);
 
     while (!q_is_empty(queue)) {
         do_consume(queue);

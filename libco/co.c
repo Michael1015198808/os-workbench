@@ -27,19 +27,20 @@ struct co {
 static int pool[MAX_ROUTINES];
 //pool[0,idx) records indexes of
 //available space for routines.
+static int pool_idx=0;
 struct co* new_co(){
-    static int idx=MAX_ROUTINES;
-    if(idx==0){
+    if(pool_idx<=0){
         fflush(stdout);
         fprintf(stderr,"pool overflow!\n");
         fflush(stderr);
     }
-    --idx;
-    routines[pool[idx]].stat=CO_ALIVE;
-    return &routines[pool[idx]];
+    --pool_idx;
+    routines[pool[pool_idx]].stat=CO_ALIVE;
+    return &routines[pool[pool_idx]];
 }
 void co_init() {
     int i;
+    pool_idx=MAX_ROUTINES;
     for(i=0;i<MAX_ROUTINES;++i){
         pool[i]=i;
         routines[i].stat=0;
@@ -73,6 +74,7 @@ struct co* co_start(const char *name, func_t func, void *arg) {
   }else{
     func(arg);
     current->stat&=~CO_ALIVE;
+    pool[pool_idx++]=current-routines;
     longjmp(ret_buf,1);
   }
   return NULL;//will not reach here
@@ -87,7 +89,6 @@ void co_yield() {
         }while(!(routines[next_co].stat&CO_ALIVE));
         current=&routines[next_co];
         longjmp(routines[next_co].tar_buf,1);
-        return;
     }
 }
 
