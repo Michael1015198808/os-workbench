@@ -8,6 +8,5 @@ void co_init();
 struct co* co_start(const char *name, func_t func, void *arg);
 void co_yield();
 void co_wait(struct co *thd);
-void co_cnt(void);
 
 #endif

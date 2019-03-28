@@ -102,6 +102,3 @@ void co_wait(struct co *thd) {
   thd->stat=0;
 }
 
-void co_cnt(void){
-    printf("%d\n",pool_idx);
-}

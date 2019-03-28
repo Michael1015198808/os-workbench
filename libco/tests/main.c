@@ -101,17 +101,14 @@ static void test_2() {
     struct co *thd2 = co_start("producer-2", producer, queue);
     struct co *thd3 = co_start("consumer-1", consumer, queue);
     struct co *thd4 = co_start("consumer-2", consumer, queue);
-    co_cnt();
 
     co_wait(thd1);
     co_wait(thd2);
-    co_cnt();
 
     g_running = 0;
 
     co_wait(thd3);
     co_wait(thd4);
-    co_cnt();
 
     while (!q_is_empty(queue)) {
         do_consume(queue);
@@ -121,17 +118,13 @@ static void test_2() {
 }
 
 int main() {
-    co_cnt();
     co_init();
-    co_cnt();
 
     printf("Test #1. Expect: (X|Y){0, 1, 2, ..., 199}\n");
     test_1();
-    co_cnt();
 
     printf("\nTest #2. Expect: (libco-){200, 201, 202, ..., 399}\n");
     test_2();
-    co_cnt();
 
     printf("\n");
 
