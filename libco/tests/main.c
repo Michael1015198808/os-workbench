@@ -118,13 +118,17 @@ static void test_2() {
 }
 
 int main() {
+    co_cnt();
     co_init();
+    co_cnt();
 
     printf("Test #1. Expect: (X|Y){0, 1, 2, ..., 199}\n");
     test_1();
+    co_cnt();
 
     printf("\nTest #2. Expect: (libco-){200, 201, 202, ..., 399}\n");
     test_2();
+    co_cnt();
 
     printf("\n");
 
