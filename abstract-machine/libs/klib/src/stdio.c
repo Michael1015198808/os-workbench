@@ -167,7 +167,6 @@ inline static int vsnprintf_real(char *out, size_t n, const char *fmt, va_list a
     return cnt-1;
 #undef output
 }
-#endif
 
 //work as a wrapper 
 static int vsnprintf(char *out, size_t n, const char *fmt, va_list ap){
@@ -177,3 +176,4 @@ static int vsnprintf(char *out, size_t n, const char *fmt, va_list ap){
     pthread_mutex_unlock(&io_lock);
     return ret;
 }
+#endif
