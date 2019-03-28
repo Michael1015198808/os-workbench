@@ -55,28 +55,29 @@ static jmp_buf ret_buf;
 struct co* co_start(const char *name, func_t func, void *arg) {
   get_sp(__stack_backup);
   current=new_co();
-  uint8_t*
-      stack_top=current->stack
-                +STACK_SIZE
-                -STACK_SIZE/4;
-  //Space for entry parameters and other things
-  //I used &name-__stack_backup to get the extra space, but failed
+  if(!setjmp(ret_buf)){
+    uint8_t*
+        stack_top=current->stack
+                  +STACK_SIZE
+                  -STACK_SIZE/4;
+    //Space for entry parameters and other things
+    //I used &name-__stack_backup to get the extra space, but failed
 #define mov_to(_para,_stack) \
   *(uintptr_t*)(_stack+(((void*)&_para)-__stack_backup))=(uintptr_t)_para;
-  mov_to(name,stack_top);
-  mov_to(func,stack_top);
-  mov_to(arg,stack_top);
+    mov_to(name,stack_top);
+    mov_to(func,stack_top);
+    mov_to(arg,stack_top);
 
-  set_sp(stack_top);
-  if(!setjmp(current->tar_buf)){
-    set_sp(__stack_backup);
-    return current;
-  }else{
-    func(arg);
-    current->stat&=~CO_ALIVE;
-    longjmp(ret_buf,1);
+    set_sp(stack_top);
+    if(!setjmp(current->tar_buf)){
+        longjmp(ret_buf);
+    }else{
+      func(arg);
+      current->stat&=~CO_ALIVE;
+      longjmp(ret_buf,1);
+    }
   }
-  return NULL;
+  return current;
 }
 
 
