@@ -70,7 +70,7 @@ struct co* co_start(const char *name, func_t func, void *arg) {
 
     set_sp(stack_top);
     if(!setjmp(current->tar_buf)){
-        longjmp(ret_buf);
+        longjmp(ret_buf,1);
     }else{
       func(arg);
       current->stat&=~CO_ALIVE;
