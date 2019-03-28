@@ -7,15 +7,12 @@
 #define log() printf("Line %d:\n",__LINE__)
 #if defined(__i386__)
   #define SP "%%esp"
-  #define AX "%%eax"
 #elif defined(__x86_64__)
   #define SP "%%rsp"
-  #define AX "%%rax"
 #endif
 #define set_sp(__target) asm volatile("mov %0," SP : : "g"(__target));
 #define get_sp(__target) asm volatile("mov " SP",%0" : "=g"(__target) :);
 #define MAX_ROUTINES 100
-#define until(_condition) while(!(_condition))
 
 struct co {
 #define KB *(1<<10)
@@ -23,8 +20,7 @@ struct co {
     uint8_t stack[STACK_SIZE];
     //stack should provide room for entry parameters
     jmp_buf tar_buf;
-#define CO_ALIVE 1
-#define CO_RUNNING 2
+#define CO_ALIVE (1<<0)
     uint8_t stat;
 }routines[MAX_ROUTINES] __attribute__((aligned(16))),*current;
 
@@ -55,57 +51,53 @@ static jmp_buf ret_buf;
 struct co* co_start(const char *name, func_t func, void *arg) {
   get_sp(__stack_backup);
   current=new_co();
-  if(!setjmp(ret_buf)){
-    uint8_t*
-        stack_top=current->stack
-                  +STACK_SIZE
-                  -STACK_SIZE/4;
-    //Space for entry parameters and other things
-    //I used &name-__stack_backup to get the extra space, but failed
+  uint8_t*
+      stack_top=current->stack
+                +STACK_SIZE
+                -STACK_SIZE/4;
+  //Space for entry parameters and other things
+  //I used &name-__stack_backup to get the extra space, but failed
 #define mov_to(_para,_stack) \
-  *(uintptr_t*)(_stack+(((void*)&_para)-__stack_backup))=(uintptr_t)_para;
-    mov_to(name,stack_top);
-    mov_to(func,stack_top);
-    mov_to(arg,stack_top);
+  *(uintptr_t*)(_stack+ \
+      /* bias*/(((void*)&_para)-__stack_backup) \
+          )=(uintptr_t)_para;
+  //Move parameters to the new stack
+  mov_to(name,stack_top);
+  mov_to(func,stack_top);
+  mov_to(arg,stack_top);
 
-    set_sp(stack_top);
-    if(!setjmp(current->tar_buf)){
-        longjmp(ret_buf,1);
-    }else{
-      func(arg);
-      current->stat&=~CO_ALIVE;
-      longjmp(ret_buf,1);
-    }
+  set_sp(stack_top);
+  if(!setjmp(current->tar_buf)){
+    set_sp(__stack_backup);
+    return current;
+  }else{
+    func(arg);
+    current->stat&=~CO_ALIVE;
+    longjmp(ret_buf,1);
   }
-  return current;
+  return NULL;//will not reach here
 }
 
 
 void co_yield() {
-    int val=setjmp(current->tar_buf);
-    if(val==0){
+    if(!setjmp(current->tar_buf)){
         int next_co;
         do{
             next_co=rand()%MAX_ROUTINES;
-        }until(routines[next_co].stat&CO_ALIVE);
-        //printf("Goto %d\n",next_co);
+        }while(!(routines[next_co].stat&CO_ALIVE));
         current=&routines[next_co];
         longjmp(routines[next_co].tar_buf,1);
-        return;
-    }else{
         return;
     }
 }
 
 void co_wait(struct co *thd) {
-  current=thd;
-  //get_sp(__stack_backup);
   if(!setjmp(ret_buf)){
     while(thd->stat&CO_ALIVE){
+      current=thd;
       longjmp(thd->tar_buf,1); 
     }
   }
-  //set_sp(__stack_backup);
   thd->stat=0;
 }
 
