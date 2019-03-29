@@ -84,9 +84,9 @@ static void pmm_init() {
   align(pm_start,PG_SIZE);
   pm_end   = (uintptr_t)_heap.end;
   bias=(void*)pm_start;
-  printf("(%d,%d)\n",_heap.start,_heap.end);
-  printf("%d\n",8 KB);
-  printf("%d\n",(_heap.end-_heap.start)/(8 KB));
+  printf("(%x,%x)\n",_heap.start,_heap.end);
+  printf("%x\n",8 KB);
+  printf("%x\n",(_heap.end-_heap.start)/(8 KB));
   printf("pages:%d\n",(pm_end-pm_start)/(PG_SIZE));
   while(1);
   for(i=0;i<cpu_cnt;++i){
