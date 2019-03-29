@@ -14,11 +14,12 @@ typedef struct header header;
 #define align(_A,_B) (_A+=(_B)-(_A&((_B)-1)))
 #define PG_SIZE (8 KB)
 
-uint16_t pages[(1<<12)+1]={};
+#define DEPTH 14
+uint16_t pages[(1<<DEPTH)+1]={};
 void *bias;
 void show_free_pages(void){
   int i;
-  for(i=1;i<(1<<12);++i){
+  for(i=1;i<(1<<DEPTH);++i){
       printf("%4d:%2x\n",i,pages[i]);
   }
 }
@@ -47,7 +48,7 @@ void disable(int idx,uintptr_t shift){
 static pthread_mutex_t alloc_lock=PTHREAD_MUTEX_INITIALIZER;
 static void* big_page_alloc(uintptr_t shift){
     pthread_mutex_lock(&alloc_lock);
-    int idx=1,level=12;
+    int idx=1,level=DEPTH;
     while(--level!=shift){
         int left=idx<<1,right=left+1;
         if(pages[left]&(1<<shift)){
