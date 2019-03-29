@@ -64,7 +64,7 @@ static void* big_page_alloc(uintptr_t shift){
     disable(idx,shift);
     pthread_mutex_unlock(&alloc_lock);
     return bias+
-        ((idx<<shift)&((1<<11)-1))*PG_SIZE;
+        ((idx<<shift)&((1<<(DEPTH-1))-1))*PG_SIZE;
 }
 static void big_page_free(header *s){
     pthread_mutex_lock(&alloc_lock);
@@ -84,7 +84,11 @@ static void pmm_init() {
   align(pm_start,PG_SIZE);
   pm_end   = (uintptr_t)_heap.end;
   bias=(void*)pm_start;
+  printf("(%d,%d)\n",_heap.start,_heap.end);
+  printf("%d\n",8 KB);
+  printf("%d\n",(_heap.end-_heap.start)/(8 KB));
   printf("pages:%d\n",(pm_end-pm_start)/(PG_SIZE));
+  while(1);
   for(i=0;i<cpu_cnt;++i){
       free_list[i].next=&free_list[i];
       free_list[i].size=0;
