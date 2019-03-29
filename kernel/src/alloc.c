@@ -83,6 +83,7 @@ static void pmm_init() {
   align(pm_start,PG_SIZE);
   pm_end   = (uintptr_t)_heap.end;
   bias=(void*)pm_start;
+  printf("pages:%d\n",(pm_end-pm_start)/(PG_SIZE));
   for(i=0;i<cpu_cnt;++i){
       free_list[i].next=&free_list[i];
       free_list[i].size=0;
