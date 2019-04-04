@@ -49,9 +49,9 @@ void show(){
 
 static void os_run() {
   hello();
+  if(_cpu()==0)
   test();
   show_free_list();
-  //show();
   _intr_write(1);
   while (1) {
     _yield();
