@@ -56,12 +56,12 @@ static void* big_page_alloc(uintptr_t shift){
         }else if(pages[right]&(1<<shift)){
             idx=right;
         }else{
+#define RETURN_NULL
 #ifdef RETURN_NULL
             return NULL;
 #else
             printf("No space left!\n");
             printf("See %s: %d for more info!\n",__FILE__,__LINE__);
-            fflush(stdout)
             while(1);
 #endif
         }
