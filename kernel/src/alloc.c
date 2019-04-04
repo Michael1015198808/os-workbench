@@ -104,8 +104,8 @@ static void pmm_init() {
       free_list[i].next=&free_list[i];
       free_list[i].size=0;
   }
-  for(i=0;i<(pm_end-pm_start)/(PG_SIZE)&&i<(1<<11);++i){
-    enable((1<<11)+i,0);
+  for(i=0;i<(pm_end-pm_start)/(PG_SIZE)&&i<(1<<(DEPTH-1));++i){
+    enable((1<<(DEPTH-1))+i,0);
   }
 }
 
