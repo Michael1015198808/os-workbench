@@ -47,12 +47,12 @@ void disable(int idx,uintptr_t shift){
 }
 static pthread_mutex_t alloc_lock=PTHREAD_MUTEX_INITIALIZER;
 static void* big_page_alloc(uintptr_t shift){
+    pthread_mutex_lock(&alloc_lock);
     static int cnt=0;
     printf("%d\n",++cnt);
     if(cnt==2){
         show_free_pages();
     }
-    pthread_mutex_lock(&alloc_lock);
     int idx=1,level=DEPTH;
     while(--level!=shift){
         int left=idx<<1,right=left+1;
