@@ -18,9 +18,10 @@ static void hello() {
   //}
 }
 void test(){
-    void *space[100];
+#define POINTER_CNT
+    void *space[POINTER_CNT];
     int i;
-    for(i=0;i<100;++i){
+    for(i=0;i<POINTER_CNT;++i){
         space[i]=pmm->alloc(rand()%((1<<10)-1));
     }
     for(i=0;i<1000;++i){
@@ -28,7 +29,7 @@ void test(){
         pmm->free(space[temp]);
         space[temp]=pmm->alloc(rand()&((1<<10)-1));
     }
-    for(i=0;i<100;++i){
+    for(i=0;i<POINTER_CNT;++i){
         pmm->free(space[i]);
     }
 }
