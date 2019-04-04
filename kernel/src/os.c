@@ -18,7 +18,7 @@ static void hello() {
   //}
 }
 void test(){
-#define POINTER_CNT 100
+#define POINTER_CNT 10
     void *space[POINTER_CNT];
     int i;
     for(i=0;i<POINTER_CNT;++i){
