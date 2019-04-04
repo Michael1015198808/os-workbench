@@ -56,7 +56,7 @@ static void* big_page_alloc(uintptr_t shift){
         }else if(pages[right]&(1<<shift)){
             idx=right;
         }else{
-#define RETURN_NULL
+//#define RETURN_NULL
 #ifdef RETURN_NULL
             pthread_mutex_unlock(&alloc_lock);
             return NULL;

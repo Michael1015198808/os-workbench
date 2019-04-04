@@ -25,7 +25,7 @@ void test(){
         space[i]=pmm->alloc(rand()%((1<<10)-1));
     }
     for(i=0;i<1000;++i){
-        int temp=rand()%10;
+        int temp=rand()%POINTER_CNT;
         pmm->free(space[temp]);
         space[temp]=pmm->alloc(rand()&((1<<10)-1));
     }
@@ -49,7 +49,6 @@ void show(){
 
 static void os_run() {
   hello();
-  if(_cpu()==0)
   test();
   show_free_list();
   _intr_write(1);
