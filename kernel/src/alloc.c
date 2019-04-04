@@ -58,6 +58,7 @@ static void* big_page_alloc(uintptr_t shift){
         }else{
 #define RETURN_NULL
 #ifdef RETURN_NULL
+            pthread_mutex_unlock(&alloc_lock);
             return NULL;
 #else
             printf("No space left!\n");
