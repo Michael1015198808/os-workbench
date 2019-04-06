@@ -14,6 +14,7 @@ int main(int argc, char *argv[],char *envp[]) {
   for(i=1;i<=argc;++i){
       new_argv[i-1]=argv[i];
   }
+  printf("argv[1]:%s\n",argv[1]);
   execve(argv[1],new_argv,envp);
   printf("%s:%d Should not reach here!\n",__FILE__,__LINE__);
   /*if(!pipe(pipes)){
