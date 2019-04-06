@@ -16,7 +16,7 @@ typedef struct node{
 }node;
 node head={"\1\0",0,&head};
 double total=0.0;
-regex_t name,num;
+regex_t name,num,exit_pat;
 regmatch_t match_info;
 void sort(void);
 void display(void);
@@ -34,7 +34,8 @@ int main(int argc, char *argv[],char *envp[]) {
   //compile regexs
   if(
     regcomp(&name,"^[a-zA-Z]*\\(",REG_EXTENDED) ||
-    regcomp(&num,"<[0-9\\.]*>\n",REG_EXTENDED) ){
+    regcomp(&num,"<[0-9\\.]*>\n",REG_EXTENDED)  ||
+    regcomp(&exit_pat,"+++ exited with [0-9]* +++",REG_EXTENDED) ){
       printf("Regexes compiled failed!\n");
       stop();
   }
@@ -77,6 +78,14 @@ int main(int argc, char *argv[],char *envp[]) {
     double time_cost;
     time_t oldtime=0,newtime;
     while(fgets(s,sizeof(s),stdin)>=0){
+      if(regexec(&exit_pat,s,1,&match_info,0)!=REG_NOMATCH){
+        printf("%s ",argv[1]);
+        int i;
+        for(i=match_info.rm_so+4;i<match_info.rm_eo-3;++i){
+          putchar(s[i]);
+        }
+        printf("\n");
+      }
       write(3,s,strlen(s));
       //Get name of syscall
       if(regexec(&name,s,1,&match_info,0)==REG_NOMATCH){
@@ -120,7 +129,6 @@ int main(int argc, char *argv[],char *envp[]) {
 }
 void sort(void){
   //bubble sort
-  printf("sort\n");
   node *p;
   for(p=&head;p!=head.next;){
       //r->q--..->p
@@ -139,7 +147,6 @@ void sort(void){
       }
       p=r;
   }
-  printf("sort end\n");
 }
 void display(void){
   node *p=head.next;
