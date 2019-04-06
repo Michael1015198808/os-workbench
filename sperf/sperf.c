@@ -11,7 +11,7 @@ void stop(void){
 regex_t name,num;
 regmatch_t match_info;
 int main(int argc, char *argv[],char *envp[]) {
-  if(argc==2){
+  if(argc==1){
     fprintf(stderr,"sperf: must have PROG [ARGS]\n");
   }
   int pipes[2];
