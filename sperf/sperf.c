@@ -117,6 +117,7 @@ int main(int argc, char *argv[],char *envp[]) {
 }
 void sort(void){
   //bubble sort
+  printf("sort\n");
   node *p=head.next;
   for(p=&head;p!=&head;){
       //r->q--..->p
