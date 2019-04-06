@@ -15,7 +15,7 @@ int main(int argc, char *argv[],char *envp[]) {
   int ret;
   if(!(ret=fork())){
     //Child process
-    const new_argc=argc+1;
+    const int new_argc=argc+1;
     char **new_argv=(char**)malloc(sizeof(void*)*(new_argc));
     if(new_argv==NULL){
       printf("No space for new_argv\n");
