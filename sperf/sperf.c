@@ -77,6 +77,7 @@ int main(int argc, char *argv[],char *envp[]) {
     double time_cost;
     time_t oldtime=0,newtime;
     while(fgets(s,sizeof(s),stdin)>=0){
+      write(3,s,strlen(s));
       //Get name of syscall
       if(regexec(&name,s,1,&match_info,0)==REG_NOMATCH){
         continue;
