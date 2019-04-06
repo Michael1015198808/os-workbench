@@ -5,6 +5,8 @@
 #include <regex.h>
 #include <stdio.h>
 #include <time.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 #define err(...) \
     fprintf(stderr,__VA_ARGS__); \
     stop();
