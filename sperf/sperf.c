@@ -5,7 +5,7 @@ int main(int argc, char *argv[],char *envp[]) {
   //int pipes[2];
   char *new_argv[]={NULL,"hello","world",NULL};
   execve("echo",new_argv,envp);
-  printf("%s:%s Should not reach here!\n",__FILE__,__LINE__);
+  printf("%s:%d Should not reach here!\n",__FILE__,__LINE__);
   /*if(!pipe(pipes)){
       int backup=dup(1);
       dup2(pipes[1],1);
