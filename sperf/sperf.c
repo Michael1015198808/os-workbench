@@ -14,6 +14,7 @@ int main(int argc, char *argv[],char *envp[]) {
   for(i=1;i<=argc;++i){
       new_argv[i-1]=argv[i];
   }
+  new_argv[argc]=NULL;
   printf("argv[1]:%s\n",argv[1]);
   execve(new_argv[0],new_argv,envp);
   printf("%s:%d Should not reach here!\n",__FILE__,__LINE__);
