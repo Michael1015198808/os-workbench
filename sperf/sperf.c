@@ -54,10 +54,10 @@ int main(int argc, char *argv[],char *envp[]) {
   if(ret==-1){
     err("Fork failed!\n");
   }
-  if(ret!=0){
+  if(ret==0){
     //Child process
     //Prepare new_argv[]
-    char* flags[]={"-o","syscall_log"};
+    char* flags[]={"-T"};
     const int new_argc=argc+LEN(flags);
     char **new_argv=(char**)malloc(sizeof(void*)*(new_argc+1));
     if(new_argv==NULL){
@@ -75,13 +75,12 @@ int main(int argc, char *argv[],char *envp[]) {
     backup[0]=dup(1);
     backup[1]=dup(2);
     dup2(open("./stdout_log",O_RDWR),1);
-    //dup2(pipes[1],1);
+    dup2(pipes[1],2);
     execve("/usr/bin/strace",new_argv,envp);
     dup2(backup[0],1);
     dup2(backup[1],2);
     err("%s:%d Should not reach here!\n",__FILE__,__LINE__);
   }else{
-    return 0;
     //Parent process
     dup2(pipes[0],0);
     char s[512];
@@ -89,8 +88,7 @@ int main(int argc, char *argv[],char *envp[]) {
     double time_cost;
     time_t oldtime=0,newtime;
     while(fgets(s,sizeof(s),stdin)>0){
-      my_write(3,s);
-        continue;
+      //my_write(3,s);
       if(regexec(&exit_pat,s,1,&match_info,0)!=REG_NOMATCH){
         //returned
         display();
