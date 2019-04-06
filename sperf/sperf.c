@@ -76,7 +76,6 @@ int main(int argc, char *argv[],char *envp[]) {
     dup2(4,1);
     dup2(pipes[1],2);
     execve("/usr/bin/strace",new_argv,envp);
-    fflush(stdout);
     dup2(backup[0],1);
     dup2(backup[1],2);
     err("%s:%d Should not reach here!\n",__FILE__,__LINE__);
@@ -89,7 +88,6 @@ int main(int argc, char *argv[],char *envp[]) {
     time_t oldtime=0,newtime;
     while(fgets(s,sizeof(s),stdin)>0){
       my_write(3,s);
-        fflush(stderr);
         continue;
       if(regexec(&exit_pat,s,1,&match_info,0)!=REG_NOMATCH){
         //returned
