@@ -23,11 +23,9 @@ int main(int argc, char *argv[],char *envp[]) {
     }
     int i;
     new_argv[0]="/usr/bin/strace";
-    for(i=1;i<=argc;++i){
-      new_argv[i]=argv[i];
-    }
-    for(i=0;i<=argc;++i){
-        printf("new_argv[%d]:%s\n",i,new_argv[i]);
+    new_argv[1]="-T";
+    for(i=2;i<=argc;++i){
+      new_argv[i]=argv[i-1];
     }
     execve("/usr/bin/strace",new_argv,envp);
     printf("%s:%d Should not reach here!\n",__FILE__,__LINE__);
