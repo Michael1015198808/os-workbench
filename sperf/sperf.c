@@ -13,6 +13,7 @@ regmatch_t match_info;
 int main(int argc, char *argv[],char *envp[]) {
   if(argc==1){
     fprintf(stderr,"sperf: must have PROG [ARGS]\n");
+    stop();
   }
   int pipes[2];
   if(pipe(pipes)){
