@@ -10,6 +10,7 @@ int main(int argc, char *argv[],char *envp[]) {
       fflush(stdout);
       exit(1);
   }
+  int i;
   for(i=1;i<=argc;++i){
       new_argv[i-1]=argv[i];
   }
