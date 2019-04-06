@@ -5,6 +5,9 @@
 #include <regex.h>
 #include <stdio.h>
 #include <time.h>
+#define err(...) \
+    fprintf(stderr,__VA_ARGS__); \
+    stop();
 void stop(void){
   fflush(stdout);
   exit(1);
@@ -23,26 +26,22 @@ void display(void);
 inline void swap(node*,node*,node*);
 int main(int argc, char *argv[],char *envp[]) {
   if(argc==1){
-    fprintf(stderr,"sperf: must have PROG [ARGS]\n");
-    stop();
+    err("sperf: must have PROG [ARGS]\n");
   }
   int pipes[2];
   if(pipe(pipes)){
-    printf("Build pipe failed!\n");
-    stop();
+    err("Build pipe failed!\n");
   }
   //compile regexs
   if(
     regcomp(&name,"^[a-zA-Z]*\\(",REG_EXTENDED) ||
     regcomp(&num,"<[0-9\\.]*>\n",REG_EXTENDED)  ||
     regcomp(&exit_pat,"exited with [0-9]* ",REG_EXTENDED) ){
-      printf("Regexes compiled failed!\n");
-      stop();
+      err("Regexes compiled failed!\n");
   }
   int ret=fork();
   if(ret==-1){
-    printf("Fork failed!\n");
-    stop();
+    err("Fork failed!\n");
   }
   if(ret==0){
     //Child process
@@ -50,9 +49,7 @@ int main(int argc, char *argv[],char *envp[]) {
     const int new_argc=argc+1;
     char **new_argv=(char**)malloc(sizeof(void*)*(new_argc+1));
     if(new_argv==NULL){
-      printf("No space for new_argv\n");
-      fflush(stdout);
-      exit(1);
+      err("No space for new_argv\n");
     }
     new_argv[0]="/usr/bin/strace";
     new_argv[1]="-T";
@@ -67,9 +64,7 @@ int main(int argc, char *argv[],char *envp[]) {
     execve("/usr/bin/strace",new_argv,envp);
     dup2(backup[0],1);
     dup2(backup[1],2);
-    printf("%s:%d Should not reach here!\n",__FILE__,__LINE__);
-    fflush(stdout);
-    stop();
+    err("%s:%d Should not reach here!\n",__FILE__,__LINE__);
   }else{
     //Parent process
     dup2(pipes[0],0);
@@ -79,6 +74,7 @@ int main(int argc, char *argv[],char *envp[]) {
     time_t oldtime=0,newtime;
     while(fgets(s,sizeof(s),stdin)>=0){
       if(regexec(&exit_pat,s,1,&match_info,0)!=REG_NOMATCH){
+        //returned
         printf("%s ",argv[1]);
         int i;
         for(i=match_info.rm_so;i<match_info.rm_eo;++i){
@@ -86,7 +82,6 @@ int main(int argc, char *argv[],char *envp[]) {
         }
         printf("\n");
       }
-      write(3,s,strlen(s));
       //Get name of syscall
       if(regexec(&name,s,1,&match_info,0)==REG_NOMATCH){
         continue;
@@ -113,8 +108,6 @@ int main(int argc, char *argv[],char *envp[]) {
         q->name=(char*)malloc(strlen(call)+1);
         strcpy(q->name,call);
         q->time=0.0;
-        fprintf(stderr,"%s:%lf\n",call,time_cost);
-        fprintf(stderr,"%s\n",s);
       }
       q->time+=time_cost;
       total+=time_cost;
