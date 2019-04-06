@@ -3,7 +3,7 @@
 int main(int argc, char *argv[],char *envp[]) {
   //char s[100]={};
   //int pipes[2];
-  char *new_argv[]={"hello","world"};
+  char *new_argv[]={NULL,"hello","world",NULL};
   execve("echo",new_argv,envp);
   /*if(!pipe(pipes)){
       int backup=dup(1);
