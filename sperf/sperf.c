@@ -29,16 +29,6 @@ int main(int argc, char *argv[],char *envp[]) {
       new_argv[i]=argv[i-1];
     }
     new_argv[new_argc]=NULL;
-    printf("argc:%d\n",argc);
-    for(i=0;i<argc;++i){
-        printf("argv[%d]:%s\n",i,argv[i]);
-    }
-    printf("argv[%d]:%s\n",i,argv[i]);
-    printf("new_argc:%d\n",new_argc);
-    for(i=0;i<new_argc;++i){
-        printf("new_argv[%d]:%s\n",i,new_argv[i]);
-    }
-    printf("new_argv[%d]:%s\n",i,new_argv[i]);
     execve("/usr/bin/strace",new_argv,envp);
     printf("%s:%d Should not reach here!\n",__FILE__,__LINE__);
     stop();
@@ -49,6 +39,11 @@ int main(int argc, char *argv[],char *envp[]) {
       stop();
     }else{
       //Fork success
+      dup2(pipes[0],0);
+      int c;
+      while((c=getchar())!=EOF){
+          putchar(c);
+      }
     }
   return 0;
 }
