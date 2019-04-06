@@ -22,21 +22,21 @@ int main(int argc, char *argv[],char *envp[]) {
       exit(1);
     }
     int i;
-    for(i=1;i<=argc;++i){
-      new_argv[i-1]=argv[i];
+    for(i=2;i<=argc+1;++i){
+      new_argv[i-2]=argv[i];
     }
     new_argv[argc]=NULL;
     printf("argv[1]:%s\n",argv[1]);
-    execve(new_argv[0],new_argv,envp);
+    execve("/usr/bin/strace",new_argv,envp);
     printf("%s:%d Should not reach here!\n",__FILE__,__LINE__);
     stop();
   }else
     //Parent process
     if(ret==-1){
-    printf("Fork failed!\n");
-    stop();
-  }else{
-    //Fork success
-  }
+      printf("Fork failed!\n");
+      stop();
+    }else{
+      //Fork success
+    }
   return 0;
 }
