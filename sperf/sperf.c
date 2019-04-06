@@ -39,7 +39,6 @@ int main(int argc, char *argv[],char *envp[]) {
   if(argc==1){
     err("sperf: must have PROG [ARGS]\n");
   }
-  int temp=open("stdout_log",O_RDWR|O_CREAT);
   int pipes[2];
   if(pipe(pipes)){
     err("Build pipe failed!\n");
@@ -75,12 +74,7 @@ int main(int argc, char *argv[],char *envp[]) {
     int backup[2];
     backup[0]=dup(1);
     backup[1]=dup(2);
-    if(temp>0){
-      dup2(temp,1);
-    }else{
-      //printf("open failed\n");
-      close(1);
-    }
+    close(1);
     dup2(pipes[1],2);
     execve("/usr/bin/strace",new_argv,envp);
     dup2(backup[0],1);
