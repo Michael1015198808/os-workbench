@@ -54,7 +54,7 @@ int main(int argc, char *argv[],char *envp[]) {
     printf("%s:%d Should not reach here!\n",__FILE__,__LINE__);
     fflush(stdout);
     stop();
-  }else{
+  }/*else{
     //Parent process
     dup2(pipes[0],0);
     char s[256];
@@ -67,6 +67,6 @@ int main(int argc, char *argv[],char *envp[]) {
       strncpy(call,s+match_info.rm_so,match_info.rm_eo-match_info.rm_so);
       printf("%s\n",call);
     }
-  }
+  }*/
   return 0;
 }
