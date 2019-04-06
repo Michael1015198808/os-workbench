@@ -89,7 +89,6 @@ int main(int argc, char *argv[],char *envp[]) {
       }
       sscanf(s+match_info.rm_so+1,"%lf",&time_cost);
       //Record 
-      fprintf(stderr,"%s:%lf\n",call,time_cost);
       node *p=&head,*q=NULL;
       do{
           q=p;
@@ -104,6 +103,8 @@ int main(int argc, char *argv[],char *envp[]) {
         q->name=(char*)malloc(strlen(call)+1);
         strcpy(q->name,call);
         q->time=0.0;
+        fprintf(stderr,"%s:%lf\n",call,time_cost);
+        fprintf(stderr,"%s\n",s);
       }
       q->time+=time_cost;
       total+=time_cost;
