@@ -3,7 +3,7 @@
 int main(int argc, char *argv[],char *envp[]) {
   //char s[100]={};
   //int pipes[2];
-  char *new_argv[]={NULL,"hello","world",NULL};
+  char *new_argv[]={"hello","world",NULL};
   execve("/bin/echo",new_argv,envp);
   printf("%s:%d Should not reach here!\n",__FILE__,__LINE__);
   /*if(!pipe(pipes)){
