@@ -56,7 +56,7 @@ int main(int argc, char *argv[],char *envp[]) {
     //Child process
     //Prepare new_argv[]
     const int new_argc=argc+1;
-    char* flags[]={"-T"};
+    char* flags[]={"-o","syscall_log"};
     char **new_argv=(char**)malloc(sizeof(void*)*(new_argc+LEN(flags)));
     if(new_argv==NULL){
       err("No space for new_argv\n");
