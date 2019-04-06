@@ -8,6 +8,11 @@ void stop(void){
   fflush(stdout);
   exit(1);
 }
+typedef struct{
+    char *name;
+    double time;
+    node* next;
+}node;
 regex_t name,num;
 regmatch_t match_info;
 int main(int argc, char *argv[],char *envp[]) {
@@ -69,7 +74,7 @@ int main(int argc, char *argv[],char *envp[]) {
         continue;
       }
       strncpy(call,s+match_info.rm_so,match_info.rm_eo-match_info.rm_so);
-      call[match_info.rm_eo-match_info.rm_so+1]='\0';
+      call[match_info.rm_eo-match_info.rm_so-1]='\0';
       printf("%s\n",call);
     }
   }
