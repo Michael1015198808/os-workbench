@@ -48,7 +48,7 @@ int main(int argc, char *argv[],char *envp[]) {
     backup[1]=dup(2);
     close(1);
     dup2(pipes[1],2);
-    execve("/usr/bin/strace",new_argv,envp);
+    //execve("/usr/bin/strace",new_argv,envp);
     dup2(backup[0],1);
     dup2(backup[1],2);
     printf("%s:%d Should not reach here!\n",__FILE__,__LINE__);
