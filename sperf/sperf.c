@@ -52,7 +52,7 @@ int main(int argc, char *argv[],char *envp[]) {
   if(ret==-1){
     err("Fork failed!\n");
   }
-  if(ret==0){
+  if(ret!=0){
     //Child process
     //Prepare new_argv[]
     const int new_argc=argc+1;
@@ -79,6 +79,7 @@ int main(int argc, char *argv[],char *envp[]) {
     dup2(backup[1],2);
     err("%s:%d Should not reach here!\n",__FILE__,__LINE__);
   }else{
+    return 0;
     //Parent process
     dup2(pipes[0],0);
     char s[512];
