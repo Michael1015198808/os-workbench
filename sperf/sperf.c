@@ -6,7 +6,7 @@ void stop(void){
   exit(1);
 }
 int main(int argc, char *argv[],char *envp[]) {
-  char s[100]={};
+  //char s[100]={};
   int pipes[2];
   if(pipe(pipes)){
     printf("Build pipe failed!\n");
