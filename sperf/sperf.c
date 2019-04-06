@@ -51,9 +51,9 @@ int main(int argc, char *argv[],char *envp[]) {
     dup2(pipes[0],0);
     char s[256];
     char call[20];
-    double time;
+    //double time;
     while(fgets(s,sizeof(s),stdin)>=0){
-      if(regexec(&name,s,1,match_info,0)==REG_NOMATCH){
+      if(regexec(&name,s,1,&match_info,0)==REG_NOMATCH){
         continue;
       }
       strncpy(call,s+match_info.rm_so,match_info.rm_eo-match_info.rm_so);
