@@ -30,6 +30,7 @@ int main(int argc, char *argv[],char *envp[]) {
   }
   if(ret==0){
     //Child process
+    //Prepare new_argv[]
     const int new_argc=argc+1;
     char **new_argv=(char**)malloc(sizeof(void*)*(new_argc+1));
     if(new_argv==NULL){
@@ -41,10 +42,17 @@ int main(int argc, char *argv[],char *envp[]) {
     new_argv[1]="-T";
     memcpy(new_argv+2,argv+1,argc*sizeof(void*));
     new_argv[new_argc]=NULL;
+    //Prepare file descriptors
+    int backup[2];
+    backup[0]=dup(1);
+    backup[1]=dup(2);
     close(1);
     dup2(pipes[1],2);
     execve("/usr/bin/strace",new_argv,envp);
+    dup2(backup[0],1);
+    dup2(backup[1],2);
     printf("%s:%d Should not reach here!\n",__FILE__,__LINE__);
+    fflush(stdout);
     stop();
   }else{
     //Parent process
