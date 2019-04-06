@@ -4,17 +4,23 @@
 #include <stdlib.h>
 #include <regex.h>
 #include <stdio.h>
+#include <time.h>
 void stop(void){
   fflush(stdout);
   exit(1);
 }
-typedef struct{
+typedef struct node{
     char *name;
     double time;
-    node* next;
+    struct node* next;
 }node;
+node head={"\1\0",0,&head};
+double total=0.0;
 regex_t name,num;
 regmatch_t match_info;
+void sort(void);
+void display(void);
+inline void swap(node*,node*,node*);
 int main(int argc, char *argv[],char *envp[]) {
   if(argc==1){
     fprintf(stderr,"sperf: must have PROG [ARGS]\n");
@@ -28,7 +34,7 @@ int main(int argc, char *argv[],char *envp[]) {
   //compile regexs
   if(
     regcomp(&name,"^[a-zA-Z]*\\(",REG_EXTENDED) ||
-    regcomp(&num,"<[0-9\\.]*>$",REG_EXTENDED) ){
+    regcomp(&num,"<[0-9\\.]*>\n",REG_EXTENDED) ){
       printf("Regexes compiled failed!\n");
       stop();
   }
@@ -68,15 +74,80 @@ int main(int argc, char *argv[],char *envp[]) {
     dup2(pipes[0],0);
     char s[256];
     char call[20];
-    //double time;
+    double time_cost;
+    time_t oldtime=0,newtime;
     while(fgets(s,sizeof(s),stdin)>=0){
+      //Get name of syscall
       if(regexec(&name,s,1,&match_info,0)==REG_NOMATCH){
         continue;
       }
       strncpy(call,s+match_info.rm_so,match_info.rm_eo-match_info.rm_so);
       call[match_info.rm_eo-match_info.rm_so-1]='\0';
-      printf("%s\n",call);
+      //Get time of syscall
+      if(regexec(&num,s,1,&match_info,0)==REG_NOMATCH){
+        continue;
+      }
+      sscanf(s+match_info.rm_so+1,"%lf",&time_cost);
+      //Record 
+      node *p=&head,*q=NULL;
+      do{
+          q=p;
+          p=p->next;
+      }while(p!=&head&&strcmp(p->name,call)!=0);
+      if(strcmp(p->name,call)){
+        //before q----->p
+        //after  q-new->p
+        q->next=(node*)malloc(sizeof(node));
+        q->next->next=p;
+        q=q->next;
+        q->name=(char*)malloc(strlen(call)+1);
+        strcpy(q->name,call);
+        q->time=0.0;
+      }
+      q->time+=time_cost;
+      total+=time_cost;
+      if(time(&newtime)>oldtime){
+        oldtime=newtime;
+        sort();
+        display();
+      }
     }
   }
   return 0;
+}
+void sort(void){
+  //bubble sort
+  node *p=head.next;
+  for(p=&head;p!=&head;){
+      //r->q--..->p
+      node *q=head.next,*r=&head;
+      while(q!=p){
+          if(
+            (q->time)<
+            (q->next->time)
+          ){
+              swap(r,q,q->next);
+          }
+          r=q;
+          q=q->next;
+      }
+      p=r;
+  }
+}
+void display(void){
+  node *p=head.next;
+  printf("\033[2J\033[39m\033[49mSyscalls:\n");
+  do{
+    printf("%10s:%lf(%10.2lf%%)\n",p->name,p->time,p->time*100/total);
+    p=p->next;
+  }while(p!=&head);
+}
+inline void swap(node *p,node *a,node *b){
+//Corectness first
+    node *list[]={p,b,a,b->next};
+    int i;
+    for(i=0;i<3;++i){
+        list[i]->next=list[i+1]->next;
+    }
+    return;
 }
