@@ -17,7 +17,7 @@ static void hello() {
     printf("Hello from CPU #%d\n",_cpu());
   //}
 }
-/*void test(){
+void test(){
 #define POINTER_CNT 1000
     void *space[POINTER_CNT];
     int i;
@@ -32,35 +32,9 @@ static void hello() {
     for(i=0;i<POINTER_CNT;++i){
         pmm->free(space[i]);
     }
-}*/
-
-void test(){
-    int *space[100];
-    int num[100];
-    int i;
-    for(i=0;i<100;++i){
-        num[i] = rand()%((1<<5)-1);
-        space[i]=pmm->alloc(num[i]);
-        for(int j=0;j < num[i]/sizeof(int);j++)
-          space[i][j] = j;
-    }
-    for(i=0;i<1000;++i){
-        int temp=rand()%10;
-        for(int j=0;j < num[temp]/sizeof(int);j++)
-          assert(space[temp][j] == j);
-        pmm->free(space[temp]);
-        num[temp] = rand()%((1<<5)-1);
-        space[temp]=pmm->alloc(num[temp]);
-        for(int j=0;j < num[temp]/sizeof(int);j++)
-          space[temp][j] = j;
-    }
-    for(i=0;i<100;++i){
-        for(int j=0;j < num[i]/sizeof(int);j++)
-          assert(space[i][j] == j);
-        pmm->free(space[i]);
-    }
-    printf("test: I finished\n");
 }
+
+
 void show(){
     void *space[10];
     int i;
