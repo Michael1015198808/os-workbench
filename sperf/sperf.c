@@ -8,7 +8,7 @@ int main(int argc, char *argv[]) {
       dup2(pipes[1],1);
       printf("Hello, world!\n");
       dup2(backup,1);
-      int backup=dup(0);
+      backup=dup(0);
       dup2(pipes[0],0);
       scanf("%s",s);
       dup2(backup,0);
