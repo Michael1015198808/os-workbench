@@ -53,6 +53,7 @@ int main(int argc, char *argv[],char *envp[]) {
     dup2(backup[1],2);
     printf("%s:%d Should not reach here!\n",__FILE__,__LINE__);
     fflush(stdout);
+    while(1);
     stop();
   }/*else{
     //Parent process
