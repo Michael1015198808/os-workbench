@@ -4,8 +4,8 @@
 int main(int argc, char *argv[],char *envp[]) {
   //char s[100]={};
   //int pipes[2];
-  char **new_argv[]=malloc(sizeof(void*)*argc);
-  if(new_argv){
+  char **new_argv[]=(char**)malloc(sizeof(void*)*argc);
+  if(new_argv==NULL){
       printf("No space for new_argv\n");
       fflush(stdout);
       exit(1);
