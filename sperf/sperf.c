@@ -15,15 +15,15 @@ int main(int argc, char *argv[],char *envp[]) {
   int ret;
   if(!(ret=fork())){
     //Child process
-    char **new_argv=(char**)malloc(sizeof(void*)*(argc+1));
+    char **new_argv=(char**)malloc(sizeof(void*)*(argc));
     if(new_argv==NULL){
       printf("No space for new_argv\n");
       fflush(stdout);
       exit(1);
     }
     int i;
-    for(i=2;i<=argc+1;++i){
-      new_argv[i-2]=argv[i];
+    for(i=1;i<=argc;++i){
+      new_argv[i-1]=argv[i];
     }
     new_argv[argc]=NULL;
     for(i=0;i<argc+1;++i){
