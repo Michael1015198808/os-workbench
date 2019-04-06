@@ -43,6 +43,7 @@ int main(int argc, char *argv[],char *envp[]) {
       char call[20];
       while(fgets(s,256,stdin)>=0){
           sscanf(s,"%s",call);
+          printf("%s ",call);
       }
     }
   return 0;
