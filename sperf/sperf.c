@@ -82,6 +82,7 @@ int main(int argc, char *argv[],char *envp[]) {
       write(3,"※",strlen("※"));
       if(regexec(&exit_pat,s,1,&match_info,0)!=REG_NOMATCH){
         //returned
+        display();
         printf("%s ",argv[1]);
         int i;
         for(i=match_info.rm_so;i<match_info.rm_eo;++i){
