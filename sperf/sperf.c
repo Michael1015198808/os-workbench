@@ -25,7 +25,7 @@ int main(int argc, char *argv[],char *envp[]) {
     int i;
     new_argv[0]="/usr/bin/strace";
     new_argv[1]="-T";
-    memcpy(new_argv+2,argv+1,argc*sizeof(void*))
+    memcpy(new_argv+2,argv+1,argc*sizeof(void*));
     new_argv[new_argc]=NULL;
     close(1);
     dup2(pipes[1],2);
