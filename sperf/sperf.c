@@ -40,8 +40,9 @@ int main(int argc, char *argv[],char *envp[]) {
       //Fork success
       dup2(pipes[0],0);
       char s[256];
+      char call[20];
       while(fgets(s,256,stdin)>=0){
-          printf("%s",s);
+          sscanf(s,"%s",call);
       }
     }
   return 0;
