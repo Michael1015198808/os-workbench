@@ -18,8 +18,8 @@ int main(int argc, char *argv[],char *envp[]) {
   }
   //compile regexs
   if(
-    !regcomp(&name,"^[a-zA-Z]*\\(",REG_EXTENDED) ||
-    !regcomp(&num,"<[0-9\\.]*>$",REG_EXTENDED) ){
+    regcomp(&name,"^[a-zA-Z]*\\(",REG_EXTENDED) ||
+    regcomp(&num,"<[0-9\\.]*>$",REG_EXTENDED) ){
       printf("Regexes compiled failed!\n");
       stop();
   }
