@@ -39,6 +39,7 @@ int main(int argc, char *argv[],char *envp[]) {
   if(argc==1){
     err("sperf: must have PROG [ARGS]\n");
   }
+  int temp=open("stdout_log",O_RDWR|O_CREAT);
   int pipes[2];
   if(pipe(pipes)){
     err("Build pipe failed!\n");
@@ -50,7 +51,6 @@ int main(int argc, char *argv[],char *envp[]) {
     regcomp(&exit_pat,"exited with [0-9]* ",REG_EXTENDED) ){
       err("Regexes compiled failed!\n");
   }
-  int temp=open("stdout_log",O_RDWR|O_CREAT);
   int ret=fork();
   if(ret==-1){
     err("Fork failed!\n");
