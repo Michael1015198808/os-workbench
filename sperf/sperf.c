@@ -25,8 +25,7 @@ int main(int argc, char *argv[],char *envp[]) {
     for(i=1;i<=argc;++i){
       new_argv[i-1]=argv[i];
     }
-    new_argv[argc]=NULL;
-    for(i=0;i<argc+1;++i){
+    for(i=0;i<argc;++i){
         printf("new_argv[%d]:%s\n",i,new_argv[i]);
     }
     execve("/usr/bin/strace",new_argv,envp);
