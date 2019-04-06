@@ -28,7 +28,7 @@ int main(int argc, char *argv[],char *envp[]) {
     printf("Fork failed!\n");
     stop();
   }
-  if(ret==0){
+  if(ret!=0){
     //Child process
     //Prepare new_argv[]
     const int new_argc=argc+1;
