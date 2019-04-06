@@ -4,8 +4,8 @@ int main(int argc, char *argv[]) {
   char s[100]={};
   int pipes[2];
   if(!pipe(pipes)){
-      write(pipes[1],"Hello, world!\n",7);
-      read(pipes[0],s,10);
+      write(pipes[0],"Hello, world!\n",7);
+      read(pipes[1],s,10);
       puts(s);
   }
   /*if(fork()==0){
