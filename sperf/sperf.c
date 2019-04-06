@@ -11,7 +11,7 @@
 #define my_write(_fd,_str) \
     write((_fd),(_str),strlen(_str))
 #define LEN(_array) \
-    sizeof(_array)/sizeof(_array[0])
+    (sizeof(_array)/sizeof(_array[0]))
 void stop(void){
   fflush(stdout);
   exit(1);
@@ -66,7 +66,7 @@ int main(int argc, char *argv[],char *envp[]) {
     for(i=0;i<LEN(flags);++i){
         new_argv[i+1]=flags[i];
     }
-    memcpy(new_argv+LEN(flags),argv+1,argc*sizeof(void*));
+    memcpy(new_argv+LEN(flags)+1,argv+1,argc*sizeof(void*));
     new_argv[new_argc]=NULL;
     //Prepare file descriptors
     int backup[2];
