@@ -72,7 +72,7 @@ int main(int argc, char *argv[],char *envp[]) {
   }else{
     //Parent process
     dup2(pipes[0],0);
-    char s[256];
+    char s[512];
     char call[20];
     double time_cost;
     time_t oldtime=0,newtime;
