@@ -74,7 +74,7 @@ int main(int argc, char *argv[],char *envp[]) {
     int backup[2];
     backup[0]=dup(1);
     backup[1]=dup(2);
-    int temp=open("./stdout_log",(O_RDWR||O_CREAT));
+    int temp=open("./stdout_log",(O_WRONLY|O_CREAT));
     if(temp>0){
       dup2(temp,1);
     }else{
