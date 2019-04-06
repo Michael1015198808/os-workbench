@@ -9,10 +9,9 @@ int main(int argc, char *argv[]) {
       printf("Hello, world!\n");
       fflush(stdout);
       dup2(backup,1);
-      printf("Hello, world!\n");
       backup=dup(0);
       dup2(pipes[0],0);
-      scanf("%s",s);
+      scanf("%s\n",s);
       dup2(backup,0);
       puts(s);
   }
