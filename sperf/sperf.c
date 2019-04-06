@@ -3,8 +3,16 @@
 int main(int argc, char *argv[],char *envp[]) {
   //char s[100]={};
   //int pipes[2];
-  char *new_argv[]={argv[0],"hello","world",NULL};
-  execve("/bin/echo",new_argv,envp);
+  char **new_argv[]=malloc(sizeof(void*)*argc);
+  if(new_argv){
+      printf("No space for new_argv\n");
+      fflush(stdout);
+      exit(1);
+  }
+  for(i=1;i<=argc;++i){
+      new_argv[i-1]=argv[i];
+  }
+  execve(argv[1],new_argv,envp);
   printf("%s:%d Should not reach here!\n",__FILE__,__LINE__);
   /*if(!pipe(pipes)){
       int backup=dup(1);
