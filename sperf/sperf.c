@@ -1,7 +1,7 @@
 #include <unistd.h>
 #include <stdio.h>
 int main(int argc, char *argv[]) {
-  char s[100]={};
+  //char s[100]={};
   int pipes[2];
   if(!pipe(pipes)){
       int backup=dup(1);
