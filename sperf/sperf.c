@@ -1,9 +1,9 @@
 #include <unistd.h>
 #include <stdio.h>
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[],char *envp[]) {
   char s[100]={};
   int pipes[2];
-  if(!pipe(pipes)){
+  /*if(!pipe(pipes)){
       int backup=dup(1);
       dup2(pipes[1],1);
       printf("Hello, world!\n");
@@ -14,7 +14,7 @@ int main(int argc, char *argv[]) {
       scanf("%s\n",s);
       dup2(backup,0);
       puts(s);
-  }
+  }*/
   /*if(fork()==0){
     printf("Hello\n");
   }*/
