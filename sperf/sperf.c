@@ -78,6 +78,7 @@ int main(int argc, char *argv[],char *envp[]) {
     if(temp>0){
       dup2(temp,1);
     }else{
+      printf("open failed\n");
       close(1);
     }
     dup2(pipes[1],2);
