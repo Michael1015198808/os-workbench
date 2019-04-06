@@ -10,6 +10,8 @@
     stop();
 #define my_write(_fd,_str) \
     write((_fd),(_str),strlen(_str))
+#define LEN(_array) \
+    sizeof(_array)/sizeof(_array[0])
 void stop(void){
   fflush(stdout);
   exit(1);
@@ -41,7 +43,7 @@ int main(int argc, char *argv[],char *envp[]) {
   }
   //compile regexs
   if(
-    regcomp(&name,"^[a-zA-Z]*\\(",REG_EXTENDED) ||
+    regcomp(&name,"^[a-zA-Z_]*[0-9]*\\(",REG_EXTENDED) ||
     regcomp(&num,"<[0-9\\.]*>\n",REG_EXTENDED)  ||
     regcomp(&exit_pat,"exited with [0-9]* ",REG_EXTENDED) ){
       err("Regexes compiled failed!\n");
@@ -54,19 +56,24 @@ int main(int argc, char *argv[],char *envp[]) {
     //Child process
     //Prepare new_argv[]
     const int new_argc=argc+1;
-    char **new_argv=(char**)malloc(sizeof(void*)*(new_argc+1));
+    char* flags[]={"-T"};
+    char **new_argv=(char**)malloc(sizeof(void*)*(new_argc+LEN(flags)));
     if(new_argv==NULL){
       err("No space for new_argv\n");
     }
     new_argv[0]="/usr/bin/strace";
-    new_argv[1]="-T";
-    memcpy(new_argv+2,argv+1,argc*sizeof(void*));
+    int i;
+    for(i=0;i<LEN(flags);++i){
+        new_argv[i+1]=flags[i];
+    }
+    memcpy(new_argv+LEN(flags),argv+1,argc*sizeof(void*));
     new_argv[new_argc]=NULL;
     //Prepare file descriptors
     int backup[2];
     backup[0]=dup(1);
     backup[1]=dup(2);
-    close(1);
+    //close(1);
+    dup2(4,1);
     dup2(pipes[1],2);
     execve("/usr/bin/strace",new_argv,envp);
     dup2(backup[0],1);
