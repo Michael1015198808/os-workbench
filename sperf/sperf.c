@@ -11,6 +11,9 @@ void stop(void){
 regex_t name,num;
 regmatch_t match_info;
 int main(int argc, char *argv[],char *envp[]) {
+  if(argc==2){
+    fprintf(stderr,"sperf: must have PROG [ARGS]\n");
+  }
   int pipes[2];
   if(pipe(pipes)){
     printf("Build pipe failed!\n");
@@ -28,7 +31,7 @@ int main(int argc, char *argv[],char *envp[]) {
     printf("Fork failed!\n");
     stop();
   }
-  if(ret!=0){
+  if(ret==0){
     //Child process
     //Prepare new_argv[]
     const int new_argc=argc+1;
@@ -48,14 +51,13 @@ int main(int argc, char *argv[],char *envp[]) {
     backup[1]=dup(2);
     close(1);
     dup2(pipes[1],2);
-    //execve("/usr/bin/strace",new_argv,envp);
+    execve("/usr/bin/strace",new_argv,envp);
     dup2(backup[0],1);
     dup2(backup[1],2);
     printf("%s:%d Should not reach here!\n",__FILE__,__LINE__);
     fflush(stdout);
-    while(1);
     stop();
-  }/*else{
+  }else{
     //Parent process
     dup2(pipes[0],0);
     char s[256];
@@ -66,8 +68,9 @@ int main(int argc, char *argv[],char *envp[]) {
         continue;
       }
       strncpy(call,s+match_info.rm_so,match_info.rm_eo-match_info.rm_so);
+      call[match_info.rm_eo-match_info.rm_so+1]='\0';
       printf("%s\n",call);
     }
-  }*/
+  }
   return 0;
 }
