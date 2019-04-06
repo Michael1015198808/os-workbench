@@ -15,7 +15,7 @@ int main(int argc, char *argv[],char *envp[]) {
   int ret;
   if(!(ret=fork())){
     //Child process
-    char **new_argv=(char**)malloc(sizeof(void*)*(argc));
+    char **new_argv=(char**)malloc(sizeof(void*)*(argc+1));
     if(new_argv==NULL){
       printf("No space for new_argv\n");
       fflush(stdout);
@@ -23,9 +23,9 @@ int main(int argc, char *argv[],char *envp[]) {
     }
     int i;
     for(i=1;i<=argc;++i){
-      new_argv[i-1]=argv[i];
+      new_argv[i]=argv[i];
     }
-    for(i=0;i<argc;++i){
+    for(i=0;i<=argc;++i){
         printf("new_argv[%d]:%s\n",i,new_argv[i]);
     }
     execve("/usr/bin/strace",new_argv,envp);
