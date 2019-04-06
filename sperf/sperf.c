@@ -22,6 +22,7 @@ int main(int argc, char *argv[],char *envp[]) {
       exit(1);
     }
     int i;
+    new_argv[0]="/usr/bin/strace";
     for(i=1;i<=argc;++i){
       new_argv[i]=argv[i];
     }
