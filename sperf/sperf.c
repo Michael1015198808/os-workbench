@@ -40,7 +40,7 @@ int main(int argc, char *argv[],char *envp[]) {
       //Fork success
       dup2(pipes[0],0);
       char s[256];
-      while(fgets(s,stdin,256)>=0){
+      while(fgets(s,256,stdin)>=0){
           printf("%s",s);
       }
     }
