@@ -14,10 +14,15 @@ void stop(void){
 }
 typedef struct node{
     char *name;
-    double time;
     struct node *next;
+    double time;
 }node;
-node head={"\1\0",0,&head};
+node head={
+  .name="\1\0",
+  .next=&head,
+  .time=0
+};
+
 double total=0.0;
 regex_t name,num,exit_pat;
 regmatch_t match_info;
@@ -73,6 +78,7 @@ int main(int argc, char *argv[],char *envp[]) {
     double time_cost;
     time_t oldtime=0,newtime;
     while(fgets(s,sizeof(s),stdin)>=0){
+      write(3,s,strlen(s));
       if(regexec(&exit_pat,s,1,&match_info,0)!=REG_NOMATCH){
         //returned
         printf("%s ",argv[1]);
