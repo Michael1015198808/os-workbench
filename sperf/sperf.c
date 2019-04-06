@@ -22,7 +22,6 @@ int main(int argc, char *argv[],char *envp[]) {
       fflush(stdout);
       exit(1);
     }
-    int i;
     new_argv[0]="/usr/bin/strace";
     new_argv[1]="-T";
     memcpy(new_argv+2,argv+1,argc*sizeof(void*));
