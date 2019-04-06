@@ -43,7 +43,7 @@ int main(int argc, char *argv[],char *envp[]) {
   }
   //compile regexs
   if(
-    regcomp(&name,"^[a-zA-Z_]*[0-9]*\\(",REG_EXTENDED) ||
+    regcomp(&name,"^[a-zA-Z]*[0-9]*\\(",REG_EXTENDED) ||
     regcomp(&num,"<[0-9\\.]*>\n",REG_EXTENDED)  ||
     regcomp(&exit_pat,"exited with [0-9]* ",REG_EXTENDED) ){
       err("Regexes compiled failed!\n");
