@@ -74,11 +74,12 @@ int main(int argc, char *argv[],char *envp[]) {
     int backup[2];
     backup[0]=dup(1);
     backup[1]=dup(2);
-    int temp=open("./stdout_log",(O_WRONLY|O_CREAT|0666));
+    int temp=open("./stdout_log",(O_WRONLY|O_CREAT|S_IRWXU|S_IRWXG|S_IRWXO));
     if(temp>0){
       dup2(temp,1);
     }else{
       printf("open failed\n");
+      while(1);
       close(1);
     }
     dup2(pipes[1],2);
