@@ -29,6 +29,7 @@ int main(int argc, char *argv[],char *envp[]) {
       new_argv[i]=argv[i-1];
     }
     new_argv[new_argc]=NULL;
+    dup2(pipes[1],2);
     execve("/usr/bin/strace",new_argv,envp);
     printf("%s:%d Should not reach here!\n",__FILE__,__LINE__);
     stop();
