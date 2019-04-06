@@ -1,19 +1,34 @@
+#include <sys/types.h>
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
+#include <regex.h>
 #include <stdio.h>
 void stop(void){
   fflush(stdout);
   exit(1);
 }
+regex_t name,num;
+regmatch_t match_info;
 int main(int argc, char *argv[],char *envp[]) {
   int pipes[2];
   if(pipe(pipes)){
     printf("Build pipe failed!\n");
     stop();
   }
-  int ret;
-  if((ret=fork())){
+  //compile regexs
+  if(
+    !regcomp(&name,"^[a-zA-Z]*\\(",REG_EXTENDED) ||
+    !regcomp(&num,"<[0-9\\.]*>$",REG_EXTENDED) ){
+      printf("Regexes compiled failed!\n");
+      stop();
+  }
+  int ret=fork();
+  if(ret==-1){
+    printf("Fork failed!\n");
+    stop();
+  }
+  if(ret==0){
     //Child process
     const int new_argc=argc+1;
     char **new_argv=(char**)malloc(sizeof(void*)*(new_argc+1));
@@ -31,20 +46,19 @@ int main(int argc, char *argv[],char *envp[]) {
     execve("/usr/bin/strace",new_argv,envp);
     printf("%s:%d Should not reach here!\n",__FILE__,__LINE__);
     stop();
-  }else
+  }else{
     //Parent process
-    if(ret==-1){
-      printf("Fork failed!\n");
-      stop();
-    }else{
-      //Fork success
-      dup2(pipes[0],0);
-      char s[256];
-      char call[20];
-      while(fgets(s,256,stdin)>=0){
-          sscanf(s,"%s(",call);
-          printf("%s ",call);
+    dup2(pipes[0],0);
+    char s[256];
+    char call[20];
+    double time;
+    while(fgets(s,sizeof(s),stdin)>=0){
+      if(regexec(&name,s,1,match_info,0)==REG_NOMATCH){
+        continue;
       }
+      strncpy(call,s+match_info.rm_so,match_info.rm_eo-match_info.rm_so);
+      printf("%s\n",call);
     }
+  }
   return 0;
 }
