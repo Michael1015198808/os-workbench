@@ -79,6 +79,7 @@ int main(int argc, char *argv[],char *envp[]) {
     time_t oldtime=0,newtime;
     while(fgets(s,sizeof(s),stdin)>=0){
       write(3,s,strlen(s));
+      write(3,"※",strlen("※"));
       if(regexec(&exit_pat,s,1,&match_info,0)!=REG_NOMATCH){
         //returned
         printf("%s ",argv[1]);
