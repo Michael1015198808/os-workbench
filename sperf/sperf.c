@@ -1,4 +1,5 @@
 #include <unistd.h>
+#include <stdlib.h>
 #include <stdio.h>
 int main(int argc, char *argv[],char *envp[]) {
   //char s[100]={};
