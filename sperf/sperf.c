@@ -35,7 +35,7 @@ int main(int argc, char *argv[],char *envp[]) {
   if(
     regcomp(&name,"^[a-zA-Z]*\\(",REG_EXTENDED) ||
     regcomp(&num,"<[0-9\\.]*>\n",REG_EXTENDED)  ||
-    regcomp(&exit_pat,"+++ exited with [0-9]* +++",REG_EXTENDED) ){
+    regcomp(&exit_pat,"exited with [0-9]* ",REG_EXTENDED) ){
       printf("Regexes compiled failed!\n");
       stop();
   }
@@ -81,7 +81,7 @@ int main(int argc, char *argv[],char *envp[]) {
       if(regexec(&exit_pat,s,1,&match_info,0)!=REG_NOMATCH){
         printf("%s ",argv[1]);
         int i;
-        for(i=match_info.rm_so+4;i<match_info.rm_eo-3;++i){
+        for(i=match_info.rm_so;i<match_info.rm_eo;++i){
           putchar(s[i]);
         }
         printf("\n");
