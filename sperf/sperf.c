@@ -39,9 +39,9 @@ int main(int argc, char *argv[],char *envp[]) {
     }else{
       //Fork success
       dup2(pipes[0],0);
-      int c;
-      while((c=getchar())!=EOF){
-          putchar(c);
+      char s[256];
+      while(fgets(s,stdin,256)>=0){
+          printf("%s",s);
       }
     }
   return 0;
