@@ -12,7 +12,7 @@ void stop(void){
 typedef struct node{
     char *name;
     double time;
-    struct node* next;
+    struct node *next;
 }node;
 node head={"\1\0",0,&head};
 double total=0.0;
@@ -89,6 +89,7 @@ int main(int argc, char *argv[],char *envp[]) {
       }
       sscanf(s+match_info.rm_so+1,"%lf",&time_cost);
       //Record 
+      fprintf(stderr,"%s:%lf\n",call,time_cost);
       node *p=&head,*q=NULL;
       do{
           q=p;
@@ -118,22 +119,25 @@ int main(int argc, char *argv[],char *envp[]) {
 void sort(void){
   //bubble sort
   printf("sort\n");
-  node *p=head.next;
-  for(p=&head;p!=&head;){
+  node *p;
+  for(p=&head;p!=head.next;){
       //r->q--..->p
       node *q=head.next,*r=&head;
       while(q!=p){
-          if(
-            (q->time)<
-            (q->next->time)
-          ){
-              swap(r,q,q->next);
-          }
+        if(
+          (q->time)<
+          (q->next->time)
+        ){
+          swap(r,q,q->next);
+          q=r->next;
+        }else{
           r=q;
           q=q->next;
+        }
       }
       p=r;
   }
+  printf("sort end\n");
 }
 void display(void){
   node *p=head.next;
@@ -144,11 +148,10 @@ void display(void){
   }while(p!=&head);
 }
 inline void swap(node *p,node *a,node *b){
-//Corectness first
-    node *list[]={p,b,a,b->next};
-    int i;
-    for(i=0;i<3;++i){
-        list[i]->next=list[i+1]->next;
-    }
+    //before p->a->b->(b->next)
+    p->next=b;
+    a->next=b->next;
+    b->next=a;
+    //after  p->b->a->(b->next)
     return;
 }
