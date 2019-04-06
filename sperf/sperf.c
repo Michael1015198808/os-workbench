@@ -81,6 +81,7 @@ int main(int argc, char *argv[],char *envp[]) {
           putchar(s[i]);
         }
         printf("\n");
+        return 0;
       }
       //Get name of syscall
       if(regexec(&name,s,1,&match_info,0)==REG_NOMATCH){
