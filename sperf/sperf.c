@@ -47,7 +47,7 @@ int main(int argc, char *argv[],char *envp[]) {
   }
   //compile regexs
   if(
-    regcomp(&name,"^[a-zA-Z]*[0-9]*\\(",REG_EXTENDED) ||
+    regcomp(&name,"^[a-zA-Z]_[a-zA-Z]*[0-9]*\\(",REG_EXTENDED) ||
     regcomp(&num,"<[0-9\\.]*>\n",REG_EXTENDED)  ||
     regcomp(&exit_pat,"exited with [0-9]* ",REG_EXTENDED) ){
       err("Regexes compiled failed!\n");
@@ -102,7 +102,7 @@ int main(int argc, char *argv[],char *envp[]) {
     double time_cost;
     time_t oldtime=0,newtime;
     while(fgets(s,sizeof(s),stdin)>0){
-      my_write(3,s);
+      my_write(3,s);//Work as a tee
       if(regexec(&exit_pat,s,1,&match_info,0)!=REG_NOMATCH){
         //returned
         display();
@@ -177,7 +177,7 @@ void display(void){
   node *p=head.next;
   printf("\033[2J\033[39m\033[49mSyscalls:\n");
   do{
-    printf("%10s:%10lf(%.2lf%%)\n",p->name,p->time,p->time*100/total);
+    printf("%*s:%10lf(%.2lf%%)\n",sizeof(call),p->name,p->time,p->time*100/total);
     p=p->next;
   }while(p!=&head);
 }
