@@ -63,7 +63,7 @@ int main(int argc, char *argv[],char *envp[]) {
     int out = open("/dev/null", O_RDWR|O_APPEND, 0600);
     int backup[2];
     if(out<0){
-        err("Can not open /dev/null\nsee %s:%d for more help",__FILE__,__FILE__);
+        err("Can not open /dev/null\nsee %s:%d for more help",__FILE__,__LINE__);
         //If can not open /dev/null,
         //you can comment this check and let
         //child process output
