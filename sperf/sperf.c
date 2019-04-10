@@ -105,6 +105,7 @@ int main(int argc, char *argv[],char *envp[]) {
       my_write(3,s);//Work as a tee
       if(regexec(&exit_pat,s,1,&match_info,0)!=REG_NOMATCH){
         //returned
+        sort();
         display();
         printf("%s ",argv[1]);
         int i;
