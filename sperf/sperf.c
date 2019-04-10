@@ -36,9 +36,11 @@ void sort(void);
 void display(void);
 inline void swap(node*,node*,node*);
 int main(int argc, char *argv[],char *envp[]) {
+  //Check arguments
   if(argc==1){
     err("sperf: must have PROG [ARGS]\n");
   }
+  //Create pipes
   int pipes[2];
   if(pipe(pipes)){
     err("Build pipe failed!\n");
@@ -50,12 +52,27 @@ int main(int argc, char *argv[],char *envp[]) {
     regcomp(&exit_pat,"exited with [0-9]* ",REG_EXTENDED) ){
       err("Regexes compiled failed!\n");
   }
+  //Fork
   int ret=fork();
   if(ret==-1){
     err("Fork failed!\n");
   }
   if(ret==0){
-    //Child process
+  //Child process
+    //Prepare file descriptors
+    int out = open("/dev/null", O_RDWR|O_APPEND, 0600);
+    int backup[2];
+    if(out<0){
+        err("Can not open /dev/null\nsee %s:%d for more help",__FILE__,__FILE__);
+        //If can not open /dev/null,
+        //you can comment this check and let
+        //child process output
+        //Or simply close them
+        close(1);close(2);
+    }else{
+        backup[0]=dup(1);backup[1]=dup(2);
+        dup2(out,1);dup2(out,2);
+    }
     //Prepare new_argv[]
     char  file[32],*flags[]={"-T","-o",file};
     sprintf(file,"/proc/%d/fd/%d",getppid(),pipes[1]);
@@ -71,12 +88,11 @@ int main(int argc, char *argv[],char *envp[]) {
     }
     memcpy(new_argv+LEN(flags)+1,argv+1,argc*sizeof(void*));
     new_argv[new_argc]=NULL;
-    //Prepare file descriptors
-    //int backup[2];
-    //backup[0]=dup(1);backup[1]=dup(2);
-    //close(1);close(2);
+
     execve("/usr/bin/strace",new_argv,envp);
-    //dup2(backup[0],1);dup2(backup[1],2);
+
+    //Execve error
+    dup2(backup[0],1);dup2(backup[1],2);
     err("%s:%d Should not reach here!\n",__FILE__,__LINE__);
   }else{
     //Parent process
