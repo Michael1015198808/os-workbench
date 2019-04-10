@@ -57,7 +57,8 @@ int main(int argc, char *argv[],char *envp[]) {
   if(ret==0){
     //Child process
     //Prepare new_argv[]
-    char* flags[]={"-T"};
+    char  file[32],*flags[]={"-T","-o",file};
+    sprintf(file,"/proc/%d/fd/%d",getppid(),pipes[1]);
     const int new_argc=argc+LEN(flags);
     char **new_argv=(char**)malloc(sizeof(void*)*(new_argc+1));
     if(new_argv==NULL){
@@ -72,13 +73,10 @@ int main(int argc, char *argv[],char *envp[]) {
     new_argv[new_argc]=NULL;
     //Prepare file descriptors
     int backup[2];
-    backup[0]=dup(1);
-    backup[1]=dup(2);
-    close(1);
-    dup2(pipes[1],2);
+    backup[0]=dup(1);backup[1]=dup(2);
+    close(1);close(2);
     execve("/usr/bin/strace",new_argv,envp);
-    dup2(backup[0],1);
-    dup2(backup[1],2);
+    dup2(backup[0],1);dup2(backup[1],2);
     err("%s:%d Should not reach here!\n",__FILE__,__LINE__);
   }else{
     //Parent process
@@ -88,7 +86,7 @@ int main(int argc, char *argv[],char *envp[]) {
     double time_cost;
     time_t oldtime=0,newtime;
     while(fgets(s,sizeof(s),stdin)>0){
-      //my_write(3,s);
+      my_write(3,s);
       if(regexec(&exit_pat,s,1,&match_info,0)!=REG_NOMATCH){
         //returned
         display();
