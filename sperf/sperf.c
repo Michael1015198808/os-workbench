@@ -177,7 +177,7 @@ void display(void){
   node *p=head.next;
   printf("\033[2J\033[39m\033[49mSyscalls:\n");
   do{
-    printf("%*s:%10lf(%.2lf%%)\n",sizeof(call),p->name,p->time,p->time*100/total);
+    printf("%20s:%10lf(%.2lf%%)\n",p->name,p->time,p->time*100/total);
     p=p->next;
   }while(p!=&head);
 }
