@@ -72,11 +72,11 @@ int main(int argc, char *argv[],char *envp[]) {
     memcpy(new_argv+LEN(flags)+1,argv+1,argc*sizeof(void*));
     new_argv[new_argc]=NULL;
     //Prepare file descriptors
-    int backup[2];
-    backup[0]=dup(1);backup[1]=dup(2);
-    close(1);close(2);
+    //int backup[2];
+    //backup[0]=dup(1);backup[1]=dup(2);
+    //close(1);close(2);
     execve("/usr/bin/strace",new_argv,envp);
-    dup2(backup[0],1);dup2(backup[1],2);
+    //dup2(backup[0],1);dup2(backup[1],2);
     err("%s:%d Should not reach here!\n",__FILE__,__LINE__);
   }else{
     //Parent process
