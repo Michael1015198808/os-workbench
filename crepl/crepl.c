@@ -1,8 +1,9 @@
 #include <stdio.h>
+#include <stdlib.h>
 char cmd[1000];
 int suffix_of(char *,char *);
 int main(int argc, char *argv[]) {
-  while(true){
+  while(1){
     printf(">> ");
     fgets(cmd,sizeof(cmd),stdin);
     if(suffix_of("int",cmd)){
