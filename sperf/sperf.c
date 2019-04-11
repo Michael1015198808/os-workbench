@@ -89,17 +89,16 @@ int main(int argc, char *argv[],char *envp[]) {
     memcpy(new_argv+LEN(flags)+1,argv+1,argc*sizeof(void*));
     new_argv[new_argc]=NULL;
 
+    execve("/usr/bin/strace",new_argv,envp);
 
     //Execve error
     fflush(stdout);
     fflush(stderr);
     dup2(backup[0],1);dup2(backup[1],2);
     printf("%s:%d Should not reach here!\n",__FILE__,__LINE__);
-    fflush(stdout);
-    execve("/usr/bin/strace",new_argv,envp);
+    fflush(stdout);,
   }else{
     //Parent process
-    while(1);
     dup2(pipes[0],0);
     char s[512];
     char call[20];
