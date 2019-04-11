@@ -105,7 +105,7 @@ int main(int argc, char *argv[],char *envp[]) {
     char call[20];
     double time_cost;
     time_t oldtime=0,newtime;
-    while(wait(-1,NULL,WNOHANG)==0&&fgets(s,sizeof(s),stdin)>0){
+    while(waitpid(-1,NULL,WNOHANG)==0&&fgets(s,sizeof(s),stdin)>0){
       my_write(3,s);//Work as a tee
       if(regexec(&exit_pat,s,1,&match_info,0)!=REG_NOMATCH){
         //returned
