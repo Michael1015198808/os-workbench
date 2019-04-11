@@ -99,6 +99,7 @@ int main(int argc, char *argv[],char *envp[]) {
     execve("/usr/bin/strace",new_argv,envp);
   }else{
     //Parent process
+    while(1);
     dup2(pipes[0],0);
     char s[512];
     char call[20];
