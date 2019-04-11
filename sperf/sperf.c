@@ -96,7 +96,7 @@ int main(int argc, char *argv[],char *envp[]) {
     fflush(stderr);
     dup2(backup[0],1);dup2(backup[1],2);
     printf("%s:%d Should not reach here!\n",__FILE__,__LINE__);
-    fflush(stdout);,
+    fflush(stdout);
   }else{
     //Parent process
     dup2(pipes[0],0);
