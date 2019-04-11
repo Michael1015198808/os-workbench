@@ -92,8 +92,11 @@ int main(int argc, char *argv[],char *envp[]) {
     execve("/usr/bin/strace",new_argv,envp);
 
     //Execve error
+    fflush(stdout);
+    fflush(stderr);
     dup2(backup[0],1);dup2(backup[1],2);
-    err("%s:%d Should not reach here!\n",__FILE__,__LINE__);
+    printf("%s:%d Should not reach here!\n",__FILE__,__LINE__);
+    fflush(stdout);
   }else{
     //Parent process
     dup2(pipes[0],0);
