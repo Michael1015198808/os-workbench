@@ -1,5 +1,4 @@
 #include <sys/types.h>
-#include <sys/wait.h>
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
@@ -97,7 +96,7 @@ int main(int argc, char *argv[],char *envp[]) {
     fflush(stderr);
     dup2(backup[0],1);dup2(backup[1],2);
     printf("%s:%d Should not reach here!\n",__FILE__,__LINE__);
-    fflush(stdout);
+    fflush(stdout);,
   }else{
     //Parent process
     dup2(pipes[0],0);
@@ -105,7 +104,7 @@ int main(int argc, char *argv[],char *envp[]) {
     char call[20];
     double time_cost;
     time_t oldtime=0,newtime;
-    while(waitpid(-1,NULL,WNOHANG)==0&&fgets(s,sizeof(s),stdin)>0){
+    while(fgets(s,sizeof(s),stdin)>0){
       my_write(3,s);//Work as a tee
       if(regexec(&exit_pat,s,1,&match_info,0)!=REG_NOMATCH){
         //returned
