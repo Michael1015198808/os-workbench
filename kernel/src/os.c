@@ -50,6 +50,7 @@ void show(){
 
 static void os_run() {
     if(_cpu()==0){
+        mprotect(NULL,sizeof(void*),PROT_NONE);
         printf("%d\n",*(int*)0);
     }
   hello();
