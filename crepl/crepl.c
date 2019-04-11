@@ -9,8 +9,8 @@ int main(int argc, char *argv[]) {
     if(suffix_of("int",cmd)){
     }else{
         char file[]="XXXXXX";
-        //int fd=mkstemp(file);
-        printf("%s\n",file);
+        int fd=mkstemp(file);
+        printf("%d:%s\n",fd,file);
         getchar();
         break;
     }
