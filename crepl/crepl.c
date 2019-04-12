@@ -6,14 +6,16 @@ int main(int argc, char *argv[]) {
   while(1){
     printf(">> ");
     fgets(cmd,sizeof(cmd),stdin);
-    if(suffix_of("int",cmd)){
+    char file[]="XXXXXX";
+    int fd=mkstemp(file);
+    printf("%d:%s\n",fd,file);
+    write(fd,cmd,strlen(cmd));
+    getchar();
+    unlink(file);
+    /*if(suffix_of("int",cmd)){
     }else{
-        char file[]="XXXXXX";
-        int fd=mkstemp(file);
-        printf("%d:%s\n",fd,file);
-        getchar();
         break;
-    }
+    }*/
   }
   return 0;
 }
