@@ -12,8 +12,8 @@ char *cflags[]={
     CC,
     "-fPIC",
     "-c",
-    "-o",
-    out,
+    /*"-o",
+    out,*/
     "-x",
     "c",
     src,
