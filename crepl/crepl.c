@@ -8,7 +8,6 @@
 char cmd[1<<10],out[16],src[16];
 char *cflags[]={
     "-fPIC",
-    "-g",
     "-c",
     "-o",
     out,
@@ -31,7 +30,9 @@ int main(int argc, char *argv[],char *envp[]) {
     cflags[2]=file;
     strcpy(src,file);
     sprintf(out,"%s.so",src);
-    execve("/usr/bin/gcc",cflags,envp);
+    if(!fork()){
+        execve("/usr/bin/gcc",cflags,envp);
+    }
     getchar();
     unlink(file);
     void *handle;
