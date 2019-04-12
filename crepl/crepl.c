@@ -42,7 +42,7 @@ int main(int argc, char *argv[],char *envp[]) {
     getchar();
     unlink(file);
     void *handle;
-    handle=dlopen(file, RTLD_LAZY | RTLD_DEEPBIND);
+    handle=dlopen(out, RTLD_LAZY | RTLD_DEEPBIND);
     int (*fun)(void)= dlsym(handle, "fun");
     fun();
 
