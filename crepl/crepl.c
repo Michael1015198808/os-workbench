@@ -25,11 +25,11 @@ int main(int argc, char *argv[],char *envp[]) {
     my_write(fd,"int fun(){return ");
     my_write(fd,cmd);
     my_write(fd,"}");
-    unlink(file);
     //Compile and link
     cflags[3]=file;
     execve("/usr/bin/gcc",cflags,envp);
     getchar();
+    unlink(file);
     void *handle;
     handle=dlopen(file, RTLD_LAZY | RTLD_DEEPBIND);
     int (*fun)(void)= dlsym(handle, "fun");
