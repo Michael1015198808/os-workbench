@@ -3,10 +3,13 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
+#define CC
+    "/usr/bin/gcc"
 #define my_write(_fd,_str) \
     write(_fd,_str,strlen(_str))
 char cmd[1<<10],out[16],src[16];
 char *cflags[]={
+    CC,
     "-fPIC",
     "-c",
     "-o",
@@ -31,7 +34,7 @@ int main(int argc, char *argv[],char *envp[]) {
     strcpy(src,file);
     sprintf(out,"%s.so",src);
     if(!fork()){
-        execve("/usr/bin/gcc",cflags,envp);
+        execve(CC,cflags,envp);
     }
     getchar();
     unlink(file);
