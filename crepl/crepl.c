@@ -10,9 +10,10 @@
 char cmd[1<<10],out[16],src[16];
 char *cflags[]={
     "gcc",
-    "-###",
-    "-c",
+    " ",
+    " ",
     "-fPIC",
+    "-c",
     "-o",
     out,
     "-x",
