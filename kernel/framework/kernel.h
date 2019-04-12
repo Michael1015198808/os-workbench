@@ -26,4 +26,29 @@ typedef struct {
   void (*free)(void *ptr);
 } MODULE(pmm);
 
+typedef struct task task_t;
+typedef struct spinlock spinlock_t;
+typedef struct semaphore sem_t;
+typedef struct {
+  void (*init)();
+  int (*create)(task_t *task, const char *name, void (*entry)(void *arg), void *arg);
+  void (*teardown)(task_t *task);
+  void (*spin_init)(spinlock_t *lk, const char *name);
+  void (*spin_lock)(spinlock_t *lk);
+  void (*spin_unlock)(spinlock_t *lk);
+  void (*sem_init)(sem_t *sem, const char *name, int value);
+  void (*sem_wait)(sem_t *sem);
+  void (*sem_signal)(sem_t *sem);
+} MODULE(kmt);
+
+typedef struct device device_t;
+typedef struct devops {
+  int (*init)(device_t *dev);
+  ssize_t (*read)(device_t *dev, off_t offset, void *buf, size_t count);
+  ssize_t (*write)(device_t *dev, off_t offset, const void *buf, size_t count);
+} devops_t;
+typedef struct {
+  void (*init)();
+} MODULE(dev);
+
 #endif
