@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <dlfcn.h>
+#include <assert.h>
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
