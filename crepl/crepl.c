@@ -5,12 +5,14 @@
 #include <stdlib.h>
 #define my_write(_fd,_str) \
     write(_fd,_str,strlen(_str))
-char cmd[1<<10];
+char cmd[1<<10],out[16],src[16];
 char *cflags[]={
-    //"/usr/bin/gcc",
+    "-fPIC",
     "-g",
     "-c",
-    NULL
+    "-o",
+    out,
+    src
 };
 int suffix_of(char *,char *);
 int main(int argc, char *argv[],char *envp[]) {
@@ -24,9 +26,11 @@ int main(int argc, char *argv[],char *envp[]) {
     printf("%d:%s\n",fd,file);
     my_write(fd,"int fun(){return ");
     my_write(fd,cmd);
-    my_write(fd,"}");
+    my_write(fd,";}");
     //Compile and link
     cflags[2]=file;
+    strcpy(src,file);
+    sprintf(out,"%s.so",src);
     execve("/usr/bin/gcc",cflags,envp);
     getchar();
     unlink(file);
