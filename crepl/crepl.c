@@ -23,7 +23,7 @@ int main(int argc, char *argv[],char *envp[]) {
     printf(">> ");
     fgets(cmd,sizeof(cmd),stdin);
     //Create temp file
-    char file[]="XXXXXX";
+    char file[]="XXXXXX.c";
     int fd=mkstemp(file);
     printf("%d:%s\n",fd,file);
     my_write(fd,"int fun(){return ");
