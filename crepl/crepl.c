@@ -9,7 +9,7 @@
     write(_fd,_str,strlen(_str))
 char cmd[1<<10],out[16],src[16];
 char *cflags[]={
-    CC,
+    "gcc",
     "-###",
     "-fPIC",
     "-c",
