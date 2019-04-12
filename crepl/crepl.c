@@ -35,7 +35,7 @@ int main(int argc, char *argv[],char *envp[]) {
     my_write(fd,";}");
     //Compile and link
     cflags[2]=file;
-    strncpy(src,file,n);
+    strncpy(src,file,7);
     sprintf(out,"%s.so",src);
     if(!fork()){
         execve(CC,cflags,envp);
