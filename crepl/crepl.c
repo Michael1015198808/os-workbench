@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <unistd.h>
+#include <string.h>
 #include <stdlib.h>
 char cmd[1000];
 int suffix_of(char *,char *);
