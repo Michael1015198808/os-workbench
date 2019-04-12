@@ -42,8 +42,9 @@ int main(int argc, char *argv[],char *envp[]) {
     getchar();
     unlink(file);
     void *handle;
-    handle=dlopen(out, RTLD_LAZY | RTLD_DEEPBIND);
+    assert(handle=dlopen(out, RTLD_LAZY | RTLD_DEEPBIND));
     int (*fun)(void)= dlsym(handle, "fun");
+    assert(fun);
     fun();
 
     /*if(suffix_of("int",cmd)){
