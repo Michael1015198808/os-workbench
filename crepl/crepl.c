@@ -7,7 +7,7 @@
     write(_fd,_str,strlen(_str))
 char cmd[1<<10];
 char *cflags[]={
-    "/usr/bin/gcc",
+    //"/usr/bin/gcc",
     "-g",
     "-c",
     NULL
@@ -26,7 +26,7 @@ int main(int argc, char *argv[],char *envp[]) {
     my_write(fd,cmd);
     my_write(fd,"}");
     //Compile and link
-    cflags[3]=file;
+    cflags[2]=file;
     execve("/usr/bin/gcc",cflags,envp);
     getchar();
     unlink(file);
