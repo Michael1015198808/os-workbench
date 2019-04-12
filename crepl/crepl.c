@@ -3,25 +3,36 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
-char cmd[1000];
+#define my_write(_fd,_str) \
+    write(_fd,_str,strlen(_str))
+char cmd[1<<10];
 char *cflags[]={
+    "/usr/bin/gcc",
     "-g",
     "-c",
+    NULL
 };
 int suffix_of(char *,char *);
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[],char *envp[]) {
   while(1){
+    //Input
     printf(">> ");
     fgets(cmd,sizeof(cmd),stdin);
+    //Create temp file
     char file[]="XXXXXX";
     int fd=mkstemp(file);
     printf("%d:%s\n",fd,file);
-    write(fd,cmd,strlen(cmd));
-    getchar();
+    my_write(fd,"int fun(){return ");
+    my_write(fd,cmd);
+    my_write(fd,"}");
     unlink(file);
+    //Compile and link
+    cflags[3]=file;
+    execve("/usr/bin/gcc",cflags,envp);
+    getchar();
     void *handle;
     handle=dlopen(file, RTLD_LAZY | RTLD_DEEPBIND);
-    void (*fun)(void)= dlsym(handle, "fun");
+    int (*fun)(void)= dlsym(handle, "fun");
     fun();
 
     /*if(suffix_of("int",cmd)){
