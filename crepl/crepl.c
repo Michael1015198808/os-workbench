@@ -3,7 +3,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
-#define CC
+#define CC \
     "/usr/bin/gcc"
 #define my_write(_fd,_str) \
     write(_fd,_str,strlen(_str))
