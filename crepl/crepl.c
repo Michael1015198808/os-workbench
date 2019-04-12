@@ -14,6 +14,8 @@ char *cflags[]={
     "-c",
     "-o",
     out,
+    "-x",
+    "c",
     src
 };
 int suffix_of(char *,char *);
