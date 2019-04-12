@@ -43,6 +43,7 @@ int main(int argc, char *argv[],char *envp[]) {
     getchar();
     unlink(file);
     void *handle;
+    printf("%s\n",out);
     assert(handle=dlopen(out, RTLD_LAZY | RTLD_DEEPBIND));
     int (*fun)(void)= dlsym(handle, "fun");
     assert(fun);
