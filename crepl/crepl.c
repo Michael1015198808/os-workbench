@@ -12,12 +12,15 @@ char cmd[1<<10],out[16],src[16];
 char *cflags[]={
     "gcc",
     //"-###",
-    "-o",
-    out,
     "-fPIC",
+    "-MMD",
+    "-ggdb3",
+    "-fomit-frame-pointer",
     "-c",
     "-x",
     "c",
+    "-o",
+    out,
     src,
     NULL
 };
@@ -36,7 +39,7 @@ int main(int argc, char *argv[],char *envp[]) {
     my_write(fd,";}");
     //Compile and link
     strcpy(src,file);
-    sprintf(out,"%s.so",src);
+    sprintf(out,"%s.o",src);
     if(!fork()){
         execve(CC,cflags,envp);
     }
