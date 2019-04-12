@@ -16,7 +16,8 @@ char *cflags[]={
     out,
     "-x",
     "c",
-    src
+    src,
+    NULL
 };
 int suffix_of(char *,char *);
 int main(int argc, char *argv[],char *envp[]) {
