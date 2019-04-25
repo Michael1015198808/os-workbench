@@ -18,7 +18,7 @@ char *cflags[]={
     "-MMD",
     "-ggdb3",
     "-fomit-frame-pointer",
-    //"-c",
+    "-c",
     "-x",
     "c",
     "-o",
@@ -52,7 +52,7 @@ int main(int argc, char *argv[],char *envp[]) {
     assert(handle=dlopen(out, RTLD_LAZY | RTLD_DEEPBIND | RTLD_GLOBAL));
     int (*fun)(void)= dlsym(handle, "fun");
     assert(fun);
-    fun();
+    printf("function returns %d",fun());
 
     /*if(suffix_of("int",cmd)){
     }else{
