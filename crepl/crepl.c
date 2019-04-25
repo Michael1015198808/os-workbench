@@ -41,6 +41,7 @@ int main(int argc, char *argv[],char *envp[]) {
     //Create temp file
     char file[]="XXXXXX";
     int fd=mkstemp(file);
+    if(fd==0)log("Can't create temporary file!\n");
     log("%d:%s\n",fd,file);
     my_write(fd,"int fun(){return ");
     my_write(fd,cmd);
@@ -57,7 +58,10 @@ int main(int argc, char *argv[],char *envp[]) {
     wait(NULL);
     unlink(file);
     void *handle;
-    assert(handle=dlopen(out, RTLD_LAZY|RTLD_GLOBAL));
+    handle=dlopen(out, RTLD_LAZY|RTLD_GLOBAL);
+    if(!handle){
+        log("Compile error!\n");
+    }
     if(suffix_of("int",cmd)){
         //Add a function
     }else{
