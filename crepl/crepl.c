@@ -64,6 +64,7 @@ int main(int argc, char *argv[],char *envp[]) {
         my_write(fd,cmd);
     }else{
         //Calculate the value
+        log("%s","Calculate\n");
         my_write(fd,"int fun(){return ");
         my_write(fd,cmd);
         my_write(fd,";}");
