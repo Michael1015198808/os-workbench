@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #define CC \
     "/usr/bin/gcc"
+#define log(...) \
+    printf("%d",__LINE__, __VA_ARGS__)
 #define my_write(_fd,_str) \
     write(_fd,_str,strlen(_str))
 char cmd[1<<10],out[16],src[16];
@@ -47,7 +49,7 @@ int main(int argc, char *argv[],char *envp[]) {
     unlink(file);
     void *handle;
     printf("%s\n",out);
-    assert(handle=dlopen(out, RTLD_LAZY | RTLD_DEEPBIND));
+    assert(handle=dlopen(out, RTLD_LAZY | RTLD_DEEPBIND | RTLD_GLOBAL));
     int (*fun)(void)= dlsym(handle, "fun");
     assert(fun);
     fun();
