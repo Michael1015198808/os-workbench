@@ -51,7 +51,7 @@ int main(int argc, char *argv[],char *envp[]) {
     void *handle;
     log("%s\n",out);*/
     void *handle;
-    strcpy(out,"test.so");
+    strcpy(out,"./test.so");
     assert(handle=dlopen(out, RTLD_DEEPBIND | RTLD_GLOBAL));
     int (*fun)(void)= dlsym(handle, "fun");
     assert(fun);
