@@ -52,7 +52,7 @@ int main(int argc, char *argv[],char *envp[]) {
     log("%s\n",out);*/
     void *handle;
     strcpy(out,"test.so");
-    assert(handle=dlopen(out, RTLD_LAZY | RTLD_DEEPBIND | RTLD_GLOBAL));
+    assert(handle=dlopen(out, RTLD_DEEPBIND | RTLD_GLOBAL));
     int (*fun)(void)= dlsym(handle, "fun");
     assert(fun);
     printf("function returns %d",fun());
