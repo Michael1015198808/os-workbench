@@ -61,6 +61,7 @@ int main(int argc, char *argv[],char *envp[]) {
     handle=dlopen(out, RTLD_LAZY|RTLD_GLOBAL);
     if(!handle){
         log("%s","Compile error!\n");
+        continue;
     }
     if(suffix_of("int",cmd)){
         //Add a function
@@ -69,6 +70,7 @@ int main(int argc, char *argv[],char *envp[]) {
         int (*fun)(void)= dlsym(handle, "fun");
         assert(fun);
         printf("(%s) == %d\n",cmd,fun());
+        unlink(out);
     }
 
   }
