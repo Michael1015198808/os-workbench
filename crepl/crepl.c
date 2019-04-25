@@ -5,6 +5,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <sys/types.h>
+#include <sys/wait.h>
 #define CC \
     "/usr/bin/gcc"
 #define log(format,...) \
