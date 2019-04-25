@@ -6,23 +6,23 @@
 int main(int argc, char** argv)
 {
     void *handle;
-    int (*func_print_name)(void);
+    void (*func_print_name)(const char*);
 
-    //handle = dlopen("./libdog.so", RTLD_NOW|RTLD_GLOBAL);
-    handle = dlopen("./test.so", RTLD_NOW|RTLD_GLOBAL);
+    handle = dlopen("./libdog.so", RTLD_LAZY|RTLD_GLOBAL);
+    handle = dlopen("./libcat.so", RTLD_LAZY);
     if (!handle) {
         /* fail to load the library */
         fprintf(stderr, "Error: %s\n", dlerror());
         return EXIT_FAILURE;
     }
-    *(void**)(&func_print_name) = dlsym(handle, "fun");
+    *(void**)(&func_print_name) = dlsym(handle, "print_name");
     if (!func_print_name) {
         /* no such symbol */
         fprintf(stderr, "Error: %s\n", dlerror());
         dlclose(handle);
         return EXIT_FAILURE;
     }
-    printf("Return value:%d\n",func_print_name());
+    func_print_name("cat");
     dlclose(handle);
     return EXIT_SUCCESS;
 }

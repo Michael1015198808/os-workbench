@@ -63,20 +63,22 @@ int main(int argc, char *argv[],char *envp[]) {
     wait(NULL);
     unlink(file);
     void *handle;
-    handle=dlopen(out, RTLD_LAZY|RTLD_GLOBAL);
     if(!handle){
         log("%s","Compile error!\n");
         continue;
     }
     if(suffix_of("int",cmd)){
         //Add a function
+        handle=dlopen(out, RTLD_LAZY|RTLD_GLOBAL);
+        printf("Added: %s\n",cmd);
     }else{
         //Calculate the value
+        handle=dlopen(out, RTLD_LAZY|RTLD_GLOBAL);
         int (*fun)(void)= dlsym(handle, "fun");
         assert(fun);
         printf("(%s) == %d\n",cmd,fun());
-        unlink(out);
     }
+    unlink(out);
 
   }
   return 0;
