@@ -52,7 +52,7 @@ int main(int argc, char *argv[],char *envp[]) {
     log("%s\n",out);*/
     void *handle;
     strcpy(out,"./test.so");
-    handle=dlopen("./test.so", RTLD_GLOBAL);
+    handle=dlopen("./test.so", RTLD_LAZY|RTLD_GLOBAL);
     if(!handle){printf("Handle error!\n");exit(0);}
     int (*fun)(void)= dlsym(handle, "fun");
     assert(fun);
