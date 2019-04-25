@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
+#include <sys/types.h>
 #define CC \
     "/usr/bin/gcc"
 #define log(format,...) \
