@@ -42,7 +42,7 @@ int main(int argc, char *argv[],char *envp[]) {
     my_write(fd,";}");
     //Compile and link
     strcpy(src,file);
-    sprintf(out,"%s.so",src);
+    sprintf(out,"./%s.so",src);
     if(!fork()){
         execve(CC,cflags,envp);
     }
