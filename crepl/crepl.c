@@ -6,8 +6,8 @@
 #include <stdlib.h>
 #define CC \
     "/usr/bin/gcc"
-#define log(...) \
-    printf("Line %3d: ",__LINE__, __VA_ARGS__)
+#define log(format,...) \
+    printf("Line %3d: " format,__LINE__, __VA_ARGS__)
 #define my_write(_fd,_str) \
     write(_fd,_str,strlen(_str))
 char cmd[1<<10],out[16],src[16];
