@@ -22,8 +22,8 @@ char *cflags[]={
     "-c",
     "-x",
     "c",
-    //"-o",
-    //out,
+    "-o",
+    out,
     src,
     NULL
 };
