@@ -33,6 +33,7 @@ int main(int argc, char *argv[],char *envp[]) {
     //Input
     printf(">> ");
     fgets(cmd,sizeof(cmd),stdin);
+    if(!strcmp("exit",cmd))return 0;
     //Create temp file
     char file[]="XXXXXX";
     int fd=mkstemp(file);
@@ -46,7 +47,7 @@ int main(int argc, char *argv[],char *envp[]) {
     if(!fork()){
         execve(CC,cflags,envp);
     }
-    getchar();
+    wait(NULL);
     unlink(file);
     void *handle;
     log("%s\n",out);
