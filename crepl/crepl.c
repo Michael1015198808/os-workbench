@@ -17,6 +17,11 @@ char *cflags[]={
     "gcc",
     //"-###",
     "-fPIC",
+#if defined(__i386__)
+    "-m32",
+#elif defined(__x86_64__)
+    "-m64",
+#endif
     //"-MMD",
     //"-ggdb3",
     //"-fomit-frame-pointer",
