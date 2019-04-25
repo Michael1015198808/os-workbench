@@ -83,7 +83,6 @@ int main(int argc, char *argv[],char *envp[]) {
         printf("(%s) == %d\n",cmd,fun());
     }
     unlink(out);
-
   }
   return 0;
 }
