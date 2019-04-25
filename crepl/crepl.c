@@ -18,6 +18,7 @@ char *cflags[]={
     "-MMD",
     "-ggdb3",
     "-fomit-frame-pointer",
+    "-shared",
     "-c",
     "-x",
     "c",
