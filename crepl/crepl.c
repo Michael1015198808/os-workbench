@@ -21,8 +21,8 @@ char *cflags[]={
     "-c",
     "-x",
     "c",
-    "-o",
-    out,
+    //"-o",
+    //out,
     src,
     NULL
 };
@@ -41,7 +41,7 @@ int main(int argc, char *argv[],char *envp[]) {
     my_write(fd,";}");
     //Compile and link
     strcpy(src,file);
-    sprintf(out,"%s.o",src);
+    sprintf(out,"%s.so",src);
     if(!fork()){
         execve(CC,cflags,envp);
     }
