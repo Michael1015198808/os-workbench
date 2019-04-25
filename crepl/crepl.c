@@ -48,9 +48,6 @@ int main(int argc, char *argv[],char *envp[]) {
     int fd=mkstemp(file);
     if(fd==0)log("%s","Can't create temporary file!\n");
     log("%d:%s\n",fd,file);
-    my_write(fd,"int fun(){return ");
-    my_write(fd,cmd);
-    my_write(fd,";}");
 
     //Compile and link
     strcpy(src,file);
@@ -61,18 +58,29 @@ int main(int argc, char *argv[],char *envp[]) {
         execve(CC,cflags,envp);
     }
     wait(NULL);
-    unlink(file);
     void *handle;
+    if(suffix_of("int",cmd)){
+        //Add a function
+        my_write(fd,cmd);
+    }else{
+        //Calculate the value
+        my_write(fd,"int fun(){return ");
+        my_write(fd,cmd);
+        my_write(fd,";}");
+    }
     handle=dlopen(out, RTLD_LAZY|RTLD_GLOBAL);
     if(!handle){
         log("%s","Compile error!\n");
         continue;
     }
+    unlink(file);
+    if(!handle){
+        log("%s","Compile error!\n");
+        continue;
+    }
     if(suffix_of("int",cmd)){
-        //Add a function
         printf("Added: %s\n",cmd);
     }else{
-        //Calculate the value
         int (*fun)(void)= dlsym(handle, "fun");
         assert(fun);
         printf("(%s) == %d\n",cmd,fun());
