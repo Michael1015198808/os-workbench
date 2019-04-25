@@ -35,7 +35,9 @@ int main(int argc, char *argv[],char *envp[]) {
     //Input
     printf(">> ");
     fgets(cmd,sizeof(cmd),stdin);
+    cmd[strlen(cmd)-1]='\0';//Remove the \n
     if(!strcmp("exit",cmd))return 0;
+
     //Create temp file
     char file[]="XXXXXX";
     int fd=mkstemp(file);
@@ -43,6 +45,7 @@ int main(int argc, char *argv[],char *envp[]) {
     my_write(fd,"int fun(){return ");
     my_write(fd,cmd);
     my_write(fd,";}");
+
     //Compile and link
     strcpy(src,file);
     sprintf(out,"./%s.so",src);
@@ -52,16 +55,16 @@ int main(int argc, char *argv[],char *envp[]) {
     wait(NULL);
     unlink(file);
     void *handle;
-    log("%s\n",out);
     assert(handle=dlopen(out, RTLD_LAZY|RTLD_GLOBAL));
-    int (*fun)(void)= dlsym(handle, "fun");
-    assert(fun);
-    printf("function returns %d\n",fun());
-
-    /*if(suffix_of("int",cmd)){
+    if(suffix_of("int",cmd)){
+        //Add a function
     }else{
-        break;
-    }*/
+        //Calculate the value
+        int (*fun)(void)= dlsym(handle, "fun");
+        assert(fun);
+        printf("(%s) == %d\n",cmd,fun());
+    }
+
   }
   return 0;
 }
