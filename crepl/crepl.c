@@ -52,7 +52,8 @@ int main(int argc, char *argv[],char *envp[]) {
     log("%s\n",out);*/
     void *handle;
     strcpy(out,"./test.so");
-    assert(handle=dlopen(out, RTLD_GLOBAL));
+    handle=dlopen(out, RTLD_GLOBAL);
+    if(!handle){printf("Handle error!\n");exit(0);}
     int (*fun)(void)= dlsym(handle, "fun");
     assert(fun);
     printf("function returns %d",fun());
