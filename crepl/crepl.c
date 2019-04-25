@@ -7,7 +7,7 @@
 #define CC \
     "/usr/bin/gcc"
 #define log(...) \
-    printf("%d",__LINE__, __VA_ARGS__)
+    printf("Line %3d: ",__LINE__, __VA_ARGS__)
 #define my_write(_fd,_str) \
     write(_fd,_str,strlen(_str))
 char cmd[1<<10],out[16],src[16];
@@ -35,7 +35,7 @@ int main(int argc, char *argv[],char *envp[]) {
     //Create temp file
     char file[]="XXXXXX";
     int fd=mkstemp(file);
-    printf("%d:%s\n",fd,file);
+    log("%d:%s\n",fd,file);
     my_write(fd,"int fun(){return ");
     my_write(fd,cmd);
     my_write(fd,";}");
@@ -48,7 +48,7 @@ int main(int argc, char *argv[],char *envp[]) {
     getchar();
     unlink(file);
     void *handle;
-    printf("%s\n",out);
+    log("%s\n",out);
     assert(handle=dlopen(out, RTLD_LAZY | RTLD_DEEPBIND | RTLD_GLOBAL));
     int (*fun)(void)= dlsym(handle, "fun");
     assert(fun);
