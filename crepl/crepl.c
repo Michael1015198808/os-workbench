@@ -29,7 +29,7 @@ char *cflags[]={
 };
 int suffix_of(char *,char *);
 int main(int argc, char *argv[],char *envp[]) {
-  /*while(1){
+  while(1){
     //Input
     printf(">> ");
     fgets(cmd,sizeof(cmd),stdin);
@@ -49,19 +49,17 @@ int main(int argc, char *argv[],char *envp[]) {
     getchar();
     unlink(file);
     void *handle;
-    log("%s\n",out);*/
-    void *handle;
-    strcpy(out,"./test.so");
+    log("%s\n",out);
     assert(handle=dlopen(out, RTLD_LAZY|RTLD_GLOBAL));
     int (*fun)(void)= dlsym(handle, "fun");
     assert(fun);
-    printf("function returns %d",fun());
+    printf("function returns %d\n",fun());
 
     /*if(suffix_of("int",cmd)){
     }else{
         break;
     }*/
-  //}
+  }
   return 0;
 }
 int suffix_of(char *s1,char *s2){
