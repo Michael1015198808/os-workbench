@@ -68,12 +68,12 @@ int main(int argc, char *argv[],char *envp[]) {
     uintptr_t wstatus;
     wait((void*)&wstatus);
     unlink(file);
-    void *handle;
-    handle=dlopen(out, RTLD_LAZY|RTLD_GLOBAL);
     if(wstatus!=0){
         printf(PRIdPTR ":%s",wstatus, "Compile error!\n");
         continue;
     }
+    void *handle;
+    handle=dlopen(out, RTLD_LAZY|RTLD_GLOBAL);
     if(!handle){
         printf("load failed!\n");
         continue;
