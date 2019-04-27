@@ -36,7 +36,7 @@ char *cflags[]={
 #elif defined(__x86_64__)
     "-m64",
 #endif
-    "-Werror",
+    //"-Werror",
     "-shared",
     "-x",
     "c",
