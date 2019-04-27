@@ -61,8 +61,6 @@ int main(int argc, char *argv[],char *envp[]) {
     strcpy(src,file);
     sprintf(out,"./%s.so",src);
     if(!fork()){
-        close(1);
-        close(2);
         execve(CC,cflags,envp);
     }
     wait(NULL);
