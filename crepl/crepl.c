@@ -69,7 +69,7 @@ int main(int argc, char *argv[],char *envp[]) {
     wait((void*)&wstatus);
     unlink(file);
     if(wstatus!=0){
-        printf(PRIdPTR ":%s",wstatus, "Compile error!\n");
+        printf("%" PRIdPTR ":%s",wstatus, "Compile error!\n");
         continue;
     }
     void *handle;
