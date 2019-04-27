@@ -51,7 +51,7 @@ void restore(int errno){
     longjmp(interpreter,-1);
 }
 int main(int argc, char *argv[],char *envp[]) {
-  //signal(SIGSEGV,restore);
+  signal(SIGSEGV,restore);
   setjmp(interpreter);
   while(1){
     //Input
