@@ -54,7 +54,7 @@ int main(int argc, char *argv[],char *envp[]) {
     if(add_func){
         my_write(fd,cmd);
     }else{
-        my_write(fd,"int fun(){return ");
+        my_write(fd,"int __expr_wrapper(){return ");
         my_write(fd,cmd);
         my_write(fd,";}");
     }
@@ -83,7 +83,7 @@ int main(int argc, char *argv[],char *envp[]) {
         printf("Added: %s\n",cmd);
     }else{
         //Calculate the value
-        int (*fun)(void)= dlsym(handle, "fun");
+        int (*fun)(void)= dlsym(handle, "__expr_wrapper");
         assert(fun);
         printf("(%s) == %d\n",cmd,fun());
     }
