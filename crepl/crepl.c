@@ -8,13 +8,15 @@
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <readline/readline.h>
+#include <readline/history.h>
 #define CC \
     "/usr/bin/gcc"
 #define log(format,...) \
     fprintf(stderr,"Line %3d: " format,__LINE__, __VA_ARGS__)
 #define my_write(_fd,_str) \
     write(_fd,_str,strlen(_str))
-char cmd[1<<10],out[16],src[16];
+char *cmd=NULL,out[16],src[16];
 char *cflags[]={
     "gcc",
     "-fPIC",
@@ -23,7 +25,7 @@ char *cflags[]={
 #elif defined(__x86_64__)
     "-m64",
 #endif
-    "-WError",
+    "-Werror",
     "-shared",
     "-x",
     "c",
@@ -36,9 +38,11 @@ int suffix_of(char *,char *);
 int main(int argc, char *argv[],char *envp[]) {
   while(1){
     //Input
-    printf(">> ");
-    fgets(cmd,sizeof(cmd),stdin);
-    cmd[strlen(cmd)-1]='\0';//Remove the \n
+    if(cmd){free(cmd);cmd=NULL;}
+    cmd=readline(">> ");
+    if(cmd&&*cmd){
+        add_history(cmd);
+    }
     if(!strcmp("exit",cmd))return 0;
 
     //Create temp file
