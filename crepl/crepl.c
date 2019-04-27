@@ -17,18 +17,14 @@
 char cmd[1<<10],out[16],src[16];
 char *cflags[]={
     "gcc",
-    //"-###",
     "-fPIC",
 #if defined(__i386__)
     "-m32",
 #elif defined(__x86_64__)
     "-m64",
 #endif
-    //"-MMD",
-    //"-ggdb3",
-    //"-fomit-frame-pointer",
+    "-WError",
     "-shared",
-    //"-c",
     "-x",
     "c",
     "-o",
