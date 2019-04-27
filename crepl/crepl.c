@@ -49,10 +49,10 @@ int suffix_of(char *,char *);
 void *handle;
 sigjmp_buf interpreter;
 void restore(int errno){
-    longjmp(interpreter);
+    longjmp(interpreter,-1);
 }
 int main(int argc, char *argv[],char *envp[]) {
-  signal(SIGSEG,restore);
+  signal(SIGSEGV,restore);
   setjmp(interpreter);
   while(1){
     //Input
