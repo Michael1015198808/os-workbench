@@ -63,12 +63,17 @@ int main(int argc, char *argv[],char *envp[]) {
     if(!fork()){
         execve(CC,cflags,envp);
     }
-    wait(NULL);
+    uintptr_t wtatus;
+    wait(&wtatus);
     unlink(file);
     void *handle;
     handle=dlopen(out, RTLD_LAZY|RTLD_GLOBAL);
-    if(!handle){
+    if(wstatus!=0){
         printf("%s","Compile error!\n");
+        continue;
+    }
+    if(!handle){
+        printf("load failed!\n");
         continue;
     }
     if(add_func){
