@@ -64,8 +64,8 @@ int main(int argc, char *argv[],char *envp[]) {
     if(!fork()){
         execve(CC,cflags,envp);
     }
-    uintptr_t wtatus;
-    wait(&wtatus);
+    uintptr_t wstatus;
+    wait((void*)&wstatus);
     unlink(file);
     void *handle;
     handle=dlopen(out, RTLD_LAZY|RTLD_GLOBAL);
