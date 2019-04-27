@@ -70,7 +70,7 @@ int main(int argc, char *argv[],char *envp[]) {
     void *handle;
     handle=dlopen(out, RTLD_LAZY|RTLD_GLOBAL);
     if(wstatus!=0){
-        printf("%d:%s",wstatus, "Compile error!\n");
+        printf("%lld:%s",wstatus, "Compile error!\n");
         continue;
     }
     if(!handle){
