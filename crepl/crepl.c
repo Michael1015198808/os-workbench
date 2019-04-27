@@ -65,11 +65,11 @@ int main(int argc, char *argv[],char *envp[]) {
     if(!fork()){
         execve(CC,cflags,envp);
     }
-    uintptr_t wstatus;
+    uint32_t wstatus;
     wait((void*)&wstatus);
     unlink(file);
     if(wstatus!=0){
-        printf("%" PRIdPTR ":%s",wstatus, "Compile error!\n");
+        printf("%ld" ":%s",wstatus, "Compile error!\n");
         continue;
     }
     void *handle;
