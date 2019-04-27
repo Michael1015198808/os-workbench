@@ -5,7 +5,6 @@
  *      Use readline to provide more flexibility
  *      Auto clear output files(*.so,*.c etc)
  *      Input exit to stop
- *      Assertions
  */
 #include <stdio.h>
 #include <setjmp.h>
