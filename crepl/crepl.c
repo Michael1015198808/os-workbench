@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <cint.h>
+#include <stdint.h>
 #include <dlfcn.h>
 #include <assert.h>
 #include <unistd.h>
