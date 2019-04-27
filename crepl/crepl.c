@@ -68,7 +68,6 @@ int main(int argc, char *argv[],char *envp[]) {
     int fd=mkstemp(file);
     int add_func=suffix_of("int",cmd);
     if(fd==0)log("%s","Can't create temporary file!\n");
-    log("%d:%s\n",fd,file);
     if(add_func){
         my_write(fd,cmd);
     }else{
