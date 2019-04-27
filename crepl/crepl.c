@@ -1,4 +1,15 @@
+/*
+ * Author: Michael Yan
+ * STUID: 171240518
+ * Features:
+ *      Use readline to provide more flexibility
+ *      Auto clear output files(*.so,*.c etc)
+ *      Input exit to stop
+ *      Assertions
+ */
 #include <stdio.h>
+#include <setjmp.h>
+#include <signal.h>
 #include <stdint.h>
 #include <inttypes.h>
 #include <dlfcn.h>
@@ -35,7 +46,14 @@ char *cflags[]={
     NULL
 };
 int suffix_of(char *,char *);
+void *handle;
+sigjmp_buf interpreter;
+void restore(int errno){
+    longjmp(interpreter);
+}
 int main(int argc, char *argv[],char *envp[]) {
+  signal(SIGSEG,restore);
+  setjmp(interpreter);
   while(1){
     //Input
     if(cmd){free(cmd);cmd=NULL;}
@@ -72,7 +90,6 @@ int main(int argc, char *argv[],char *envp[]) {
         printf("%d" ":%s",wstatus, "Compile error!\n");
         continue;
     }
-    void *handle;
     handle=dlopen(out, RTLD_LAZY|RTLD_GLOBAL);
     if(!handle){
         printf("load failed!\n");
