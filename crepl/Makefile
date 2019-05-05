@@ -5,3 +5,4 @@ all: $(NAME)-64 $(NAME)-32
 
 include ../Makefile
 include ../Makefile.lab
+CFLAGS += -lreadline
