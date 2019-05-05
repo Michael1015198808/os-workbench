@@ -53,10 +53,9 @@ void show(){
 }
 
 static void os_run() {
-    if(_cpu()==0){
-        mprotect(NULL,sizeof(void*),PROT_NONE);
+    /*if(_cpu()==0){
         printf("%d\n",*(int*)0);
-    }
+    }*/
   hello();
   test();
   show_free_list();
