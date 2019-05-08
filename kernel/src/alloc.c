@@ -145,7 +145,7 @@ static void kfree(void *ptr) {
          *prevp=&free_list[cpu_id],
          *to_free=(header*)(ptr-sizeof(header));
   if(to_free->fence!=0x13579ace){
-    printf("Fence changed to %x!\n",to_free->fence);
+    printf("Fence at %x changed to %x!\n",&to_free->fence,to_free->fence);
     //while(1);
   }
   if(to_free->size> PG_SIZE/2){
