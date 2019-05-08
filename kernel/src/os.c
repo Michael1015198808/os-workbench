@@ -24,9 +24,12 @@ void test(){
         space[i]=pmm->alloc(rand()%((1<<10)-1));
     }
     for(i=0;i<1000;++i){
-        int temp=rand()%10;
-        pmm->free(space[temp]);
-        space[temp]=pmm->alloc(rand()&((1<<10)-1));
+        int idx=rand()%10,len=rand()&((1<<10)-1);
+        pmm->free(space[idx]);
+        space[idx]=pmm->alloc(len);
+        for(int j=0;j<len;++j){
+            ((char*)space[idx])[j]=j;
+        }
     }
     for(i=0;i<100;++i){
         pmm->free(space[i]);
