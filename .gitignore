@@ -6,3 +6,6 @@ a.out
 a.out-*
 *-32*
 *-64*
+kernel/arch.md
+tags
+*/tags
