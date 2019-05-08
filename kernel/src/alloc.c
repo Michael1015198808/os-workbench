@@ -120,12 +120,12 @@ static void *kalloc(size_t size) {
           ret->size=size;//record size for free
           p->size-=size+sizeof(header);//Shrink current space
           ret->fence=0x13579ace;
-          print("%d\n",__LINE__);
+          printf("%d\n",__LINE__);
           return &(ret->space);
         }else{
           prevp->next=p->next;//"delete" p
           ret->fence=0x13579ace;
-          print("%d\n",__LINE__);
+          printf("%d\n",__LINE__);
           return &(p->space);
         }
       }
