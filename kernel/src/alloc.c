@@ -120,10 +120,12 @@ static void *kalloc(size_t size) {
           ret->size=size;//record size for free
           p->size-=size+sizeof(header);//Shrink current space
           ret->fence=0x13579ace;
+          print("%d\n",__LINE__);
           return &(ret->space);
         }else{
           prevp->next=p->next;//"delete" p
           ret->fence=0x13579ace;
+          print("%d\n",__LINE__);
           return &(p->space);
         }
       }
@@ -132,7 +134,7 @@ static void *kalloc(size_t size) {
     }while(p!=&free_list[cpu_id]);
   }
   prevp->next=big_page_alloc(0);//ask for a new page
-  printf("get %p\n",prevp->next);
+  //printf("get %p\n",prevp->next);
   prevp->next->next=p;
   prevp->next->size=PG_SIZE-sizeof(header);
   return kalloc(size);
