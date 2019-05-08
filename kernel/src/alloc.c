@@ -48,7 +48,6 @@ void disable(int idx,uintptr_t shift){
 static pthread_mutex_t alloc_lock=PTHREAD_MUTEX_INITIALIZER;
 static void* big_page_alloc(uintptr_t shift){
     pthread_mutex_lock(&alloc_lock);
-    printf("Alloc big page\n");
     int idx=1,level=12;
     while(--level!=shift){
         int left=idx<<1,right=left+1;
@@ -57,7 +56,6 @@ static void* big_page_alloc(uintptr_t shift){
         }else if(pages[right]&(1<<shift)){
             idx=right;
         }else{
-            printf("No space left!\n");
             while(1);
             return NULL;//No space
         }
@@ -136,6 +134,7 @@ static void *kalloc(size_t size) {
     }while(p!=&free_list[cpu_id]);
   }
   prevp->next=big_page_alloc(0);//ask for a new page
+  printf("get %p\n",prevp->next);
   prevp->next->next=p;
   prevp->next->size=PG_SIZE-sizeof(header);
   return kalloc(size);
