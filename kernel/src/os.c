@@ -25,9 +25,9 @@ void test(){
         space[i]=pmm->alloc(rand()%((1<<10)-1));
     }
     for(i=0;i<1000;++i){
-        int temp=rand()%POINTER_CNT;
-        pmm->free(space[temp]);
-        space[temp]=pmm->alloc(rand()&((1<<10)-1));
+        int idx=rand()%POINTER_CNT,len=rand()&((1<<10)-1);
+        pmm->free(space[idx]);
+        space[idx]=pmm->alloc(rand()&(len);
     }
     for(i=0;i<POINTER_CNT;++i){
         pmm->free(space[i]);

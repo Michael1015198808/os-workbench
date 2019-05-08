@@ -7,6 +7,7 @@ static uintptr_t pm_start, pm_end;
 struct header{
     struct header *next;
     uintptr_t size;
+    uint32_t fence;
     struct{}space;//space doesn't take any storage
     //directly return &space
 }static free_list[4]={};//Sentinels
@@ -63,6 +64,7 @@ static void* big_page_alloc(uintptr_t shift){
 #else
             printf("No space left!\n");
             printf("See %s: %d for more info!\n",__FILE__,__LINE__);
+            pthread_mutex_unlock(&alloc_lock);
             while(1);
 #endif
         }
@@ -119,6 +121,7 @@ static void *kalloc(size_t size) {
       }
       header *ret=big_page_alloc(shift);
       ret->size=size;
+      ret->fence=0x13579ace;
       return &(ret->space);
   }else{
     do{
@@ -130,9 +133,11 @@ static void *kalloc(size_t size) {
           ret=(header*)tail;
           ret->size=size;//record size for free
           p->size-=size+sizeof(header);//Shrink current space
+          ret->fence=0x13579ace;
           return &(ret->space);
         }else{
           prevp->next=p->next;//"delete" p
+          p->fence=0x13579ace;
           return &(p->space);
         }
       }
@@ -152,6 +157,10 @@ static void kfree(void *ptr) {
   header *p=free_list[cpu_id].next,
          *prevp=&free_list[cpu_id],
          *to_free=(header*)(ptr-sizeof(header));
+  if(to_free->fence!=0x13579ace){
+    printf("Fence at %x changed to %x!\n",&to_free->fence,to_free->fence);
+    //while(1);
+  }
   if(to_free->size> PG_SIZE/2){
     big_page_free(to_free);
     return;
