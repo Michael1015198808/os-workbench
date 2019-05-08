@@ -124,7 +124,7 @@ static void *kalloc(size_t size) {
           return &(ret->space);
         }else{
           prevp->next=p->next;//"delete" p
-          ret->fence=0x13579ace;
+          p->fence=0x13579ace;
           printf("%d\n",__LINE__);
           return &(p->space);
         }
