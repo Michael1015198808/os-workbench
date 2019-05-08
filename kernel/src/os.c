@@ -29,8 +29,8 @@ void test(){
         space[temp]=pmm->alloc(rand()&((1<<10)-1));
     }
     for(i=0;i<100;++i){
-        printf("%d\n",i);
-        show_free_list();
+        if(i==33||i==34)
+          show_free_list();
         pmm->free(space[i]);
     }
 }
