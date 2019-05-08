@@ -22,10 +22,11 @@ void test(){
     int i;
     for(i=0;i<100;++i){
         space[i]=pmm->alloc(rand()%((1<<10)-1));
+        printf("%d:%x\n",i,*(uint32_t*)0x20a008);
     }
     for(i=0;i<1000;++i){
         int temp=rand()%10;
-        printf("%d(%d):%x\n",i,temp,*(uint32_t*)0x20a008);
+        //printf("%d(%d):%x\n",i,temp,*(uint32_t*)0x20a008);
         pmm->free(space[temp]);
         space[temp]=pmm->alloc(rand()&((1<<10)-1));
     }
