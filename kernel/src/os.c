@@ -27,9 +27,6 @@ void test(){
         int idx=rand()%10,len=rand()&((1<<10)-1);
         pmm->free(space[idx]);
         space[idx]=pmm->alloc(len);
-        for(int j=0;j<len;++j){
-            ((char*)space[idx])[j]=j;
-        }
     }
     for(i=0;i<100;++i){
         pmm->free(space[i]);
