@@ -2,11 +2,14 @@
 #include <klib.h>
 
 static void os_init() {
+  pmm->init();
+  kmt->init();
+  _vme_init(pmm->alloc, pmm->free);
+  dev->init();
   //kmt->create(pmm->alloc(sizeof(task_t)), "print", echo_task, "tty1");
   //kmt->create(pmm->alloc(sizeof(task_t)), "print", echo_task, "tty2");
   //kmt->create(pmm->alloc(sizeof(task_t)), "print", echo_task, "tty3");
   //kmt->create(pmm->alloc(sizeof(task_t)), "print", echo_task, "tty4");
-  pmm->init();
 }
 
 //volatile static _Thread_local int cnt=0;
@@ -53,12 +56,10 @@ void show(){
 }
 
 static void os_run() {
-    /*if(_cpu()==0){
-        printf("%d\n",*(int*)0);
-    }*/
+  /*if(_cpu()==0){
+      printf("%d\n",*(int*)0);
+  }*/
   hello();
-  test();
-  show_free_list();
   _intr_write(1);
   while (1) {
     _yield();
@@ -66,6 +67,12 @@ static void os_run() {
 }
 
 static _Context *os_trap(_Event ev, _Context *context) {
+  static pthread_mutex_lock trap_lk=PTHREAD_MUTEX_INITIALIZER;
+  pthread_mutex_lock(&trap_lk);
+  log("Someone calls os_trap");
+  pthread_mutex_unlock(&trap_lk);
+  while(1);
+  //TODO: handle ev
   return context;
 }
 
