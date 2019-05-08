@@ -64,6 +64,8 @@ static void* big_page_alloc(uintptr_t shift){
     }
     disable(idx,shift);
     pthread_mutex_unlock(&alloc_lock);
+    printf("Return %x",bias+
+        ((idx<<shift)&((1<<11)-1))*PG_SIZE);
     return bias+
         ((idx<<shift)&((1<<11)-1))*PG_SIZE;
 }
