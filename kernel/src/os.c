@@ -29,7 +29,7 @@ void test(){
         space[temp]=pmm->alloc(rand()&((1<<10)-1));
     }
     for(i=0;i<100;++i){
-        if(i==34||i==35)
+        if(i==76||i==75)
           show_free_list();
         pmm->free(space[i]);
     }
