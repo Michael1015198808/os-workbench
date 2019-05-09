@@ -42,5 +42,5 @@ struct semaphore {
       } \
     }while(0)
 
-#define new(A) (typeof(A)*)malloc(pmm->kalloc(A))
+#define new(A) (typeof(A)*)pmm->alloc(sizeof(A))
 #endif

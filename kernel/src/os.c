@@ -8,7 +8,7 @@ typedef struct irq{
 }irq_handler;
 static irq_handler *handlers=NULL;
 void guard(void){
-    assert(0,"Guard should not be called!\n");
+    Assert(0,"Guard should not be called!\n");
 }
 
 static inline void handler_init(void){
