@@ -14,7 +14,7 @@ int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), void *a
     return 0;
 }
 void kmt_teardown(task_t *task){
-    pmm->kfree(task->name);
+    pmm->free(task->name);
     return ;
 }
 void kmt_spin_init(spinlock_t *lk, const char *name){
@@ -28,7 +28,7 @@ void kmt_spin_lock(spinlock_t *lk){
         ++lk->reen;
     }else{
         lk->int_on=_intr_read();
-        intr_write(1);
+        _intr_write(1);
         pthread_mutex_lock(&lk->locked);
         lk->reen=1;
         lk->owner=_cpu();
@@ -42,7 +42,7 @@ void kmt_spin_unlock(spinlock_t *lk){
         }else{
             if(lk->reen==1){
                 lk->owner=-1;
-                intr_write(lk->int_on);
+                _intr_write(lk->int_on);
                 //True but sometimes slow
                 pthread_mutex_unlock(&(lk->locked));
             }else{
