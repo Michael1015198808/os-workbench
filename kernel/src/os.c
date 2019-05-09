@@ -71,7 +71,7 @@ static void os_run() {
 }
 
 static _Context *os_trap(_Event ev, _Context *context) {
-  static pthread_mutex_lock_t trap_lk=PTHREAD_MUTEX_INITIALIZER;
+  static pthread_mutex_t trap_lk=PTHREAD_MUTEX_INITIALIZER;
   pthread_mutex_lock(&trap_lk);
   _Context *ret = NULL;
   for(struct irq *handler=handlers;handler!=NULL;handler=handler->next){
@@ -83,7 +83,7 @@ static _Context *os_trap(_Event ev, _Context *context) {
   log("Someone calls os_trap");
   pthread_mutex_unlock(&trap_lk);
   if(ret==NULL){
-      log("ret==NULL");
+      log("ret==NULL",);
       while(1);
   }
   return context;
