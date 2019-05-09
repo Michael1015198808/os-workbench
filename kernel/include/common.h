@@ -2,6 +2,7 @@
 #define __COMMON_H__
 
 #include <kernel.h>
+#include <klib.h>
 #include <nanos.h>
 
 #define DEBUG
