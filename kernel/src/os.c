@@ -83,7 +83,7 @@ static _Context *os_trap(_Event ev, _Context *context) {
   log("Someone calls os_trap");
   pthread_mutex_unlock(&trap_lk);
   if(ret==NULL){
-      log("ret==NULL",);
+      log("ret==NULL");
       while(1);
   }
   return context;
