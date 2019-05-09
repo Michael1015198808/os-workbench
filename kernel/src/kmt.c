@@ -59,12 +59,12 @@ void kmt_sem_init(sem_t *sem, const char *name, int value){
     sem->value=value;
 }
 void kmt_sem_wait(sem_t *sem){
-    pthread_mutex_lock(sem->lock);
+    pthread_mutex_lock(&(sem->lock));
     --(sem->value);
     while(sem->value==0){
         pthread_mutex_unlock(&(sem->lock));
         _yield();
-        pthread_mutex_lock&((sem->lock));
+        pthread_mutex_lock(&(sem->lock));
     }
     pthread_mutex_unlock(sem->lock);
 }
