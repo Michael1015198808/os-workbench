@@ -2,7 +2,7 @@
 #include <klib.h>
 
 #define copy_name(dest,src) \
-    dest=pmm->kalloc(strlen(src)+1); \
+    dest=pmm->alloc(strlen(src)+1); \
     memcpy(dest,src,strlen(src)+1);
 void kmt_init(void){
     return;
