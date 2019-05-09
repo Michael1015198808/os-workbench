@@ -1,11 +1,29 @@
 #include <common.h>
 #include <klib.h>
 
+typedef struct irq{
+    int event,seq;
+    handler_t handler;
+    struct irq *next;
+}irq_handler;
+static irq_handler *handlers=NULL;
+void guard(void){
+    assert(0,"Guard should not be called!\n");
+}
+
+static inline void handler_init(void){
+    handlers=new(irq_handler);
+    handlers->event=-1;
+    handlers->seq=0;
+    handlers->handler=(handler_t)guard;
+    handlers->next=NULL;
+}
 static void os_init() {
   pmm->init();
   kmt->init();
   _vme_init(pmm->alloc, pmm->free);
   dev->init();
+  handler_init();
   //kmt->create(pmm->alloc(sizeof(task_t)), "print", echo_task, "tty1");
   //kmt->create(pmm->alloc(sizeof(task_t)), "print", echo_task, "tty2");
   //kmt->create(pmm->alloc(sizeof(task_t)), "print", echo_task, "tty3");
@@ -34,25 +52,11 @@ void test(){
     for(i=0;i<1000;++i){
         int idx=rand()%POINTER_CNT,len=rand()&((1<<10)-1);
         pmm->free(space[idx]);
-        space[idx]=pmm->alloc(rand()&(len);
+        space[idx]=pmm->alloc(len);
     }
     for(i=0;i<POINTER_CNT;++i){
         pmm->free(space[i]);
     }
-}
-
-
-void show(){
-    void *space[10];
-    int i;
-    show_free_list();
-    for(i=0;i<10;++i){
-        space[i]=pmm->alloc(16);
-    }
-    show_free_list();
-    pmm->free(space[5]);
-    show_free_list();
-    show_free_list();
 }
 
 static void os_run() {
@@ -69,14 +73,37 @@ static void os_run() {
 static _Context *os_trap(_Event ev, _Context *context) {
   static pthread_mutex_lock trap_lk=PTHREAD_MUTEX_INITIALIZER;
   pthread_mutex_lock(&trap_lk);
+  _Context *ret = NULL,*next=NULL;
+  for(struct irq *handler=handlers;handler!=NULL;handler=handler->next){
+    if (handler->event == _EVENT_NULL || handler->event == ev.event) {
+      _Context *next = handler->handler(ev, context);
+      if (next) ret = next;
+    }
+  }
   log("Someone calls os_trap");
   pthread_mutex_unlock(&trap_lk);
-  while(1);
-  //TODO: handle ev
+  if(ret==NULL){
+      log("ret==NULL");
+      while(1);
+  }
   return context;
 }
 
+
 static void os_on_irq(int seq, int event, handler_t handler) {
+    irq_handler *prev=NULL,*p=handlers;
+//prev->new->p
+    while(p){
+        if(p->event>event||(p->event==event&&p->seq>=seq))break;
+        prev=p;
+        p=p->next;
+    }
+    prev->next=new(irq_handler);
+    prev->next->next=p;
+
+    prev->next->seq=seq;
+    prev->next->event=event;
+    prev->next->handler=handler;
 }
 
 MODULE_DEF(os) {
