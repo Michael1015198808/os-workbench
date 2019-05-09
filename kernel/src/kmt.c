@@ -44,7 +44,7 @@ void kmt_spin_unlock(spinlock_t *lk){
                 lk->owner=-1;
                 intr_write(lk->int_on);
                 //True but sometimes slow
-                pthread_mutex_unlock(lk->locked);
+                pthread_mutex_unlock(&(lk->locked));
             }else{
                 --lk->reen;
             }
@@ -62,9 +62,9 @@ void kmt_sem_wait(sem_t *sem){
     pthread_mutex_lock(sem->lock);
     --(sem->value);
     while(sem->value==0){
-        pthread_mutex_unlock(sem->lock);
+        pthread_mutex_unlock(&(sem->lock));
         _yield();
-        pthread_mutex_lock(sem->lock);
+        pthread_mutex_lock&((sem->lock));
     }
     pthread_mutex_unlock(sem->lock);
 }
