@@ -12,7 +12,7 @@ uintptr_t cnt_free_list(void);
 void show_free_pages(void);
 #endif
 #define STK_SZ ((1<<12)-64)
-typedef struct{
+typedef struct task{
     int32_t id;
     char* name;
     uint32_t fence1[4];
