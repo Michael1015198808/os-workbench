@@ -20,7 +20,7 @@ typedef struct task{
     uint8_t stack[STK_SZ];
     uint32_t fence2[4];
 }task_t;
-typedef struct{
+typedef struct spinlock{
     uint32_t reen,owner;
     pthread_mutex_t locked;
     char *name;
