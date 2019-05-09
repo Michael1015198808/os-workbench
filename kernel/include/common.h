@@ -37,7 +37,7 @@ struct semaphore {
 #define Assert(cond,...) \
     do { \
       if(!cond){ \
-        log(##__VA_ARGS__); \
+        log(__VA_ARGS__); \
         _halt(0); \
       } \
     }while(0)
