@@ -34,6 +34,7 @@ struct semaphore {
 };
 
 #define log(fmt,...) printf("%s:%3d[cpu%d]" fmt,__FILE__,__LINE__,_cpu(),__VA_ARGS__)
+#define log(str) printf("%s:%3d[cpu%d]" str,__FILE__,__LINE__,_cpu())
 #define Assert(cond,...) \
     do { \
       if(!cond){ \
