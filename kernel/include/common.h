@@ -5,6 +5,7 @@
 #include <klib.h>
 #include <nanos.h>
 
+#define TASK_FENCE
 #define DEBUG
 //Comment the line above after testing
 #ifdef DEBUG
@@ -16,9 +17,16 @@ void show_free_pages(void);
 typedef struct task{
     int32_t id;
     char* name;
+    _Context context;
+#ifdef TASK_FENCE
     uint32_t fence1[4];
+#endif
     uint8_t stack[STK_SZ];
+    struct{
+    }stack_end;
+#ifdef TASK_FENCE
     uint32_t fence2[4];
+#endif
 }task_t;
 typedef struct spinlock{
     uint32_t reen,owner;

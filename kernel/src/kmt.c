@@ -4,13 +4,26 @@
 #define copy_name(dest,src) \
     dest=pmm->alloc(strlen(src)+1); \
     memcpy(dest,src,strlen(src)+1);
+
+static _Context* kmt_context_save(_Event ev, _Context *c);
+static _Context* kmt_context_switch(_Event ev, _Context *c);
 void kmt_init(void){
+    os->on_irq(INT_MIN, _EVENT_NULL, kmt_context_save);
+    os->on_irq(INT_MAX, _EVENT_NULL, kmt_context_switch);
     return;
 }
 int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), void *arg){
     static int32_t id=0;
     task->id=id++;
     copy_name(task->name,name);
+    
+    task->context = *_kcontext((_Area){task->stack,&(task->stack_end)}, entry, arg);
+#ifdef TASK_FENCE
+    for(int i=0;i<4;++i){
+        task->fence1[i]=0x13579ace;
+        task->fence2[i]=0xeca97531;
+    }
+#endif
     return 0;
 }
 void kmt_teardown(task_t *task){
