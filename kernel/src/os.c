@@ -84,9 +84,7 @@ static _Context *os_trap(_Event ev, _Context *context) {
 
 
 static void os_on_irq(int seq, int event, handler_t handler) {
-    //Assert(handlers==(void*)NULL,"Handler haven't initialized");
-    log("Handlers:%p\n",handlers);
-    while(1);
+    Assert(handlers!=(void*)NULL,"Handler haven't initialized");
     irq_handler *prev=NULL,*p=handlers;
 //prev->new->p
     while(p){
