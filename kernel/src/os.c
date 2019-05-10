@@ -20,6 +20,7 @@ static void os_init() {
   kmt->init();
   _vme_init(pmm->alloc, pmm->free);
   dev->init();
+  log("Os init finished\n");
   //kmt->create(pmm->alloc(sizeof(task_t)), "print", echo_task, "tty1");
   //kmt->create(pmm->alloc(sizeof(task_t)), "print", echo_task, "tty2");
   //kmt->create(pmm->alloc(sizeof(task_t)), "print", echo_task, "tty3");
@@ -77,7 +78,7 @@ static _Context *os_trap(_Event ev, _Context *context) {
       if (next) ret = next;
     }
   }
-  log("Someone calls os_trap");
+  //log("Someone calls os_trap");
   pthread_mutex_unlock(&trap_lk);
   return ret;
 }
