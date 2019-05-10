@@ -17,8 +17,11 @@ static irq_handler irq_guard={
 
 static void os_init() {
   pmm->init();
+  log("");
   kmt->init();
+  log("");
   _vme_init(pmm->alloc, pmm->free);
+  log("");
   dev->init();
   log("Os init finished\n");
   //kmt->create(pmm->alloc(sizeof(task_t)), "print", echo_task, "tty1");
