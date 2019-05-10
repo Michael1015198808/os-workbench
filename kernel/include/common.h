@@ -4,6 +4,7 @@
 #include <kernel.h>
 #include <klib.h>
 #include <nanos.h>
+#include <stdint.h>
 
 #define TASK_FENCE
 #define DEBUG
