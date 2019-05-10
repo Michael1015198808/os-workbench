@@ -6,12 +6,14 @@ typedef struct irq{
     handler_t handler;
     struct irq *next;
 }irq_handler;
-static irq_handler irq_guard={
-    -1,0,guard,NULL
-},*handlers=&irq_guard;
+
 void guard(void){
     Assert(0,"Guard should not be called!\n");
 }
+
+static irq_handler irq_guard={
+    -1,0,guard,NULL
+},*handlers=&irq_guard;
 
 static void os_init() {
   pmm->init();
