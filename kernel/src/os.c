@@ -12,7 +12,7 @@ void guard(void){
 }
 
 static irq_handler irq_guard={
-    -1,0,guard,NULL
+    -1,0,(handler_t)guard,NULL
 },*handlers=&irq_guard;
 
 static void os_init() {
