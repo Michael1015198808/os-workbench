@@ -5,8 +5,14 @@
     dest=pmm->alloc(strlen(src)+1); \
     memcpy(dest,src,strlen(src)+1);
 
-static _Context* kmt_context_save(_Event ev, _Context *c);
-static _Context* kmt_context_switch(_Event ev, _Context *c);
+static _Context* kmt_context_save(_Event ev, _Context *c){
+    Assert(0);
+    return NULL;
+}
+static _Context* kmt_context_switch(_Event ev, _Context *c){
+    Assert(0);
+    return NULL;
+}
 void kmt_init(void){
     os->on_irq(INT_MIN, _EVENT_NULL, kmt_context_save);
     os->on_irq(INT_MAX, _EVENT_NULL, kmt_context_switch);
