@@ -19,11 +19,11 @@ static inline void handler_init(void){
     handlers->next=NULL;
 }
 static void os_init() {
+  handler_init();
   pmm->init();
   kmt->init();
   _vme_init(pmm->alloc, pmm->free);
   dev->init();
-  handler_init();
   //kmt->create(pmm->alloc(sizeof(task_t)), "print", echo_task, "tty1");
   //kmt->create(pmm->alloc(sizeof(task_t)), "print", echo_task, "tty2");
   //kmt->create(pmm->alloc(sizeof(task_t)), "print", echo_task, "tty3");
@@ -88,6 +88,7 @@ static _Context *os_trap(_Event ev, _Context *context) {
 
 
 static void os_on_irq(int seq, int event, handler_t handler) {
+    Assert(handler==NULL);
     irq_handler *prev=NULL,*p=handlers;
 //prev->new->p
     while(p){
