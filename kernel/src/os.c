@@ -6,20 +6,14 @@ typedef struct irq{
     handler_t handler;
     struct irq *next;
 }irq_handler;
-static irq_handler *handlers=NULL;
+static irq_handler irq_guard={
+    -1,0,guard,NULL
+},*handlers=&irq_guard;
 void guard(void){
     Assert(0,"Guard should not be called!\n");
 }
 
-static inline void handler_init(void){
-    handlers=new(irq_handler);
-    handlers->event=-1;
-    handlers->seq=0;
-    handlers->handler=(handler_t)guard;
-    handlers->next=NULL;
-}
 static void os_init() {
-  handler_init();
   pmm->init();
   kmt->init();
   _vme_init(pmm->alloc, pmm->free);
