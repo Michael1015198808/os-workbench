@@ -12,7 +12,7 @@ int currents[4]={-1,-1,-1,-1},tasks_cnt=0;
 static _Context* kmt_context_save(_Event ev, _Context *c){
     int cpu_id=_cpu();
     if(current==-1){
-        kmt_create(pmm->alloc(sizeof(task_t)),"os_run",NULL,NULL);
+        kmt->create(pmm->alloc(sizeof(task_t)),"os_run",NULL,NULL);
         current=tasks_cnt;
         ++tasks_cnt;
     }
