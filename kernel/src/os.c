@@ -103,7 +103,7 @@ static void os_on_irq(int seq, int event, handler_t handler) {
 void irq_test(){
     irq_handler *p=handlers->next;
     while(p){
-        p->handler((_Event)0,(void*)0);
+        ((void(*)(void))p->handler)();
     }
 }
 
