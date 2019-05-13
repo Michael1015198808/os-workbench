@@ -5,8 +5,8 @@
     dest=pmm->alloc(strlen(src)+1); \
     memcpy(dest,src,strlen(src)+1);
 
-static task *tasks[20];
-task *currents[4]={};
+static task_t *tasks[20];
+task_t *currents[4]={};
 #define current currents[cpu_id]
 
 static _Context* kmt_context_save(_Event ev, _Context *c){
