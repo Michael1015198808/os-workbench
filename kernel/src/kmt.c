@@ -18,7 +18,7 @@ static _Context* kmt_context_save(_Event ev, _Context *c){
 static _Context* kmt_context_switch(_Event ev, _Context *c){
     int cpu_id=_cpu();
     do{
-        if(current==-1||current==tasks_cnt){
+        if(current==-1||current==tasks_cnt-1){
             current=0;
         }else{
             ++current;
