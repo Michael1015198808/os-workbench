@@ -12,7 +12,7 @@ void guard(void){
 }
 
 static irq_handler irq_guard={
-    INT_MIN,0,(handler_t)guard,&irq_guard
+    INT_MIN,-1,(handler_t)guard,&irq_guard
 },*handlers=&irq_guard;
 
 static void os_init() {
@@ -90,6 +90,7 @@ static void os_on_irq(int seq, int event, handler_t handler) {
 //prev->new->p
     while(p){
         if(p->seq>=seq)break;
+        printf("%d\n",p->seq);
         prev=p;
         p=p->next;
     }
