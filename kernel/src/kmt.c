@@ -14,10 +14,8 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
     return c;
 }
 void kmt_init(void){
-    void irq_test(void);
     os->on_irq(INT_MIN, _EVENT_NULL, kmt_context_save);
     os->on_irq(INT_MAX, _EVENT_NULL, kmt_context_switch);
-    irq_test();
 }
 int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), void *arg){
     static int32_t id=0;
