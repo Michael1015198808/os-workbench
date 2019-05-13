@@ -11,7 +11,7 @@ static _Context* kmt_context_save(_Event ev, _Context *c){
 }
 static _Context* kmt_context_switch(_Event ev, _Context *c){
     Assert(0);
-    return NULL;
+    return c;
 }
 void kmt_init(void){
     os->on_irq(INT_MIN, _EVENT_NULL, kmt_context_save);

@@ -12,7 +12,7 @@ void guard(void){
 }
 
 static irq_handler irq_guard={
-    -1,0,(handler_t)guard,NULL
+    INT_MIN,0,(handler_t)guard,&irq_guard
 },*handlers=&irq_guard;
 
 static void os_init() {
@@ -86,10 +86,10 @@ static _Context *os_trap(_Event ev, _Context *context) {
 
 static void os_on_irq(int seq, int event, handler_t handler) {
     Assert(handlers!=(void*)NULL,"Handler haven't initialized");
-    irq_handler *prev=NULL,*p=handlers;
+    irq_handler *prev=handlers,*p=handlers->next;
 //prev->new->p
     while(p){
-        if(p->seq>seq||(p->seq==seq&&p->event>=event))break;
+        if(p->seq>=seq)break;
         prev=p;
         p=p->next;
     }
