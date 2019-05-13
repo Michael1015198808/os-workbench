@@ -34,7 +34,7 @@ void kmt_init(void){
 int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), void *arg){
     log("create %s\n",name);
     task->id=tasks_cnt++;
-    Assert(tasks_cnt>LEN(tasks));
+    Assert(tasks_cnt<LEN(tasks));
     task->cpu=-1;
     copy_name(task->name,name);
     
