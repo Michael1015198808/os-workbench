@@ -89,6 +89,7 @@ void input_task(void *args) {
 
   while (1) {
     int code;
+    log("input_task");
     while ((code = read_key()) != 0) {
       printf("%d\n",code);
       input_keydown(in, code);
