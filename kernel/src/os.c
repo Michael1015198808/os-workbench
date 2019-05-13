@@ -62,11 +62,8 @@ static void os_run() {
   /*if(_cpu()==0){
       printf("%d\n",*(int*)0);
   }*/
-  _intr_write(1);
   log("Intr%d\n",_intr_read());
-  _intr_write(1);
   hello();
-  log("Intr%d\n",_intr_read());
   while (1) {
     _yield();
   }
