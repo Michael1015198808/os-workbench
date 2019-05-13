@@ -59,7 +59,7 @@ void test(){
 }
 
 static void os_run() {
-  intr_write(0);
+  _intr_write(0);
   /*if(_cpu()==0){
       printf("%d\n",*(int*)0);
   }*/
