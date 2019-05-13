@@ -70,12 +70,8 @@ static void os_run() {
 }
 
 static _Context *os_trap(_Event ev, _Context *context) {
-  task *currents[4]={};
-#define current currents[cpu_id]
   static pthread_mutex_t trap_lk=PTHREAD_MUTEX_INITIALIZER;
-  int cpu_id=_cpu();
   pthread_mutex_lock(&trap_lk);
-  if(current)current->context=*context;
   _Context *ret = context;
   for(struct irq *handler=handlers;handler!=NULL;handler=handler->next){
     if (handler->event == _EVENT_NULL || handler->event == ev.event) {
