@@ -32,11 +32,12 @@ void kmt_init(void){
     os->on_irq(INT_MAX, _EVENT_NULL, kmt_context_switch);
 }
 int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), void *arg){
+    log("create %s\n",task->name);
+    tasks[tasks_cnt]=task;
     task->id=tasks_cnt++;
     Assert(tasks_cnt<LEN(tasks));
     task->cpu=-1;
     copy_name(task->name,name);
-    log("create %s\n",task->name);
     
     task->context = *_kcontext(
             (_Area){(void*)task->stack,&(task->stack_end)}, entry, arg);
