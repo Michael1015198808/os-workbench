@@ -59,12 +59,12 @@ void test(){
 }
 
 static void os_run() {
-  _intr_write(1);
   /*if(_cpu()==0){
       printf("%d\n",*(int*)0);
   }*/
   hello();
-  //_intr_write(1);
+  _intr_write(1);
+  _intr_write(0);
   while (1) {
     _yield();
   }
