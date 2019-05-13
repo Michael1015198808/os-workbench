@@ -100,6 +100,12 @@ static void os_on_irq(int seq, int event, handler_t handler) {
     prev->next->event=event;
     prev->next->handler=handler;
 }
+void irq_test(){
+    irq_handler *p=handlers->next;
+    while(p){
+        p->handler(0,0);
+    }
+}
 
 MODULE_DEF(os) {
   .init   = os_init,
