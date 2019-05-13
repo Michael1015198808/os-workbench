@@ -18,6 +18,7 @@ void show_free_pages(void);
 #define STK_SZ ((1<<12)-64)
 typedef struct task{
     int32_t id;
+    int32_t cpu;
     char* name;
     _Context context;
 #ifdef TASK_FENCE

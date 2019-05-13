@@ -12,13 +12,15 @@ void guard(void){
 }
 
 static irq_handler irq_guard={
-    INT_MIN,-1,(handler_t)guard,&irq_guard
+    .seq=INT_MIN,
+    .event=-1,
+    .handler=(handler_t)guard,
+    .next=&irq_guard
 },*handlers=&irq_guard;
 
 static void os_init() {
   pmm->init();
   kmt->init();
-  log("");
   dev->init();
   log("Os init finished\n");
   //kmt->create(pmm->alloc(sizeof(task_t)), "print", echo_task, "tty1");
@@ -68,8 +70,12 @@ static void os_run() {
 }
 
 static _Context *os_trap(_Event ev, _Context *context) {
+  task *currents[4]={};
+#define current currents[cpu_id]
   static pthread_mutex_t trap_lk=PTHREAD_MUTEX_INITIALIZER;
+  int cpu_id=_cpu();
   pthread_mutex_lock(&trap_lk);
+  if(current)current->context=*context;
   _Context *ret = context;
   for(struct irq *handler=handlers;handler!=NULL;handler=handler->next){
     if (handler->event == _EVENT_NULL || handler->event == ev.event) {
@@ -106,6 +112,16 @@ void irq_test(){
         ((void(*)(void))p->handler)();
         p=p->next;
     }
+}
+void echo_task(void *name) {
+  device_t *tty = dev_lookup(name);
+  while (1) {
+    char line[128], text[128];
+    sprintf(text, "(%s) $ ", name); tty_write(tty, text);
+    int nread = tty->ops->read(tty, 0, line, sizeof(line));
+    line[nread - 1] = '\0';
+    sprintf(text, "Echo: %s.\n", line); tty_write(tty, text);
+  }
 }
 
 MODULE_DEF(os) {
