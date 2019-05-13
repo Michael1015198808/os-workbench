@@ -89,7 +89,7 @@ static void os_on_irq(int seq, int event, handler_t handler) {
     irq_handler *prev=handlers,*p=handlers->next;
 //prev->new->p
     while(p){
-        if(prev->seq<=seq)break;
+        if(p->seq>seq||p==handlers)break;
         prev=p;
         p=p->next;
     }
