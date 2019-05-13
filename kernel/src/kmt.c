@@ -6,11 +6,11 @@
     memcpy(dest,src,strlen(src)+1);
 
 static _Context* kmt_context_save(_Event ev, _Context *c){
-    log("context_save\n");
+    //log("context_save\n");
     return NULL;
 }
 static _Context* kmt_context_switch(_Event ev, _Context *c){
-    log("context_switch\n");
+    //log("context_switch\n");
     return c;
 }
 void kmt_init(void){
