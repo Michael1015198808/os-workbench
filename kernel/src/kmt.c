@@ -11,14 +11,14 @@ int currents[4]={-1,-1,-1,-1},tasks_cnt=0;
 
 static _Context* kmt_context_save(_Event ev, _Context *c){
     int cpu_id=_cpu();
-    if(current!=-1)current->context=*c;
+    if(current!=-1)tasks[current]->context=*c;
     return NULL;
 }
 static _Context* kmt_context_switch(_Event ev, _Context *c){
     int cpu_id=_cpu();
     do{
         if(current==-1||current==tasks_cnt){
-            current=tasks;
+            current=0;
         }else{
             ++current;
         }
