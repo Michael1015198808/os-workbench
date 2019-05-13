@@ -45,7 +45,7 @@ struct semaphore {
 };
 #define LEN(arr) ((sizeof(arr) / sizeof(arr[0])))
 
-#define log(fmt,...) printf("[cpu%d]%s %3d:" fmt,_cpu(),__FILE__,__LINE__,##__VA_ARGS__)
+#define log(fmt,...) printf("[cpu%d]%s %3d:\n    " fmt,_cpu(),__FILE__,__LINE__,##__VA_ARGS__)
 #define Assert(cond,...) \
     do { \
       if(!(cond)){ \
