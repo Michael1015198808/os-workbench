@@ -25,7 +25,7 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
         }
     }while(tasks[current]->cpu==cpu_id&&tasks[current]->cpu>0);
     tasks[current]->cpu=cpu_id;
-    //log("context switch to (%d)%s\n",current,tasks[current]->name);
+    log("context switch to (%d)%s\n",current,tasks[current]->name);
     return &tasks[current]->context;
 }
 void kmt_init(void){
@@ -33,7 +33,7 @@ void kmt_init(void){
     os->on_irq(INT_MAX, _EVENT_NULL, kmt_context_switch);
 }
 int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), void *arg){
-    log("create %s\n",name);
+    //log("create %s\n",name);
     tasks[tasks_cnt]=task;
     task->id=tasks_cnt++;
     Assert(tasks_cnt<LEN(tasks));
