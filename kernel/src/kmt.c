@@ -21,13 +21,14 @@ static _Context* kmt_context_save(_Event ev, _Context *c){
     return NULL;
 }
 static _Context* kmt_context_switch(_Event ev, _Context *c){
-    int cpu_id=_cpu();
+    int cpu_id=_cpu(),loop=1;
     do{
         if(current==-1||current==tasks_cnt-1){
             current=0;
         }else{
             ++current;
         }
+        if(++loop==10000){log("In kmt_context_switch\n");loop=0;}
     }while(tasks[current]->cpu==cpu_id&&tasks[current]->cpu>0);
     tasks[current]->cpu=cpu_id;
     log("context switch to (%d)%s\n",current,tasks[current]->name);
