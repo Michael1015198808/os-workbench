@@ -2,7 +2,7 @@
 #include <klib.h>
 
 typedef struct irq{
-    int event,seq;
+    int seq,event;
     handler_t handler;
     struct irq *next;
 }irq_handler;
@@ -90,7 +90,6 @@ static void os_on_irq(int seq, int event, handler_t handler) {
 //prev->new->p
     while(p){
         if(p->seq>=seq)break;
-        printf("%d\n",p->seq);
         prev=p;
         p=p->next;
     }
