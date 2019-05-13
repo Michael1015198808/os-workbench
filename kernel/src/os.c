@@ -104,6 +104,7 @@ void irq_test(){
     irq_handler *p=handlers->next;
     while(p){
         ((void(*)(void))p->handler)();
+        p=p->next;
     }
 }
 
