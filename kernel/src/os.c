@@ -73,7 +73,7 @@ static _Context *os_trap(_Event ev, _Context *context) {
   _Context *ret = context;
   for(struct irq *handler=handlers;handler!=NULL;handler=handler->next){
     if (handler->event == _EVENT_NULL || handler->event == ev.event) {
-      log("Call one handler\n");
+      //log("Call one handler\n");
       _Context *next = handler->handler(ev, context);
       if (next) ret = next;
     }
