@@ -109,7 +109,7 @@ void irq_test(){
         p=p->next;
     }
 }
-void echo_task(void *name) {
+/*void echo_task(void *name) {
   device_t *tty = dev_lookup(name);
   while (1) {
     char line[128], text[128];
@@ -118,7 +118,7 @@ void echo_task(void *name) {
     line[nread - 1] = '\0';
     sprintf(text, "Echo: %s.\n", line); tty_write(tty, text);
   }
-}
+}*/
 
 MODULE_DEF(os) {
   .init   = os_init,
