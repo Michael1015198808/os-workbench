@@ -63,8 +63,9 @@ static void os_run() {
       printf("%d\n",*(int*)0);
   }*/
   hello();
+  log("Intr%d\n",_intr_read());
   _intr_write(1);
-  _intr_write(0);
+  log("Intr%d\n",_intr_read());
   while (1) {
     _yield();
   }
