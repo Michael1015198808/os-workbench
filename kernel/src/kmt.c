@@ -5,26 +5,27 @@
     dest=pmm->alloc(strlen(src)+1); \
     memcpy(dest,src,strlen(src)+1);
 
-static task_t *tasks[20];
-task_t *currents[4]={};
+static task_t *tasks[20]={};
+int currents[4]={-1,-1,-1,-1},tasks_cnt=0;
 #define current currents[cpu_id]
 
 static _Context* kmt_context_save(_Event ev, _Context *c){
-    if(current)current->context=*context;
+    int cpu_id=_cpu();
+    if(current!=-1)current->context=*c;
     return NULL;
 }
 static _Context* kmt_context_switch(_Event ev, _Context *c){
     int cpu_id=_cpu();
     do{
-        if(!current||current==&tasks[len(tasks)]){
+        if(current==-1||current==tasks_cnt){
             current=tasks;
         }else{
             ++current;
         }
-    }while(current->cpu==cpu_id&&current->cpu>0);
-    current->cpu=cpu_id;
-    log("context switch to %s\n",current->name);
-    return &current->context;
+    }while(tasks[current]->cpu==cpu_id&&tasks[current]->cpu>0);
+    tasks[current]->cpu=cpu_id;
+    log("context switch to %s\n",tasks[current]->name);
+    return &tasks[current]->context;
 }
 void kmt_init(void){
     os->on_irq(INT_MIN, _EVENT_NULL, kmt_context_save);
@@ -32,9 +33,8 @@ void kmt_init(void){
 }
 int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), void *arg){
     log("create %s\n",name);
-    static int32_t id=0;
-    task->id=id++;
-    Assert(id>LEN(tasks));
+    task->id=tasks_cnt++;
+    Assert(tasks_cnt>LEN(tasks));
     task->cpu=-1;
     copy_name(task->name,name);
     
