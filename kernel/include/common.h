@@ -21,6 +21,7 @@ typedef struct task{
     int32_t cpu;
     char* name;
     _Context context;
+    enum state{SLEEPING,WAITING,RUNNING};
 #ifdef TASK_FENCE
     uint32_t fence1[4];
 #endif

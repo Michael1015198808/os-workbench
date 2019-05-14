@@ -30,7 +30,7 @@ static void os_init() {
   dev->init();
   kmt->create(pmm->alloc(sizeof(task_t)),"echo-test",echo_test,"n");
   kmt->create(pmm->alloc(sizeof(task_t)),"echo-test",echo_test,"m");
-  kmt->create(pmm->alloc(sizeof(task_t)),"echo-test",echo_test,"$");
+  kmt->create(pmm->alloc(sizeof(task_t)),"echo-test",echo_test,"s");
   kmt->create(pmm->alloc(sizeof(task_t)),"echo-test",echo_test,"l");
   log("Os init finished\n");
   //kmt->create(pmm->alloc(sizeof(task_t)), "print", echo_task, "tty1");
@@ -48,7 +48,7 @@ static void hello() {
   //My printf is thread-safe
   //while(1){
     //printf("Hello from CPU #%d for the %d-th time\n",_cpu(),++cnt);
-    printf("Hello from CPU #%d\n",_cpu());
+    printf("nmsl from CPU #%d\n",_cpu());
   //}
 }
 void test(){
