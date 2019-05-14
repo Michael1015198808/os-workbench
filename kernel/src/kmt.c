@@ -21,7 +21,7 @@ static _Context* kmt_context_save(_Event ev, _Context *c){
     return NULL;
 }
 static _Context* kmt_context_switch(_Event ev, _Context *c){
-    static pthread_mutex_lock switch_lk=PTHREAD_MUTEX_INITIALIZER;
+    static pthread_mutex_t switch_lk=PTHREAD_MUTEX_INITIALIZER;
     pthread_mutex_lock(&switch_lk);
     int cpu_id=_cpu(),loop=1;
     do{
