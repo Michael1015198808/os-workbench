@@ -20,7 +20,7 @@ static irq_handler irq_guard={
 
 void echo_test(void *arg){
     while(1){
-        printf("%d%c",_cpu(),((char*)arg)[0]);
+        printf("%c",((char*)arg)[0]);
         _yield();
     }
 }
@@ -76,7 +76,7 @@ static void os_run() {
   hello();
   _intr_write(1);
   while (1) {
-    //_yield();
+    _yield();
   }
 }
 
