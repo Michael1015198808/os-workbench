@@ -14,7 +14,6 @@ static _Context* kmt_context_save(_Event ev, _Context *c){
     if(current==-1){
         kmt->create(pmm->alloc(sizeof(task_t)),"os_run",NULL,NULL);
         current=tasks_cnt;
-        ++tasks_cnt;
     }
     tasks[current]->context=*c;
     tasks[current]->cpu=-1;
