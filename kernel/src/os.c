@@ -94,6 +94,7 @@ static _Context *os_trap(_Event ev, _Context *context) {
   }
   pthread_mutex_unlock(&trap_lk);
   //log("ret%p\n",ret);
+  Assert(ret!=NULL);
   return ret;
 }
 
