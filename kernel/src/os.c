@@ -83,7 +83,9 @@ static _Context *os_trap(_Event ev, _Context *context) {
   static pthread_mutex_t trap_lk=PTHREAD_MUTEX_INITIALIZER;
   pthread_mutex_lock(&trap_lk);
   _Context *ret = context;
-  for(struct irq *handler=handlers->next;handler!=handlers;handler=handler->next){
+  for(struct irq *handler=handlers->next;
+          handler!=handlers;
+          handler=handler->next){
     if (handler->event == _EVENT_NULL || handler->event == ev.event) {
       //log("Call one handler\n");
       _Context *next = handler->handler(ev, context);
