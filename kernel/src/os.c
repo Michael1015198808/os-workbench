@@ -72,6 +72,7 @@ static void os_run() {
   }*/
   log("Intr%d\n",_intr_read());
   hello();
+  _intr_write(1);
   while (1) {
     //_yield();
   }
