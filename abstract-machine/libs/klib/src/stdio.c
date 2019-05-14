@@ -13,11 +13,14 @@ int printf(const char *fmt, ...) {
     assert(n<MAX);
 #undef MAX
     static pthread_mutex_t putc_lock=PTHREAD_MUTEX_INITIALIZER;
+    int intr=_intr_read();
+    _intr_write(0);
     pthread_mutex_lock(&putc_lock);
     for(i=0;i<n;++i){
         _putc(buf[i]);
     }
     pthread_mutex_unlock(&putc_lock);
+    _intr_write(intr);
     return i;
 }
 
@@ -118,8 +121,7 @@ inline static int vsnprintf_real(char *out, size_t n, const char *fmt, va_list a
                     if (ival < 0) {
                         output('-');
                         ival = -ival;
-                    }
-                    while (ival > 0) {
+                    } while (ival > 0) {
                         num[i++] = ival % 10 + '0';
                         ival /= 10;
                     }
@@ -170,10 +172,11 @@ inline static int vsnprintf_real(char *out, size_t n, const char *fmt, va_list a
 
 //work as a wrapper 
 static int vsnprintf(char *out, size_t n, const char *fmt, va_list ap){
-    static pthread_mutex_t io_lock=PTHREAD_MUTEX_INITIALIZER;
-    pthread_mutex_lock(&io_lock);
+    /*static pthread_mutex_t io_lk=PTHREAD_MUTEX_INITIALIZER;
+    pthread_mutex_lock(&io_lk);
     int ret=vsnprintf_real(out,n,fmt,ap);
-    pthread_mutex_unlock(&io_lock);
-    return ret;
+    pthread_mutex_unlock(&io_lk);
+    return ret;*/
+    return vsnprintf_real(out,n,fmt,ap);
 }
 #endif
