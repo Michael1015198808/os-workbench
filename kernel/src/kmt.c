@@ -31,7 +31,7 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
         if(++loop==10){log("In kmt_context_switch\n");loop=0;}
     }while(tasks[current]->cpu!=cpu_id&&tasks[current]->cpu>0);
     tasks[current]->cpu=cpu_id;
-    //log("context switch to (%d)%s\n",current,tasks[current]->name);
+    log("context switch to (%d)%s\n",current,tasks[current]->name);
     return &tasks[current]->context;
 }
 void kmt_init(void){
