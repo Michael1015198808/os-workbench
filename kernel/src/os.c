@@ -18,10 +18,17 @@ static irq_handler irq_guard={
     .next=&irq_guard
 },*handlers=&irq_guard;
 
+void echo_test(void *arg){
+    while(1){
+        printf("%c",(char*)arg[0]);
+    }
+}
 static void os_init() {
   pmm->init();
   kmt->init();
   dev->init();
+  kmt->create(pmm->alloc(sizeof(task_t)),"echo-test",echo_test,"nm$l");
+  kmt->create(pmm->alloc(sizeof(task_t)),"echo-test",echo_test,"m$l");
   log("Os init finished\n");
   //kmt->create(pmm->alloc(sizeof(task_t)), "print", echo_task, "tty1");
   //kmt->create(pmm->alloc(sizeof(task_t)), "print", echo_task, "tty2");
@@ -63,7 +70,6 @@ static void os_run() {
       printf("%d\n",*(int*)0);
   }*/
   log("Intr%d\n",_intr_read());
-  _yield();
   hello();
   while (1) {
     _yield();
