@@ -21,6 +21,7 @@ static irq_handler irq_guard={
 void echo_test(void *arg){
     while(1){
         printf("%c",((char*)arg)[0]);
+        _yield();
     }
 }
 static void os_init() {
