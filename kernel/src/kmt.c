@@ -23,7 +23,7 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
     static pthread_mutex_t switch_lk=PTHREAD_MUTEX_INITIALIZER;
     pthread_mutex_lock(&switch_lk);
     int cpu_id=_cpu(),loop=1;
-    log("context switch from (%d)%s\n",current,tasks[current]->name);
+    //log("context switch from (%d)%s\n",current,tasks[current]->name);
     do{
         if(current==-1||current==tasks_cnt-1){
             current=0;
