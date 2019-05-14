@@ -21,6 +21,8 @@ static _Context* kmt_context_save(_Event ev, _Context *c){
     return NULL;
 }
 static _Context* kmt_context_switch(_Event ev, _Context *c){
+    static pthread_mutex_lock switch_lk=PTHREAD_MUTEX_INITIALIZER;
+    pthread_mutex_lock(&switch_lk);
     int cpu_id=_cpu(),loop=1;
     do{
         if(current==-1||current==tasks_cnt-1){
@@ -32,6 +34,7 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
     }while(tasks[current]->cpu!=cpu_id&&tasks[current]->cpu>0);
     tasks[current]->cpu=cpu_id;
     log("context switch to (%d)%s\n",current,tasks[current]->name);
+    pthread_mutex_unlock(&switch_lk);
     return &tasks[current]->context;
 }
 void kmt_init(void){
