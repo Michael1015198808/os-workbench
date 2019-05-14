@@ -79,7 +79,7 @@ static void os_run() {
   }
 }
 
-int switch_flag[5]=0;
+int switch_flag[5];
 static _Context *os_trap(_Event ev, _Context *context) {
   static pthread_mutex_t trap_lk=PTHREAD_MUTEX_INITIALIZER;
   pthread_mutex_lock(&trap_lk);
