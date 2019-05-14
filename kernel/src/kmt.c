@@ -34,7 +34,7 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
     }while(tasks[current]->cpu!=cpu_id&&tasks[current]->cpu>=0);
     tasks[current]->cpu=cpu_id;
     Assert(current<tasks_cnt);
-    log("context switch to (%d)%s\n",current,tasks[current]->name);
+    //log("context switch to (%d)%s\n",current,tasks[current]->name);
     pthread_mutex_unlock(&switch_lk);
     return &tasks[current]->context;
 }
