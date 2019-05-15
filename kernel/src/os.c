@@ -82,6 +82,7 @@ static void os_run() {
 int switch_flag[5];
 static _Context *os_trap(_Event ev, _Context *context) {
     static pthread_mutex_t trap_lk;
+    intr_close();
     pthread_mutex_lock(&trap_lk);
     _Context *ret = context;
     switch_flag[_cpu()]=0;
@@ -97,6 +98,7 @@ static _Context *os_trap(_Event ev, _Context *context) {
         }
     }
     pthread_mutex_unlock(&trap_lk);
+    intr_open();
     //log("ret%p\n",ret);
     if(ret==NULL){
         log("\n%d\n",switch_flag[_cpu()]);
