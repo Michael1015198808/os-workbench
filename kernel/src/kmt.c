@@ -180,7 +180,7 @@ void kmt_sem_wait(sem_t *sem){
 }
 void kmt_sem_signal(sem_t *sem){
     kmt->spin_lock(&(sem->lock));
-    if(sem->value<capa){
+    if(sem->value<sem->capa){
         if(sem->value==0){
             add_task(sem->head->task);
             sem->head=sem->head->next;
