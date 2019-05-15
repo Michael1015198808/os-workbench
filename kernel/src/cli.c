@@ -1,18 +1,21 @@
 #include <klib.h>
 #include <common.h>
 
-int ncli[4]={};
+int ncli[4]={},ori[4]={};
 void intr_close(){
-    Assert(ncli[_cpu()]>=0);
-    if(ncli[_cpu()]==0){
+    int cpu_id=_cpu();
+    Assert(ncli[cpu_id]>=0);
+    if(ncli[cpu_id]==0){
+        ori[cpu_id]=_intr_read();
         _intr_write(0);
     }
-    ++ncli[_cpu()];
+    ++ncli[cpu_id];
 }
 void intr_open(){
-    --ncli[_cpu()];
-    if(ncli[_cpu()]==0){
-        _intr_write(1);
+    int cpu_id=_cpu();
+    --ncli[cpu_id];
+    if(ncli[cpu_id]==0){
+        _intr_write(ori[cpu_id]);
     }
-    Assert(ncli[_cpu()]>=0);
+    Assert(ncli[cpu_id]>=0);
 }
