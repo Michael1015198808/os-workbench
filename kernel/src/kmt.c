@@ -162,7 +162,7 @@ void kmt_sem_init(sem_t *sem, const char *name, int value){
     copy_name(sem->name,name);
     sem->value=value;
     sem->capa=10000;
-    kmt->spin_init(&(sem->lock));
+    kmt_spin_init(&(sem->lock));
     sem->head=NULL;
     sem->tail=pmm->alloc(sizeof(list_t));
     //log("%s: %d",sem->name,sem->value);
