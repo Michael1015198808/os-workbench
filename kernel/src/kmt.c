@@ -109,7 +109,9 @@ void kmt_spin_lock(spinlock_t *lk){
                 break;
             }else{
                 while(lk->locked){
+                    pthread_mutex_unlock(&inner_lock);
                     _yield();
+                    pthread_mutex_lock(&inner_lock);
                 };
             }
         }
