@@ -22,12 +22,12 @@ static _Context* kmt_context_save(_Event ev, _Context *c){
 static _Context* kmt_context_switch(_Event ev, _Context *c){
     static pthread_mutex_t tasks_lk=PTHREAD_MUTEX_INITIALIZER;
     pthread_mutex_lock(&tasks_lk);
-    int cpu_id=_cpu(),loop=1;
+    int cpu_id=_cpu();
     extern int *switch_flag;
     switch_flag[cpu_id]=1;
     //log("context switch from (%d)%s\n",current,tasks[current]->name);
     do{
-        current=rnad()%tasks_cnt;
+        current=rand()%tasks_cnt;
     }while(tasks[current]->cpu!=cpu_id&&tasks[current]->cpu>=0);
     tasks[current]->cpu=cpu_id;
     //log("context switch to (%d)%s\n",current,tasks[current]->name);
