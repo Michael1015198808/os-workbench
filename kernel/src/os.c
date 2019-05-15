@@ -80,9 +80,9 @@ static void os_run() {
 }
 
 int switch_flag[5];
+static pthread_mutex_t irq_lk;
 static _Context *os_trap(_Event ev, _Context *context) {
-    static pthread_mutex_t trap_lk;
-    pthread_mutex_lock(&trap_lk);
+    pthread_mutex_lock(&irq_lk);
     _Context *ret = context;
     switch_flag[_cpu()]=0;
 
@@ -96,7 +96,7 @@ static _Context *os_trap(_Event ev, _Context *context) {
             if (next) ret = next;
         }
     }
-    pthread_mutex_unlock(&trap_lk);
+    pthread_mutex_unlock(&irq_lk);
     //log("ret%p\n",ret);
     if(ret==NULL){
         log("\n%d\n",switch_flag[_cpu()]);
@@ -107,6 +107,7 @@ static _Context *os_trap(_Event ev, _Context *context) {
 
 static void os_on_irq(int seq, int event, handler_t handler) {
     Assert(handlers!=(void*)NULL,"Handler haven't initialized");
+    pthread_mutex_lock(&irq_lk);
     irq_handler *prev=handlers,*p=handlers->next;
 //prev->new->p
     while(p){
@@ -120,6 +121,7 @@ static void os_on_irq(int seq, int event, handler_t handler) {
     prev->next->seq=seq;
     prev->next->event=event;
     prev->next->handler=handler;
+    pthread_mutex_unlocklock(&irq_lk);
 }
 void irq_test(){
     irq_handler *p=handlers->next;
