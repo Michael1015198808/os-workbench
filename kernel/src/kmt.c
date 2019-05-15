@@ -159,10 +159,10 @@ void kmt_sem_wait(sem_t *sem){
         if(sem->value==sem->capa){
             add_task(sem->head->task);
             sem->head=sem->head->next;
-            log("(%s)%s: wait1\n",task[current]->name,sem->name);
+            log("(%s)%s: wait1\n",tasks[current]->name,sem->name);
         }else{
             --(sem->value);
-            log("(%s)%s: wait2\n",task[current]->name,sem->name);
+            log("(%s)%s: wait2\n",tasks[current]->name,sem->name);
         }
     }else{
         int cpu_id=_cpu();
@@ -175,7 +175,7 @@ void kmt_sem_wait(sem_t *sem){
         }
         remove_task(tasks[current]);
         kmt->spin_unlock(&(sem->lock));
-        log("(%s)%s: wait3\n",task[current]->name,sem->name);
+        log("(%s)%s: wait3\n",tasks[current]->name,sem->name);
         _yield();
         return;
     }
@@ -187,10 +187,10 @@ void kmt_sem_signal(sem_t *sem){
         if(sem->value==0){
             add_task(sem->head->task);
             sem->head=sem->head->next;
-            log("(%s)%s: sign1\n",task[current]->name,sem->name);
+            log("(%s)%s: sign1\n",tasks[current]->name,sem->name);
         }else{
             ++(sem->value);
-            log("(%s)%s: sign2\n",task[current]->name,sem->name);
+            log("(%s)%s: sign2\n",tasks[current]->name,sem->name);
         }
     }else{
         int cpu_id=_cpu();
@@ -203,7 +203,7 @@ void kmt_sem_signal(sem_t *sem){
         }
         remove_task(tasks[current]);
         kmt->spin_unlock(&(sem->lock));
-        log("(%s)%s: sign3\n",task[current]->name,sem->name);
+        log("(%s)%s: sign3\n",tasks[current]->name,sem->name);
         _yield();
         return;
     }
