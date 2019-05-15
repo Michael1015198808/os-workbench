@@ -52,7 +52,7 @@ struct semaphore {
     char *name;
     int value,capa;
     spinlock_t lock;
-    list_t* head,tail;
+    list_t *head,*tail;
     //TODO: 嘤嘤嘤
 };
 #define LEN(arr) ((sizeof(arr) / sizeof(arr[0])))

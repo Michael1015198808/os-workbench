@@ -156,6 +156,7 @@ void kmt_sem_wait(sem_t *sem){
     if(sem->value>0){
         --(sem->value);
     }else{
+        int cpu_id=_cpu();
         sem->tail->next=pmm->alloc(sizeof(list_t));
         sem->tail=sem->tail->next;
         sem->tail->task=tasks[current];
