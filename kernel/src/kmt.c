@@ -154,6 +154,7 @@ void kmt_sem_init(sem_t *sem, const char *name, int value){
     sem->tail=NULL;
 }
 void kmt_sem_wait(sem_t *sem){
+    int cpu_id=_cpu();
     kmt->spin_lock(&(sem->lock));
     if(sem->value>0){
         if(sem->value==sem->capa){
@@ -165,7 +166,6 @@ void kmt_sem_wait(sem_t *sem){
             log("(%s)%s: wait2\n",tasks[current]->name,sem->name);
         }
     }else{
-        int cpu_id=_cpu();
         sem->tail->next=pmm->alloc(sizeof(list_t));
         sem->tail=sem->tail->next;
         sem->tail->task=tasks[current];
@@ -182,6 +182,7 @@ void kmt_sem_wait(sem_t *sem){
     kmt->spin_unlock(&(sem->lock));
 }
 void kmt_sem_signal(sem_t *sem){
+    int cpu_id=_cpu();
     kmt->spin_lock(&(sem->lock));
     if(sem->value<sem->capa){
         if(sem->value==0){
@@ -193,7 +194,6 @@ void kmt_sem_signal(sem_t *sem){
             log("(%s)%s: sign2\n",tasks[current]->name,sem->name);
         }
     }else{
-        int cpu_id=_cpu();
         sem->tail->next=pmm->alloc(sizeof(list_t));
         sem->tail=sem->tail->next;
         sem->tail->task=tasks[current];
