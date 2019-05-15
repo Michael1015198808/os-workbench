@@ -18,12 +18,12 @@ int currents[4]={-1,-1,-1,-1},tasks_cnt=0;
 #define current currents[cpu_id]
 
 static add_task(task_t *task){
-    kmt->lock(&tasks_lk);
+    kmt->spin_lock(&tasks_lk);
     tasks[tasks_cnt++]=task;
-    kmt->unlock(&tasks_lk);
+    kmt->spin_unlock(&tasks_lk);
 }
 static remove_task(task_t *task){
-    kmt->lock(&tasks_lk);
+    kmt->spin_lock(&tasks_lk);
     int i;
     for(i=0;i<tasks_cnt;++i){
         if(tasks[i]==task){
@@ -32,10 +32,10 @@ static remove_task(task_t *task){
     }
     tasks[i]=tasks[tasks_cnt];
     --tasks_cnt;
-    kmt->unlock(&tasks_lk);
+    kmt->spin_unlock(&tasks_lk);
 }
 static _Context* kmt_context_save(_Event ev, _Context *c){
-    kmt->lock(&tasks_lk);
+    kmt->spin_lock(&tasks_lk);
     int cpu_id=_cpu();
     if(current==-1){
         kmt->create(pmm->alloc(sizeof(task_t)),"os_run",NULL,NULL);
@@ -43,11 +43,11 @@ static _Context* kmt_context_save(_Event ev, _Context *c){
     }
     tasks[current]->context=*c;
     tasks[current]->cpu=-1;
-    kmt->unlock(tasks_lk);
+    kmt->spin_unlock(tasks_lk);
     return NULL;
 }
 static _Context* kmt_context_switch(_Event ev, _Context *c){
-    kmt->lock(&tasks_lk);
+    kmt->spin_lock(&tasks_lk);
     int cpu_id=_cpu();
     extern int *switch_flag;
     switch_flag[cpu_id]=1;
@@ -57,7 +57,7 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
     }while(tasks[current]->cpu!=cpu_id&&tasks[current]->cpu>=0);
     tasks[current]->cpu=cpu_id;
     //log("context switch to (%d)%s\n",current,tasks[current]->name);
-    kmt->unlock(tasks_lk);
+    kmt->spin_unlock(tasks_lk);
     return &tasks[current]->context;
 }
 void kmt_init(void){
@@ -94,7 +94,7 @@ void kmt_teardown(task_t *task){
     return ;
 }
 void kmt_spin_init(spinlock_t *lk, const char *name){
-    lk->locked=PTHREAD_MUTEX_INITIALIZER;
+    lk->spin_locked=PTHREAD_MUTEX_INITIALIZER;
     copy_name(lk->name,name);
 }
 void kmt_spin_lock(spinlock_t *lk){
