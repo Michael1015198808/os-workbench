@@ -159,8 +159,10 @@ void kmt_sem_wait(sem_t *sem){
         if(sem->value==sem->capa){
             add_task(sem->head->task);
             sem->head=sem->head->next;
+            log("wait1\n");
         }else{
             --(sem->value);
+            log("wait2\n");
         }
     }else{
         int cpu_id=_cpu();
@@ -173,6 +175,7 @@ void kmt_sem_wait(sem_t *sem){
         }
         remove_task(tasks[current]);
         kmt->spin_lock(&(sem->lock));
+        log("wait3\n");
         _yield();
         return;
     }
@@ -184,8 +187,10 @@ void kmt_sem_signal(sem_t *sem){
         if(sem->value==0){
             add_task(sem->head->task);
             sem->head=sem->head->next;
+            log("sign1\n");
         }else{
             ++(sem->value);
+            log("sign2\n");
         }
     }else{
         int cpu_id=_cpu();
@@ -198,6 +203,7 @@ void kmt_sem_signal(sem_t *sem){
         }
         remove_task(tasks[current]);
         kmt->spin_lock(&(sem->lock));
+        log("sign3\n");
         _yield();
         return;
     }
