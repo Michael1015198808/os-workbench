@@ -17,11 +17,11 @@ static spinlock_t tasks_lk;
 int currents[4]={-1,-1,-1,-1},tasks_cnt=0;
 #define current currents[cpu_id]
 void show_sem_list(sem_t *sem){
-    task_t *p;
+    list_t *p;
     for(p=sem->head;p!=sem->tail;p=p->next){
-        printf("%s->",p->name);
+        printf("%s->",p->task->name);
     }
-    printf("%s",p->name);
+    printf("%s",p->task->name);
 }
 
 static int add_task(task_t *task){
