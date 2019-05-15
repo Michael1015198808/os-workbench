@@ -3,7 +3,7 @@
 
 int ncli[4]={};
 void intr_close(){
-    Assert(ncli[_cpu()]<0);
+    Assert(ncli[_cpu()]>=0);
     if(ncli[_cpu()]==0){
         _intr_write(0);
     }
@@ -14,5 +14,5 @@ void intr_open(){
     if(ncli[_cpu()]==0){
         _intr_write(1);
     }
-    Assert(ncli[_cpu()]<0);
+    Assert(ncli[_cpu()]>=0);
 }
