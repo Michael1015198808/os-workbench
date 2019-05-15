@@ -17,12 +17,12 @@ static spinlock_t tasks_lk;
 int currents[4]={-1,-1,-1,-1},tasks_cnt=0;
 #define current currents[cpu_id]
 
-static add_task(task_t *task){
+static void add_task(task_t *task){
     kmt->spin_lock(&tasks_lk);
     tasks[tasks_cnt++]=task;
     kmt->spin_unlock(&tasks_lk);
 }
-static remove_task(task_t *task){
+void remove_task(task_t *task){
     kmt->spin_lock(&tasks_lk);
     int i;
     for(i=0;i<tasks_cnt;++i){
