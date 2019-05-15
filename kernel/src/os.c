@@ -24,7 +24,6 @@ void echo_test(void *arg){
         _yield();
     }
 }
-static spinlock_t trap_lk;
 static void os_init() {
     pmm->init();
     kmt->init();
@@ -33,7 +32,6 @@ static void os_init() {
     kmt->create(pmm->alloc(sizeof(task_t)),"echo-test",echo_test,"m");
     kmt->create(pmm->alloc(sizeof(task_t)),"echo-test",echo_test,"s");
     kmt->create(pmm->alloc(sizeof(task_t)),"echo-test",echo_test,"l");
-    kmt->init(&trap_lk);
     log("Os init finished\n");
     //kmt->create(pmm->alloc(sizeof(task_t)), "print", echo_task, "tty1");
     //kmt->create(pmm->alloc(sizeof(task_t)), "print", echo_task, "tty2");
@@ -82,27 +80,28 @@ static void os_run() {
 }
 
 int switch_flag[5];
-static spinlock_t trap_lk;
 static _Context *os_trap(_Event ev, _Context *context) {
-  kmt->spin_lock(&trap_lk);
-  _Context *ret = context;
-  switch_flag[_cpu()]=0;
-  for(struct irq *handler=handlers->next;
-          handler!=handlers;
-          handler=handler->next){
-    if (handler->event == _EVENT_NULL || handler->event == ev.event) {
-      //log("Call one handler\n");
-      //log("%d\n",ret);
-      _Context *next = handler->handler(ev, context);
-      if (next) ret = next;
+    static pthread_mutex_t trap_lk;
+    pthread_mutex_lock(&trap_lk);
+    _Context *ret = context;
+    switch_flag[_cpu()]=0;
+
+    for(struct irq *handler=handlers->next;
+        handler!=handlers;
+        handler=handler->next){
+        if (handler->event == _EVENT_NULL || handler->event == ev.event) {
+            //log("Call one handler\n");
+            //log("%d\n",ret);
+            _Context *next = handler->handler(ev, context);
+            if (next) ret = next;
+        }
     }
-  }
-  kmt->spin_unlock(&trap_lk);
-  //log("ret%p\n",ret);
-  if(ret==NULL){
-      log("\n%d\n",switch_flag[_cpu()]);
-  };
-  return ret;
+    pthread_mutex_unlock(&trap_lk);
+    //log("ret%p\n",ret);
+    if(ret==NULL){
+        log("\n%d\n",switch_flag[_cpu()]);
+    };
+    return ret;
 }
 
 
