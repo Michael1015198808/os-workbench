@@ -72,7 +72,7 @@ void kmt_init(void){
     kmt->spin_init(&tasks_lk, "tasks-lock");
 }
 int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), void *arg){
-    static int ignore_num=2;
+    static int ignore_num=0;
     if(ignore_num>0){
         --ignore_num;
         return 0;
@@ -154,6 +154,7 @@ void kmt_sem_init(sem_t *sem, const char *name, int value){
     sem->tail=NULL;
 }
 void kmt_sem_wait(sem_t *sem){
+    return;
     kmt->spin_lock(&(sem->lock));
     if(sem->value>0){
         --(sem->value);
@@ -168,6 +169,7 @@ void kmt_sem_wait(sem_t *sem){
     kmt->spin_lock(&(sem->lock));
 }
 void kmt_sem_signal(sem_t *sem){
+    return;
     if(sem->value){
         
     }
