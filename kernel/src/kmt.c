@@ -43,7 +43,7 @@ static _Context* kmt_context_save(_Event ev, _Context *c){
     }
     tasks[current]->context=*c;
     tasks[current]->cpu=-1;
-    kmt->spin_unlock(tasks_lk);
+    kmt->spin_unlock(&tasks_lk);
     return NULL;
 }
 static _Context* kmt_context_switch(_Event ev, _Context *c){
@@ -57,7 +57,7 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
     }while(tasks[current]->cpu!=cpu_id&&tasks[current]->cpu>=0);
     tasks[current]->cpu=cpu_id;
     //log("context switch to (%d)%s\n",current,tasks[current]->name);
-    kmt->spin_unlock(tasks_lk);
+    kmt->spin_unlock(&tasks_lk);
     return &tasks[current]->context;
 }
 void kmt_init(void){
@@ -94,7 +94,7 @@ void kmt_teardown(task_t *task){
     return ;
 }
 void kmt_spin_init(spinlock_t *lk, const char *name){
-    lk->spin_locked=PTHREAD_MUTEX_INITIALIZER;
+    lk->locked=PTHREAD_MUTEX_INITIALIZER;
     copy_name(lk->name,name);
 }
 void kmt_spin_lock(spinlock_t *lk){
