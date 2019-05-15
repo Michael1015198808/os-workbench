@@ -16,6 +16,10 @@ uintptr_t cnt_free_list(void);
 void show_free_pages(void);
 #endif
 #define STK_SZ ((1<<12)-64)
+int ncli[4];
+void intr_close();
+void intr_open();
+
 typedef struct task{
     int32_t id;
     int32_t cpu;
@@ -32,12 +36,14 @@ typedef struct task{
     uint32_t fence2[4];
 #endif
 }task_t;
+
 typedef struct spinlock{
     uint32_t reen,owner;
     pthread_mutex_t locked;
     char *name;
     uint8_t int_on;
 }spinlock_t;
+
 struct semaphore {
     char *name;
     int value;

@@ -20,24 +20,18 @@ static _Context* kmt_context_save(_Event ev, _Context *c){
     return NULL;
 }
 static _Context* kmt_context_switch(_Event ev, _Context *c){
-    static pthread_mutex_t switch_lk=PTHREAD_MUTEX_INITIALIZER;
-    pthread_mutex_lock(&switch_lk);
+    static pthread_mutex_t tasks_lk=PTHREAD_MUTEX_INITIALIZER;
+    pthread_mutex_lock(&tasks_lk);
     int cpu_id=_cpu(),loop=1;
     extern int *switch_flag;
     switch_flag[cpu_id]=1;
     //log("context switch from (%d)%s\n",current,tasks[current]->name);
     do{
-        if(current==-1||current==tasks_cnt-1){
-            current=0;
-        }else{
-            ++current;
-        }
-        if(++loop==10){log("In kmt_context_switch\n");loop=0;}
+        current=rnad()%tasks_cnt;
     }while(tasks[current]->cpu!=cpu_id&&tasks[current]->cpu>=0);
     tasks[current]->cpu=cpu_id;
-    Assert(current<tasks_cnt);
     //log("context switch to (%d)%s\n",current,tasks[current]->name);
-    pthread_mutex_unlock(&switch_lk);
+    pthread_mutex_unlock(&tasks_lk);
     return &tasks[current]->context;
 }
 void kmt_init(void){
@@ -77,17 +71,26 @@ void kmt_spin_init(spinlock_t *lk, const char *name){
 }
 void kmt_spin_lock(spinlock_t *lk){
     static pthread_mutex_t inner_lock=PTHREAD_MUTEX_INITIALIZER;
+    intr_close();
     pthread_mutex_lock(&inner_lock);
-    if(lk->locked&&lk->owner==_cpu()){
-        ++lk->reen;
-    }else{
-        lk->int_on=_intr_read();
-        _intr_write(1);
+    while(1){
+        if(lk->locked){
+            if(lk->owner==_cpu()){
+                ++lk->reen;
+                break;
+            }else{
+                while(lk->locked){
+                    _yield();
+                };
+            }
+        }
         pthread_mutex_lock(&lk->locked);
         lk->reen=1;
         lk->owner=_cpu();
-    }
+        break;
+    }//Use break to release lock and restore intr
     pthread_mutex_unlock(&inner_lock);
+    intr_open();
 }
 void kmt_spin_unlock(spinlock_t *lk){
     if(lk->locked){

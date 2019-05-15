@@ -90,7 +90,7 @@ static _Context *os_trap(_Event ev, _Context *context) {
           handler=handler->next){
     if (handler->event == _EVENT_NULL || handler->event == ev.event) {
       //log("Call one handler\n");
-      log("%d\n",ret);
+      //log("%d\n",ret);
       _Context *next = handler->handler(ev, context);
       if (next) ret = next;
     }
