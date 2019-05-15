@@ -152,7 +152,7 @@ void kmt_sem_init(sem_t *sem, const char *name, int value){
     kmt->init(&(sem->lock));
     sem->head=NULL;
     sem->tail=pmm->alloc(sizeof(list_t));
-    log("%s: %d",sem->name,sem->value);
+    //log("%s: %d",sem->name,sem->value);
 }
 static void sem_add_task(sem_t *sem){
     int cpu_id=_cpu();
