@@ -21,7 +21,7 @@ void intr_close();
 void intr_open();
 
 typedef struct task{
-    int32_t id;
+    //int32_t id;
     int32_t cpu;
     char* name;
     _Context context;
