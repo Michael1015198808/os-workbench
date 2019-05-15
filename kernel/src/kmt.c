@@ -40,6 +40,7 @@ static _Context* kmt_context_save(_Event ev, _Context *c){
     kmt->spin_lock(&tasks_lk);
     int cpu_id=_cpu();
     if(current==-1){
+        current=tasks_cnt-1;
         kmt->spin_unlock(&tasks_lk);
         return NULL;
         kmt->create(pmm->alloc(sizeof(task_t)),"os_run",NULL,NULL);
