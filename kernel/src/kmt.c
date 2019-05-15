@@ -17,11 +17,12 @@ static spinlock_t tasks_lk;
 int currents[4]={-1,-1,-1,-1},tasks_cnt=0;
 #define current currents[cpu_id]
 
-static void add_task(task_t *task){
+static int add_task(task_t *task){
     kmt->spin_lock(&tasks_lk);
-    log("create (%d)%s\n",tasks_cnt,name);
+    int tmp=tasks_cnt;
     tasks[tasks_cnt++]=task;
     kmt->spin_unlock(&tasks_lk);
+    return tmp;
 }
 void remove_task(task_t *task){
     kmt->spin_lock(&tasks_lk);
@@ -73,7 +74,7 @@ int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), void *a
         return 0;
     }
     //task->id=tasks_cnt;
-    add_task(task);
+    log("create (%d)%s\n",add_task(task),name);
     Assert(tasks_cnt<LEN(tasks));
     task->cpu=-1;
     copy_name(task->name,name);
