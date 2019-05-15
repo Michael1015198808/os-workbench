@@ -63,7 +63,7 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
 void kmt_init(void){
     os->on_irq(INT_MIN, _EVENT_NULL, kmt_context_save);
     os->on_irq(INT_MAX, _EVENT_NULL, kmt_context_switch);
-    kmt_spin_init(&tasks_lk, "tasks-lock");
+    kmt->spin_init(&tasks_lk, "tasks-lock");
 }
 int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), void *arg){
     static int ignore_num=2;
