@@ -6,10 +6,36 @@
     memcpy(dest,src,strlen(src)+1);
 
 static task_t *tasks[20]={};
+static spinlock_t tasks_lk;
+/*
+ * shared by
+ *   add_task
+ *   remove_task
+ *   kmt_context_save
+ *   kmt_context_switch
+ */
 int currents[4]={-1,-1,-1,-1},tasks_cnt=0;
 #define current currents[cpu_id]
 
+static add_task(task_t *task){
+    kmt->lock(&tasks_lk);
+    tasks[tasks_cnt++]=task;
+    kmt->unlock(&tasks_lk);
+}
+static remove_task(task_t *task){
+    kmt->lock(&tasks_lk);
+    int i;
+    for(i=0;i<tasks_cnt;++i){
+        if(tasks[i]==task){
+            break;
+        }
+    }
+    tasks[i]=tasks[tasks_cnt];
+    --tasks_cnt;
+    kmt->unlock(&tasks_lk);
+}
 static _Context* kmt_context_save(_Event ev, _Context *c){
+    kmt->lock(&tasks_lk);
     int cpu_id=_cpu();
     if(current==-1){
         kmt->create(pmm->alloc(sizeof(task_t)),"os_run",NULL,NULL);
@@ -17,11 +43,11 @@ static _Context* kmt_context_save(_Event ev, _Context *c){
     }
     tasks[current]->context=*c;
     tasks[current]->cpu=-1;
+    kmt->unlock(tasks_lk);
     return NULL;
 }
 static _Context* kmt_context_switch(_Event ev, _Context *c){
-    static pthread_mutex_t tasks_lk=PTHREAD_MUTEX_INITIALIZER;
-    pthread_mutex_lock(&tasks_lk);
+    kmt->lock(&tasks_lk);
     int cpu_id=_cpu();
     extern int *switch_flag;
     switch_flag[cpu_id]=1;
@@ -31,12 +57,13 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
     }while(tasks[current]->cpu!=cpu_id&&tasks[current]->cpu>=0);
     tasks[current]->cpu=cpu_id;
     //log("context switch to (%d)%s\n",current,tasks[current]->name);
-    pthread_mutex_unlock(&tasks_lk);
+    kmt->unlock(tasks_lk);
     return &tasks[current]->context;
 }
 void kmt_init(void){
     os->on_irq(INT_MIN, _EVENT_NULL, kmt_context_save);
     os->on_irq(INT_MAX, _EVENT_NULL, kmt_context_switch);
+    kmt_spin_init(&tasks_lk, "tasks-lock");
 }
 int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), void *arg){
     static int ignore_num=2;
@@ -45,8 +72,8 @@ int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), void *a
         return 0;
     }
     log("create (%d)%s\n",tasks_cnt,name);
-    tasks[tasks_cnt]=task;
-    task->id=tasks_cnt++;
+    //task->id=tasks_cnt;
+    add_task(task);
     Assert(tasks_cnt<LEN(tasks));
     task->cpu=-1;
     copy_name(task->name,name);
@@ -62,6 +89,7 @@ int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), void *a
     return 0;
 }
 void kmt_teardown(task_t *task){
+    Assert(0);
     pmm->free(task->name);
     return ;
 }

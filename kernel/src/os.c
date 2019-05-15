@@ -25,18 +25,20 @@ void echo_test(void *arg){
     }
 }
 static void os_init() {
-  pmm->init();
-  kmt->init();
-  dev->init();
-  kmt->create(pmm->alloc(sizeof(task_t)),"echo-test",echo_test,"n");
-  kmt->create(pmm->alloc(sizeof(task_t)),"echo-test",echo_test,"m");
-  kmt->create(pmm->alloc(sizeof(task_t)),"echo-test",echo_test,"s");
-  kmt->create(pmm->alloc(sizeof(task_t)),"echo-test",echo_test,"l");
-  log("Os init finished\n");
-  //kmt->create(pmm->alloc(sizeof(task_t)), "print", echo_task, "tty1");
-  //kmt->create(pmm->alloc(sizeof(task_t)), "print", echo_task, "tty2");
-  //kmt->create(pmm->alloc(sizeof(task_t)), "print", echo_task, "tty3");
-  //kmt->create(pmm->alloc(sizeof(task_t)), "print", echo_task, "tty4");
+    pmm->init();
+    kmt->init();
+    dev->init();
+    kmt->create(pmm->alloc(sizeof(task_t)),"echo-test",echo_test,"n");
+    kmt->create(pmm->alloc(sizeof(task_t)),"echo-test",echo_test,"m");
+    kmt->create(pmm->alloc(sizeof(task_t)),"echo-test",echo_test,"s");
+    kmt->create(pmm->alloc(sizeof(task_t)),"echo-test",echo_test,"l");
+    extern spinlock_t trap_lk;
+    kmt->init(&trap_lk);
+    log("Os init finished\n");
+    //kmt->create(pmm->alloc(sizeof(task_t)), "print", echo_task, "tty1");
+    //kmt->create(pmm->alloc(sizeof(task_t)), "print", echo_task, "tty2");
+    //kmt->create(pmm->alloc(sizeof(task_t)), "print", echo_task, "tty3");
+    //kmt->create(pmm->alloc(sizeof(task_t)), "print", echo_task, "tty4");
 }
 
 //volatile static _Thread_local int cnt=0;
@@ -80,9 +82,9 @@ static void os_run() {
 }
 
 int switch_flag[5];
+static spinlock_t trap_lk;
 static _Context *os_trap(_Event ev, _Context *context) {
-  static pthread_mutex_t trap_lk=PTHREAD_MUTEX_INITIALIZER;
-  pthread_mutex_lock(&trap_lk);
+  kmt->lock(&trap_lk);
   _Context *ret = context;
   switch_flag[_cpu()]=0;
   for(struct irq *handler=handlers->next;
@@ -95,7 +97,7 @@ static _Context *os_trap(_Event ev, _Context *context) {
       if (next) ret = next;
     }
   }
-  pthread_mutex_unlock(&trap_lk);
+  kmt->unlock(&trap_lk);
   //log("ret%p\n",ret);
   if(ret==NULL){
       log("\n%d\n",switch_flag[_cpu()]);
