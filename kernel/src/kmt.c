@@ -151,62 +151,43 @@ void kmt_sem_init(sem_t *sem, const char *name, int value){
     sem->value=sem->capa=value;
     kmt->init(&(sem->lock));
     sem->head=NULL;
-    sem->tail=NULL;
+    sem->tail=pmm->alloc(sizeof(list_t));
     log("%s: %d",sem->name,sem->value);
 }
-void kmt_sem_wait(sem_t *sem){
+static void sem_add_task(sem_t *sem){
     int cpu_id=_cpu();
+    sem->tail->next=pmm->alloc(sizeof(list_t));
+    sem->tail=sem->tail->next;
+    sem->tail->task=tasks[current];
+    sem->tail->next=NULL;
+    if(sem->head==NULL){
+        sem->head=sem->tail;
+    }
+    remove_task(tasks[current]);
+    _yield();
+}
+static void sem_remove_task(sem_t *sem){
+    add_task(sem->head->task);
+    Assert(sem->head!=NULL);
+    sem->head=sem->head->next;
+}
+void kmt_sem_wait(sem_t *sem){
     kmt->spin_lock(&(sem->lock));
-    if(sem->value>0){
-        if(sem->value==sem->capa){
-            add_task(sem->head->task);
-            sem->head=sem->head->next;
-            log("(%s)%s: wait1\n",tasks[current]->name,sem->name);
-        }else{
-            --(sem->value);
-            log("(%s)%s: wait2\n",tasks[current]->name,sem->name);
-        }
-    }else{
-        sem->tail->next=pmm->alloc(sizeof(list_t));
-        sem->tail=sem->tail->next;
-        sem->tail->task=tasks[current];
-        sem->tail->next=NULL;
-        if(sem->head==NULL){
-            sem->head=sem->tail;
-        }
-        remove_task(tasks[current]);
-        kmt->spin_unlock(&(sem->lock));
-        log("(%s)%s: wait3\n",tasks[current]->name,sem->name);
-        _yield();
-        return;
+    --(sem->value);
+    if(sem->value>capa){
+        sem_remove_task(sem);
+    }else if(sem->value<0){
+        return sem_add_task(sem);
     }
     kmt->spin_unlock(&(sem->lock));
 }
 void kmt_sem_signal(sem_t *sem){
-    int cpu_id=_cpu();
     kmt->spin_lock(&(sem->lock));
-    if(sem->value<sem->capa){
-        if(sem->value==0){
-            add_task(sem->head->task);
-            sem->head=sem->head->next;
-            log("(%s)%s: sign1\n",tasks[current]->name,sem->name);
-        }else{
-            ++(sem->value);
-            log("(%s)%s: sign2\n",tasks[current]->name,sem->name);
-        }
-    }else{
-        sem->tail->next=pmm->alloc(sizeof(list_t));
-        sem->tail=sem->tail->next;
-        sem->tail->task=tasks[current];
-        sem->tail->next=NULL;
-        if(sem->head==NULL){
-            sem->head=sem->tail;
-        }
-        remove_task(tasks[current]);
-        kmt->spin_unlock(&(sem->lock));
-        log("(%s)%s: sign3\n",tasks[current]->name,sem->name);
-        _yield();
-        return;
+    ++(sem->value);
+    if(sem->value>capa){
+        return sem_add_task(sem);
+    }else if(sem->value<0){
+        sem_remove_task(sem);
     }
     kmt->spin_unlock(&(sem->lock));
 }
