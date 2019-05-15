@@ -32,8 +32,7 @@ void remove_task(task_t *task){
             break;
         }
     }
-    tasks[i]=tasks[tasks_cnt];
-    --tasks_cnt;
+    tasks[i]=tasks[--tasks_cnt];
     kmt->spin_unlock(&tasks_lk);
 }
 static _Context* kmt_context_save(_Event ev, _Context *c){
