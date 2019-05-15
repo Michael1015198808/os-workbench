@@ -107,48 +107,51 @@ static void pmm_init() {
 }
 
 static void *kalloc(size_t size) {
-  align(size,0x10);
-  int cpu_id=_cpu();//Call once
-  uint8_t *tail=NULL;
-  header *p=free_list[cpu_id].next,*prevp=&free_list[cpu_id],*ret;
-  if(size> PG_SIZE/2){
-      size+=sizeof(header);
-      int shift=0;
-      int temp=size/PG_SIZE;
-      while(temp>0){
-          temp>>=1;
-          ++shift;
-      }
-      header *ret=big_page_alloc(shift);
-      ret->size=size;
-      ret->fence=0x13579ace;
-      return &(ret->space);
-  }else{
-    do{
-      if(p->size>=size){
-        if(p->size-size>sizeof(header)){
-          tail=(uint8_t*)p;
-          tail+=p->size;
-          tail-=size;//Get to the tail
-          ret=(header*)tail;
-          ret->size=size;//record size for free
-          p->size-=size+sizeof(header);//Shrink current space
-          ret->fence=0x13579ace;
-          return &(ret->space);
-        }else{
-          prevp->next=p->next;//"delete" p
-          p->fence=0x13579ace;
-          return &(p->space);
+    align(size,0x10);
+    int cpu_id=_cpu();//Call once
+    uint8_t *tail=NULL;
+    header *p=free_list[cpu_id].next,*prevp=&free_list[cpu_id],*ret;
+    if(size> PG_SIZE/2){
+        size+=sizeof(header);
+        int shift=0;
+        int temp=size/PG_SIZE;
+        while(temp>0){
+            temp>>=1;
+            ++shift;
         }
-      }
-      prevp=p;
-      p=p->next;
-    }while(p!=&free_list[cpu_id]);
-  }
-  prevp->next=big_page_alloc(0);//ask for a new page
-  prevp->next->next=p;
-  prevp->next->size=PG_SIZE-sizeof(header);
-  return kalloc(size);
+        header *ret=big_page_alloc(shift);
+        ret->size=size;
+        ret->fence=0x13579ace;
+        memset(&(ret->space),0,size);
+        return &(ret->space);
+    }else{
+        do{
+            if(p->size>=size){
+                if(p->size-size>sizeof(header)){
+                    tail=(uint8_t*)p;
+                    tail+=p->size;
+                    tail-=size;//Get to the tail
+                    ret=(header*)tail;
+                    ret->size=size;//record size for free
+                    p->size-=size+sizeof(header);//Shrink current space
+                    ret->fence=0x13579ace;
+                    memset(&(ret->space),0,size);
+                    return &(ret->space);
+                }else{
+                    prevp->next=p->next;//"delete" p
+                    p->fence=0x13579ace;
+                    memset(&(p->space),0,size);
+                    return &(p->space);
+                }
+            }
+            prevp=p;
+            p=p->next;
+        }while(p!=&free_list[cpu_id]);
+    }
+    prevp->next=big_page_alloc(0);//ask for a new page
+    prevp->next->next=p;
+    prevp->next->size=PG_SIZE-sizeof(header);
+    return kalloc(size);
 }
 
 static void kfree(void *ptr) {
