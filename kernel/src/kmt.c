@@ -45,7 +45,7 @@ static _Context* kmt_context_save(_Event ev, _Context *c){
         kmt->create(pmm->alloc(sizeof(task_t)),"os_run",NULL,NULL);
         current=tasks_cnt-1;
     }
-    log("context save\n");
+    //log("context save\n");
     tasks[current]->context=*c;
     tasks[current]->cpu=-1;
     kmt->spin_unlock(&tasks_lk);
@@ -61,7 +61,7 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
         current=rand()%tasks_cnt;
     }while(tasks[current]->cpu!=cpu_id&&tasks[current]->cpu>=0);
     tasks[current]->cpu=cpu_id;
-    log("context switch to (%d)%s\n",current,tasks[current]->name);
+    //log("context switch to (%d)%s\n",current,tasks[current]->name);
     kmt->spin_unlock(&tasks_lk);
     return &tasks[current]->context;
 }
