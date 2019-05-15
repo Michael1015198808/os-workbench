@@ -19,6 +19,7 @@ int currents[4]={-1,-1,-1,-1},tasks_cnt=0;
 
 static void add_task(task_t *task){
     kmt->spin_lock(&tasks_lk);
+    log("create (%d)%s\n",tasks_cnt,name);
     tasks[tasks_cnt++]=task;
     kmt->spin_unlock(&tasks_lk);
 }
@@ -71,7 +72,6 @@ int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), void *a
         --ignore_num;
         return 0;
     }
-    log("create (%d)%s\n",tasks_cnt,name);
     //task->id=tasks_cnt;
     add_task(task);
     Assert(tasks_cnt<LEN(tasks));
