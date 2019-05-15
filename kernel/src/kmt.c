@@ -174,6 +174,7 @@ static void sem_add_task(sem_t *sem){
         sem->head=sem->tail;
     }
     remove_task(tasks[current]);
+    show_sem_list(sem);
     _yield();
 }
 static void sem_remove_task(sem_t *sem){
