@@ -10,13 +10,12 @@ typedef struct irq{
 void guard(void){
     Assert(0,"Guard should not be called!\n");
 }
-
-static irq_handler irq_guard={
+static const irq_handler irq_guard={
     .seq=INT_MIN,
     .event=-1,
     .handler=(handler_t)guard,
     .next=&irq_guard
-},*handlers=&irq_guard;
+};
 
 sem_t echo_sem;
 void echo_test(void *arg){
@@ -96,8 +95,8 @@ static _Context *os_trap(_Event ev, _Context *context) {
     _Context *ret = context;
     switch_flag[_cpu()]=0;
 
-    for(struct irq *handler=handlers->next;
-        handler!=handlers;
+    for(struct irq *handler=irq_guard.next;
+        handler!=&irq_guard;
         handler=handler->next){
         if (handler->event == _EVENT_NULL || handler->event == ev.event) {
             //log("Call one handler\n");
