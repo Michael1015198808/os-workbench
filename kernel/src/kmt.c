@@ -169,7 +169,7 @@ void kmt_sem_wait(sem_t *sem){
         sem->tail->task=tasks[current];
         sem->tail->next=NULL;
         if(sem->head==NULL){
-            sem->head=tail;
+            sem->head=sem->tail;
         }
         remove_task(tasks[current]);
         kmt->spin_lock(&(sem->lock));
@@ -194,7 +194,7 @@ void kmt_sem_signal(sem_t *sem){
         sem->tail->task=tasks[current];
         sem->tail->next=NULL;
         if(sem->head==NULL){
-            sem->head=tail;
+            sem->head=sem->tail;
         }
         remove_task(tasks[current]);
         kmt->spin_lock(&(sem->lock));
