@@ -22,6 +22,7 @@ void echo_test(void *arg){
     while(1){
         printf("%c",((char*)arg)[0]);
         //kmt->sem_wait(&echo_sem);
+        _yield();
     }
 }
 void sem_test(void *arg){
