@@ -146,19 +146,28 @@ void kmt_spin_unlock(spinlock_t *lk){
 }
 void kmt_sem_init(sem_t *sem, const char *name, int value){
     copy_name(sem->name,name);
-    sem->value=value;
+    sem->value=sem->capa=value;
+    kmt->init(&(sem->lock));
+    sem->head=NULL;
+    sem->tail=NULL;
 }
 void kmt_sem_wait(sem_t *sem){
     kmt->spin_lock(&(sem->lock));
-    --(sem->value);
-    while(sem->value==0){
-        kmt->spin_lock(&(sem->lock));
-        _yield();
-        kmt->spin_lock(&(sem->lock));
+    if(sem->value>0){
+        --(sem->value);
+    }else{
+        sem->tail->next=pmm->alloc(sizeof(list_t));
+        sem->tail=sem->tail->next;
+        sem->tail->task=tasks[current];
+        sem->tail->next=NULL;
+        remove_task(current);
     }
     kmt->spin_lock(&(sem->lock));
 }
 void kmt_sem_signal(sem_t *sem){
+    if(sem->value){
+        
+    }
     ++(sem->value);
 }
 MODULE_DEF(kmt) {

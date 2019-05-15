@@ -44,10 +44,15 @@ typedef struct spinlock{
     uint8_t int_on;
 }spinlock_t;
 
+typedef struct List{
+    task_t* task;
+    struct List* next;
+}list_t;
 struct semaphore {
     char *name;
-    int value;
+    int value,capa;
     spinlock_t lock;
+    list_t* head,tail;
     //TODO: 嘤嘤嘤
 };
 #define LEN(arr) ((sizeof(arr) / sizeof(arr[0])))
