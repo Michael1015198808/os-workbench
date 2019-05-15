@@ -203,11 +203,6 @@ void kmt_sem_signal(sem_t *sem){
     }
     kmt->spin_lock(&(sem->lock));
 }
-void kmt_sem_signal(sem_t *sem){
-    kmt->spin_lock(&(sem->lock));
-    }
-    kmt->spin_lock(&(sem->lock));
-}
 MODULE_DEF(kmt) {
   .init        =kmt_init,
   .create      =kmt_create,
