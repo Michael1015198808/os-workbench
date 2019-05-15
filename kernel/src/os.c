@@ -10,7 +10,7 @@ typedef struct irq{
 void guard(void){
     Assert(0,"Guard should not be called!\n");
 }
-static const irq_handler irq_guard={
+static irq_handler irq_guard={
     .seq=INT_MIN,
     .event=-1,
     .handler=(handler_t)guard,
