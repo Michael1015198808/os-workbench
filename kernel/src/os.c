@@ -90,6 +90,7 @@ static _Context *os_trap(_Event ev, _Context *context) {
           handler=handler->next){
     if (handler->event == _EVENT_NULL || handler->event == ev.event) {
       //log("Call one handler\n");
+      log("%d\n",ret);
       _Context *next = handler->handler(ev, context);
       if (next) ret = next;
     }
@@ -97,7 +98,7 @@ static _Context *os_trap(_Event ev, _Context *context) {
   pthread_mutex_unlock(&trap_lk);
   //log("ret%p\n",ret);
   if(ret==NULL){
-      log("%d\n",switch_flag[_cpu()]);
+      log("\n%d\n",switch_flag[_cpu()]);
   };
   return ret;
 }
