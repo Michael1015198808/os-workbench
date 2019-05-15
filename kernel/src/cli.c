@@ -1,4 +1,5 @@
 #include <klib.h>
+#include <common.h>
 
 void intr_close(){
     Assert(ncli[_cpu()]<0);
