@@ -115,12 +115,11 @@ static _Context *os_trap(_Event ev, _Context *context) {
 
 
 static void os_on_irq(int seq, int event, handler_t handler) {
-    Assert(handlers!=(void*)NULL,"Handler haven't initialized");
     pthread_mutex_lock(&irq_lk);
-    irq_handler *prev=handlers,*p=handlers->next;
+    irq_handler *prev=&irq_guard,*p=irq_guard->next;
 //prev->new->p
     while(p){
-        if(p->seq>seq||p==handlers)break;
+        if(p->seq>seq||p==&irq_guard)break;
         prev=p;
         p=p->next;
     }
@@ -133,7 +132,7 @@ static void os_on_irq(int seq, int event, handler_t handler) {
     pthread_mutex_unlock(&irq_lk);
 }
 void irq_test(){
-    irq_handler *p=handlers->next;
+    irq_handler *p=irq_guard.next;
     while(p){
         ((void(*)(void))p->handler)();
         p=p->next;
