@@ -16,6 +16,13 @@ static spinlock_t tasks_lk;
  */
 int currents[4]={-1,-1,-1,-1},tasks_cnt=0;
 #define current currents[cpu_id]
+void show_sem_list(sem_t *sem){
+    task *p;
+    for(p=sem->head;p!=sem->tail;p=p->next){
+        printf("%s->",p->name);
+    }
+    printf("%s",p->name);
+}
 
 static int add_task(task_t *task){
     kmt->spin_lock(&tasks_lk);
@@ -29,6 +36,7 @@ void remove_task(task_t *task){
     int i;
     for(i=0;i<tasks_cnt;++i){
         if(tasks[i]==task){
+            printf("%d/%d\n",i,tasks_cnt);
             break;
         }
     }
