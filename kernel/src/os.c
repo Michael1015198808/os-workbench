@@ -121,7 +121,7 @@ static void os_on_irq(int seq, int event, handler_t handler) {
     prev->next->seq=seq;
     prev->next->event=event;
     prev->next->handler=handler;
-    pthread_mutex_unlocklock(&irq_lk);
+    pthread_mutex_unlock(&irq_lk);
 }
 void irq_test(){
     irq_handler *p=handlers->next;
