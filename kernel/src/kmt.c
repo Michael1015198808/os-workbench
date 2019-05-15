@@ -68,7 +68,6 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
     do{
         current=rand()%tasks_cnt;
     }while(tasks[current]->cpu!=cpu_id&&tasks[current]->cpu>=0);
-    printf("%d/%d\n",current,tasks_cnt);
     tasks[current]->cpu=cpu_id;
     //log("context switch to (%d)%s\n",current,tasks[current]->name);
     kmt->spin_unlock(&tasks_lk);
@@ -175,7 +174,6 @@ static void sem_add_task(sem_t *sem){
         sem->head=sem->tail;
     }
     remove_task(tasks[current]);
-    show_sem_list(sem);
     _yield();
 }
 static void sem_remove_task(sem_t *sem){
