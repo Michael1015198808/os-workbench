@@ -24,6 +24,7 @@ void echo_test(void *arg){
         _yield();
     }
 }
+static spinlock_t trap_lk;
 static void os_init() {
     pmm->init();
     kmt->init();
@@ -32,7 +33,6 @@ static void os_init() {
     kmt->create(pmm->alloc(sizeof(task_t)),"echo-test",echo_test,"m");
     kmt->create(pmm->alloc(sizeof(task_t)),"echo-test",echo_test,"s");
     kmt->create(pmm->alloc(sizeof(task_t)),"echo-test",echo_test,"l");
-    extern spinlock_t trap_lk;
     kmt->init(&trap_lk);
     log("Os init finished\n");
     //kmt->create(pmm->alloc(sizeof(task_t)), "print", echo_task, "tty1");
@@ -84,7 +84,7 @@ static void os_run() {
 int switch_flag[5];
 static spinlock_t trap_lk;
 static _Context *os_trap(_Event ev, _Context *context) {
-  kmt->lock(&trap_lk);
+  kmt->spin_lock(&trap_lk);
   _Context *ret = context;
   switch_flag[_cpu()]=0;
   for(struct irq *handler=handlers->next;
@@ -97,7 +97,7 @@ static _Context *os_trap(_Event ev, _Context *context) {
       if (next) ret = next;
     }
   }
-  kmt->unlock(&trap_lk);
+  kmt->spin_unlock(&trap_lk);
   //log("ret%p\n",ret);
   if(ret==NULL){
       log("\n%d\n",switch_flag[_cpu()]);
