@@ -22,6 +22,15 @@ void kmt_test(){
     tasks[2]=tasks[3];
     tasks[4]=tasks[3];
 }
+
+void show_sem_list(sem_t *sem){
+    list_t *p;
+    for(p=sem->head;p!=sem->tail;p=p->next){
+        printf("%s->",p->task->name);
+    }
+    printf("%s\n",p->task->name);
+}
+
 void show(){
     extern sem_t echo_sem;
     show_sem_list(&echo_sem);
@@ -32,13 +41,6 @@ void show(){
     printf("\n");
 }
 
-void show_sem_list(sem_t *sem){
-    list_t *p;
-    for(p=sem->head;p!=sem->tail;p=p->next){
-        printf("%s->",p->task->name);
-    }
-    printf("%s\n",p->task->name);
-}
 
 static int add_task(task_t *task){
     kmt->spin_lock(&tasks_lk);
@@ -200,6 +202,8 @@ static void sem_remove_task(sem_t *sem){
     Assert(sem->head!=NULL);
     sem->head=sem->head->next;
 }
+
+extern pthread_mutex_t irq_lk;
 void kmt_sem_wait(sem_t *sem){
     kmt->spin_lock(&irq_lk);
     kmt->spin_lock(&(sem->lock));
