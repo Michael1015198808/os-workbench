@@ -193,8 +193,8 @@ static void sem_add_task(sem_t *sem){
         sem->head=sem->tail;
     }
     remove_task();
-    kmt->spin_unlock(&(sem->lock));
     sem_log(sem,unlock);
+    kmt->spin_unlock(&(sem->lock));
     _yield();
     kmt->spin_lock(&(sem->lock));
     sem_log(sem,lock);
@@ -216,8 +216,8 @@ void kmt_sem_wait(sem_t *sem){
     }else if(sem->value<0){
         return sem_add_task(sem);
     }
-    kmt->spin_unlock(&(sem->lock));
     sem_log(sem,unlock);
+    kmt->spin_unlock(&(sem->lock));
 }
 void kmt_sem_signal(sem_t *sem){
     kmt->spin_lock(&(sem->lock));
@@ -228,8 +228,8 @@ void kmt_sem_signal(sem_t *sem){
     }else if(sem->value<=0){
         sem_remove_task(sem);
     }
-    kmt->spin_unlock(&(sem->lock));
     sem_log(sem,unlock);
+    kmt->spin_unlock(&(sem->lock));
 }
 MODULE_DEF(kmt) {
   .init        =kmt_init,
