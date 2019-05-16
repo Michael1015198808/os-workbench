@@ -36,7 +36,7 @@ void remove_task(task_t *task){
     int i;
     for(i=0;i<tasks_cnt;++i){
         if(tasks[i]==task){
-            printf("%d/%d\n",i,tasks_cnt);
+            log("%d/%d\n",i,tasks_cnt);
             break;
         }
     }
