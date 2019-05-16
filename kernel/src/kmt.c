@@ -198,9 +198,11 @@ static void sem_add_task(sem_t *sem){
     kmt->spin_lock(&(sem->lock));
 }
 static void sem_remove_task(sem_t *sem){
-    add_task(sem->head->task);
     Assert(sem->head!=NULL);
+    add_task(sem->head->task);
+    void *tmp=sem->head;
     sem->head=sem->head->next;
+    pmm->free(tmp);
 }
 
 extern pthread_mutex_t irq_lk;
@@ -220,7 +222,7 @@ void kmt_sem_signal(sem_t *sem){
     if(sem->value>sem->capa){
         return sem_add_task(sem);
     }else if(sem->value<=0){
-        //sem_remove_task(sem);
+        sem_remove_task(sem);
     }
     kmt->spin_unlock(&(sem->lock));
 }
