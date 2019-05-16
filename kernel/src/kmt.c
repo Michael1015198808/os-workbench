@@ -205,7 +205,6 @@ static void sem_remove_task(sem_t *sem){
 
 extern pthread_mutex_t irq_lk;
 void kmt_sem_wait(sem_t *sem){
-    pthread_mutex_lock(&irq_lk);
     kmt->spin_lock(&(sem->lock));
     --(sem->value);
     if(sem->value>sem->capa){
@@ -214,19 +213,16 @@ void kmt_sem_wait(sem_t *sem){
         return sem_add_task(sem);
     }
     kmt->spin_unlock(&(sem->lock));
-    pthread_mutex_unlock(&irq_lk);
 }
 void kmt_sem_signal(sem_t *sem){
-    pthread_mutex_lock(&irq_lk);
     kmt->spin_lock(&(sem->lock));
     ++(sem->value);
     if(sem->value>sem->capa){
         return sem_add_task(sem);
     }else if(sem->value<=0){
-        sem_remove_task(sem);
+        //sem_remove_task(sem);
     }
     kmt->spin_unlock(&(sem->lock));
-    pthread_mutex_unlock(&irq_lk);
 }
 MODULE_DEF(kmt) {
   .init        =kmt_init,
