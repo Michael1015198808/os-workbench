@@ -185,7 +185,9 @@ static void sem_add_task(sem_t *sem){
         sem->head=sem->tail;
     }
     remove_task();
+    kmt->spin_unlock(&(sem->lock));
     _yield();
+    kmt->spin_lock(&(sem->lock));
 }
 static void sem_remove_task(sem_t *sem){
     add_task(sem->head->task);
