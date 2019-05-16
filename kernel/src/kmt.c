@@ -31,16 +31,9 @@ static int add_task(task_t *task){
     kmt->spin_unlock(&tasks_lk);
     return tmp;
 }
-void remove_task(task_t *task){
+void remove_task(){
     kmt->spin_lock(&tasks_lk);
-    int i;
-    for(i=0;i<tasks_cnt;++i){
-        if(tasks[i]==task){
-            log("%d/%d\n",i,tasks_cnt);
-            break;
-        }
-    }
-    tasks[i]=tasks[--tasks_cnt];
+    tasks[currents[_cpu()]]=tasks[--tasks_cnt];
     kmt->spin_unlock(&tasks_lk);
 }
 static _Context* kmt_context_save(_Event ev, _Context *c){
@@ -176,7 +169,7 @@ static void sem_add_task(sem_t *sem){
     if(sem->head==NULL){
         sem->head=sem->tail;
     }
-    remove_task(tasks[current]);
+    remove_task();
     _yield();
 }
 static void sem_remove_task(sem_t *sem){
