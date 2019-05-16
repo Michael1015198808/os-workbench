@@ -46,9 +46,11 @@ static int add_task(task_t *task){
     return tmp;
 }
 void remove_task(){
+    int cpu_id=_cpu();
     kmt->spin_lock(&tasks_lk);
-    log("%d %d\n",currents[_cpu()],tasks_cnt);
-    tasks[currents[_cpu()]]=tasks[--tasks_cnt];
+    //log("%d %d\n",currents[_cpu()],tasks_cnt);
+    --tasks_cnt;
+    tasks[current]=tasks[tasks_cnt];
     kmt->spin_unlock(&tasks_lk);
 }
 static _Context* kmt_context_save(_Event ev, _Context *c){
