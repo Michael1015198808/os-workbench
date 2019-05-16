@@ -7,7 +7,7 @@
 #include <limits.h>
 #include <stdint.h>
 
-#define sem_log
+#define sem_log(A,info) fprintf(A->log+A->idx,"[cpu%d]%s:%s",_cpu(),tasks[currents[_cpu()]]->name, #info)
 #define TASK_FENCE
 #define DEBUG
 //Comment the line above after testing
@@ -59,9 +59,6 @@ struct semaphore {
     char log[5000];
 #endif
 };
-#ifdef sem_log
-#define log(A,info) fprintf(A->log+A->idx,"[cpu%d]%s:%s",_cpu(),tasks[currents[_cpu()]]->name, #info)
-#endif
 #define LEN(arr) ((sizeof(arr) / sizeof(arr[0])))
 
 #define log(fmt,...) printf("[cpu%d]%s %3d:\n    " fmt,_cpu(),__FILE__,__LINE__,##__VA_ARGS__)
