@@ -17,6 +17,7 @@ static spinlock_t tasks_lk;
 int currents[4]={-1,-1,-1,-1},tasks_cnt=0;
 #define current currents[cpu_id]
 void kmt_test(){
+    tasks[0]=tasks[3];
     tasks[1]=tasks[3];
     tasks[2]=tasks[3];
     tasks[4]=tasks[3];
@@ -171,7 +172,7 @@ void kmt_spin_unlock(spinlock_t *lk){
 void kmt_sem_init(sem_t *sem, const char *name, int value){
     copy_name(sem->name,name);
     sem->value=value;
-    sem->capa=10000;
+    sem->capa=1<<20;
     kmt->spin_init(&(sem->lock),name);
     sem->head=NULL;
     sem->tail=pmm->alloc(sizeof(list_t));
