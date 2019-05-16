@@ -208,7 +208,7 @@ void kmt_sem_signal(sem_t *sem){
     if(sem->value>sem->capa){
         return sem_add_task(sem);
     }else if(sem->value<0){
-        sem_remove_task(sem);
+        //sem_remove_task(sem);
     }
     kmt->spin_unlock(&(sem->lock));
 }
