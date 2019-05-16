@@ -194,8 +194,10 @@ static void sem_add_task(sem_t *sem){
     }
     remove_task();
     kmt->spin_unlock(&(sem->lock));
+    log(sem,unlock);
     _yield();
     kmt->spin_lock(&(sem->lock));
+    log(sem,lock);
 }
 static void sem_remove_task(sem_t *sem){
     Assert(sem->head!=NULL);
@@ -208,6 +210,7 @@ static void sem_remove_task(sem_t *sem){
 extern pthread_mutex_t irq_lk;
 void kmt_sem_wait(sem_t *sem){
     kmt->spin_lock(&(sem->lock));
+    log(sem,lock);
     --(sem->value);
     if(sem->value>sem->capa){
         sem_remove_task(sem);
@@ -215,9 +218,11 @@ void kmt_sem_wait(sem_t *sem){
         return sem_add_task(sem);
     }
     kmt->spin_unlock(&(sem->lock));
+    log(sem,unlock);
 }
 void kmt_sem_signal(sem_t *sem){
     kmt->spin_lock(&(sem->lock));
+    log(sem,lock);
     ++(sem->value);
     if(sem->value>sem->capa){
         return sem_add_task(sem);
@@ -225,6 +230,7 @@ void kmt_sem_signal(sem_t *sem){
         sem_remove_task(sem);
     }
     kmt->spin_unlock(&(sem->lock));
+    log(sem,unlock);
 }
 MODULE_DEF(kmt) {
   .init        =kmt_init,
