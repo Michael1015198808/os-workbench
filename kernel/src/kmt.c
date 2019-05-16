@@ -30,7 +30,7 @@ void show(){
     for(int i=1;i<tasks_cnt;++i){
         printf("->%s",tasks[i]->name);
     }
-    putchar('\n');
+    printf("\n");
 }
 
 static int add_task(task_t *task){
