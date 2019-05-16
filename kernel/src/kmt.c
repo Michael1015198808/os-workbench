@@ -21,7 +21,15 @@ void show_sem_list(sem_t *sem){
     for(p=sem->head;p!=sem->tail;p=p->next){
         printf("%s->",p->task->name);
     }
-    printf("%s",p->task->name);
+    printf("%s\n",p->task->name);
+}
+void show(){
+    show_sem_list(&echo_sem);
+    printf("%s",tasks[0]->name);
+    for(int i=1;i<tasks_cnt;++i){
+        printf("->%s",tasks[i]->name);
+    }
+    putchar('\n');
 }
 
 static int add_task(task_t *task){
