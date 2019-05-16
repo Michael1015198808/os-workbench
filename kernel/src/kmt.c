@@ -207,7 +207,6 @@ static void sem_remove_task(sem_t *sem){
     pmm->free(tmp);
 }
 
-extern pthread_mutex_t irq_lk;
 void kmt_sem_wait(sem_t *sem){
     kmt->spin_lock(&(sem->lock));
     sem_log(sem,lock);
