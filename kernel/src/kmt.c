@@ -7,7 +7,7 @@
 
 static task_t *tasks[20]={};
 static spinlock_t tasks_lk;
-/*
+/* tasks, tasks_cnt
  * shared by
  *   add_task
  *   remove_task
@@ -22,13 +22,6 @@ void kmt_test(){
     tasks[2]=tasks[3];
     tasks[4]=tasks[3];
 }
-void show_sem_list(sem_t *sem){
-    list_t *p;
-    for(p=sem->head;p!=sem->tail;p=p->next){
-        printf("%s->",p->task->name);
-    }
-    printf("%s\n",p->task->name);
-}
 void show(){
     extern sem_t echo_sem;
     show_sem_list(&echo_sem);
@@ -37,6 +30,14 @@ void show(){
         printf("->%s",tasks[i]->name);
     }
     printf("\n");
+}
+
+void show_sem_list(sem_t *sem){
+    list_t *p;
+    for(p=sem->head;p!=sem->tail;p=p->next){
+        printf("%s->",p->task->name);
+    }
+    printf("%s\n",p->task->name);
 }
 
 static int add_task(task_t *task){
@@ -200,6 +201,7 @@ static void sem_remove_task(sem_t *sem){
     sem->head=sem->head->next;
 }
 void kmt_sem_wait(sem_t *sem){
+    kmt->spin_lock(&irq_lk);
     kmt->spin_lock(&(sem->lock));
     --(sem->value);
     if(sem->value>sem->capa){
@@ -208,8 +210,10 @@ void kmt_sem_wait(sem_t *sem){
         return sem_add_task(sem);
     }
     kmt->spin_unlock(&(sem->lock));
+    kmt->spin_unlock(&irq_lk);
 }
 void kmt_sem_signal(sem_t *sem){
+    kmt->spin_lock(&irq_lk);
     kmt->spin_lock(&(sem->lock));
     ++(sem->value);
     if(sem->value>sem->capa){
@@ -218,6 +222,7 @@ void kmt_sem_signal(sem_t *sem){
         sem_remove_task(sem);
     }
     kmt->spin_unlock(&(sem->lock));
+    kmt->spin_unlock(&irq_lk);
 }
 MODULE_DEF(kmt) {
   .init        =kmt_init,

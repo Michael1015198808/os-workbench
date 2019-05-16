@@ -80,7 +80,7 @@ static void os_run() {
 }
 
 int switch_flag[5];
-static pthread_mutex_t irq_lk;
+pthread_mutex_t irq_lk;
 static _Context *os_trap(_Event ev, _Context *context) {
     pthread_mutex_lock(&irq_lk);
     _Context *ret = context;
