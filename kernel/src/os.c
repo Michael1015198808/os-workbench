@@ -47,7 +47,7 @@ static void os_init() {
     kmt->create(pmm->alloc(sizeof(task_t)),"echo-test",echo_test,"l");
     kmt->sem_init(&echo_sem,"echo-sem",0);
     extern void kmt_test(void);
-    kmt_test();
+    //kmt_test();
     log("Os init finished\n");
     //kmt->create(pmm->alloc(sizeof(task_t)), "print", echo_task, "tty1");
     //kmt->create(pmm->alloc(sizeof(task_t)), "print", echo_task, "tty2");
