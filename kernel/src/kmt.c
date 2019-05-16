@@ -24,6 +24,7 @@ void show_sem_list(sem_t *sem){
     printf("%s\n",p->task->name);
 }
 void show(){
+    extern sem_t echo_sem;
     show_sem_list(&echo_sem);
     printf("%s",tasks[0]->name);
     for(int i=1;i<tasks_cnt;++i){
