@@ -16,6 +16,11 @@ static spinlock_t tasks_lk;
  */
 int currents[4]={-1,-1,-1,-1},tasks_cnt=0;
 #define current currents[cpu_id]
+void kmt_test(){
+    void *tmp=tasks[2];
+    tasks[2]=tasks[3];
+    tasks[3]=tmp;
+}
 void show_sem_list(sem_t *sem){
     list_t *p;
     for(p=sem->head;p!=sem->tail;p=p->next){
