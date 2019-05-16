@@ -50,8 +50,10 @@ void remove_task(){
     int cpu_id=_cpu();
     kmt->spin_lock(&tasks_lk);
     //log("%d %d\n",currents[_cpu()],tasks_cnt);
-    tasks[current]=tasks[--tasks_cnt];
-    current=-1;
+    void *tmp=tasks[current];
+    tasks[current]=tasks[tasks_cnt-1];
+    tasks[tasks_cnt-1]=tmp;
+    current=--tasks_cnt;
     kmt->spin_unlock(&tasks_lk);
 }
 static _Context* kmt_context_save(_Event ev, _Context *c){
@@ -213,7 +215,7 @@ void kmt_sem_signal(sem_t *sem){
     if(sem->value>sem->capa){
         return sem_add_task(sem);
     }else if(sem->value<=0){
-        //sem_remove_task(sem);
+        sem_remove_task(sem);
     }
     kmt->spin_unlock(&(sem->lock));
 }
