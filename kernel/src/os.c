@@ -30,9 +30,9 @@ void sem_test(void *arg){
         //printf("loop\n");
         printf("!");
         kmt->sem_signal(&echo_sem);
-        /*kmt->sem_signal(&echo_sem);
         kmt->sem_signal(&echo_sem);
-        kmt->sem_signal(&echo_sem);*/
+        kmt->sem_signal(&echo_sem);
+        kmt->sem_signal(&echo_sem);
         //while(1);
         _yield();
     }
@@ -65,22 +65,6 @@ static void hello() {
     //printf("Hello from CPU #%d for the %d-th time\n",_cpu(),++cnt);
     printf("nmsl from CPU #%d\n",_cpu());
   //}
-}
-void test(){
-#define POINTER_CNT 1000
-    void *space[POINTER_CNT];
-    int i;
-    for(i=0;i<POINTER_CNT;++i){
-        space[i]=pmm->alloc(rand()%((1<<10)-1));
-    }
-    for(i=0;i<1000;++i){
-        int idx=rand()%POINTER_CNT,len=rand()&((1<<10)-1);
-        pmm->free(space[idx]);
-        space[idx]=pmm->alloc(len);
-    }
-    for(i=0;i<POINTER_CNT;++i){
-        pmm->free(space[i]);
-    }
 }
 
 static void os_run() {
