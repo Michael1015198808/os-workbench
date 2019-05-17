@@ -170,8 +170,7 @@ void kmt_spin_unlock(spinlock_t *lk){
             }
         }
     }else{
-        log("Lock[%s] isn't locked!\n",lk->name);
-        while(1);
+        Assert(0,"Lock[%s] isn't locked!\n",lk->name);
     }
 }
 void kmt_sem_init(sem_t *sem, const char *name, int value){
