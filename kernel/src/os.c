@@ -104,7 +104,7 @@ static _Context *os_trap(_Event ev, _Context *context) {
             if (next) ret = next;
         }
     }
-    irq_idx+=fprintf(irq_log,"[cpu%d]task%dunlock\n",_cpu(),currents[_cpu()]);
+    irq_idx+=sprintf(irq_log,"[cpu%d]task%dunlock\n",_cpu(),currents[_cpu()]);
     pthread_mutex_unlock(&irq_lk);
     //log("ret%p\n",ret);
     if(ret==NULL){
