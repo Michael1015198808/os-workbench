@@ -85,7 +85,7 @@ char irq_log[65600];
 int irq_idx=0;
 static _Context *os_trap(_Event ev, _Context *context) {
     pthread_mutex_lock(&irq_lk);
-    irq_idx+=fprintf(irq_log,"[cpu%d]task%dlock\n",_cpu(),currents[_cpu()]);
+    irq_idx+=sprintf(irq_log,"[cpu%d]task%dlock\n",_cpu(),currents[_cpu()]);
     irq_idx&=(1<<16)-1;
     _Context *ret = context;
     switch_flag[_cpu()]=0;
