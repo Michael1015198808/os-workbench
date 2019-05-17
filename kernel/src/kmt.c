@@ -150,6 +150,7 @@ void kmt_spin_lock(spinlock_t *lk){
         pthread_mutex_lock(&lk->locked);
         lk->reen=1;
         lk->owner=_cpu();
+        intr_close();
         break;
     }//Use break to release lock and restore intr
     pthread_mutex_unlock(&inner_lock);
@@ -162,7 +163,7 @@ void kmt_spin_unlock(spinlock_t *lk){
         }else{
             if(lk->reen==1){
                 lk->owner=-1;
-                _intr_write(lk->int_on);
+                intr_open();
                 //True but sometimes slow
                 pthread_mutex_unlock(&(lk->locked));
             }else{
