@@ -3,5 +3,5 @@ void _putc(char);
 void print(char* s){
     do{
         _putc(*s);
-    }while(++s);
+    }while(*(++s));
 }
