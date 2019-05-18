@@ -13,7 +13,7 @@
     #define sem_log(...) 
 #endif
 
-#define intr_log(info) {int cpu_id=_cpu();(intr_idx_[cpu_id]+=sprintf(intr_log_[cpu_id]+intr_idx_[cpu_id],"\n[cpu%d]%s:%d %s:%s",_cpu(),__func__,__LINE__,tasks[currents[_cpu()]]->name,info))&=(1<<16)-1;}
+#define intr_log(info) {int cpu_id=_cpu();(intr_idx_[cpu_id]+=sprintf(intr_log_[cpu_id]+intr_idx_[cpu_id],"\n[cpu%d]%s:%d %s:%s",_cpu(),__func__,__LINE__,tasks[currents[_cpu()]]->name,info));intr_idx_[cpu_id]&=(1<<16)-1;}
 
 #ifdef intr_log
     char intr_log_[2][66000];
