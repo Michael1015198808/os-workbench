@@ -2,6 +2,6 @@
 void _putc(char*);
 void print(char* s){
     do{
-        _putc(s);
+        _putc(*s);
     }while(++s);
 }
