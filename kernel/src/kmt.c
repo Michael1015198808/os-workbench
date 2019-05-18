@@ -197,8 +197,6 @@ static void sem_add_task(sem_t *sem){
     sem_log(sem,unlock);
     kmt->spin_unlock(&(sem->lock));
     _yield();
-    kmt->spin_lock(&(sem->lock));
-    sem_log(sem,lock);
 }
 static void sem_remove_task(sem_t *sem){
     Assert(sem->head!=NULL);
