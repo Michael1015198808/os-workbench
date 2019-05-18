@@ -2,6 +2,8 @@
 #include <common.h>
 
 int ncli[4]={},ori[4]={};
+static char log[2][66000];
+static int idx[2];
 void intr_close(){
     int cpu_id=_cpu();
     Assert(ncli[cpu_id]>=0);

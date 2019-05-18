@@ -133,6 +133,7 @@ void kmt_spin_init(spinlock_t *lk, const char *name){
 void kmt_spin_lock(spinlock_t *lk){
     //static pthread_mutex_t inner_lock=PTHREAD_MUTEX_INITIALIZER;
     intr_close();
+    intr_log("close");
     //pthread_mutex_lock(&inner_lock);
     while(1){
         if(lk->locked){
@@ -142,10 +143,12 @@ void kmt_spin_lock(spinlock_t *lk){
             }else{
                 while(lk->locked){
                     //pthread_mutex_unlock(&inner_lock);
+                    intr_log("open");
                     intr_open();
                     _yield();
                     //while(1);
                     intr_close();
+                    intr_log("close");
                     //pthread_mutex_lock(&inner_lock);
                 };
             }
@@ -154,9 +157,11 @@ void kmt_spin_lock(spinlock_t *lk){
         lk->reen=1;
         lk->owner=_cpu();
         intr_close();
+        intr_log("close");
         break;
     }//Use break to release lock and restore intr
     //pthread_mutex_unlock(&inner_lock);
+    intr_log("open");
     intr_open();
 }
 void kmt_spin_unlock(spinlock_t *lk){
@@ -166,6 +171,7 @@ void kmt_spin_unlock(spinlock_t *lk){
         }else{
             if(lk->reen==1){
                 lk->owner=-1;
+                intr_log("open");
                 intr_open();
                 //True but sometimes slow
                 pthread_mutex_unlock(&(lk->locked));
