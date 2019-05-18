@@ -7,7 +7,7 @@
 #include <limits.h>
 #include <stdint.h>
 
-#define sem_log(A,info) A->idx&=(1<<16)-1;A->idx+=sprintf(A->log+A->idx,"[cpu%d]%s:%s\n",_cpu(),tasks[currents[_cpu()]]->name, #info)
+#define sem_log(A,info,...) A->idx&=(1<<16)-1;A->idx+=sprintf(A->log+A->idx,"[cpu%d]%s:%s %d\n",_cpu(),tasks[currents[_cpu()]]->name,  #info, A->value)
 #define TASK_FENCE
 #define DEBUG
 //Comment the line above after testing
