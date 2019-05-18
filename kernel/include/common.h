@@ -8,7 +8,7 @@
 #include <stdint.h>
 
 //#define sem_log(A,info,...) A->idx&=(1<<16)-1;A->idx+=sprintf(A->log+A->idx,"\n[cpu%d]%s:%d %s:%s %d",_cpu(),__func__,__LINE__,tasks[currents[_cpu()]]->name,  #info, A->value)
-#define intr_log(info) (idx[cpu_id]+=sprintf(log[cpu_id]+idx[cpu_id],"\n[cpu%d]%s:%d %s:%s",_cpu(),__func__,__LINE__,tasks[currents[_cpu()]]->name,info))&=(1<<16)-1;
+#define intr_log(info) (idx[cpu_id]+=sprintf(intr_log_[cpu_id]+intr_idx_[cpu_id],"\n[cpu%d]%s:%d %s:%s",_cpu(),__func__,__LINE__,tasks[currents[_cpu()]]->name,info))&=(1<<16)-1;
 #define TASK_FENCE
 #define DEBUG
 //Comment the line above after testing
