@@ -141,7 +141,8 @@ void kmt_spin_lock(spinlock_t *lk){
                 while(lk->locked){
                     //pthread_mutex_unlock(&inner_lock);
                     intr_open();
-                    _yield();
+                    //_yield();
+                    while(1);
                     intr_close();
                     //pthread_mutex_lock(&inner_lock);
                 };
