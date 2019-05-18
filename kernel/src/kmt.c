@@ -71,7 +71,9 @@ static _Context* kmt_context_save(_Event ev, _Context *c){
     }
     //log("context save\n");
     tasks[current]->context=*c;
-    tasks[current]->cpu=-1;
+    if(ncli[_cpu()]==1){
+        tasks[current]->cpu=-1;
+    }
     kmt->spin_unlock(&tasks_lk);
     return NULL;
 }
