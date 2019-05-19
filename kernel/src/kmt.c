@@ -225,8 +225,8 @@ static void sem_remove_task(sem_t *sem){
 }
 
 void kmt_sem_wait(sem_t *sem){
-    sem_remove_task;
-    sem_add_task;
+    (void)sem_remove_task;
+    (void)sem_add_task;
     /*
     kmt->spin_lock(&(sem->lock));
     sem_log(sem,lock);
