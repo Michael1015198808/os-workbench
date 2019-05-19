@@ -190,7 +190,7 @@ void kmt_spin_unlock(spinlock_t *lk){
 void kmt_sem_init(sem_t *sem, const char *name, int value){
     copy_name(sem->name,name);
     sem->value=value;
-    sem->capa=1<<20;
+    sem->capa=1<<24;
     kmt->spin_init(&(sem->lock),name);
     sem->head=NULL;
     sem->tail=pmm->alloc(sizeof(list_t));
@@ -235,6 +235,8 @@ void kmt_sem_signal(sem_t *sem){
     //sem_log(sem,lock);
     ++(sem->value);
     if(sem->value>sem->capa){
+        log("seg->value>sem->capa\n");
+        while(1);
         return sem_add_task(sem);
     }else if(sem->value<=0){
         sem_remove_task(sem);
