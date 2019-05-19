@@ -146,25 +146,23 @@ void kmt_spin_lock(spinlock_t *lk){
     pthread_mutex_lock(&inner_lock);
     detail_log(inner_log,inner_idx,"lock");
     while(1){
-    /*
         if(lk->locked){
             if(lk->owner==_cpu()){
                 ++lk->reen;
                 break;
             }else{
                 while(lk->locked){
-                    //pthread_mutex_unlock(&inner_lock);
+                    pthread_mutex_unlock(&inner_lock);
                     intr_log("open");
                     intr_open();
                     _yield();
                     //while(1);
                     intr_close();
                     intr_log("close");
-                    //pthread_mutex_lock(&inner_lock);
+                    pthread_mutex_lock(&inner_lock);
                 };
             }
         }
-    */
         pthread_mutex_lock(&lk->locked);
         detail_log(lk->log,lk->idx,"lock");
         //lk->reen=1;
