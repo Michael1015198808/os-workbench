@@ -177,9 +177,6 @@ void kmt_spin_lock(spinlock_t *lk){
 void kmt_spin_unlock(spinlock_t *lk){
     pthread_mutex_lock(&inner_lock);
     detail_log(inner_log,inner_idx,"lock");
-    detail_log(lk->log,lk->idx,"unlock");
-    pthread_mutex_unlock(&lk->locked);
-    /*
     if(lk->locked){
         if(lk->owner!=_cpu()){
             log("Lock[%s] isn't holded by this CPU!\n",lk->name);
@@ -189,6 +186,7 @@ void kmt_spin_unlock(spinlock_t *lk){
                 intr_log("open");
                 intr_open();
                 //True but sometimes slow
+                detail_log(lk->log,lk->idx,"unlock");
                 pthread_mutex_unlock(&(lk->locked));
             }else{
                 --lk->reen;
@@ -197,7 +195,6 @@ void kmt_spin_unlock(spinlock_t *lk){
     }else{
         Assert(0,"Lock[%s] isn't locked!\n",lk->name);
     }
-    */
     detail_log(inner_log,inner_idx,"unlock");
     pthread_mutex_unlock(&inner_lock);
 }
