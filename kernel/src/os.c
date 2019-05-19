@@ -26,7 +26,6 @@ void echo_test(void *arg){
     }
 }
 void sem_test(void *arg){
-    log("%d\n",_intr_read());
     while(1){
         //printf("loop\n");
         printf("!");
@@ -118,7 +117,6 @@ static _Context *os_trap(_Event ev, _Context *context) {
 
 static void os_on_irq(int seq, int event, handler_t handler) {
     pthread_mutex_lock(&irq_lk);
-    log("%p\n",handler);
     irq_handler *prev=&irq_guard,*p=irq_guard.next;
 //prev->new->p
     while(p){
