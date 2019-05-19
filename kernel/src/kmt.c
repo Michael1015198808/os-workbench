@@ -140,9 +140,7 @@ static pthread_mutex_t inner_lock=PTHREAD_MUTEX_INITIALIZER;
 static char inner_log[66000];
 static int inner_idx=0;
 void kmt_spin_lock(spinlock_t *lk){
-    /*intr_close();
-    intr_log("close");*/
-    //int cpu_id=_cpu();(void)cpu_id;
+    int cpu_id=_cpu();(void)cpu_id;
     pthread_mutex_lock(&inner_lock);
     detail_log(inner_log,inner_idx,"lock");
     while(1){
@@ -165,7 +163,7 @@ void kmt_spin_lock(spinlock_t *lk){
         }
         pthread_mutex_lock(&lk->locked);
         detail_log(lk->log,lk->idx,"lock");
-        //lk->reen=1;
+        lk->reen=1;
         /*
         lk->owner=_cpu();
         intr_close();
@@ -175,8 +173,6 @@ void kmt_spin_lock(spinlock_t *lk){
     }//Use break to release lock and restore intr
     detail_log(inner_log,inner_idx,"unlock");
     pthread_mutex_unlock(&inner_lock);
-    /*intr_log("open");
-    intr_open();*/
 }
 void kmt_spin_unlock(spinlock_t *lk){
     pthread_mutex_lock(&inner_lock);
