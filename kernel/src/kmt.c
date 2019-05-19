@@ -184,8 +184,7 @@ void kmt_spin_unlock(spinlock_t *lk){
             }
         }
     }else{
-        break;
-        Assert(0,"Lock[%s] isn't locked!\n",lk->name);
+        //Assert(0,"Lock[%s] isn't locked!\n",lk->name);
     }
     pthread_mutex_unlock(&inner_lock);
 }
