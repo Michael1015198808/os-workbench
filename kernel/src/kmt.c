@@ -7,7 +7,7 @@
 
 static task_t *tasks[20]={};
 //static spinlock_t tasks_lk;
-static volatile pthread_mutex_t tasks_lk;
+static pthread_mutex_t tasks_lk;
 int tasks_idx=0;
 char tasks_log[66000];
 #define trace_pthread_mutex_lock(_lk) \
@@ -138,11 +138,11 @@ void kmt_spin_init(spinlock_t *lk, const char *name){
     lk->locked=PTHREAD_MUTEX_INITIALIZER;
     copy_name(lk->name,name);
 }
+static pthread_mutex_t inner_lock=PTHREAD_MUTEX_INITIALIZER;
 void kmt_spin_lock(spinlock_t *lk){
-    //static pthread_mutex_t inner_lock=PTHREAD_MUTEX_INITIALIZER;
     intr_close();
     intr_log("close");
-    //pthread_mutex_lock(&inner_lock);
+    pthread_mutex_lock(&inner_lock);
     while(1){
         if(lk->locked){
             if(lk->owner==_cpu()){
@@ -168,11 +168,12 @@ void kmt_spin_lock(spinlock_t *lk){
         intr_log("close");
         break;
     }//Use break to release lock and restore intr
-    //pthread_mutex_unlock(&inner_lock);
+    pthread_mutex_unlock(&inner_lock);
     intr_log("open");
     intr_open();
 }
 void kmt_spin_unlock(spinlock_t *lk){
+    pthread_mutex_lock(&inner_lock);
     if(lk->locked){
         if(lk->owner!=_cpu()){
             log("Lock[%s] isn't holded by this CPU!\n",lk->name);
@@ -190,6 +191,7 @@ void kmt_spin_unlock(spinlock_t *lk){
     }else{
         Assert(0,"Lock[%s] isn't locked!\n",lk->name);
     }
+    pthread_mutex_unlock(&inner_lock);
 }
 void kmt_sem_init(sem_t *sem, const char *name, int value){
     copy_name(sem->name,name);
@@ -235,7 +237,7 @@ void kmt_sem_wait(sem_t *sem){
     kmt->spin_unlock(&(sem->lock));
 }
 void kmt_sem_signal(sem_t *sem){
-    //kmt->spin_lock(&(sem->lock));
+    kmt->spin_lock(&(sem->lock));
     //sem_log(sem,lock);
     ++(sem->value);
     if(sem->value>sem->capa){
@@ -244,7 +246,7 @@ void kmt_sem_signal(sem_t *sem){
         sem_remove_task(sem);
     }
     //sem_log(sem,unlock);
-    //kmt->spin_unlock(&(sem->lock));
+    kmt->spin_unlock(&(sem->lock));
 }
 MODULE_DEF(kmt) {
   .init        =kmt_init,
