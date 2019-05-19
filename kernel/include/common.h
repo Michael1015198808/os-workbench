@@ -89,7 +89,9 @@ struct semaphore {
 #define Assert(cond,...) \
     do { \
       if(!(cond)){ \
-        log("\33[1;31mAssertion " #cond " fails!\33[0m\n" __VA_ARGS__); \
+        printf("\33[1;31m"); \
+        log("Assertion " #cond " fails!\n" __VA_ARGS__); \
+        printf("\33[0m"); \
         _halt(0); \
       } \
     }while(0)
