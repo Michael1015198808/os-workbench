@@ -14,6 +14,12 @@
 #endif
 
 #define intr_log(info) {int cpu_id=_cpu();(intr_idx_[cpu_id]+=sprintf(intr_log_[cpu_id]+intr_idx_[cpu_id],"\n[cpu%d]%s:%d %s:%s",_cpu(),__func__,__LINE__,tasks[currents[_cpu()]]->name,info));intr_idx_[cpu_id]&=(1<<16)-1;}
+#define detail_log(log,idx,info) \
+    do{ \
+        int cpu_id=_cpu(); \
+        idx+=sprintf(log+idx,"\n[cpu%d]%s:%d(%s) %s:%s",_cpu(),__FILE__,__LINE__,__func__,tasks[current]->name,info); \
+        idx&=(1<<16)-1; \
+    }while(0)
 
 #ifdef intr_log
     char intr_log_[2][66000];
@@ -66,7 +72,7 @@ typedef struct List{
 }list_t;
 struct semaphore {
     char *name;
-    int value,capa;
+    volatile int value,capa;
     spinlock_t lock;
     list_t *head,*tail;
 #ifdef sem_log

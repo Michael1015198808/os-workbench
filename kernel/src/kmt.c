@@ -8,6 +8,16 @@
 static task_t *tasks[20]={};
 //static spinlock_t tasks_lk;
 static pthread_mutex_t tasks_lk;
+int tasks_idx=0;
+char tasks_log[66000];
+#define trace_pthread_mutex_lock( lk) \
+    pthread_mutex_lock(&lk); \
+    detail_log(tasks_log,tasks_idx,"lock"); \
+
+#define trace_pthread_mutex_unlock(lk) \
+    detail_log(tasks_log,tasks_idx,"unlock"); \
+    idx+=pthread_mutex_unlock(&lk);
+
 /* tasks, tasks_cnt
  * shared by
  *   add_task
@@ -44,23 +54,23 @@ void show(){
 
 
 static int add_task(task_t *task){
-    pthread_mutex_lock(&tasks_lk);
+    trace_pthread_mutex_lock(&tasks_lk);
     tasks[tasks_cnt++]=task;
-    pthread_mutex_unlock(&tasks_lk);
+    trace_pthread_mutex_unlock(&tasks_lk);
     return tasks_cnt-1;
 }
 void remove_task(){
     int cpu_id=_cpu();
-    pthread_mutex_lock(&tasks_lk);
+    trace_pthread_mutex_lock(&tasks_lk);
     //log("%d %d\n",currents[_cpu()],tasks_cnt);
     void *tmp=tasks[current];
     tasks[current]=tasks[tasks_cnt-1];
     tasks[tasks_cnt-1]=tmp;
     current=--tasks_cnt;
-    pthread_mutex_unlock(&tasks_lk);
+    trace_pthread_mutex_unlock(&tasks_lk);
 }
 static _Context* kmt_context_save(_Event ev, _Context *c){
-    pthread_mutex_lock(&tasks_lk);
+    trace_pthread_mutex_lock(&tasks_lk);
     int cpu_id=_cpu();
     if(current==-1){
         current=tasks_cnt-1;
@@ -72,11 +82,11 @@ static _Context* kmt_context_save(_Event ev, _Context *c){
             tasks[current]->cpu=-1;
         }
     }
-    pthread_mutex_unlock(&tasks_lk);
+    trace_pthread_mutex_unlock(&tasks_lk);
     return NULL;
 }
 static _Context* kmt_context_switch(_Event ev, _Context *c){
-    pthread_mutex_lock(&tasks_lk);
+    trace_pthread_mutex_lock(&tasks_lk);
     int cpu_id=_cpu();
     extern int *switch_flag;
     switch_flag[cpu_id]=1;
@@ -89,7 +99,7 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
     //printf(" %d ",tasks_cnt);
     tasks[current]->cpu=cpu_id;
     //log("context switch to (%d)%s\n",current,tasks[current]->name);
-    pthread_mutex_unlock(&tasks_lk);
+    trace_pthread_mutex_unlock(&tasks_lk);
     return &tasks[current]->context;
 }
 void kmt_init(void){
@@ -151,7 +161,7 @@ void kmt_spin_lock(spinlock_t *lk){
                 };
             }
         }
-        pthread_mutex_lock(&lk->locked);
+        trace_pthread_mutex_lock(&lk->locked);
         lk->reen=1;
         lk->owner=_cpu();
         intr_close();
@@ -172,7 +182,7 @@ void kmt_spin_unlock(spinlock_t *lk){
                 intr_log("open");
                 intr_open();
                 //True but sometimes slow
-                pthread_mutex_unlock(&(lk->locked));
+                trace_pthread_mutex_unlock(&(lk->locked));
             }else{
                 --lk->reen;
             }
