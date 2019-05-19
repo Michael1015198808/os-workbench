@@ -46,7 +46,7 @@ void show(){
 static int add_task(task_t *task){
     pthread_mutex_lock(&tasks_lk);
     tasks[tasks_cnt++]=task;
-    pthread_mutex_unlock(tasks_lk);
+    pthread_mutex_unlock(&tasks_lk);
     return tasks_cnt-1;
 }
 void remove_task(){
@@ -57,7 +57,7 @@ void remove_task(){
     tasks[current]=tasks[tasks_cnt-1];
     tasks[tasks_cnt-1]=tmp;
     current=--tasks_cnt;
-    pthread_mutex_unlock(tasks_lk);
+    pthread_mutex_unlock(&tasks_lk);
 }
 static _Context* kmt_context_save(_Event ev, _Context *c){
     pthread_mutex_lock(&tasks_lk);
@@ -72,7 +72,7 @@ static _Context* kmt_context_save(_Event ev, _Context *c){
             tasks[current]->cpu=-1;
         }
     }
-    pthread_mutex_unlock(tasks_lk);
+    pthread_mutex_unlock(&tasks_lk);
     return NULL;
 }
 static _Context* kmt_context_switch(_Event ev, _Context *c){
@@ -89,7 +89,7 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
     //printf(" %d ",tasks_cnt);
     tasks[current]->cpu=cpu_id;
     //log("context switch to (%d)%s\n",current,tasks[current]->name);
-    pthread_mutex_unlock(tasks_lk);
+    pthread_mutex_unlock(&tasks_lk);
     return &tasks[current]->context;
 }
 void kmt_init(void){
