@@ -135,6 +135,7 @@ void kmt_spin_lock(spinlock_t *lk){
     /*intr_close();
     intr_log("close");*/
     pthread_mutex_lock(&inner_lock);
+    pthread_mutex_lock(lk->locked);
     /*
     while(1){
         if(lk->locked){
@@ -168,8 +169,9 @@ void kmt_spin_lock(spinlock_t *lk){
 }
 void kmt_spin_unlock(spinlock_t *lk){
     pthread_mutex_lock(&inner_lock);
+    pthread_mutex_unlock(lk->locked);
+    /*
     if(lk->locked){
-        Assert(0,"Lock[%s] isn't locked!\n",lk->name);
         if(lk->owner!=_cpu()){
             log("Lock[%s] isn't holded by this CPU!\n",lk->name);
         }else{
@@ -184,8 +186,9 @@ void kmt_spin_unlock(spinlock_t *lk){
             }
         }
     }else{
-        //Assert(0,"Lock[%s] isn't locked!\n",lk->name);
+        Assert(0,"Lock[%s] isn't locked!\n",lk->name);
     }
+    */
     pthread_mutex_unlock(&inner_lock);
 }
 void kmt_sem_init(sem_t *sem, const char *name, int value){
