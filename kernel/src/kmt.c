@@ -236,6 +236,7 @@ void kmt_sem_wait(sem_t *sem){
     if(sem->value>sem->capa){
         sem_remove_task(sem);
     }else if(sem->value<0){
+        log("\n%d\n",sem->value);
         return sem_add_task(sem);
     }
     kmt->spin_unlock(&(sem->lock));
