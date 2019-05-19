@@ -7,7 +7,7 @@
 
 static task_t *tasks[20]={};
 //static spinlock_t tasks_lk;
-static pthread_mutex_t tasks_lk;
+static volatile pthread_mutex_t tasks_lk;
 int tasks_idx=0;
 char tasks_log[66000];
 #define trace_pthread_mutex_lock(_lk) \
