@@ -164,8 +164,8 @@ void kmt_spin_lock(spinlock_t *lk){
         pthread_mutex_lock(&lk->locked);
         detail_log(lk->log,lk->idx,"lock");
         lk->reen=1;
-        /*
         lk->owner=_cpu();
+        /*
         intr_close();
         intr_log("close");
         */
