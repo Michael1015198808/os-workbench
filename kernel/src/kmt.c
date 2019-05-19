@@ -235,16 +235,16 @@ void kmt_sem_wait(sem_t *sem){
     kmt->spin_unlock(&(sem->lock));
 }
 void kmt_sem_signal(sem_t *sem){
-    kmt->spin_lock(&(sem->lock));
-    sem_log(sem,lock);
+    //kmt->spin_lock(&(sem->lock));
+    //sem_log(sem,lock);
     ++(sem->value);
     if(sem->value>sem->capa){
         return sem_add_task(sem);
     }else if(sem->value<=0){
         sem_remove_task(sem);
     }
-    sem_log(sem,unlock);
-    kmt->spin_unlock(&(sem->lock));
+    //sem_log(sem,unlock);
+    //kmt->spin_unlock(&(sem->lock));
 }
 MODULE_DEF(kmt) {
   .init        =kmt_init,

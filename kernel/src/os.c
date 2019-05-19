@@ -31,7 +31,7 @@ void sem_test(void *arg){
         //printf("loop\n");
         printf("!");
         //kmt->sem_signal(&echo_sem);
-        //kmt->sem_signal(&echo_sem);
+        kmt->sem_signal(&echo_sem);
         //while(1);
         _yield();
     }
