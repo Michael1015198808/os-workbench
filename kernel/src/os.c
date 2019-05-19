@@ -92,6 +92,7 @@ static _Context *os_trap(_Event ev, _Context *context) {
     irq_idx+=sprintf(irq_log+irq_idx,"[cpu%d]task%dlock\n",_cpu(),currents[_cpu()]);irq_idx&=(1<<16)-1;*/
     _Context *ret = context;
     switch_flag[_cpu()]=0;
+    intr_close();
 
     for(struct irq *handler=irq_guard.next;
         handler!=&irq_guard;
@@ -106,6 +107,7 @@ static _Context *os_trap(_Event ev, _Context *context) {
     /*irq_idx+=sprintf(irq_log+irq_idx,"[cpu%d]task%dunlock\n",_cpu(),currents[_cpu()]);
     pthread_mutex_unlock(&irq_lk);*/
     //log("ret%p\n",ret);
+    intr_open();
     if(ret==NULL){
         log("\n%d\n",switch_flag[_cpu()]);
     };
