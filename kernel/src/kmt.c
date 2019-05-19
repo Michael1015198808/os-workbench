@@ -161,7 +161,7 @@ void kmt_spin_lock(spinlock_t *lk){
                 };
             }
         }
-        trace_pthread_mutex_lock(&lk->locked);
+        pthread_mutex_lock(&lk->locked);
         lk->reen=1;
         lk->owner=_cpu();
         intr_close();
@@ -182,7 +182,7 @@ void kmt_spin_unlock(spinlock_t *lk){
                 intr_log("open");
                 intr_open();
                 //True but sometimes slow
-                trace_pthread_mutex_unlock(&(lk->locked));
+                pthread_mutex_unlock(&(lk->locked));
             }else{
                 --lk->reen;
             }
