@@ -160,7 +160,7 @@ void kmt_spin_lock(spinlock_t *lk){
         lk->owner=_cpu();
         intr_close();
         intr_log("close");
-        break;
+        //break;
     //}//Use break to release lock and restore intr
     pthread_mutex_unlock(&inner_lock);
     /*intr_log("open");
