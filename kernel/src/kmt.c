@@ -96,7 +96,7 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
         if(tasks[current]->fence1[i]!=0x13579ace||tasks[current]->fence2[i]!=0xeca97531){
             log("Stack over/under flow!\n");
             while(1);
-        };
+        }
     }
     return &tasks[current]->context;
 }
@@ -116,7 +116,7 @@ int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), void *a
     Assert(tasks_cnt<LEN(tasks),"%d\n",tasks_cnt);
     task->cpu=-1;
     copy_name(task->name,name);
-    
+
     task->context = *_kcontext(
             (_Area){(void*)task->stack,&(task->stack_end)}, entry, arg);
 #ifdef TASK_FENCE
@@ -233,6 +233,7 @@ static void sem_remove_task(sem_t *sem){
 void kmt_sem_wait(sem_t *sem){
     (void)sem_remove_task;
     (void)sem_add_task;
+    intr_close();
     kmt->spin_lock(&(sem->lock));
     /*
     sem_log(sem,lock);
@@ -245,6 +246,7 @@ void kmt_sem_wait(sem_t *sem){
     sem_log(sem,unlock);
     */
     kmt->spin_unlock(&(sem->lock));
+    intr_open();
 }
 void kmt_sem_signal(sem_t *sem){
     //kmt->spin_lock(&(sem->lock));
