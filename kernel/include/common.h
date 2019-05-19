@@ -16,8 +16,9 @@
 #define intr_log(info) {int cpu_id=_cpu();(intr_idx_[cpu_id]+=sprintf(intr_log_[cpu_id]+intr_idx_[cpu_id],"\n[cpu%d]%s:%d %s:%s",_cpu(),__func__,__LINE__,tasks[currents[_cpu()]]->name,info));intr_idx_[cpu_id]&=(1<<16)-1;}
 #define detail_log(_log,_idx,info) \
     do{ \
-        int cpu_id=_cpu(); \
+        int cpu_id=_cpu(),_old=_idx; \
         _idx+=sprintf(_log+_idx,"\n[cpu%d]%s:%3d(%s) %s:%s",_cpu(),__FILE__,__LINE__,__func__,tasks[current]->name,info); \
+        printf(_log+_old); \
         _idx&=(1<<16)-1; \
     }while(0)
 
