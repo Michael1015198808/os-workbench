@@ -16,7 +16,7 @@ char tasks_log[66000];
 
 #define trace_pthread_mutex_unlock(lk) \
     detail_log(tasks_log,tasks_idx,"unlock"); \
-    idx+=pthread_mutex_unlock(&lk);
+    idx+=pthread_mutex_unlock(lk);
 
 /* tasks, tasks_cnt
  * shared by
