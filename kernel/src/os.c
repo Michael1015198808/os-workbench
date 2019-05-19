@@ -30,8 +30,8 @@ void sem_test(void *arg){
     while(1){
         //printf("loop\n");
         printf("!");
-        kmt->sem_signal(&echo_sem);
-        kmt->sem_signal(&echo_sem);
+        //kmt->sem_signal(&echo_sem);
+        //kmt->sem_signal(&echo_sem);
         //while(1);
         _yield();
     }
@@ -110,7 +110,7 @@ static _Context *os_trap(_Event ev, _Context *context) {
     //log("ret%p\n",ret);
     intr_open();
     if(ret==NULL){
-        log("\n%d\n",switch_flag[_cpu()]);
+        log("\nswitch:(%d)\n",switch_flag[_cpu()]);
     };
     return ret;
 }
