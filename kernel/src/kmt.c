@@ -159,9 +159,9 @@ void kmt_spin_lock(spinlock_t *lk){
         intr_close();
         intr_log("close");
         break;
-    }//Use break to release lock and restore intr
+    }//Use break to release lock and restore intr*/
     pthread_mutex_unlock(&inner_lock);
-    intr_log("open");
+    /*intr_log("open");
     intr_open();*/
 }
 void kmt_spin_unlock(spinlock_t *lk){
@@ -217,7 +217,8 @@ static void sem_remove_task(sem_t *sem){
 }
 
 void kmt_sem_wait(sem_t *sem){
-    /*kmt->spin_lock(&(sem->lock));
+    kmt->spin_lock(&(sem->lock));
+    /*
     sem_log(sem,lock);
     --(sem->value);
     if(sem->value>sem->capa){
@@ -226,7 +227,8 @@ void kmt_sem_wait(sem_t *sem){
         return sem_add_task(sem);
     }
     sem_log(sem,unlock);
-    kmt->spin_unlock(&(sem->lock));*/
+    */
+    kmt->spin_unlock(&(sem->lock));
 }
 void kmt_sem_signal(sem_t *sem){
     //kmt->spin_lock(&(sem->lock));
