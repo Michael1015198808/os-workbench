@@ -6,7 +6,8 @@
     memcpy(dest,src,strlen(src)+1);
 
 static task_t *tasks[20]={};
-static spinlock_t tasks_lk;
+//static spinlock_t tasks_lk;
+static pthread_mutex_t tasks_lk;
 /* tasks, tasks_cnt
  * shared by
  *   add_task
@@ -43,42 +44,39 @@ void show(){
 
 
 static int add_task(task_t *task){
-    kmt->spin_lock(&tasks_lk);
-    int tmp=tasks_cnt;
+    pthread_mutex_lock(&tasks_lk);
     tasks[tasks_cnt++]=task;
-    kmt->spin_unlock(&tasks_lk);
-    return tmp;
+    pthread_mutex_unlock(tasks_lk);
+    return tasks_cnt-1;
 }
 void remove_task(){
     int cpu_id=_cpu();
-    kmt->spin_lock(&tasks_lk);
+    pthread_mutex_lock(&tasks_lk);
     //log("%d %d\n",currents[_cpu()],tasks_cnt);
     void *tmp=tasks[current];
     tasks[current]=tasks[tasks_cnt-1];
     tasks[tasks_cnt-1]=tmp;
     current=--tasks_cnt;
-    kmt->spin_unlock(&tasks_lk);
+    pthread_mutex_unlock(tasks_lk);
 }
 static _Context* kmt_context_save(_Event ev, _Context *c){
-    kmt->spin_lock(&tasks_lk);
+    pthread_mutex_lock(&tasks_lk);
     int cpu_id=_cpu();
     if(current==-1){
         current=tasks_cnt-1;
-        kmt->spin_unlock(&tasks_lk);
-        return NULL;
-        kmt->create(pmm->alloc(sizeof(task_t)),"os_run",NULL,NULL);
-        current=tasks_cnt-1;
+        //kmt->create(pmm->alloc(sizeof(task_t)),"os_run",NULL,NULL);
+        //current=tasks_cnt-1;
+    }else{
+        tasks[current]->context=*c;
+        if(ncli[_cpu()]<=1){
+            tasks[current]->cpu=-1;
+        }
     }
-    //log("context save\n");
-    tasks[current]->context=*c;
-    if(ncli[_cpu()]==1){
-        tasks[current]->cpu=-1;
-    }
-    kmt->spin_unlock(&tasks_lk);
+    pthread_mutex_unlock(tasks_lk);
     return NULL;
 }
 static _Context* kmt_context_switch(_Event ev, _Context *c){
-    kmt->spin_lock(&tasks_lk);
+    pthread_mutex_lock(&tasks_lk);
     int cpu_id=_cpu();
     extern int *switch_flag;
     switch_flag[cpu_id]=1;
@@ -91,7 +89,7 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
     //printf(" %d ",tasks_cnt);
     tasks[current]->cpu=cpu_id;
     //log("context switch to (%d)%s\n",current,tasks[current]->name);
-    kmt->spin_unlock(&tasks_lk);
+    pthread_mutex_unlock(tasks_lk);
     return &tasks[current]->context;
 }
 void kmt_init(void){
