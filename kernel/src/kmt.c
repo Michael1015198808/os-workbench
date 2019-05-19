@@ -134,6 +134,7 @@ static pthread_mutex_t inner_lock=PTHREAD_MUTEX_INITIALIZER;
 void kmt_spin_lock(spinlock_t *lk){
     /*intr_close();
     intr_log("close");*/
+    int cpu_id=_cpu();
     pthread_mutex_lock(&inner_lock);
     while(1){
     /*
@@ -157,8 +158,8 @@ void kmt_spin_lock(spinlock_t *lk){
     */
         pthread_mutex_lock(&lk->locked);
         lk->reen=1;
-        lk->owner=_cpu();
         /*
+        lk->owner=_cpu();
         intr_close();
         intr_log("close");
         */
