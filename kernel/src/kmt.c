@@ -72,16 +72,13 @@ static _Context* kmt_context_save(_Event ev, _Context *c){
         //current=tasks_cnt-1;
     }else{
         tasks[current]->context=*c;
-        if(ncli[_cpu()]<=1){
-            tasks[current]->cpu=-1;
-        }
     }
     //trace_pthread_mutex_unlock(&tasks_lk);
     return NULL;
 }
 static _Context* kmt_context_switch(_Event ev, _Context *c){
     trace_pthread_mutex_lock(&tasks_lk);
-    int cpu_id=_cpu();
+    int cpu_id=_cpu(),old=current;
     extern int *switch_flag;
     switch_flag[cpu_id]=1;
     //log("context switch from (%d)%s\n",current,tasks[current]->name);
@@ -93,6 +90,7 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
     //printf(" %d ",tasks_cnt);
     tasks[current]->cpu=cpu_id;
     //log("context switch to (%d)%s\n",current,tasks[current]->name);
+    tasks[old]->cpu=-1;
     trace_pthread_mutex_unlock(&tasks_lk);
     return &tasks[current]->context;
 }
