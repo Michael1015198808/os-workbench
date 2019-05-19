@@ -93,7 +93,7 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
     tasks[old]->cpu=-1;
     trace_pthread_mutex_unlock(&tasks_lk);
     for(int i=0;i<4;++i){
-        if(current->fence1[i]!=0x13579ace||current->fence2[i]!=0xeca97531){
+        if(tasks[current]->fence1[i]!=0x13579ace||tasks[current]->fence2[i]!=0xeca97531){
             log("Stack over/under flow!\n");
             while(1);
         };
