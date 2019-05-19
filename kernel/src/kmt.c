@@ -249,7 +249,8 @@ void kmt_sem_wait(sem_t *sem){
     intr_open();
 }
 void kmt_sem_signal(sem_t *sem){
-    //kmt->spin_lock(&(sem->lock));
+    intr_close();
+    kmt->spin_lock(&(sem->lock));
     //sem_log(sem,lock);
     ++(sem->value);
     /*
@@ -262,7 +263,8 @@ void kmt_sem_signal(sem_t *sem){
     }
     */
     //sem_log(sem,unlock);
-    //kmt->spin_unlock(&(sem->lock));
+    kmt->spin_unlock(&(sem->lock));
+    intr_open();
 }
 MODULE_DEF(kmt) {
   .init        =kmt_init,
