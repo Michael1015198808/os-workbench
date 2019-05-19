@@ -70,7 +70,7 @@ void remove_task(){
     trace_pthread_mutex_unlock(&tasks_lk);
 }
 static _Context* kmt_context_save(_Event ev, _Context *c){
-    trace_pthread_mutex_lock(&tasks_lk);
+    //trace_pthread_mutex_lock(&tasks_lk);
     int cpu_id=_cpu();
     if(current==-1){
         current=tasks_cnt-1;
@@ -82,7 +82,7 @@ static _Context* kmt_context_save(_Event ev, _Context *c){
             tasks[current]->cpu=-1;
         }
     }
-    trace_pthread_mutex_unlock(&tasks_lk);
+    //trace_pthread_mutex_unlock(&tasks_lk);
     return NULL;
 }
 static _Context* kmt_context_switch(_Event ev, _Context *c){
