@@ -10,13 +10,13 @@ static task_t *tasks[20]={};
 static pthread_mutex_t tasks_lk;
 int tasks_idx=0;
 char tasks_log[66000];
-#define trace_pthread_mutex_lock( lk) \
-    pthread_mutex_lock(lk); \
+#define trace_pthread_mutex_lock(_lk) \
+    pthread_mutex_lock(_lk); \
     detail_log(tasks_log,tasks_idx,"lock"); \
 
-#define trace_pthread_mutex_unlock(lk) \
+#define trace_pthread_mutex_unlock(_lk) \
     detail_log(tasks_log,tasks_idx,"unlock"); \
-    idx+=pthread_mutex_unlock(lk);
+    pthread_mutex_unlock(_lk);
 
 /* tasks, tasks_cnt
  * shared by
