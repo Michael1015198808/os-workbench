@@ -27,12 +27,6 @@ char tasks_log[66000];
  */
 int currents[4]={-1,-1,-1,-1},tasks_cnt=0;
 #define current currents[cpu_id]
-void kmt_test(){
-    tasks[0]=tasks[3];
-    tasks[1]=tasks[3];
-    tasks[2]=tasks[3];
-    tasks[4]=tasks[3];
-}
 
 void show_sem_list(sem_t *sem){
     list_t *p;
