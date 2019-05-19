@@ -19,7 +19,7 @@
         int cpu_id=_cpu(),_old=_idx; \
         _idx+=sprintf(_log+_idx,"\n[cpu%d]%s:%3d(%s) %s:%s",_cpu(),__FILE__,__LINE__,__func__,tasks[current]->name,info); \
         (void)_old; \
-        /*printf(_log+_old);*/ \
+        printf(_log+_old); \
         _idx&=(1<<16)-1; \
     }while(0)
 
