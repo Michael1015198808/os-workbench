@@ -137,11 +137,14 @@ void kmt_spin_init(spinlock_t *lk, const char *name){
     copy_name(lk->name,name);
 }
 static pthread_mutex_t inner_lock=PTHREAD_MUTEX_INITIALIZER;
+static char inner_log[66000];
+static int inner_idx=0;
 void kmt_spin_lock(spinlock_t *lk){
     /*intr_close();
     intr_log("close");*/
     //int cpu_id=_cpu();(void)cpu_id;
     pthread_mutex_lock(&inner_lock);
+    detail_log(inner_log,inner_idx,"lock");
     while(1){
     /*
         if(lk->locked){
@@ -171,12 +174,14 @@ void kmt_spin_lock(spinlock_t *lk){
         */
         break;
     }//Use break to release lock and restore intr
+    detail_log(inner_log,inner_idx,"unlock");
     pthread_mutex_unlock(&inner_lock);
     /*intr_log("open");
     intr_open();*/
 }
 void kmt_spin_unlock(spinlock_t *lk){
     pthread_mutex_lock(&inner_lock);
+    detail_log(inner_log,inner_idx,"lock");
     pthread_mutex_unlock(&lk->locked);
     /*
     if(lk->locked){
@@ -197,6 +202,7 @@ void kmt_spin_unlock(spinlock_t *lk){
         Assert(0,"Lock[%s] isn't locked!\n",lk->name);
     }
     */
+    detail_log(inner_log,inner_idx,"unlock");
     pthread_mutex_unlock(&inner_lock);
 }
 void kmt_sem_init(sem_t *sem, const char *name, int value){
