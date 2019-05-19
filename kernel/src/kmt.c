@@ -183,8 +183,6 @@ void kmt_spin_unlock(spinlock_t *lk){
         }else{
             if(lk->reen==1){
                 lk->owner=-1;
-                intr_log("open");
-                intr_open();
                 //True but sometimes slow
                 detail_log(lk->log,lk->idx,"unlock");
                 pthread_mutex_unlock(&(lk->locked));
