@@ -220,11 +220,11 @@ void kmt_sem_wait(sem_t *sem){
     kmt->spin_lock(&(sem->lock));
     sem_log(sem,lock);
     --(sem->value);
-    if(sem->value>sem->capa){
+    /*if(sem->value>sem->capa){
         sem_remove_task(sem);
     }else if(sem->value<0){
         return sem_add_task(sem);
-    }
+    }*/
     sem_log(sem,unlock);
     kmt->spin_unlock(&(sem->lock));
 }
