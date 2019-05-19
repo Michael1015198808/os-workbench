@@ -9,6 +9,8 @@
 
 //#define sem_log(A,info,...) A->idx&=(1<<16)-1;A->idx+=sprintf(A->log+A->idx,"\n[cpu%d]%s:%d %s:%s %d",_cpu(),__func__,__LINE__,tasks[currents[_cpu()]]->name,  #info, A->value)
 
+#define log
+
 #ifndef sem_log
     #define sem_log(...) 
 #endif
@@ -67,6 +69,10 @@ typedef struct spinlock{
     pthread_mutex_t locked;
     char *name;
     uint8_t int_on;
+#ifdef log
+    int idx;
+    char log[66000];
+#endif
 }spinlock_t;
 
 typedef struct List{
