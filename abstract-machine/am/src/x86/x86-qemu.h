@@ -64,7 +64,7 @@ void othercpu_halt();
     if (name##_lock_flags[_cpu()]) sti(); \
   }
 
-#define RANGE(st, ed) (_Area) { .start = (void *)st, .end = (void *)ed }
+#define RANGE(st, ed) (_Area) { .start = (void *)(st), .end = (void *)(ed) }
 static inline int in_range(void *ptr, _Area area) {
   return area.start <= ptr && ptr < area.end;
 }

@@ -70,6 +70,7 @@ static void hello() {
 }
 
 static void os_run() {
+    _trace_on(_TRACE_ALL);
     /*if(_cpu()==0){
         printf("%d\n",*(int*)0);
     }*/

@@ -117,8 +117,10 @@ int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), void *a
     task->cpu=-1;
     copy_name(task->name,name);
 
-    task->context = *_kcontext(
-            (_Area){(void*)task->stack,&(task->stack_end)}, entry, arg);
+    task->context = *_kcontext(RANGE(task->stack,tasks->stack_end),entry,arg)
+                    /*
+                     *_kcontext(
+            (_Area){(void*)task->stack,&(task->stack_end)}, entry, arg);*/
 #ifdef TASK_FENCE
     for(int i=0;i<4;++i){
         task->fence1[i]=0x13579ace;
