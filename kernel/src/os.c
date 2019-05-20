@@ -71,6 +71,7 @@ static void hello() {
 }
 
 static void os_run() {
+    printf("%s:%d[cpu:%d]intr:%d\n",__FILE__,__LINE__,_cpu(),_intr_read());
     _trace_on(_TRACE_ALL);
     /*if(_cpu()==0){
         printf("%d\n",*(int*)0);
