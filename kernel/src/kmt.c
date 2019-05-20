@@ -5,7 +5,7 @@
     dest=pmm->alloc(strlen(src)+1); \
     memcpy(dest,src,strlen(src)+1);
 
-static task_t *tasks[20]={};
+task_t *tasks[20]={};
 //static spinlock_t tasks_lk;
 static pthread_mutex_t tasks_lk;
 int tasks_idx=0,tasks_old=0;
