@@ -1,6 +1,9 @@
 #include "klib.h"
 
-int ncli[4]={},ori[4]={};
+#include "../am/src/x86/x86-qemu.h"
+//Only for the macro MAX_CPU
+
+int ncli[MAX_CPU]={},ori[MAX_CPU]={};
 char intr_log_[66000];
 pthread_mutex_t log_lk=PTHREAD_MUTEX_INITIALIZER;
 int intr_idx_=0;

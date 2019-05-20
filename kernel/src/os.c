@@ -22,7 +22,7 @@ sem_t echo_sem;
 void echo_test(void *arg){
     _intr_write(0);
     while(1){
-        printf("%c%d",((char*)arg)[0],_intr_read());
+        printf("%c",((char*)arg)[0]);
         kmt->sem_wait(&echo_sem);
         _yield();
     }
@@ -31,9 +31,9 @@ void sem_test(void *arg){
     _intr_write(0);
     while(1){
         //printf("loop\n");
-        printf("~%d",_intr_read());
+        printf("~");
         kmt->sem_signal(&echo_sem);
-        printf("~%d",_intr_read());
+        printf("~");
         kmt->sem_signal(&echo_sem);
         //while(1);
         _yield();
