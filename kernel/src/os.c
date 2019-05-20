@@ -71,7 +71,7 @@ static void os_run() {
     /*if(_cpu()==0){
         printf("%d\n",*(int*)0);
     }*/
-    _intr_write(0);
+    _intr_write(1);
     while(1);
     hello();
     while (1) {
