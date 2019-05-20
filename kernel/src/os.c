@@ -92,8 +92,8 @@ static _Context *os_trap(_Event ev, _Context *context) {
     _Context *ret = context;
     switch_flag[_cpu()]=0;
     extern task_t *tasks[20];
-    intr_close();
     intr_log("close");
+    intr_close();
 
     for(struct irq *handler=irq_guard.next;
         handler!=&irq_guard;
