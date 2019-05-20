@@ -20,7 +20,7 @@ static irq_handler irq_guard={
 
 sem_t echo_sem;
 void echo_test(void *arg){
-    intr_close();
+    _intr_write(0);
     while(1){
         printf("%c%d",((char*)arg)[0],_intr_read());
         kmt->sem_wait(&echo_sem);
@@ -28,7 +28,7 @@ void echo_test(void *arg){
     }
 }
 void sem_test(void *arg){
-    intr_write(0);
+    _intr_write(0);
     while(1){
         //printf("loop\n");
         printf("~%d",_intr_read());
