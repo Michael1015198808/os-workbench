@@ -1,4 +1,5 @@
 #include <common.h>
+#include <amtrace.h>
 #include <klib.h>
 
 typedef struct irq{
