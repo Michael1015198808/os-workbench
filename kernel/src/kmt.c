@@ -86,7 +86,7 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
         //current=rand()%tasks_cnt;
         ++current;
         current%=tasks_cnt;
-    }while(current%_ncpu()!=cpu_id);//(tasks[current]->cpu!=cpu_id&&tasks[current]->cpu>=0);
+    }/*while(current%_ncpu()!=cpu_id);*/(tasks[current]->cpu!=cpu_id&&tasks[current]->cpu>=0);
     //printf(" %d ",tasks_cnt);
     tasks[current]->cpu=cpu_id;
     //log("context switch to (%d)%s\n",current,tasks[current]->name);
@@ -228,16 +228,16 @@ static void sem_remove_task(sem_t *sem){
 }
 
 void kmt_sem_wait(sem_t *sem){
-    (void)sem_remove_task;
-    (void)sem_add_task;
     intr_close();
     kmt->spin_lock(&(sem->lock));
     --(sem->value);
+
     if(sem->value>sem->capa){
         sem_remove_task(sem);
     }else if(sem->value<0){
         return sem_add_task(sem);
     }
+
     kmt->spin_unlock(&(sem->lock));
     intr_open();
 }
@@ -245,15 +245,17 @@ void kmt_sem_signal(sem_t *sem){
     intr_close();
     kmt->spin_lock(&(sem->lock));
     ++(sem->value);
+
     /*
     if(sem->value>sem->capa){
-        log("seg->value>sem->capa\n");
-        while(1);
+        while(1)
+            log("seg->value>sem->capa\n");
         return sem_add_task(sem);
     }else if(sem->value<=0){
         sem_remove_task(sem);
     }
     */
+
     kmt->spin_unlock(&(sem->lock));
     intr_open();
 }
