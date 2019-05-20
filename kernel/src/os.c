@@ -114,6 +114,7 @@ static _Context *os_trap(_Event ev, _Context *context) {
     if(ret==NULL){
         log("\nswitch:(%d)\n",switch_flag[_cpu()]);
     };
+    log("intr:%d\n",_intr_read());
     return ret;
 }
 
