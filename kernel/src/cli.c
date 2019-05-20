@@ -3,6 +3,7 @@
 
 int ncli[4]={},ori[4]={};
 char intr_log_[66000];
+pthread_mutex_t log_lk=PTHREAD_MUTEX_INITIALIZER;
 int intr_idx_=0;
 void intr_close(){
     int cpu_id=_cpu();
