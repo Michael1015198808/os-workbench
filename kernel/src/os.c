@@ -95,7 +95,6 @@ static _Context *os_trap(_Event ev, _Context *context) {
     //log("intr:%d\n",_intr_read());
     _Context *ret = context;
     switch_flag[_cpu()]=0;
-    extern task_t *tasks[20];(void)tasks;
     intr_log("close");
     intr_close();
 

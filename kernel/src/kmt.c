@@ -87,9 +87,7 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
         ++current;
         current%=tasks_cnt;
     }while/*(current%_ncpu()!=cpu_id);*/(tasks[current]->cpu!=cpu_id&&tasks[current]->cpu>=0);
-    //printf(" %d ",tasks_cnt);
     tasks[current]->cpu=cpu_id;
-    //log("context switch to (%d)%s\n",current,tasks[current]->name);
     tasks[old]->cpu=-1;
     trace_pthread_mutex_unlock(&tasks_lk);
     for(int i=0;i<4;++i){
