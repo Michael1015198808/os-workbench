@@ -28,9 +28,11 @@ void echo_test(void *arg){
 void sem_test(void *arg){
     while(1){
         //printf("loop\n");
-        printf("~");
+        printf("~1");
         kmt->sem_signal(&echo_sem);
+        printf("~2");
         kmt->sem_signal(&echo_sem);
+        printf("~3");
         kmt->sem_signal(&echo_sem);
         //while(1);
         _yield();
