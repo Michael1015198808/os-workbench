@@ -103,8 +103,6 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
 void kmt_init(void){
     os->on_irq(INT_MIN, _EVENT_NULL, kmt_context_save);
     os->on_irq(INT_MAX, _EVENT_NULL, kmt_context_switch);
-    (void)sem_remove_task;
-    (void)sem_add_task;
     //kmt->spin_init(&tasks_lk, "tasks-lock");
 }
 int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), void *arg){
@@ -262,6 +260,8 @@ void kmt_sem_signal(sem_t *sem){
 
     kmt->spin_unlock(&(sem->lock));
     intr_open();
+    (void)sem_remove_task;
+    (void)sem_add_task;
 }
 MODULE_DEF(kmt) {
   .init        =kmt_init,
