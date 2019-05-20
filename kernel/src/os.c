@@ -95,6 +95,8 @@ static _Context *os_trap(_Event ev, _Context *context) {
     /*pthread_mutex_lock(&irq_lk);
     irq_idx+=sprintf(irq_log+irq_idx,"[cpu%d]task%dlock\n",_cpu(),currents[_cpu()]);irq_idx&=(1<<16)-1;*/
     //log("intr:%d\n",_intr_read());
+    printf("%s:%d[cpu:%d]intr:%d\n",__FILE__,__LINE__,_cpu(),_intr_read());
+    while(1);
     _Context *ret = context;
     switch_flag[_cpu()]=0;
     extern task_t *tasks[20];(void)tasks;
