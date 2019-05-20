@@ -172,11 +172,11 @@ inline static int vsnprintf_real(char *out, size_t n, const char *fmt, va_list a
 
 //work as a wrapper 
 static int vsnprintf(char *out, size_t n, const char *fmt, va_list ap){
-    /*static pthread_mutex_t io_lk=PTHREAD_MUTEX_INITIALIZER;
+    static pthread_mutex_t io_lk=PTHREAD_MUTEX_INITIALIZER;
     pthread_mutex_lock(&io_lk);
     int ret=vsnprintf_real(out,n,fmt,ap);
     pthread_mutex_unlock(&io_lk);
-    return ret;*/
-    return vsnprintf_real(out,n,fmt,ap);
+    return ret;
+    //return vsnprintf_real(out,n,fmt,ap);
 }
 #endif
