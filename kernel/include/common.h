@@ -15,7 +15,7 @@
     #define sem_log(...) 
 #endif
 
-#define intr_log(info) {int cpu_id=_cpu();(intr_idx_+=sprintf(intr_log_+intr_idx_[cpu_id],"\n [cpu%d]%s:%d %s(%d):%s %d",cpu_id,__FILE__,__LINE__,tasks[currents[cpu_id]]->name,currents[cpu_id],info,ncli[cpu_id]));intr_idx_[cpu_id]&=(1<<16)-1;}
+#define intr_log(info) {int cpu_id=_cpu();(intr_idx_+=sprintf(intr_log_+intr_idx_,"\n [cpu%d]%s:%d %s(%d):%s %d",cpu_id,__FILE__,__LINE__,tasks[currents[cpu_id]]->name,currents[cpu_id],info,ncli[cpu_id]));intr_idx_[cpu_id]&=(1<<16)-1;}
 #define detail_log(_log,_idx,info) \
     do{ \
         int cpu_id=_cpu(),_old=_idx; \
