@@ -151,12 +151,15 @@ void kmt_spin_lock(spinlock_t *lk){
             }else{
                 while(lk->locked){
                     pthread_mutex_unlock(&inner_lock);
+                    /*
                     intr_log("open");
                     intr_open();
                     _yield();
                     //while(1);
                     intr_close();
                     intr_log("close");
+                    */
+                    for(volatile int i=0;i<10000;++i);
                     pthread_mutex_lock(&inner_lock);
                 };
             }
