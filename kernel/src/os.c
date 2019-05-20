@@ -120,7 +120,7 @@ static _Context *os_trap(_Event ev, _Context *context) {
         log("\nswitch:(%d)\n",switch_flag[_cpu()]);
     };
     //log("intr:%d\n",_intr_read());
-    printf("%s:%d[cpu:%d]intr:%d\n",__FILE__,__LINE__,_cpu(),_intr_read());while(1);
+    printf("%s:%d[cpu:%d]intr:%d\n",__FILE__,__LINE__,_cpu(),_intr_read());
     return ret;
 }
 
