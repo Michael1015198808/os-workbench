@@ -72,6 +72,7 @@ static void os_run() {
         printf("%d\n",*(int*)0);
     }*/
     _intr_write(0);
+    while(1);
     hello();
     while (1) {
         _yield();
