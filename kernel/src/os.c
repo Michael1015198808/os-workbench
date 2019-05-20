@@ -32,8 +32,6 @@ void sem_test(void *arg){
         kmt->sem_signal(&echo_sem);
         printf("~2");
         kmt->sem_signal(&echo_sem);
-        printf("~3");
-        kmt->sem_signal(&echo_sem);
         //while(1);
         _yield();
     }
@@ -48,7 +46,7 @@ static void os_init() {
     kmt->create(pmm->alloc(sizeof(task_t)),"echo-test:m",echo_test,"m");
     kmt->create(pmm->alloc(sizeof(task_t)),"echo-test:s",echo_test,"s");
     kmt->create(pmm->alloc(sizeof(task_t)),"echo-test:l",echo_test,"l");
-    kmt->sem_init(&echo_sem,"echo-sem",100);
+    kmt->sem_init(&echo_sem,"echo-sem",3);
     log("Os init finished\n");
     //kmt->create(pmm->alloc(sizeof(task_t)), "print", echo_task, "tty1");
     //kmt->create(pmm->alloc(sizeof(task_t)), "print", echo_task, "tty2");
