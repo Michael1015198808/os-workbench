@@ -31,7 +31,7 @@
     int intr_idx_;
     pthread_mutex_t log_lk;
 #else
-    #define intr_log()
+    #define intr_log(...)
 #endif
 
 #define TASK_FENCE
