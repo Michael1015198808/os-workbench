@@ -231,8 +231,8 @@ static void sem_remove_task(sem_t *sem){
 }
 
 void kmt_sem_wait(sem_t *sem){
-    intr_close();
     intr_log("close");
+    intr_close();
     kmt->spin_lock(&(sem->lock));
     --(sem->value);
 
@@ -249,8 +249,8 @@ void kmt_sem_wait(sem_t *sem){
     intr_open();
 }
 void kmt_sem_signal(sem_t *sem){
-    intr_close();
     intr_log("close");
+    intr_close();
     kmt->spin_lock(&(sem->lock));
     ++(sem->value);
 
