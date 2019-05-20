@@ -140,7 +140,7 @@ static int inner_idx=0;
 void kmt_spin_lock(spinlock_t *lk){
     int cpu_id=_cpu();(void)cpu_id;
     pthread_mutex_lock(&inner_lock);
-    detail_log(inner_log,inner_idx,"lock");
+    /*
     while(1){
         if(lk->locked){
             if(lk->owner==_cpu()){
@@ -149,21 +149,18 @@ void kmt_spin_lock(spinlock_t *lk){
             }else{
                 while(lk->locked){
                     pthread_mutex_unlock(&inner_lock);
-                    /*
                     intr_log("open");
                     intr_open();
                     _yield();
                     //while(1);
                     intr_close();
                     intr_log("close");
-                    */
                     for(volatile int i=0;i<10000;++i);
                     pthread_mutex_lock(&inner_lock);
                 };
             }
         }
         pthread_mutex_lock(&lk->locked);
-        detail_log(lk->log,lk->idx,"lock");
         lk->reen=1;
         lk->owner=_cpu();
         /*
@@ -172,12 +169,12 @@ void kmt_spin_lock(spinlock_t *lk){
         */
         break;
     }//Use break to release lock and restore intr
-    detail_log(inner_log,inner_idx,"unlock");
+    */
     pthread_mutex_unlock(&inner_lock);
 }
 void kmt_spin_unlock(spinlock_t *lk){
     pthread_mutex_lock(&inner_lock);
-    detail_log(inner_log,inner_idx,"lock");
+    /*
     if(lk->locked){
         if(lk->owner!=_cpu()){
             log("Lock[%s] isn't holded by this CPU!\n",lk->name);
@@ -185,7 +182,6 @@ void kmt_spin_unlock(spinlock_t *lk){
             if(lk->reen==1){
                 lk->owner=-1;
                 //True but sometimes slow
-                detail_log(lk->log,lk->idx,"unlock");
                 pthread_mutex_unlock(&(lk->locked));
             }else{
                 --lk->reen;
@@ -194,7 +190,7 @@ void kmt_spin_unlock(spinlock_t *lk){
     }else{
         Assert(0,"Lock[%s] isn't locked!\n",lk->name);
     }
-    detail_log(inner_log,inner_idx,"unlock");
+    */
     pthread_mutex_unlock(&inner_lock);
 }
 void kmt_sem_init(sem_t *sem, const char *name, int value){
