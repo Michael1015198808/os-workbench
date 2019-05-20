@@ -30,8 +30,8 @@
     char intr_log_[66000];
     int intr_idx_;
     pthread_mutex_t log_lk;
-#elif
-#define intr_log 
+#else
+    #define intr_log 
 #endif
 
 #define TASK_FENCE
