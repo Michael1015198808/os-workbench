@@ -91,6 +91,7 @@ static _Context *os_trap(_Event ev, _Context *context) {
     irq_idx+=sprintf(irq_log+irq_idx,"[cpu%d]task%dlock\n",_cpu(),currents[_cpu()]);irq_idx&=(1<<16)-1;*/
     _Context *ret = context;
     switch_flag[_cpu()]=0;
+    extern task_t *tasks[20];
     intr_close();
     intr_log("close");
 
