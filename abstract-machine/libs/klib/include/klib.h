@@ -90,3 +90,8 @@ void pthread_mutex_unlock(pthread_mutex_t* locked);
 #endif
 
 #endif
+
+//Below is my functions.
+//cli.c
+void intr_close();
+void intr_open();

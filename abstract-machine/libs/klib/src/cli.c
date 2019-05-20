@@ -1,5 +1,4 @@
-#include <klib.h>
-#include <common.h>
+#include "klib.h"
 
 int ncli[4]={},ori[4]={};
 char intr_log_[66000];

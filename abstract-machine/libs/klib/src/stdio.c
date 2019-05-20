@@ -13,14 +13,13 @@ int printf(const char *fmt, ...) {
     assert(n<MAX);
 #undef MAX
     static pthread_mutex_t putc_lock=PTHREAD_MUTEX_INITIALIZER;
-    int intr=_intr_read();
-    _intr_write(0);
+    intr_close();
     pthread_mutex_lock(&putc_lock);
     for(i=0;i<n;++i){
         _putc(buf[i]);
     }
     pthread_mutex_unlock(&putc_lock);
-    _intr_write(intr);
+    intr_open();
     return i;
 }
 
