@@ -26,6 +26,7 @@ void echo_test(void *arg){
     }
 }
 void sem_test(void *arg){
+    intr_close();
     while(1){
         //printf("loop\n");
         printf("~%d",_intr_read());
