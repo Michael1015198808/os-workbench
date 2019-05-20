@@ -92,6 +92,19 @@ void pthread_mutex_unlock(pthread_mutex_t* locked);
 #endif
 
 //Below is my functions.
-//cli.c
+//intr.c
 void intr_close();
 void intr_open();
+
+#define log(fmt,...) printf("[cpu%d]%s %3d:\n    " fmt,_cpu(),__FILE__,__LINE__,##__VA_ARGS__)
+#define Assert(cond,...) \
+    do { \
+      if(!(cond)){ \
+        printf("\33[1;31m"); \
+        log("Assertion " #cond " fails!\n" __VA_ARGS__); \
+        printf("\33[0m"); \
+        _halt(0); \
+      } \
+    }while(0)
+
+
