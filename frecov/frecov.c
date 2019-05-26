@@ -18,13 +18,13 @@
 #include <time.h>
 #include <unistd.h>
 int main(int argc, char *argv[]) {
-    int fd = open("./test_file", O_RDWR);
+    int fd = open("./fs.img", O_RDONLY, 123,123);
     struct stat st;
     fstat(fd, &st);
-    uint8_t *byte_ptr = mmap(NULL, st.st_size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+    uint8_t *byte_ptr = mmap(NULL, st.st_size, PROT_READ , MAP_SHARED, fd, 0);
 
     // read a byte from the file
-    for(int i=0;i<15;++i){
+    for(int i=0;i<25;++i){
         putchar(byte_ptr[i]);
     }
 
