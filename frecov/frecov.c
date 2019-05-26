@@ -24,7 +24,6 @@ int main(int argc, char *argv[]) {
     uint8_t *byte_ptr = mmap(NULL, st.st_size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
 
     // read a byte from the file
-    uint8_t byte = byte_ptr[12];
     for(int i=0;i<15;++i){
         putchar(byte_ptr[i]);
     }
