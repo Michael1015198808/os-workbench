@@ -20,8 +20,8 @@
 typedef union bmp{
     uint8_t info[0];
     
-    struct __attribute((aligned(1))){
-        struct{
+    struct{
+        struct __attribute((aligned(1))){
             uint16_t type;
             uint32_t size;
             uint16_t unused[2];
