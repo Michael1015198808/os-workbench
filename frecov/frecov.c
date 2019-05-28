@@ -34,8 +34,7 @@ typedef union bmp{
         //Bitmap file header
         pstruct{
             uint32_t size;
-            uint16_t width;
-            uint16_t height;
+            uint32_t width,height;
             uint16_t planes;
             uint16_t bit_per_pixel;
         }dibh;
@@ -50,10 +49,8 @@ int main(int argc, char *argv[]) {
     uint8_t *fs = mmap(NULL, st.st_size, PROT_READ , MAP_SHARED, fd, 0);
 
     bmp_t *volatile bp=(void*)fs;
-    printf("%d,%d\n",bp->dibh.width,bp->dibh.height);
-    for(int i=0;i<st.st_size;i+=2){
-        printf("%02x%02x ",fs[i],fs[i+1]);
-        if((i&15)==14)puts("");
+    for(int i=0;i<bp->dibh.width*bp->dibh.height;++i){
+        putchar(fs[bp->bfh.offset]);
     }
     while(1);//Do things using gdb
     /*
