@@ -20,7 +20,7 @@
 typedef struct bmp{
     int height,weight;
 }bmp_t;
-_Static_assert(0,"test");
+_Static_assert(1,"test");
 int main(int argc, char *argv[]) {
     int fd = open("./fs.img", O_RDONLY);
     struct stat st;
