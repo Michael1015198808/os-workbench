@@ -20,7 +20,7 @@
 
 #define offset_of(member,struct) ((uintptr_t)&(((struct*)0)->member))
 #define pstruct struct __attribute__((packed))
-#define my_cmp(pat, ptr) strncmp(pat,ptr,sizeof(pat))
+#define my_cmp(pat, ptr) strncmp(pat,(const char*)ptr,sizeof(pat))
 typedef union bmp{
     uint8_t info[0];
     
@@ -34,25 +34,34 @@ typedef union bmp{
         //Bitmap file header
         pstruct{
             uint32_t size;
-            uint16_t width,height,planes,bit_per_pixel;
+            uint16_t width;
+            uint16_t height;
+            uint16_t planes;
+            uint16_t bit_per_pixel;
         }dibh;
         //DIB header
     };
 }bmp_t;
 _Static_assert(offset_of(dibh,bmp_t)==14,"Offset of DIB header is wrong!");
 int main(int argc, char *argv[]) {
-    printf("%d\n",(int)offset_of(dibh,bmp_t));
-    return 0;
-    int fd = open("./fs.img", O_RDONLY);
+    int fd = open("./header.bmp", O_RDONLY);
     struct stat st;
     fstat(fd, &st);
     uint8_t *fs = mmap(NULL, st.st_size, PROT_READ , MAP_SHARED, fd, 0);
 
-    // read a byte from the file
-    for(uint64_t i=0;i<st.st_size;i+=0x100){
-        if(my_cmp("BM",fs+i));
+    bmp_t *bp=(void*)fs;
+    printf("%d,%d\n",bp->dibh.width,bp->dibh.height);
+    for(int i=0;i<st.st_size;++i){
+        printf("%2x ",fs[i]);
     }
-
+    while(1);//Do things using gdb
+    /*
+    for(uint64_t i=0;i<st.st_size;i+=0x100){
+        if(!my_cmp("BM",fs+i)){
+            //TODO: fancy thing!
+        };
+    }
+    */
     close(fd);
     return 0;
 }

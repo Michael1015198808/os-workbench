@@ -4,3 +4,9 @@ all: $(NAME)-64 $(NAME)-32
 
 include ../Makefile
 include ../Makefile.lab
+.PHONY: run
+BITS := 64
+run:all
+	./$(NAME)-$(BITS)
+gdb:all
+	gdb ./$(NAME)-$(BITS)
