@@ -19,6 +19,7 @@
 #include <unistd.h>
 typedef struct bmp{
     int height,weight;
+_Static_assert(0,"test");
 }bmp_t;
 _Static_assert(1,"test");
 int main(int argc, char *argv[]) {
