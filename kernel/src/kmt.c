@@ -99,7 +99,6 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
     return &tasks[current]->context;
 }
 void kmt_init(void){
-    (void)tasks_log;
     os->on_irq(INT_MIN, _EVENT_NULL, kmt_context_save);
     os->on_irq(INT_MAX, _EVENT_NULL, kmt_context_switch);
     //kmt->spin_init(&tasks_lk, "tasks-lock");
@@ -136,8 +135,8 @@ void kmt_spin_init(spinlock_t *lk, const char *name){
     copy_name(lk->name,name);
 }
 static pthread_mutex_t inner_lock=PTHREAD_MUTEX_INITIALIZER;
-static char inner_log[66000];
-static int inner_idx=0;
+//static char inner_log[66000];
+//static int inner_idx=0;
 void kmt_spin_lock(spinlock_t *lk){
     int cpu_id=_cpu();(void)cpu_id;
     pthread_mutex_lock(&inner_lock);
