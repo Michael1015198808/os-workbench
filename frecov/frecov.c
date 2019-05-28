@@ -37,7 +37,7 @@ typedef union bmp{
 #define offset_of(member,struct) ((uintptr_t)&(((struct*)0)->member))
 //_Static_assert(offset_of(dibh,bmp_t)==14,"Offset of DIB header is wrong!");
 int main(int argc, char *argv[]) {
-    printf("%d\n",offset_of(dibh,bmp_t));
+    printf("%d\n",(int)offset_of(dibh,bmp_t));
     return 0;
     int fd = open("./fs.img", O_RDONLY);
     struct stat st;
