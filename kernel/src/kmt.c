@@ -99,6 +99,7 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
     return &tasks[current]->context;
 }
 void kmt_init(void){
+    (void)tasks_log;
     os->on_irq(INT_MIN, _EVENT_NULL, kmt_context_save);
     os->on_irq(INT_MAX, _EVENT_NULL, kmt_context_switch);
     //kmt->spin_init(&tasks_lk, "tasks-lock");
