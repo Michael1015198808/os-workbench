@@ -19,7 +19,8 @@
 #include <unistd.h>
 typedef union bmp{
     uint8_t info[0];
-    struct{
+    
+    struct __attribute((aligned(1))){
         struct{
             uint16_t type;
             uint32_t size;
@@ -34,8 +35,10 @@ typedef union bmp{
     };
 }bmp_t;
 #define offset_of(member,struct) ((uintptr_t)&(((struct*)0)->member))
-_static_assert(offset_of(dibh,bmp_t)==14,"Offset of DIB header is wrong!(%d)",offset_of(dibh,bmp_t));
+//_Static_assert(offset_of(dibh,bmp_t)==14,"Offset of DIB header is wrong!");
 int main(int argc, char *argv[]) {
+    printf("%d\n",offset_of(dibh,bmp_t));
+    return 0;
     int fd = open("./fs.img", O_RDONLY);
     struct stat st;
     fstat(fd, &st);
