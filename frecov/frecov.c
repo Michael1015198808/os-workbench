@@ -49,8 +49,8 @@ int main(int argc, char *argv[]) {
     uint8_t *fs = mmap(NULL, st.st_size, PROT_READ , MAP_SHARED, fd, 0);
 
     bmp_t *volatile bp=(void*)fs;
-    for(int i=0;i<bp->dibh.width*bp->dibh.height;++i){
-        putchar(fs[bp->bfh.offset]);
+    for(int i=0;i<(bp->dibh.width*bp->dibh.height);++i){
+        putchar(fs[bp->bfh.offset+i]);
     }
     while(1);//Do things using gdb
     /*
