@@ -17,15 +17,19 @@
 #include <sys/wait.h>
 #include <time.h>
 #include <unistd.h>
+typedef struct bmp{
+    int height,weight;
+}bmp_t;
+_static_assert(0,"test");
 int main(int argc, char *argv[]) {
-    int fd = open("./fs.img", O_RDONLY, 123,123);
+    int fd = open("./fs.img", O_RDONLY);
     struct stat st;
     fstat(fd, &st);
-    uint8_t *byte_ptr = mmap(NULL, st.st_size, PROT_READ , MAP_SHARED, fd, 0);
+    uint8_t *image = mmap(NULL, st.st_size, PROT_READ , MAP_SHARED, fd, 0);
 
     // read a byte from the file
-    for(int i=0;i<25;++i){
-        putchar(byte_ptr[i]);
+    for(uint64_t i=0;i<st.st_size;++i){
+        putchar(image[i]);
     }
 
     close(fd);
