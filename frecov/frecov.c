@@ -17,11 +17,24 @@
 #include <sys/wait.h>
 #include <time.h>
 #include <unistd.h>
-typedef struct bmp{
-    int height,weight;
-_Static_assert(0,"test");
+typedef union bmp{
+    uint8_t info[0];
+    struct{
+        struct{
+            uint16_t type;
+            uint32_t size;
+            uint16_t unused[2];
+            uint32_t offset;
+        }bfh;
+        //Bitmap file header
+        struct{
+            
+        }dibh;
+        //DIB header
+    };
 }bmp_t;
-_Static_assert(1,"test");
+#define offset_of(member,struct) ((uintptr_t)&(((struct*)0)->member))
+_Static_assert(offset_of(dibh,bmp_t)==14,"Offset of DIB header is wrong!");
 int main(int argc, char *argv[]) {
     int fd = open("./fs.img", O_RDONLY);
     struct stat st;
