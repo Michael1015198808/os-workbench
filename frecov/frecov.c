@@ -52,8 +52,8 @@ int main(int argc, char *argv[]) {
     bmp_t *bp=(void*)fs;
     printf("%d,%d\n",bp->dibh.width,bp->dibh.height);
     for(int i=0;i<st.st_size;i+=2){
-        printf("%2x%2x ",fs[i],fs[i+1]);
-        if(!(i&15))puts("");
+        printf("%02x%02x ",fs[i],fs[i+1]);
+        if(i&15==14)puts("");
     }
     while(1);//Do things using gdb
     /*
