@@ -47,20 +47,19 @@ void show(){
 }
 
 
-static int add_task(task_t *task){
+static void add_task(task_t *task){
     trace_pthread_mutex_lock(&tasks_lk);
     tasks[tasks_cnt++]=task;
     trace_pthread_mutex_unlock(&tasks_lk);
-    return tasks_cnt-1;
 }
-void remove_task(){
+static void remove_task(){
     int cpu_id=_cpu();
     trace_pthread_mutex_lock(&tasks_lk);
     //log("%d %d\n",currents[_cpu()],tasks_cnt);
     void *tmp=tasks[current];
     tasks[current]=tasks[tasks_cnt-1];
     tasks[tasks_cnt-1]=tmp;
-    current=--tasks_cnt;
+    current=-1;
     trace_pthread_mutex_unlock(&tasks_lk);
 }
 static _Context* kmt_context_save(_Event ev, _Context *c){
@@ -226,13 +225,9 @@ void kmt_sem_wait(sem_t *sem){
     kmt->spin_lock(&(sem->lock));
     --(sem->value);
 
-    /*
-    if(sem->value>sem->capa){
-        sem_remove_task(sem);
-    }else if(sem->value<0){
+    if(sem->value<0){
         return sem_add_task(sem);
     }
-    */
 
     kmt->spin_unlock(&(sem->lock));
 }
@@ -240,15 +235,9 @@ void kmt_sem_signal(sem_t *sem){
     kmt->spin_lock(&(sem->lock));
     ++(sem->value);
 
-    /*
-    if(sem->value>sem->capa){
-        while(1)
-            log("seg->value>sem->capa\n");
-        return sem_add_task(sem);
-    }else if(sem->value<=0){
+    if(sem->value<=0){
         sem_remove_task(sem);
     }
-    */
 
     kmt->spin_unlock(&(sem->lock));
     (void)sem_remove_task;
