@@ -49,7 +49,7 @@ int main(int argc, char *argv[]) {
     fstat(fd, &st);
     uint8_t *fs = mmap(NULL, st.st_size, PROT_READ , MAP_SHARED, fd, 0);
 
-    bmp_t (volatile*)bp=(void*)fs;
+    bmp_t *volatile bp=(void*)fs;
     printf("%d,%d\n",bp->dibh.width,bp->dibh.height);
     for(int i=0;i<st.st_size;i+=2){
         printf("%02x%02x ",fs[i],fs[i+1]);
