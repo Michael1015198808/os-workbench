@@ -52,7 +52,7 @@ void intr_open();
 typedef struct task{
     //int32_t id;
     int32_t cpu;
-    uint32_t attr;
+    uint8_t attr;
 #define TASK_RUNABLE 0
 #define TASK_SLEEP 1
 #define TASK_RUNNING 2
