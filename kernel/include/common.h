@@ -90,7 +90,7 @@ typedef struct List{
 #define POOL_LEN 20
 typedef struct semaphore {
     char *name;
-    int value,capa;
+    volatile int value;
     spinlock_t lock;
     task_t *pool[POOL_LEN];
     int head,tail;

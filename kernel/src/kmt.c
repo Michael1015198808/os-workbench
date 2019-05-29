@@ -196,7 +196,6 @@ void kmt_spin_unlock(spinlock_t *lk){
 void kmt_sem_init(sem_t *sem, const char *name, int value){
     copy_name(sem->name,name);
     sem->value=value;
-    sem->capa=1<<24;
     kmt->spin_init(&(sem->lock),name);
     sem->head=0;
     sem->tail=0;
