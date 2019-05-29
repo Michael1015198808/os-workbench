@@ -15,5 +15,5 @@ void show_attr(){
     for(i=1;i<tasks_cnt;++i){
         printf(",%d",tasks[i]->attr);
     }
-    putchar('\n');
+    _putc('\n');
 }
