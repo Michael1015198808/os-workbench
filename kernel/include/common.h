@@ -7,7 +7,6 @@
 #include <limits.h>
 #include <stdint.h>
 
-#define _MY_TRACE_H
 #include <my_trace.h>
 
 //#define sem_log(A,info,...) A->idx&=(1<<16)-1;A->idx+=sprintf(A->log+A->idx,"\n[cpu%d]%s:%d %s:%s %d",_cpu(),__func__,__LINE__,tasks[currents[_cpu()]]->name,  #info, A->value)
@@ -68,7 +67,7 @@ typedef struct semaphore {
     volatile int value;
     spinlock_t lock;
     task_t *pool[POOL_LEN];
-    int head,tail;
+    volatile int head,tail;
 #ifdef sem_log
     int idx;
     char log[66000];
