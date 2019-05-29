@@ -87,7 +87,7 @@ typedef struct List{
     struct List* next;
 }list_t;
 
-typdef struct semaphore {
+typedef struct semaphore {
     char *name;
     volatile int value,capa;
     spinlock_t lock;
