@@ -66,19 +66,24 @@ static _Context* kmt_context_save(_Event ev, _Context *c){
 }
 static _Context* kmt_context_switch(_Event ev, _Context *c){
     trace_pthread_mutex_lock(&tasks_lk);
-    int cpu_id=_cpu(),old=current;
+    int cpu_id=_cpu(),new=0;
     extern int *switch_flag;
     switch_flag[cpu_id]=1;
     //log("context switch from (%d)%s\n",current,tasks[current]->name);
+    new=current;
     do{
         //current=rand()%tasks_cnt;
-        ++current;
-        current%=tasks_cnt;
-    }while/*(current%_ncpu()!=cpu_id);*/(tasks[current]->attr);
-    tasks[current]->cpu=cpu_id;
-    set_flag(tasks[current]->attr,TASK_RUNNING);
+        ++new;
+        new%=tasks_cnt;
+    }while(tasks[new]->attr);
+
+    tasks[new]->cpu=cpu_id;
+    set_flag(tasks[new]->attr,TASK_RUNNING);
+
+    tasks[current]->cpu=-1;
     neg_flag(tasks[current]->attr,~TASK_RUNNING);
-    tasks[old]->cpu=-1;
+
+    current=new;
     trace_pthread_mutex_unlock(&tasks_lk);
     for(int i=0;i<4;++i){
         if(tasks[current]->fence1[i]!=0x13579ace||tasks[current]->fence2[i]!=0xeca97531){
@@ -197,6 +202,7 @@ static void sem_add_task(sem_t *sem){
     sem->pool[sem->tail++]=tasks[current];
     set_flag(tasks[current]->attr,TASK_SLEEP);
     kmt->spin_unlock(&(sem->lock));
+    if(sem->tail>POOL_LEN)sem->tail-=POOL_LEN;
     _yield();
 }
 
@@ -211,6 +217,7 @@ void kmt_sem_wait(sem_t *sem){
 }
 static void sem_remove_task(sem_t *sem){
     neg_flag(sem->pool[sem->head++]->attr,TASK_SLEEP);
+    if(sem->head>POOL_LEN)sem->head-=POOL_LEN;
 }
 void kmt_sem_signal(sem_t *sem){
     kmt->spin_lock(&(sem->lock));

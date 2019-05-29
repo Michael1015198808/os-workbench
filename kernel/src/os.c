@@ -33,10 +33,10 @@ void sem_test(void *arg){
     while(1){
         //printf("loop\n");
         printf("~");
-        if(sig)
+        //if(sig)
             kmt->sem_signal(&echo_sem);
         printf("~");
-        if(sig)
+        //if(sig)
             kmt->sem_signal(&echo_sem);
         //while(1);
         _yield();

@@ -87,11 +87,12 @@ typedef struct List{
     struct List* next;
 }list_t;
 
+#define POOL_LEN 20
 typedef struct semaphore {
     char *name;
     volatile int value,capa;
     spinlock_t lock;
-    task_t *pool[20];
+    task_t *pool[POOL_LEN];
     int head,tail;
 #ifdef sem_log
     int idx;
