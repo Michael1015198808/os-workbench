@@ -27,11 +27,11 @@ int currents[4]={-1,-1,-1,-1},tasks_cnt=0;
 #define current currents[cpu_id]
 
 void show_sem_list(sem_t *sem){
-    list_t *p;
+    int p;
     for(p=sem->head;p!=sem->tail;p=p->next){
-        printf("%s->",p->task->name);
+        printf("%s->",sem->pool[p]->name);
     }
-    printf("%s\n",p->task->name);
+    printf("%s->",sem->pool[p]->name);
 }
 
 void show(){
