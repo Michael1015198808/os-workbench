@@ -81,17 +81,17 @@ typedef union bpb{
         uint8_t sectors_per_cluster;
         uint16_t sectors_reserved;
         uint8_t fat_cnt;
-        uint8_t unused1[16];
+        uint8_t unused1[5];
         uint16_t sector_per_fat_low;
         uint8_t unused2[12];
         uint32_t sector_per_fat_high;
         uint8_t unused3[4];
         uint32_t start_cluster;
-        uint8_t unused_[31];
+        uint8_t unused_[42];
     };
 }bpb_t;
-_Static_assert(offset_of(sector_per_fat_low,bpb_t)==0x16,"Offset of sector_per_fat_low is wrong!");
-_Static_assert(offset_of(sector_per_fat_high,bpb_t)==0x24,"Offset of sector_per_fat_high is wrong!");
+_Static_assert(offset_of(sector_per_fat_low,bpb_t)==0x16-0xb,"Offset of sector_per_fat_low is wrong!");
+_Static_assert(offset_of(sector_per_fat_high,bpb_t)==0x24-0xb,"Offset of sector_per_fat_high is wrong!");
 _Static_assert(sizeof(bpb_t)>=79,"Size of bpb is wrong!");
 _Static_assert(sizeof(bpb_t)<=79,"Size of bpb is wrong!");
 inline uint32_t sector_per_fat(const bpb_t *p){
@@ -103,9 +103,6 @@ int main(int argc, char *argv[]) {
     struct stat st;
     fstat(fd, &st);
     const bpb_t *fs = 0xb+mmap(NULL, st.st_size, PROT_READ , MAP_SHARED, fd, 0);
-    printf("%llx\n",1LL*offset_of(sector_per_fat_high,bpb_t));
-    printf("%llx\n",1LL*fs->sector_per_fat_high);
-    return 0;
 
     (void)fs;
     entry_t *e=(entry_t*)(uintptr_t)(
