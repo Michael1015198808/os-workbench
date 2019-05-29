@@ -18,12 +18,13 @@
         _idx&=(1<<16)-1; \
     }while(0)
 
+#endif
+
+
 #ifdef intr_log
     char intr_log_[66000];
     int intr_idx_;
     pthread_mutex_t log_lk;
 #else
     #define intr_log(...)
-#endif
-
 #endif
