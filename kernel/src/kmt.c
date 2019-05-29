@@ -210,9 +210,9 @@ void kmt_sem_wait(sem_t *sem){
     kmt->spin_lock(&(sem->lock));
     --(sem->value);
 
-    /*if(sem->value<0){
+    if(sem->value<0){
         return sem_add_task(sem);
-    }*/
+    }
     kmt->spin_unlock(&(sem->lock));
 }
 static void sem_remove_task(sem_t *sem){
@@ -223,9 +223,9 @@ void kmt_sem_signal(sem_t *sem){
     kmt->spin_lock(&(sem->lock));
     ++(sem->value);
 
-    /*if(sem->value<=0){
+    if(sem->value<=0){
         sem_remove_task(sem);
-    }*/
+    }
     kmt->spin_unlock(&(sem->lock));
     (void)sem_add_task;
     (void)sem_remove_task;
