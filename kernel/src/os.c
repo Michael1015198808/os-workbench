@@ -82,7 +82,6 @@ static void os_run() {
 }
 
 /* For debug */
-int switch_flag[5];
 /*char irq_log[65600];
 int irq_idx=0;*/
 extern int* currents;
@@ -94,7 +93,6 @@ static _Context *os_trap(_Event ev, _Context *context) {
     irq_idx+=sprintf(irq_log+irq_idx,"[cpu%d]task%dlock\n",_cpu(),currents[_cpu()]);irq_idx&=(1<<16)-1;*/
     //log("intr:%d\n",_intr_read());
     _Context *ret = context;
-    switch_flag[_cpu()]=0;
     intr_log("close");
     intr_close();
 
@@ -114,7 +112,7 @@ static _Context *os_trap(_Event ev, _Context *context) {
     intr_log("open");
     intr_open();
     if(ret==NULL){
-        log("\nswitch:(%d)\n",switch_flag[_cpu()]);
+        log("\nkmt_context_switch returns NULL\n");
     };
     //log("intr:%d\n",_intr_read());
     return ret;
