@@ -27,17 +27,14 @@ void echo_test(void *arg){
         _yield();
     }
 }
-volatile int sig=0;
 void sem_test(void *arg){
     _intr_write(0);
     while(1){
         //printf("loop\n");
         printf("~");
-        if(sig)
-            kmt->sem_signal(&echo_sem);
+        kmt->sem_signal(&echo_sem);
         printf("~");
-        if(sig)
-            kmt->sem_signal(&echo_sem);
+        kmt->sem_signal(&echo_sem);
         //while(1);
         _yield();
     }
