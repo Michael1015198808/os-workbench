@@ -7,6 +7,7 @@ void print(char* s){
         _putc(*s);
     }while(*(++s));
 }
+task_t **tasks;
 int tasks_cnt;
 void show_attr(){
     int i;
