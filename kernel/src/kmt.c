@@ -201,12 +201,17 @@ void kmt_sem_init(sem_t *sem, const char *name, int value){
     sem->tail=0;
     //log("%s: %d",sem->name,sem->value);
 }
+char addrm_log[66000];
+uint16_t addrm_idx=0;
 static void sem_add_task(sem_t *sem){
     int cpu_id=_cpu();
+    addrm_idx+=sprintf(addrm_log+addrm_idx,"add:[%d]:%d",sem->tail,current);
+    
     sem->pool[sem->tail++]=tasks[current];
     set_flag(tasks[current]->attr,TASK_SLEEP);
-    kmt->spin_unlock(&(sem->lock));
     if(sem->tail>=POOL_LEN)sem->tail-=POOL_LEN;
+
+    kmt->spin_unlock(&(sem->lock));
     _yield();
 }
 
@@ -220,6 +225,8 @@ void kmt_sem_wait(sem_t *sem){
     kmt->spin_unlock(&(sem->lock));
 }
 static void sem_remove_task(sem_t *sem){
+    addrm_idx+=sprintf(addrm_log+addrm_idx,"remove:[%d]:%d",sem->head,currents[_cpu()]);
+
     neg_flag(sem->pool[sem->head++]->attr,TASK_SLEEP);
     if(sem->head>=POOL_LEN)sem->head-=POOL_LEN;
 }

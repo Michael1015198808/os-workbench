@@ -11,9 +11,9 @@ task_t **tasks;
 int tasks_cnt;
 void show_attr(){
     int i;
-    printf(",%d",tasks[0]->attr);
+    printf(",%d",(int)tasks[0]->attr);
     for(i=1;i<tasks_cnt;++i){
-        printf(",%d",tasks[i]->attr);
+        printf(",%d",(int)tasks[i]->attr);
     }
     _putc('\n');
 }
