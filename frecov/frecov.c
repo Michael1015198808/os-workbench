@@ -99,7 +99,7 @@ inline uint32_t sector_per_fat(const bpb_t *p){
 }
 
 int main(int argc, char *argv[]) {
-    printf("%lx\n",offset_of(sector_per_fat_high,bpb_t));
+    printf("%llx\n",1LL*offset_of(sector_per_fat_high,bpb_t));
     int fd = open("./test.img", O_RDONLY);
     struct stat st;
     fstat(fd, &st);
