@@ -99,6 +99,7 @@ inline uint32_t sector_per_fat(const bpb_t *p){
 }
 
 int main(int argc, char *argv[]) {
+    printf("%x\n",offset_of(sector_per_fat_high));
     int fd = open("./test.img", O_RDONLY);
     struct stat st;
     fstat(fd, &st);
@@ -110,9 +111,10 @@ int main(int argc, char *argv[]) {
                   fs->fat_cnt*sector_per_fat(fs)+
                   (fs->start_cluster-2)*fs->sectors_per_cluster )
                     *fs->bytes_per_sector);
-    while(1){
-        ++e;
-    }
+    printf("%p\n",e);
+    printf("%x\n",(unsigned)(0x100400-(uintptr_t)e)/fs->bytes_per_sector);
+    e=((void*)fs)+0x00100440;
+    printf("%lld\n",(e->clus_high*1LL<<16)+e->clus_low);
     close(fd);
     return 0;
 }
