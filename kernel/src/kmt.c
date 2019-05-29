@@ -217,7 +217,6 @@ static void sem_add_task(sem_t *sem){
 
     kmt->spin_unlock(&(sem->lock));
     _yield();
-    printf("[cpu%d](%d)From yield",cpu_id,current);
 }
 static void sem_remove_task(sem_t *sem){
     addrm_idx+=sprintf(addrm_log+addrm_idx,"remove:[%d]:%x",sem->head,sem->pool[sem->head]);
