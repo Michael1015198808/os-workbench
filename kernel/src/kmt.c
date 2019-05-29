@@ -206,7 +206,7 @@ static void sem_add_task(sem_t *sem){
     sem->pool[sem->tail++]=tasks[current];
     set_flag(tasks[current]->attr,TASK_SLEEP);
     kmt->spin_unlock(&(sem->lock));
-    if(sem->tail>POOL_LEN)sem->tail-=POOL_LEN;
+    if(sem->tail>=POOL_LEN)sem->tail-=POOL_LEN;
     _yield();
 }
 
@@ -221,7 +221,7 @@ void kmt_sem_wait(sem_t *sem){
 }
 static void sem_remove_task(sem_t *sem){
     neg_flag(sem->pool[sem->head++]->attr,TASK_SLEEP);
-    if(sem->head>POOL_LEN)sem->head-=POOL_LEN;
+    if(sem->head>=POOL_LEN)sem->head-=POOL_LEN;
 }
 void kmt_sem_signal(sem_t *sem){
     kmt->spin_lock(&(sem->lock));
