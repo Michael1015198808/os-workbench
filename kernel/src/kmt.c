@@ -225,7 +225,7 @@ void kmt_sem_wait(sem_t *sem){
     kmt->spin_unlock(&(sem->lock));
 }
 static void sem_remove_task(sem_t *sem){
-    addrm_idx+=sprintf(addrm_log+addrm_idx,"remove:[%d]:%d\n",sem->head,currents[_cpu()]);
+    addrm_idx+=sprintf(addrm_log+addrm_idx,"remove:[%d]:%d\n",sem->head,sem->pool[sem->head]);
 
     neg_flag(sem->pool[sem->head++]->attr,TASK_SLEEP);
     if(sem->head>=POOL_LEN)sem->head-=POOL_LEN;
