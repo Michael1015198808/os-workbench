@@ -20,8 +20,6 @@ char tasks_log[66000];
 
 /* tasks, tasks_cnt
  * shared by
- *   add_task
- *   remove_task
  *   kmt_context_save
  *   kmt_context_switch
  */
@@ -46,22 +44,6 @@ void show(){
     printf("\n");
 }
 
-
-static void add_task(task_t *task){
-    trace_pthread_mutex_lock(&tasks_lk);
-    tasks[tasks_cnt++]=task;
-    trace_pthread_mutex_unlock(&tasks_lk);
-}
-static void remove_task(){
-    int cpu_id=_cpu();
-    trace_pthread_mutex_lock(&tasks_lk);
-    //log("%d %d\n",currents[_cpu()],tasks_cnt);
-    void *tmp=tasks[current];
-    tasks[current]=tasks[tasks_cnt-1];
-    tasks[tasks_cnt-1]=tmp;
-    current=-1;
-    trace_pthread_mutex_unlock(&tasks_lk);
-}
 static _Context* kmt_context_save(_Event ev, _Context *c){
     //trace_pthread_mutex_lock(&tasks_lk);
     int cpu_id=_cpu();
@@ -85,8 +67,10 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
         //current=rand()%tasks_cnt;
         ++current;
         current%=tasks_cnt;
-    }while/*(current%_ncpu()!=cpu_id);*/(tasks[current]->cpu!=cpu_id&&tasks[current]->cpu>=0);
+    }while/*(current%_ncpu()!=cpu_id);*/(tasks[current]->attr);
     tasks[current]->cpu=cpu_id;
+    set_flag(tasks[current]->attr,TASK_RUNNING);
+    neg_flag(tasks[current]->attr,~TASK_RUNNING);
     tasks[old]->cpu=-1;
     trace_pthread_mutex_unlock(&tasks_lk);
     for(int i=0;i<4;++i){
@@ -109,9 +93,10 @@ int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), void *a
         return 0;
     }
     //task->id=tasks_cnt;
-    log("create (%d)%s\n",add_task(task),name);
+    log("create (%d)%s\n",tasks_cnt,name);
     Assert(tasks_cnt<LEN(tasks),"%d\n",tasks_cnt);
     task->cpu=-1;
+    task->state=RUNABLE;
     copy_name(task->name,name);
 
     task->context = *_kcontext(
@@ -195,30 +180,16 @@ void kmt_sem_init(sem_t *sem, const char *name, int value){
     sem->value=value;
     sem->capa=1<<24;
     kmt->spin_init(&(sem->lock),name);
-    sem->head=NULL;
-    sem->tail=pmm->alloc(sizeof(list_t));
+    sem->head=0;
+    sem->tail=0;
     //log("%s: %d",sem->name,sem->value);
 }
 static void sem_add_task(sem_t *sem){
     int cpu_id=_cpu();
-    sem->tail->next=pmm->alloc(sizeof(list_t));
-    sem->tail=sem->tail->next;
-    sem->tail->task=tasks[current];
-    sem->tail->next=NULL;
-    if(sem->head==NULL){
-        sem->head=sem->tail;
-    }
-    remove_task();
-    sem_log(sem,unlock);
+    sem->pool[sem->tail++]=tasks[current];
+    set_flag(tasks[current]->attr,TASK_SLEEP);
     kmt->spin_unlock(&(sem->lock));
     _yield();
-}
-static void sem_remove_task(sem_t *sem){
-    Assert(sem->head!=NULL);
-    add_task(sem->head->task);
-    void *tmp=sem->head;
-    sem->head=sem->head->next;
-    pmm->free(tmp);
 }
 
 void kmt_sem_wait(sem_t *sem){
@@ -228,8 +199,11 @@ void kmt_sem_wait(sem_t *sem){
     if(sem->value<0){
         return sem_add_task(sem);
     }
-
     kmt->spin_unlock(&(sem->lock));
+}
+static void sem_remove_task(sem_t *sem){
+    int cpu_id=_cpu();
+    neg_flag(taskssem->pool[sem->head++]->attr,TASK_SLEEP);
 }
 void kmt_sem_signal(sem_t *sem){
     kmt->spin_lock(&(sem->lock));
@@ -238,10 +212,7 @@ void kmt_sem_signal(sem_t *sem){
     if(sem->value<=0){
         sem_remove_task(sem);
     }
-
     kmt->spin_unlock(&(sem->lock));
-    (void)sem_remove_task;
-    (void)sem_add_task;
 }
 MODULE_DEF(kmt) {
   .init        =kmt_init,

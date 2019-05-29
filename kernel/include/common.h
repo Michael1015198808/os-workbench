@@ -8,6 +8,8 @@
 #include <stdint.h>
 
 //#define sem_log(A,info,...) A->idx&=(1<<16)-1;A->idx+=sprintf(A->log+A->idx,"\n[cpu%d]%s:%d %s:%s %d",_cpu(),__func__,__LINE__,tasks[currents[_cpu()]]->name,  #info, A->value)
+#define set_flag(A,B) A|=B
+#define neg_flag(A,B) A&=~B
 
 #define spinlock_log
 
@@ -50,6 +52,10 @@ void intr_open();
 typedef struct task{
     //int32_t id;
     int32_t cpu;
+    uint32_t attr;
+#define TASK_RUNABLE 0
+#define TASK_SLEEP 1
+#define TASK_RUNNING 2
     char* name;
     _Context context;
     //enum state{SLEEPING,WAITING,RUNNING}state;
@@ -80,16 +86,18 @@ typedef struct List{
     task_t* task;
     struct List* next;
 }list_t;
-struct semaphore {
+
+typdef struct semaphore {
     char *name;
     volatile int value,capa;
     spinlock_t lock;
-    list_t *head,*tail;
+    task_t *pool[20];
+    int head,tail;
 #ifdef sem_log
     int idx;
     char log[66000];
 #endif
-};
+}semaphore_t;
 #define LEN(arr) ((sizeof(arr) / sizeof(arr[0])))
 
 #define new(A) (typeof(A)*)pmm->alloc(sizeof(A))
