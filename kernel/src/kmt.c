@@ -81,7 +81,7 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
     set_flag(tasks[new]->attr,TASK_RUNNING);
 
     tasks[current]->cpu=-1;
-    neg_flag(tasks[current]->attr,~TASK_RUNNING);
+    neg_flag(tasks[current]->attr,TASK_RUNNING);
 
     current=new;
     trace_pthread_mutex_unlock(&tasks_lk);
