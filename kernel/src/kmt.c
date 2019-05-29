@@ -204,7 +204,7 @@ void kmt_sem_init(sem_t *sem, const char *name, int value){
 
 
 char addrm_log[66000];
-uint16_t addrm_idx=0;
+volatile uint16_t addrm_idx=0;
 
 static void sem_add_task(sem_t *sem){
     int cpu_id=_cpu();
@@ -217,6 +217,7 @@ static void sem_add_task(sem_t *sem){
 
     kmt->spin_unlock(&(sem->lock));
     _yield();
+    printf("[cpu%d](%d)From yield",cpu_id,current);
 }
 static void sem_remove_task(sem_t *sem){
     addrm_idx+=sprintf(addrm_log+addrm_idx,"remove:[%d]:%x",sem->head,sem->pool[sem->head]);
