@@ -7,58 +7,31 @@
 #include <limits.h>
 #include <stdint.h>
 
+#include <my_trace.h>
 //#define sem_log(A,info,...) A->idx&=(1<<16)-1;A->idx+=sprintf(A->log+A->idx,"\n[cpu%d]%s:%d %s:%s %d",_cpu(),__func__,__LINE__,tasks[currents[_cpu()]]->name,  #info, A->value)
 #define set_flag(A,B) (A)|=(B)
 #define neg_flag(A,B) (A)&=~(B)
 
-#define spinlock_log
+#define LEN(arr) ((sizeof(arr) / sizeof(arr[0])))
 
-#ifndef sem_log
-    #define sem_log(...) 
-#endif
-
-//#define intr_log(info) {int cpu_id=_cpu();pthread_mutex_lock(&log_lk);(intr_idx_+=sprintf(intr_log_+intr_idx_,"\n[cpu%d]%s:%d %s(%d):%s %d",cpu_id,__FILE__,__LINE__,tasks[currents[cpu_id]]->name,currents[cpu_id],info,ncli[cpu_id]));pthread_mutex_unlock(&log_lk);intr_idx_&=(1<<16)-1;}
-#define detail_log(_log,_idx,info) \
-    do{ \
-        int cpu_id=_cpu(),_old=_idx; \
-        _idx+=sprintf(_log+_idx,"\n[cpu%d]%s:%3d(%s) %s:%s",_cpu(),__FILE__,__LINE__,__func__,tasks[current]->name,info); \
-        (void)_old; \
-        tasks_old=_old; \
-        /*printf(_log+_old);*/ \
-        _idx&=(1<<16)-1; \
-    }while(0)
-
-#ifdef intr_log
-    char intr_log_[66000];
-    int intr_idx_;
-    pthread_mutex_t log_lk;
-#else
-    #define intr_log(...)
-#endif
+#define new(A) (typeof(A)*)pmm->alloc(sizeof(A))
 
 #define TASK_FENCE
-#define DEBUG
-//Comment the line above after testing
-#ifdef DEBUG
-void show_free_list(void);
-uintptr_t cnt_free_list(void);
-void show_free_pages(void);
-#endif
+
 #define STK_SZ ((1<<12)-64)
 int ncli[4];
 void intr_close();
 void intr_open();
 
+#define TASK_RUNABLE 0
+#define TASK_SLEEP 1
+#define TASK_RUNNING 2
 typedef struct task{
     //int32_t id;
     int32_t cpu;
     uint32_t attr;
-#define TASK_RUNABLE 0
-#define TASK_SLEEP 1
-#define TASK_RUNNING 2
     char* name;
     _Context context;
-    //enum state{SLEEPING,WAITING,RUNNING}state;
 #ifdef TASK_FENCE
     uint32_t fence1[4];
 #endif
@@ -99,7 +72,4 @@ typedef struct semaphore {
     char log[66000];
 #endif
 }semaphore_t;
-#define LEN(arr) ((sizeof(arr) / sizeof(arr[0])))
-
-#define new(A) (typeof(A)*)pmm->alloc(sizeof(A))
 #endif
