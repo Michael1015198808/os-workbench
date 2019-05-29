@@ -78,6 +78,7 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
         if(cnt==0){
             trace_pthread_mutex_unlock(&tasks_lk);
             for(volatile uint32_t sleep=1;sleep<10000000;++sleep);//Sleep if can't get any process to run
+            if((current->attr|TASK_SLEEP)==0)return &tasks[current]->context;
             trace_pthread_mutex_lock(&tasks_lk);
         }
     }while(tasks[new]->attr);
