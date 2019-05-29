@@ -44,7 +44,7 @@ static void os_init() {
     kmt->init();
     dev->init();
     kmt->create(pmm->alloc(sizeof(task_t)),"sem-test1",sem_test,"!");
-    kmt->create(pmm->alloc(sizeof(task_t)),"sem-test2",sem_test,"!");
+    //kmt->create(pmm->alloc(sizeof(task_t)),"sem-test2",sem_test,"!");
     kmt->create(pmm->alloc(sizeof(task_t)),"echo-test:n",echo_test,"n");
     kmt->create(pmm->alloc(sizeof(task_t)),"echo-test:m",echo_test,"m");
     kmt->create(pmm->alloc(sizeof(task_t)),"echo-test:s",echo_test,"s");
