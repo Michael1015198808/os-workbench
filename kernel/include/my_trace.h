@@ -28,3 +28,7 @@
 #else
     #define intr_log(...)
 #endif
+
+#ifndef detail_log
+#define detail_log(...)
+#endif
