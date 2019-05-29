@@ -67,8 +67,6 @@ static _Context* kmt_context_save(_Event ev, _Context *c){
 static _Context* kmt_context_switch(_Event ev, _Context *c){
     trace_pthread_mutex_lock(&tasks_lk);
     int cpu_id=_cpu(),new=0;
-    extern int *switch_flag;
-    switch_flag[cpu_id]=1;
     //log("context switch from (%d)%s\n",current,tasks[current]->name);
     new=current;
     uint16_t cnt=0;
