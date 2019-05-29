@@ -28,7 +28,7 @@ int currents[4]={-1,-1,-1,-1},tasks_cnt=0;
 
 void show_sem_list(sem_t *sem){
     int p;
-    for(p=sem->head;p!=sem->tail;p=p->next){
+    for(p=sem->head;p!=sem->tail;++p){
         printf("%s->",sem->pool[p]->name);
     }
     printf("%s->",sem->pool[p]->name);
@@ -96,7 +96,7 @@ int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), void *a
     log("create (%d)%s\n",tasks_cnt,name);
     Assert(tasks_cnt<LEN(tasks),"%d\n",tasks_cnt);
     task->cpu=-1;
-    task->state=RUNABLE;
+    task->attr=TASK_RUNABLE;
     copy_name(task->name,name);
 
     task->context = *_kcontext(
@@ -202,8 +202,7 @@ void kmt_sem_wait(sem_t *sem){
     kmt->spin_unlock(&(sem->lock));
 }
 static void sem_remove_task(sem_t *sem){
-    int cpu_id=_cpu();
-    neg_flag(taskssem->pool[sem->head++]->attr,TASK_SLEEP);
+    neg_flag(sem->pool[sem->head++]->attr,TASK_SLEEP);
 }
 void kmt_sem_signal(sem_t *sem){
     kmt->spin_lock(&(sem->lock));
