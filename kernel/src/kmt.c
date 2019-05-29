@@ -201,8 +201,11 @@ void kmt_sem_init(sem_t *sem, const char *name, int value){
     sem->tail=0;
     //log("%s: %d",sem->name,sem->value);
 }
+
+
 char addrm_log[66000];
 uint16_t addrm_idx=0;
+
 static void sem_add_task(sem_t *sem){
     int cpu_id=_cpu();
     addrm_idx+=sprintf(addrm_log+addrm_idx,"add:[%d]:%x",sem->tail,tasks[current]);
@@ -215,6 +218,13 @@ static void sem_add_task(sem_t *sem){
     kmt->spin_unlock(&(sem->lock));
     _yield();
 }
+static void sem_remove_task(sem_t *sem){
+    addrm_idx+=sprintf(addrm_log+addrm_idx,"remove:[%d]:%x",sem->head,sem->pool[sem->head]);
+
+    neg_flag(sem->pool[sem->head++]->attr,TASK_SLEEP);
+    addrm_idx+=sprintf(addrm_log+addrm_idx,"(%d)\n",sem->pool[sem->head]->attr);
+    if(sem->head>=POOL_LEN)sem->head-=POOL_LEN;
+}
 
 void kmt_sem_wait(sem_t *sem){
     kmt->spin_lock(&(sem->lock));
@@ -225,13 +235,6 @@ void kmt_sem_wait(sem_t *sem){
     }
     kmt->spin_unlock(&(sem->lock));
 }
-static void sem_remove_task(sem_t *sem){
-    addrm_idx+=sprintf(addrm_log+addrm_idx,"remove:[%d]:%x",sem->head,sem->pool[sem->head]);
-
-    neg_flag(sem->pool[sem->head++]->attr,TASK_SLEEP);
-    addrm_idx+=sprintf(addrm_log+addrm_idx,"(%d)\n",sem->pool[sem->head]->attr);
-    if(sem->head>=POOL_LEN)sem->head-=POOL_LEN;
-}
 void kmt_sem_signal(sem_t *sem){
     kmt->spin_lock(&(sem->lock));
     ++(sem->value);
@@ -241,6 +244,7 @@ void kmt_sem_signal(sem_t *sem){
     }
     kmt->spin_unlock(&(sem->lock));
 }
+
 MODULE_DEF(kmt) {
   .init        =kmt_init,
   .create      =kmt_create,
