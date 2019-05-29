@@ -20,6 +20,8 @@ char tasks_log[66000];
 
 /* tasks, tasks_cnt
  * shared by
+ *   add_task
+ *   remove_task
  *   kmt_context_save
  *   kmt_context_switch
  */
@@ -42,6 +44,11 @@ void show(){
         printf("->%s",tasks[i]->name);
     }
     printf("\n");
+}
+static void add_task(task_t *task){
+    pthread_mutex_lock(&tasks_lk);
+    tasks[tasks_cnt++]=task;
+    pthread_mutex_unlock(&tasks_lk);
 }
 
 static _Context* kmt_context_save(_Event ev, _Context *c){
