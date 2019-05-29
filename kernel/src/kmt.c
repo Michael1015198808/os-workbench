@@ -71,10 +71,17 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
     switch_flag[cpu_id]=1;
     //log("context switch from (%d)%s\n",current,tasks[current]->name);
     new=current;
+    uint16_t cnt=0;
     do{
         //current=rand()%tasks_cnt;
         ++new;
+        ++cnt;
         new%=tasks_cnt;
+        if(cnt==0){
+            trace_pthread_mutex_unlock(&tasks_lk);
+            for(volatile uint32_t sleep=1;sleep<1000000000;++sleep);//Sleep if can't get any process to run
+            trace_pthread_mutex_lock(&tasks_lk);
+        }
     }while(tasks[new]->attr);
 
     tasks[new]->cpu=cpu_id;
