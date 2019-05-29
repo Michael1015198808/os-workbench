@@ -232,8 +232,6 @@ void kmt_sem_signal(sem_t *sem){
         sem_remove_task(sem);
     }
     kmt->spin_unlock(&(sem->lock));
-    (void)sem_add_task;
-    (void)sem_remove_task;
 }
 MODULE_DEF(kmt) {
   .init        =kmt_init,
