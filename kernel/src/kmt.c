@@ -205,7 +205,7 @@ char addrm_log[66000];
 uint16_t addrm_idx=0;
 static void sem_add_task(sem_t *sem){
     int cpu_id=_cpu();
-    addrm_idx+=sprintf(addrm_log+addrm_idx,"add:[%d]:%d\n",sem->tail,current);
+    addrm_idx+=sprintf(addrm_log+addrm_idx,"add:[%d]:%x\n",sem->tail,tasks[current]);
     
     sem->pool[sem->tail++]=tasks[current];
     set_flag(tasks[current]->attr,TASK_SLEEP);
@@ -225,7 +225,7 @@ void kmt_sem_wait(sem_t *sem){
     kmt->spin_unlock(&(sem->lock));
 }
 static void sem_remove_task(sem_t *sem){
-    addrm_idx+=sprintf(addrm_log+addrm_idx,"remove:[%d]:%d\n",sem->head,sem->pool[sem->head]);
+    addrm_idx+=sprintf(addrm_log+addrm_idx,"remove:[%d]:%x\n",sem->head,sem->pool[sem->head]);
 
     neg_flag(sem->pool[sem->head++]->attr,TASK_SLEEP);
     if(sem->head>=POOL_LEN)sem->head-=POOL_LEN;
