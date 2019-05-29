@@ -99,11 +99,13 @@ inline uint32_t sector_per_fat(const bpb_t *p){
 }
 
 int main(int argc, char *argv[]) {
-    printf("%llx\n",1LL*offset_of(sector_per_fat_high,bpb_t));
     int fd = open("./test.img", O_RDONLY);
     struct stat st;
     fstat(fd, &st);
     const bpb_t *fs = 0xb+mmap(NULL, st.st_size, PROT_READ , MAP_SHARED, fd, 0);
+    printf("%llx\n",1LL*offset_of(sector_per_fat_high,bpb_t));
+    printf("%llx\n",1LL*fs->sector_per_fat_high);
+    return 0;
 
     (void)fs;
     entry_t *e=(entry_t*)(uintptr_t)(
