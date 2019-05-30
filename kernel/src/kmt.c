@@ -53,14 +53,18 @@ static void add_task(task_t *task){
 
 #define set_flag(A,B) \
     { \
-    uintptr_t p=(uintptr_t)&A; \
-    asm volatile("lock or %1,(%0)"::"r"(p),"g"((B))); \
+        pthread_mutex_lock(&A->attr_lock); \
+        uintptr_t p=(uintptr_t)&A->attr; \
+        asm volatile("lock or %1,(%0)"::"r"(p),"g"((B))); \
+        pthread_mutex_unlock(&A->attr_lock); \
     }
 
 #define neg_flag(A,B) \
     { \
-    uintptr_t p=(uintptr_t)&A; \
-    asm volatile("lock and %1,(%0)"::"r"(p),"g"(~(B))); \
+        pthread_mutex_lock(&A->attr_lock); \
+        uintptr_t p=(uintptr_t)&A->attr; \
+        asm volatile("lock and %1,(%0)"::"r"(p),"g"(~(B))); \
+        pthread_mutex_unlock(&A->attr_lock); \
     }
 
 static _Context* kmt_context_save(_Event ev, _Context *c){
@@ -96,10 +100,10 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
     }while(tasks[new]->attr);
 
     tasks[current]->cpu=-1;
-    neg_flag(tasks[current]->attr,TASK_RUNNING);
+    neg_flag(tasks[current],TASK_RUNNING);
 
     tasks[new]->cpu=cpu_id;
-    set_flag(tasks[new]->attr,TASK_RUNNING);
+    set_flag(tasks[new],TASK_RUNNING);
     tasks[current]->sleep_flag=0;
 
     current=new;
@@ -129,6 +133,7 @@ int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), void *a
     Assert(tasks_cnt<LEN(tasks),"%d\n",tasks_cnt);
     task->cpu=-1;
     task->attr=TASK_RUNABLE;
+    task->lock=0;
     copy_name(task->name,name);
 
     task->context = *_kcontext(
@@ -225,7 +230,7 @@ static void sem_add_task(sem_t *sem){
     addrm_idx+=sprintf(addrm_log+addrm_idx,"add:[%d]:%x",sem->tail,tasks[current]);
     
     sem->pool[sem->tail++]=tasks[current];
-    set_flag(tasks[current]->attr,TASK_SLEEP);
+    set_flag(tasks[current],TASK_SLEEP);
     tasks[current]->sleep_flag|=2;
     addrm_idx+=sprintf(addrm_log+addrm_idx,"(%d)\n",tasks[current]->attr);
     if(sem->tail>=POOL_LEN)sem->tail-=POOL_LEN;
@@ -236,7 +241,7 @@ static void sem_add_task(sem_t *sem){
 static void sem_remove_task(sem_t *sem){
     addrm_idx+=sprintf(addrm_log+addrm_idx,"remove:[%d]:%x",sem->head,sem->pool[sem->head]);
 
-    neg_flag(sem->pool[sem->head++]->attr,TASK_SLEEP);
+    neg_flag(sem->pool[sem->head++],TASK_SLEEP);
     sem->pool[(sem->head+19)%20]->sleep_flag|=1;
     addrm_idx+=sprintf(addrm_log+addrm_idx,"(%d)\n",sem->pool[(sem->head+19)%20]->attr);
     if(sem->head>=POOL_LEN)sem->head-=POOL_LEN;
