@@ -51,6 +51,7 @@ static void add_task(task_t *task){
     pthread_mutex_unlock(&tasks_lk);
 }
 
+int sleep_flag[4]={};
 #define set_flag(A,B) \
     { \
     uintptr_t p=(uintptr_t)&A; \
@@ -89,8 +90,8 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
         new%=tasks_cnt;
         if(cnt==0){
             trace_pthread_mutex_unlock(&tasks_lk);
-            for(volatile uint32_t sleep=1;sleep<10000000;++sleep);//Sleep if can't get any process to run
             if((tasks[current]->attr&TASK_SLEEP)==0)return &tasks[current]->context;
+            for(volatile uint32_t sleep=1;sleep<10000000;++sleep);//Sleep if can't get any process to run
             trace_pthread_mutex_lock(&tasks_lk);
         }
     }while(tasks[new]->attr);
@@ -100,6 +101,7 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
 
     tasks[new]->cpu=cpu_id;
     set_flag(tasks[new]->attr,TASK_RUNNING);
+    sleep_flag[tasks[sem->pool[(sem->head+19)%20]]]=0;
 
     current=new;
     trace_pthread_mutex_unlock(&tasks_lk);
@@ -225,6 +227,7 @@ static void sem_add_task(sem_t *sem){
     
     sem->pool[sem->tail++]=tasks[current];
     set_flag(tasks[current]->attr,TASK_SLEEP);
+    sleep_flag[tasks[current]]|=2;
     addrm_idx+=sprintf(addrm_log+addrm_idx,"(%d)\n",tasks[current]->attr);
     if(sem->tail>=POOL_LEN)sem->tail-=POOL_LEN;
 
@@ -235,6 +238,7 @@ static void sem_remove_task(sem_t *sem){
     addrm_idx+=sprintf(addrm_log+addrm_idx,"remove:[%d]:%x",sem->head,sem->pool[sem->head]);
 
     neg_flag(sem->pool[sem->head++]->attr,TASK_SLEEP);
+    sleep_flag[tasks[sem->pool[(sem->head+19)%20]]]|=1;
     addrm_idx+=sprintf(addrm_log+addrm_idx,"(%d)\n",sem->pool[(sem->head+19)%20]->attr);
     if(sem->head>=POOL_LEN)sem->head-=POOL_LEN;
 }
