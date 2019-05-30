@@ -66,11 +66,7 @@ static void add_task(task_t *task){
 static _Context* kmt_context_save(_Event ev, _Context *c){
     //trace_pthread_mutex_lock(&tasks_lk);
     int cpu_id=_cpu();
-    if(current==-1){
-        current=tasks_cnt-1;
-        //kmt->create(pmm->alloc(sizeof(task_t)),"os_run",NULL,NULL);
-        //current=tasks_cnt-1;
-    }else{
+    if(current!=-1){
         tasks[current]->context=*c;
     }
     //trace_pthread_mutex_unlock(&tasks_lk);
@@ -95,8 +91,10 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
         }
     }while(tasks[new]->attr);
 
-    tasks[current]->cpu=-1;
-    neg_flag(tasks[current]->attr,TASK_RUNNING);
+    if(current!=-1){
+        tasks[current]->cpu=-1;
+        neg_flag(tasks[current]->attr,TASK_RUNNING);
+    }
 
     tasks[new]->cpu=cpu_id;
     set_flag(tasks[new]->attr,TASK_RUNNING);
