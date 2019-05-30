@@ -29,7 +29,7 @@ typedef struct task{
     //int32_t id;
     int32_t cpu;
     volatile uint32_t attr;
-    pthread_t attr_lock;
+    pthread_mutex_t attr_lock;
     char* name;
     _Context context;
 #ifdef TASK_FENCE
