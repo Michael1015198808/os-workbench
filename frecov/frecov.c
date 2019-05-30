@@ -105,7 +105,7 @@ int main(int argc, char *argv[]) {
     const bpb_t *fs = 0xb+mmap(NULL, st.st_size, PROT_READ , MAP_SHARED, fd, 0);
 
     (void)fs;
-    entry_t *e=(entry_t*)(uintptr_t)(
+    entry_t *e=(entry_t*)(uintptr_t)(((void*)fs)+
                 ( fs->sectors_reserved+
                   fs->fat_cnt*sector_per_fat(fs)+
                   (fs->start_cluster-2)*fs->sectors_per_cluster )
