@@ -132,7 +132,7 @@ int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), void *a
     Assert(tasks_cnt<LEN(tasks),"%d\n",tasks_cnt);
     task->cpu=-1;
     task->attr=TASK_RUNABLE;
-    task->lock=0;
+    task->attr_lock=0;
     copy_name(task->name,name);
 
     task->context = *_kcontext(
