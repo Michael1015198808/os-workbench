@@ -18,5 +18,9 @@ void show_attr(){
     _putc('\n');
 }
 void show_tasks{
-    for(int i=0;i<tasks_cnt;++)
+    printf("%p",tasks[0]);
+    for(int i=1;i<tasks_cnt;++i){
+        printf(",%p",tasks[i]);
+    }
+    _putc('\n');
 }
