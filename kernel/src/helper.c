@@ -7,7 +7,7 @@ void print(char* s){
         _putc(*s);
     }while(*(++s));
 }
-task_t **tasks;
+task_t *tasks[20];
 int tasks_cnt;
 void show_attr(){
     int i;
@@ -16,4 +16,7 @@ void show_attr(){
         printf(",%d",(int)tasks[i]->attr);
     }
     _putc('\n');
+}
+void show_tasks{
+    for(int i=0;i<tasks_cnt;++)
 }
