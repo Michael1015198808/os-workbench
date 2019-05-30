@@ -59,7 +59,7 @@ static void add_task(task_t *task){
 
 #define neg_flag(A,B) \
     { \
-        Assert((A->attr_lock)==0,"%x:%x\n",A,A->attr_lock); \
+        Assert(A->attr_lock==0); \
         uintptr_t p=(uintptr_t)&A->attr; \
         asm volatile("lock and %1,(%0)"::"r"(p),"g"(~(B))); \
     }
@@ -231,8 +231,8 @@ static void sem_add_task(sem_t *sem){
 }
 static void sem_remove_task(sem_t *sem){
 
-    neg_flag(sem->pool[sem->head++],TASK_SLEEP);
-    if(sem->head>=POOL_LEN)sem->head-=POOL_LEN;
+    neg_flag(sem->pool[sem->head],TASK_SLEEP);
+    if(++sem->head>=POOL_LEN)sem->head-=POOL_LEN;
 }
 
 void kmt_sem_wait(sem_t *sem){
