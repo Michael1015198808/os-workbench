@@ -104,7 +104,6 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
 
     tasks[new]->cpu=cpu_id;
     set_flag(tasks[new],TASK_RUNNING);
-    tasks[current]->sleep_flag=0;
 
     current=new;
     trace_pthread_mutex_unlock(&tasks_lk);
@@ -231,7 +230,6 @@ static void sem_add_task(sem_t *sem){
     
     sem->pool[sem->tail++]=tasks[current];
     set_flag(tasks[current],TASK_SLEEP);
-    tasks[current]->sleep_flag|=2;
     addrm_idx+=sprintf(addrm_log+addrm_idx,"(%d)\n",tasks[current]->attr);
     if(sem->tail>=POOL_LEN)sem->tail-=POOL_LEN;
 
@@ -242,7 +240,6 @@ static void sem_remove_task(sem_t *sem){
     addrm_idx+=sprintf(addrm_log+addrm_idx,"remove:[%d]:%x",sem->head,sem->pool[sem->head]);
 
     neg_flag(sem->pool[sem->head++],TASK_SLEEP);
-    sem->pool[(sem->head+19)%20]->sleep_flag|=1;
     addrm_idx+=sprintf(addrm_log+addrm_idx,"(%d)\n",sem->pool[(sem->head+19)%20]->attr);
     if(sem->head>=POOL_LEN)sem->head-=POOL_LEN;
 }
