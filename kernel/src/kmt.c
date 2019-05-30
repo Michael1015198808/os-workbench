@@ -59,7 +59,7 @@ static void add_task(task_t *task){
 
 #define neg_flag(A,B) \
     { \
-        Assert(*A->attr_lock==0); \
+        Assert(*(A->attr_lock)==0); \
         pthread_mutex_lock(&A->attr_lock); \
         uintptr_t p=(uintptr_t)&A->attr; \
         asm volatile("lock and %1,(%0)"::"r"(p),"g"(~(B))); \
