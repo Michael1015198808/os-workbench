@@ -223,7 +223,7 @@ static void sem_remove_task(sem_t *sem){
     addrm_idx+=sprintf(addrm_log+addrm_idx,"remove:[%d]:%x",sem->head,sem->pool[sem->head]);
 
     neg_flag(sem->pool[sem->head++]->attr,TASK_SLEEP);
-    addrm_idx+=sprintf(addrm_log+addrm_idx,"(%d)\n",sem->pool[sem->head]->attr);
+    addrm_idx+=sprintf(addrm_log+addrm_idx,"(%d)\n",sem->pool[(sem->head+19)%20]->attr);
     if(sem->head>=POOL_LEN)sem->head-=POOL_LEN;
 }
 
