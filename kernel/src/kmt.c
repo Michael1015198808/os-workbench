@@ -59,10 +59,8 @@ static void add_task(task_t *task){
 
 #define neg_flag(A,B) \
     { \
-        pthread_mutex_lock(&A->attr_lock); \
         uintptr_t p=(uintptr_t)&A->attr; \
         asm volatile("lock and %1,(%0)"::"r"(p),"g"(~(B))); \
-        pthread_mutex_unlock(&A->attr_lock); \
     }
 
 static _Context* kmt_context_save(_Event ev, _Context *c){
@@ -219,26 +217,20 @@ void kmt_sem_init(sem_t *sem, const char *name, int value){
 }
 
 
-char addrm_log[66000];
-volatile uint16_t addrm_idx=0;
 
 static void sem_add_task(sem_t *sem){
     int cpu_id=_cpu();
-    addrm_idx+=sprintf(addrm_log+addrm_idx,"add:[%d]:%x",sem->tail,tasks[current]);
     
     sem->pool[sem->tail++]=tasks[current];
     set_flag(tasks[current],TASK_SLEEP);
-    addrm_idx+=sprintf(addrm_log+addrm_idx,"(%d)\n",tasks[current]->attr);
     if(sem->tail>=POOL_LEN)sem->tail-=POOL_LEN;
 
     kmt->spin_unlock(&(sem->lock));
     _yield();
 }
 static void sem_remove_task(sem_t *sem){
-    addrm_idx+=sprintf(addrm_log+addrm_idx,"remove:[%d]:%x",sem->head,sem->pool[sem->head]);
 
     neg_flag(sem->pool[sem->head++],TASK_SLEEP);
-    addrm_idx+=sprintf(addrm_log+addrm_idx,"(%d)\n",sem->pool[(sem->head+19)%20]->attr);
     if(sem->head>=POOL_LEN)sem->head-=POOL_LEN;
 }
 
