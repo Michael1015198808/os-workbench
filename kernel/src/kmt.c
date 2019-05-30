@@ -101,7 +101,7 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
 
     tasks[new]->cpu=cpu_id;
     set_flag(tasks[new]->attr,TASK_RUNNING);
-    sleep_flag[tasks[sem->pool[(sem->head+19)%20]]]=0;
+    sleep_flag[current]=0;
 
     current=new;
     trace_pthread_mutex_unlock(&tasks_lk);
