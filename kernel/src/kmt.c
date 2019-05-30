@@ -218,7 +218,9 @@ void kmt_sem_init(sem_t *sem, const char *name, int value){
 
 
 
+int add_rm_cnt=0;
 static void sem_add_task(sem_t *sem){
+    ++add_rm_cnt;
     int cpu_id=_cpu();
     
     sem->pool[sem->tail++]=tasks[current];
@@ -229,6 +231,7 @@ static void sem_add_task(sem_t *sem){
     _yield();
 }
 static void sem_remove_task(sem_t *sem){
+    --add_rm_cnt;
 
     neg_flag(sem->pool[sem->head],TASK_SLEEP);
     neg_flag(sem->pool[sem->head],TASK_SLEEP);
