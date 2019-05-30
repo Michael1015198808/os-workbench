@@ -25,5 +25,5 @@ void show_tasks(){
     _putc('\n');
 }
 void infinite_loop(void){
-    asm volatile("jmp 0");
+    while(1);
 }
