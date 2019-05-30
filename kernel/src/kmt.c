@@ -61,8 +61,10 @@ static void add_task(task_t *task){
 
 #define neg_flag(A,B) \
     { \
+        pthread_mutex_lock(&A->attr_lock); \
         uintptr_t p=(uintptr_t)&A->attr; \
         asm volatile("lock and %1,(%0)"::"r"(p),"g"(~(B))); \
+        pthread_mutex_unlock(&A->attr_lock); \
     }
 
 static _Context* kmt_context_save(_Event ev, _Context *c){
