@@ -27,7 +27,7 @@ void echo_test(void *arg){
     while(1){
         Assert(_intr_read()==0);
         printf("%c",((char*)arg)[0]);
-        log_idx+=sprintf(log+log_idx,"%d%d",currents[0],currents[1]);
+        log_idx+=sprintf(log+log_idx,"%d%d ",currents[0],currents[1]);
         kmt->sem_wait(&echo_sem);
         _yield();
     }
@@ -38,7 +38,7 @@ void sem_test(void *arg){
         Assert(_intr_read()==0);
         //printf("loop\n");
         printf("~");
-        log_idx+=sprintf(log+log_idx,"%d%d",currents[0],currents[1]);
+        log_idx+=sprintf(log+log_idx,"%d%d ",currents[0],currents[1]);
         kmt->sem_signal(&echo_sem);
         //printf("~");
         //kmt->sem_signal(&echo_sem);
