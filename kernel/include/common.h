@@ -10,8 +10,10 @@
 #include <my_trace.h>
 
 //#define sem_log(A,info,...) A->idx&=(1<<16)-1;A->idx+=sprintf(A->log+A->idx,"\n[cpu%d]%s:%d %s:%s %d",_cpu(),__func__,__LINE__,tasks[currents[_cpu()]]->name,  #info, A->value)
-#define set_flag(A,B) (A)|=(B)
-#define neg_flag(A,B) (A)&=~(B)
+#define set_flag(A,B) \
+    asm volatile("or %0, %1": "g"(B):"=g"(A))
+#define neg_flag(A,B) \
+    asm volatile("add %0, %1": "g"(B):"=g"(A))
 
 #define LEN(arr) ((sizeof(arr) / sizeof(arr[0])))
 
