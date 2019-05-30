@@ -85,7 +85,7 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
 
     tasks[current]->cpu=-1;
     uintptr_t p=(uintptr_t)&tasks[current]->attr;
-    asm volatile("mov $0xfffffffd,0x4(%0)":"=g"(p):);
+    asm volatile("and $0xfffffffd,(%0)":"=g"(p):);
     //neg_flag(tasks[current]->attr,TASK_RUNNING);
 
     tasks[new]->cpu=cpu_id;

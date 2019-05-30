@@ -15,7 +15,7 @@
     //asm volatile("or %1, %0": "=g"(A):"g"(B))
 #define neg_flag(A,B) \
     (A)&=~(B)
-    //asm volatile("add %1, %0": "=g"(A):"g"(B))
+    //asm volatile("and %1, %0": "=g"(A):"g"(B))
 
 #define LEN(arr) ((sizeof(arr) / sizeof(arr[0])))
 
