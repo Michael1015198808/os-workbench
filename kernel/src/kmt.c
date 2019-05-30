@@ -52,12 +52,16 @@ static void add_task(task_t *task){
 }
 
 #define set_flag(A,B) \
+    { \
     uintptr_t p=(uintptr_t)&A; \
-    asm volatile("or %1,(%0)"::"r"(p),"g"((B)));
+    asm volatile("or %1,(%0)"::"r"(p),"g"((B))); \
+    }
 
 #define neg_flag(A,B) \
+    { \
     uintptr_t p=(uintptr_t)&A; \
-    asm volatile("and %1,(%0)"::"r"(p),"g"((B)));
+    asm volatile("and %1,(%0)"::"r"(p),"g"((B))); \
+    }
 
 static _Context* kmt_context_save(_Event ev, _Context *c){
     //trace_pthread_mutex_lock(&tasks_lk);
