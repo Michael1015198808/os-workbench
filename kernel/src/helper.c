@@ -2,10 +2,10 @@
 #include <common.h>
 #include <klib.h>
 void _putc(char);
-void print(char* s){
+void print(char* s,int l){
     do{
         _putc(*s);
-    }while(*(++s));
+    }while(*(++s)&&(l--));
 }
 task_t *tasks[20];
 int tasks_cnt;

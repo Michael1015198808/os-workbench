@@ -19,15 +19,12 @@ static irq_handler irq_guard={
 };
 
 sem_t echo_sem;
-int log_idx=0;
-char log[120000]={};
 int currents[4];
 void echo_test(void *arg){
     _intr_write(0);
     while(1){
         Assert(_intr_read()==0);
         printf("%c",((char*)arg)[0]);
-        log_idx+=sprintf(log+log_idx,"%d%d ",currents[0],currents[1]);
         kmt->sem_wait(&echo_sem);
         _yield();
     }
@@ -38,7 +35,6 @@ void sem_test(void *arg){
         Assert(_intr_read()==0);
         //printf("loop\n");
         printf("~");
-        log_idx+=sprintf(log+log_idx,"%d%d ",currents[0],currents[1]);
         kmt->sem_signal(&echo_sem);
         //printf("~");
         //kmt->sem_signal(&echo_sem);
