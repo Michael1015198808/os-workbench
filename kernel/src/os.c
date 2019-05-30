@@ -11,6 +11,7 @@ typedef struct irq{
 void guard(void){
     Assert(0,"Guard should not be called!\n");
 }
+
 static irq_handler irq_guard={
     .seq=INT_MIN,
     .event=-1,
@@ -33,12 +34,10 @@ void sem_test(void *arg){
     _intr_write(0);
     while(1){
         Assert(_intr_read()==0);
-        //printf("loop\n");
         printf("~");
         kmt->sem_signal(&echo_sem);
         //printf("~");
         //kmt->sem_signal(&echo_sem);
-        //while(1);
         _yield();
     }
 }
