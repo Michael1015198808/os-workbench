@@ -51,6 +51,14 @@ static void add_task(task_t *task){
     pthread_mutex_unlock(&tasks_lk);
 }
 
+#define set_flag(A,B) \
+    uintptr_t p=(uintptr_t)&A; \
+    asm volatile("or %1,(%0)"::"r"(p),"g"((B)));
+
+#define neg_flag(A,B) \
+    uintptr_t p=(uintptr_t)&A; \
+    asm volatile("and %1,(%0)"::"r"(p),"g"((B)));
+
 static _Context* kmt_context_save(_Event ev, _Context *c){
     //trace_pthread_mutex_lock(&tasks_lk);
     int cpu_id=_cpu();
@@ -84,9 +92,7 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
     }while(tasks[new]->attr);
 
     tasks[current]->cpu=-1;
-    uintptr_t p=(uintptr_t)&tasks[current]->attr;
-    asm volatile("and $0xfffffffd,(%0)"::"r"(p));
-    //neg_flag(tasks[current]->attr,TASK_RUNNING);
+    neg_flag(tasks[current]->attr,TASK_RUNNING);
 
     tasks[new]->cpu=cpu_id;
     set_flag(tasks[new]->attr,TASK_RUNNING);
