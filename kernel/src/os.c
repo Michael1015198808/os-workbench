@@ -84,7 +84,7 @@ static void os_run() {
 /* For debug */
 /*char irq_log[65600];
 int irq_idx=0;*/
-extern int* currents;
+int currents[4];
 /* For debug */
 
 pthread_mutex_t irq_lk;
