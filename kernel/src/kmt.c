@@ -76,6 +76,8 @@ static _Context* kmt_context_save(_Event ev, _Context *c){
     //trace_pthread_mutex_unlock(&tasks_lk);
     return NULL;
 }
+int log_idx=0;
+char log[120000]={};
 static _Context* kmt_context_switch(_Event ev, _Context *c){
     trace_pthread_mutex_lock(&tasks_lk);
     int cpu_id=_cpu(),new=0;
@@ -103,8 +105,6 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
 
     current=new;
     
-    int log_idx=0;
-    char log[120000]={};
     log_idx+=sprintf(log+log_idx,"[%d%d](%d%d) ",currents[0],currents[1],tasks[0]->attr,tasks[1]->attr);
 
     trace_pthread_mutex_unlock(&tasks_lk);
