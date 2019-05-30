@@ -21,6 +21,7 @@ static irq_handler irq_guard={
 sem_t echo_sem;
 int log_idx=0;
 char log[120000]={};
+int currents[4];
 void echo_test(void *arg){
     _intr_write(0);
     while(1){
