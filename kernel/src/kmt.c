@@ -61,7 +61,6 @@ static void add_task(task_t *task){
 
 #define neg_flag(A,B) \
     { \
-        Assert(A->attr_lock==0,"%x:%x",A,A->attr_lock); \
         pthread_mutex_lock(&A->attr_lock); \
         A->attr&=~B; \
         uintptr_t p=(uintptr_t)&A->attr; \
