@@ -30,7 +30,7 @@ void intr_open();
 typedef struct task{
     //int32_t id;
     int32_t cpu;
-    uint32_t attr;
+    volatile uint32_t attr;
     char* name;
     _Context context;
 #ifdef TASK_FENCE
