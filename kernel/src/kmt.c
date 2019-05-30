@@ -227,7 +227,7 @@ static void sem_add_task(sem_t *sem){
     
     sem->pool[sem->tail++]=tasks[current];
     set_flag(tasks[current]->attr,TASK_SLEEP);
-    sleep_flag[tasks[current]]|=2;
+    sleep_flag[current]|=2;
     addrm_idx+=sprintf(addrm_log+addrm_idx,"(%d)\n",tasks[current]->attr);
     if(sem->tail>=POOL_LEN)sem->tail-=POOL_LEN;
 
@@ -238,7 +238,7 @@ static void sem_remove_task(sem_t *sem){
     addrm_idx+=sprintf(addrm_log+addrm_idx,"remove:[%d]:%x",sem->head,sem->pool[sem->head]);
 
     neg_flag(sem->pool[sem->head++]->attr,TASK_SLEEP);
-    sleep_flag[tasks[sem->pool[(sem->head+19)%20]]]|=1;
+    sleep_flag[sem->pool[(sem->head+19)%20]]|=1;
     addrm_idx+=sprintf(addrm_log+addrm_idx,"(%d)\n",sem->pool[(sem->head+19)%20]->attr);
     if(sem->head>=POOL_LEN)sem->head-=POOL_LEN;
 }
