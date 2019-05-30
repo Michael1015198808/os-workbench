@@ -98,7 +98,6 @@ static _Context *os_trap(_Event ev, _Context *context) {
     irq_idx+=sprintf(irq_log+irq_idx,"[cpu%d]task%dlock\n",_cpu(),currents[_cpu()]);irq_idx&=(1<<16)-1;*/
     //log("intr:%d\n",_intr_read());
     _Context *ret = context;
-    intr_log("close");
     intr_close();
 
     for(struct irq *handler=irq_guard.next;
@@ -114,8 +113,8 @@ static _Context *os_trap(_Event ev, _Context *context) {
     /*irq_idx+=sprintf(irq_log+irq_idx,"[cpu%d]task%dunlock\n",_cpu(),currents[_cpu()]);
     pthread_mutex_unlock(&irq_lk);*/
     //log("ret%p\n",ret);
-    intr_log("open");
     intr_open();
+    Assert(ncli[_cpu()]==0);
     if(ret==NULL){
         log("\nkmt_context_switch returns NULL\n");
     };
