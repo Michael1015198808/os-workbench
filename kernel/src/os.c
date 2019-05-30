@@ -30,6 +30,9 @@ void echo_test(void *arg){
         _yield();
     }
 }
+void idle(void *arg){
+    while(1);
+}
 void sem_test(void *arg){
     _intr_write(0);
     while(1){
@@ -45,6 +48,7 @@ static void os_init() {
     pmm->init();
     kmt->init();
     dev->init();
+    kmt->create(pmm->alloc(sizeof(task_t)),"idle1",idle,NULL);
     /*
     kmt->create(pmm->alloc(sizeof(task_t)),"sem-test1",sem_test,"!");
     //kmt->create(pmm->alloc(sizeof(task_t)),"sem-test2",sem_test,"!");
