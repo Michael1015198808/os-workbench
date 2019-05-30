@@ -1,0 +1,1443 @@
+./sperf/sperf.c:50:    regcomp(&name,"^[a-zA-Z]*_*[a-zA-Z]*[0-9]*\\(",REG_EXTENDED) ||
+./sperf/sperf.c:51:    regcomp(&num,"<[0-9\\.]*>\n",REG_EXTENDED)  ||
+./sperf/sperf.c:52:    regcomp(&exit_pat,"exited with [0-9]* ",REG_EXTENDED) ){
+./sperf/sperf.c:57:  if(ret==-1){
+./sperf/sperf.c:77:    char  file[32],*flags[]={"-T","-o",file};
+./sperf/sperf.c:125:      strncpy(call,s+match_info.rm_so,match_info.rm_eo-match_info.rm_so);
+./sperf/sperf.c:126:      call[match_info.rm_eo-match_info.rm_so-1]='\0';
+./sperf/sperf.c:136:          p=p->next;
+./sperf/sperf.c:137:      }while(p!=&head&&strcmp(p->name,call)!=0);
+./sperf/sperf.c:138:      if(strcmp(p->name,call)){
+./sperf/sperf.c:139:        //before q----->p
+./sperf/sperf.c:140:        //after  q-new->p
+./sperf/sperf.c:141:        q->next=(node*)malloc(sizeof(node));
+./sperf/sperf.c:142:        q->next->next=p;
+./sperf/sperf.c:143:        q=q->next;
+./sperf/sperf.c:144:        q->name=(char*)malloc(strlen(call)+1);
+./sperf/sperf.c:145:        strcpy(q->name,call);
+./sperf/sperf.c:146:        q->time=0.0;
+./sperf/sperf.c:148:      q->time+=time_cost;
+./sperf/sperf.c:163:      //r->q--..->p
+./sperf/sperf.c:167:          (q->time)<
+./sperf/sperf.c:168:          (q->next->time)
+./sperf/sperf.c:170:          swap(r,q,q->next);
+./sperf/sperf.c:171:          q=r->next;
+./sperf/sperf.c:174:          q=q->next;
+./sperf/sperf.c:184:    printf("%20s:%10lfs(%.2lf%%)\n",p->name,p->time,p->time*100/total);
+./sperf/sperf.c:185:    p=p->next;
+./sperf/sperf.c:189:    //before p->a->b->(b->next)
+./sperf/sperf.c:190:    p->next=b;
+./sperf/sperf.c:191:    a->next=b->next;
+./sperf/sperf.c:192:    b->next=a;
+./sperf/sperf.c:193:    //after  p->b->a->(b->next)
+./pstree/pstree.c:12:Support args in forms like '-np' or '-n -p'
+./pstree/pstree.c:46://Proc*-->Proc*-->...-->Proc*|-->NULL(forbidden)
+./pstree/pstree.c:60:    if(pp->son==NULL){
+./pstree/pstree.c:61:        pp->son=info[pid];
+./pstree/pstree.c:63:        if(cmp(pp->son,info[pid])>0){
+./pstree/pstree.c:64:            info[pid]->bro=pp->son;
+./pstree/pstree.c:65:            pp->son=info[pid];
+./pstree/pstree.c:68:        if(print_flag.show_pids==0&&pp->son->cnt!=0&&cmp(pp->son,info[pid])==0){
+./pstree/pstree.c:69:            ++pp->son->cnt;
+./pstree/pstree.c:72:        Proc *l=pp->son,*r=l->bro;
+./pstree/pstree.c:75:            r=l->bro;
+./pstree/pstree.c:77:        if(print_flag.show_pids==0&&r!=NULL&&r->cnt!=0&&cmp(r,info[pid])==0){
+./pstree/pstree.c:78:            ++r->cnt;
+./pstree/pstree.c:81:        info[pid]->bro=l->bro;
+./pstree/pstree.c:82:        l->bro=info[pid];
+./pstree/pstree.c:87:    info[pid]->son=info[pid]->bro=NULL;
+./pstree/pstree.c:88:    info[pid]->pid=pid;
+./pstree/pstree.c:89:    info[pid]->name=NULL;
+./pstree/pstree.c:90:    info[pid]->cnt=0;
+./pstree/pstree.c:101:        if(digit_judge(entry->d_name)) {
+./pstree/pstree.c:102:            sprintf(filename,"%s%s",entry->d_name,"/status");
+./pstree/pstree.c:113:            if(info[pid]->name==NULL)info[pid]->name=malloc(strlen(proname)+1);
+./pstree/pstree.c:114:            strcpy(info[pid]->name,proname);
+./pstree/pstree.c:125:            sprintf(filename,"%s%s",entry->d_name,"/task");
+./pstree/pstree.c:127:            while((task_entry = readdir(tasks)) != NULL) {if(digit_judge(task_entry->d_name)) {
+./pstree/pstree.c:128:                sprintf(filename,"%s%s%s%s",entry->d_name,"/task/",task_entry->d_name,"/status");
+./pstree/pstree.c:140:                    if(info[pid]->name==NULL){
+./pstree/pstree.c:141:                        info[pid]->name=malloc(strlen(proname)+3);
+./pstree/pstree.c:142:                        sprintf(info[pid]->name,"{%s}",proname);
+./pstree/pstree.c:143:                        info[pid]->cnt=1;
+./pstree/pstree.c:156:int depth=-1;
+./pstree/pstree.c:159://Due to different coding like UTF-8, the output maybe different
+./pstree/pstree.c:160://I've tried my best to make every line in output correctly inter-
+./pstree/pstree.c:166://-bar_len is used to omit the rightmost bar, because it's replaced by other kinds
+./pstree/pstree.c:181:        if(p->bro!=NULL){printf("├─");}
+./pstree/pstree.c:183:    }else if(p->pid!=1){
+./pstree/pstree.c:184:        if(p->bro!=NULL){printf("─┬─");}
+./pstree/pstree.c:188:    if(p->cnt>1){
+./pstree/pstree.c:189:        output("%d*[",p->cnt);
+./pstree/pstree.c:191:    output("%s",p->name);
+./pstree/pstree.c:193:        output("(%d)",p->pid);
+./pstree/pstree.c:195:    if(p->cnt>1){
+./pstree/pstree.c:199:    if(p->son==NULL){putchar('\n');return;}
+./pstree/pstree.c:203:    bar_exist[depth]=p->son->bro!=NULL;
+./pstree/pstree.c:205:    print_tree(p->son,1);
+./pstree/pstree.c:207:    Proc* current=p->son->bro;
+./pstree/pstree.c:209:        bar_exist[depth]=current->bro!=NULL;
+./pstree/pstree.c:211:        current=current->bro;
+./pstree/pstree.c:213:    --depth;
+./pstree/pstree.c:224:    {"--version",version},
+./pstree/pstree.c:225:    {"--numeric-sort",numeric_sort},
+./pstree/pstree.c:226:    {"--show-pids",show_pids},
+./pstree/pstree.c:227:    {"-log",bug_fix_log},
+./pstree/pstree.c:238://ares with -- here
+./pstree/pstree.c:244:        if(argv[i][0]=='-'){
+./pstree/pstree.c:245:            if(argv[i][1]=='-'){
+./pstree/pstree.c:246:                //args with --
+./pstree/pstree.c:258:                int k,len=strlen(argv[i]);//prevent multi-call speed up
+./pstree/pstree.c:282:                //args with -
+./pstree/pstree.c:295://The oldest version is copied from https://stackoverflow.com/questions/8149569/scan-a-directory-to-find-files-in-c
+./pstree/pstree.c:299:    puts("Copyright (C) 2019-2019 Michael Yan");
+./pstree/pstree.c:311:    return strcmp(p1->name,p2->name);
+./pstree/pstree.c:314:    if(strcmp(p1->name,p2->name)){
+./pstree/pstree.c:315:        return p1->pid>p2->pid?1:-1;
+./crepl/crepl.c:32:    "-fPIC",
+./crepl/crepl.c:34:    "-m32",
+./crepl/crepl.c:36:    "-m64",
+./crepl/crepl.c:38:    //"-Werror",
+./crepl/crepl.c:39:    "-shared",
+./crepl/crepl.c:40:    "-x",
+./crepl/crepl.c:42:    "-o",
+./crepl/crepl.c:51:    longjmp(interpreter,-1);
+Binary file ./.git/objects/f6/5c1137b5f11e4841331b1281ed7dae34ab91dc matches
+Binary file ./.git/objects/8b/a4a94d149a7d174da0e2598dec821150e1148c matches
+Binary file ./.git/objects/7d/15c406f72fa5388d95d3d5ff7d151a9ea6097c matches
+Binary file ./.git/objects/c5/031dd60beb116757983b9bd5c24df2aa022e2c matches
+Binary file ./.git/objects/fe/698c199c6159237dab79cc844f60fb7c41e52c matches
+Binary file ./.git/objects/c7/9fbe8f102a3288def50909000ded4afcacb5cc matches
+Binary file ./.git/objects/08/66891a057e0cf43095653742e8ae2f1c0ed92c matches
+Binary file ./.git/objects/cd/538a753e69e90e33f247cc545c7591d664449c matches
+Binary file ./.git/objects/50/5f3ba921f10060518da4d8b7aa2041b45d966c matches
+Binary file ./.git/objects/bc/ae0c57640a280e9b297ba48a580df453f62b3c matches
+Binary file ./.git/objects/98/b010ec394fca9993fb23870907edd2ba1afabc matches
+Binary file ./.git/objects/1e/b806f9075e3fd9c651a2ea13e2b5f38e9a589c matches
+Binary file ./.git/objects/a5/f75966c554e4791676cd4842c2f01c0a8ceb8c matches
+Binary file ./.git/objects/f0/ed5de731bfe792d058b641c6090a509691866c matches
+Binary file ./.git/objects/d1/18bc1bc4694b649d91e2843cc3c772fb984a9c matches
+Binary file ./.git/objects/9a/e4636422778f88a7d6a755421826af378670ac matches
+Binary file ./.git/objects/ed/742603bd867b8881453451c9e3451b5cbc309c matches
+Binary file ./.git/objects/df/eed4d419c6f943d6ca8d05fc66ea99fb33bd6c matches
+Binary file ./.git/objects/57/0cc99b4f80b04c9e1fd1a17184bae00793d1fc matches
+Binary file ./.git/objects/95/eb71bd817c91479ecec0dac0430a67f72ef5ac matches
+Binary file ./.git/objects/a0/702b34927d7cb630bbc998a34c62a00084f12c matches
+Binary file ./.git/objects/d2/cffa8bec48ccead8588df05b96349ff2b57bdc matches
+Binary file ./.git/objects/30/749c5e54cb17990dd85c34021b7d36dc0eb23c matches
+Binary file ./.git/objects/65/7f997a2934a5d2274adcf1bd2a0c80a37d34ec matches
+Binary file ./.git/objects/65/1e3f10713cc4077db4dd9d4fe375de8d90bfdc matches
+Binary file ./.git/objects/19/c575514883f991bf847e0e999f3db9bc2e61ac matches
+Binary file ./.git/objects/59/58dcb9b8bdee26aa7828fb4212d37d8427299c matches
+Binary file ./.git/objects/20/7b06aed1f31ec7b65c080a40a43c05bd05f02c matches
+Binary file ./.git/objects/d4/51c0e845989107f1a7996ff6571f47164e7a4c matches
+./abstract-machine/libs/fixmath/src/fix16_trig.c:23:	mask = (inAngle >> (sizeof(fix16_t)*CHAR_BIT-1));
+./abstract-machine/libs/fixmath/src/fix16_trig.c:26:	/* On 0->PI, sin looks like x² that is :
+./abstract-machine/libs/fixmath/src/fix16_trig.c:27:	   - centered on PI/2,
+./abstract-machine/libs/fixmath/src/fix16_trig.c:28:	   - equals 1 on PI/2,
+./abstract-machine/libs/fixmath/src/fix16_trig.c:29:	   - equals 0 on 0 and PI
+./abstract-machine/libs/fixmath/src/fix16_trig.c:30:	  that means :  4/PI * x  - 4/PI² * x²
+./abstract-machine/libs/fixmath/src/fix16_trig.c:31:	  Use abs(x) to handle (-PI) -> 0 zone.
+./abstract-machine/libs/fixmath/src/fix16_trig.c:34:	/* At this point, retval equals sin(inAngle) on important points ( -PI, -PI/2, 0, PI/2, PI),
+./abstract-machine/libs/fixmath/src/fix16_trig.c:39:	mask = (retval >> (sizeof(fix16_t)*CHAR_BIT-1));
+./abstract-machine/libs/fixmath/src/fix16_trig.c:42:	retval += fix16_mul(X4_CORRECTION_COMPONENT, fix16_mul(retval, abs_retval) - retval );
+./abstract-machine/libs/fixmath/src/fix16_trig.c:57:		tempAngle -= fix16_pi;
+./abstract-machine/libs/fixmath/src/fix16_trig.c:59:			tempAngle = fix16_pi - tempAngle;
+./abstract-machine/libs/fixmath/src/fix16_trig.c:60:		tempOut = -(tempAngle >= _fix16_sin_lut_count ? fix16_one : _fix16_sin_lut[tempAngle]);
+./abstract-machine/libs/fixmath/src/fix16_trig.c:63:			tempAngle = fix16_pi - tempAngle;
+./abstract-machine/libs/fixmath/src/fix16_trig.c:68:		tempAngle -= (fix16_pi << 1);
+./abstract-machine/libs/fixmath/src/fix16_trig.c:69:	else if(tempAngle < -fix16_pi)
+./abstract-machine/libs/fixmath/src/fix16_trig.c:83:	tempOut -= (tempAngle / 6);
+./abstract-machine/libs/fixmath/src/fix16_trig.c:87:	tempOut -= (tempAngle / 5040);
+./abstract-machine/libs/fixmath/src/fix16_trig.c:91:	tempOut -= (tempAngle / 39916800);
+./abstract-machine/libs/fixmath/src/fix16_trig.c:94:	tempOut = fix16_mul(-13, tempAngleSq) + 546;
+./abstract-machine/libs/fixmath/src/fix16_trig.c:95:	tempOut = fix16_mul(tempOut, tempAngleSq) - 10923;
+./abstract-machine/libs/fixmath/src/fix16_trig.c:122:		|| (x < -fix16_one))
+./abstract-machine/libs/fixmath/src/fix16_trig.c:126:	out = (fix16_one - fix16_mul(x, x));
+./abstract-machine/libs/fixmath/src/fix16_trig.c:134:	return ((fix16_pi >> 1) - fix16_asin(x));
+./abstract-machine/libs/fixmath/src/fix16_trig.c:150:	mask = (inY >> (sizeof(fix16_t)*CHAR_BIT-1));
+./abstract-machine/libs/fixmath/src/fix16_trig.c:155:		r = fix16_div( (inX - abs_inY), (inX + abs_inY));
+./abstract-machine/libs/fixmath/src/fix16_trig.c:157:		angle = fix16_mul(0x00003240 , r_3) - fix16_mul(0x0000FB50,r) + PI_DIV_4;
+./abstract-machine/libs/fixmath/src/fix16_trig.c:159:		r = fix16_div( (inX + abs_inY), (abs_inY - inX));
+./abstract-machine/libs/fixmath/src/fix16_trig.c:162:			- fix16_mul(0x0000FB50,r)
+./abstract-machine/libs/fixmath/src/fix16_trig.c:167:		angle = -angle;
+./abstract-machine/libs/fixmath/src/fract32.c:9:	uint32_t tempDiv = (0xFFFFFFFF / (inDenominator - 1));
+./abstract-machine/libs/fixmath/src/fract32.c:14:	return (0xFFFFFFFF - inFract);
+./abstract-machine/libs/fixmath/src/fract32.c:24:        return -(int32_t)fract32_usmul(-inVal, inFract);
+./abstract-machine/libs/fixmath/src/fix16_exp.c:15:	if(inValue <= -772243  ) return 0;
+./abstract-machine/libs/fixmath/src/fix16_exp.c:31:	// The power-series converges much faster on positive values
+./abstract-machine/libs/fixmath/src/fix16_exp.c:32:	// and exp(-x) = 1/exp(x).
+./abstract-machine/libs/fixmath/src/fix16_exp.c:34:	if (neg) inValue = -inValue;
+./abstract-machine/libs/fixmath/src/fix16_exp.c:82:		scaling -= 4;
+./abstract-machine/libs/fixmath/src/fix16_exp.c:88:		// f(x) = e(x) - y
+./abstract-machine/libs/fixmath/src/fix16_exp.c:91:		delta = fix16_div(inValue - e, e);
+./abstract-machine/libs/fixmath/src/fix16_exp.c:99:		&& ((delta > 1) || (delta < -1)));
+./abstract-machine/libs/fixmath/src/fix16_exp.c:135:	for(i = 16; i > 0; i--)
+./abstract-machine/libs/fixmath/src/fix16_exp.c:163: * This can be used as a helper function to calculate powers with non-integer powers and/or bases.
+./abstract-machine/libs/fixmath/src/fix16_exp.c:167:	// Note that a negative x gives a non-real result.
+./abstract-machine/libs/fixmath/src/fix16_exp.c:168:	// If x == 0, the limit of log2(x)  as x -> 0 = -infinity.
+./abstract-machine/libs/fixmath/src/fix16_exp.c:169:	// log2(-ve) gives a complex result.
+./abstract-machine/libs/fixmath/src/fix16_exp.c:172:	// If the input is less than one, the result is -log2(1.0 / in)
+./abstract-machine/libs/fixmath/src/fix16_exp.c:177:		if (x == 1) return fix16_from_int(-16);
+./abstract-machine/libs/fixmath/src/fix16_exp.c:180:		return -fix16__log2_inner(inverse);
+./abstract-machine/libs/fixmath/src/fix16.c:27:	uint32_t diff = _a - _b;
+./abstract-machine/libs/fixmath/src/fix16.c:61:/* 64-bit implementation for fix16_mul. Fastest version for e.g. ARM Cortex M3.
+./abstract-machine/libs/fixmath/src/fix16.c:62: * Performs a 32*32 -> 64bit multiplication. The middle 32 bits are the result,
+./abstract-machine/libs/fixmath/src/fix16.c:85:		// This adjustment is required in order to round -1/2 correctly
+./abstract-machine/libs/fixmath/src/fix16.c:86:		product--;
+./abstract-machine/libs/fixmath/src/fix16.c:108:/* 32-bit implementation of fix16_mul. Potentially fast on 16-bit processors,
+./abstract-machine/libs/fixmath/src/fix16.c:110: * uint64_t. Uses 16*16->32bit multiplications.
+./abstract-machine/libs/fixmath/src/fix16.c:115:	// Each argument is divided to 16-bit parts.
+./abstract-machine/libs/fixmath/src/fix16.c:118:	// -----------
+./abstract-machine/libs/fixmath/src/fix16.c:119:	//					BD	16 * 16 -> 32 bit products
+./abstract-machine/libs/fixmath/src/fix16.c:123:	//			 |----| 64 bit product
+./abstract-machine/libs/fixmath/src/fix16.c:149:	// achieves proper rounding to result-1, except in the corner
+./abstract-machine/libs/fixmath/src/fix16.c:153:	product_lo -= 0x8000;
+./abstract-machine/libs/fixmath/src/fix16.c:154:	product_lo -= (uint32_t)product_hi >> 31;
+./abstract-machine/libs/fixmath/src/fix16.c:156:		product_hi--;
+./abstract-machine/libs/fixmath/src/fix16.c:159:	// as dividing by 0x10000. For example if product = -1, result will
+./abstract-machine/libs/fixmath/src/fix16.c:160:	// also be -1 and not 0. This is compensated by adding +1 to the result
+./abstract-machine/libs/fixmath/src/fix16.c:169:/* 8-bit implementation of fix16_mul. Fastest on e.g. Atmel AVR.
+./abstract-machine/libs/fixmath/src/fix16.c:170: * Uses 8*8->16bit multiplications, and also skips any bytes that
+./abstract-machine/libs/fixmath/src/fix16.c:176:	uint32_t _a = (inArg0 >= 0) ? inArg0 : (-inArg0);
+./abstract-machine/libs/fixmath/src/fix16.c:177:	uint32_t _b = (inArg1 >= 0) ? inArg1 : (-inArg1);
+./abstract-machine/libs/fixmath/src/fix16.c:246:		result = -result;
+./abstract-machine/libs/fixmath/src/fix16.c:271:/* 32-bit implementation of fix16_div. Fastest version for e.g. ARM Cortex M3.
+./abstract-machine/libs/fixmath/src/fix16.c:272: * Performs 32-bit divisions repeatedly to reduce the remainder. For this to
+./abstract-machine/libs/fixmath/src/fix16.c:273: * be efficient, the processor has to have 32-bit hardware division.
+./abstract-machine/libs/fixmath/src/fix16.c:277:// Count leading zeros, using processor-specific instruction if available.
+./abstract-machine/libs/fixmath/src/fix16.c:278:#define clz(x) (__builtin_clzl(x) - (8 * sizeof(long) - 32))
+./abstract-machine/libs/fixmath/src/fix16.c:293:	// computed all the bits in (a<<17)/b. Usually this takes 1-3 iterations.
+./abstract-machine/libs/fixmath/src/fix16.c:298:	uint32_t remainder = (a >= 0) ? a : (-a);
+./abstract-machine/libs/fixmath/src/fix16.c:299:	uint32_t divider = (b >= 0) ? b : (-b);
+./abstract-machine/libs/fixmath/src/fix16.c:303:	// Kick-start the division a bit.
+./abstract-machine/libs/fixmath/src/fix16.c:304:	// This improves speed in the worst-case scenarios where N and D are large
+./abstract-machine/libs/fixmath/src/fix16.c:310:		remainder -= ((uint64_t)quotient * divider) >> 17;
+./abstract-machine/libs/fixmath/src/fix16.c:317:		bit_pos -= 4;
+./abstract-machine/libs/fixmath/src/fix16.c:326:		bit_pos -= shift;
+./abstract-machine/libs/fixmath/src/fix16.c:338:		bit_pos--;
+./abstract-machine/libs/fixmath/src/fix16.c:356:		result = -result;
+./abstract-machine/libs/fixmath/src/fix16.c:363:/* Alternative 32-bit implementation of fix16_div. Fastest on e.g. Atmel AVR.
+./abstract-machine/libs/fixmath/src/fix16.c:372:	// trying to compose a 64-bit divide out of 32-bit divisions on
+./abstract-machine/libs/fixmath/src/fix16.c:378:	uint32_t remainder = (a >= 0) ? a : (-a);
+./abstract-machine/libs/fixmath/src/fix16.c:379:	uint32_t divider = (b >= 0) ? b : (-b);
+./abstract-machine/libs/fixmath/src/fix16.c:403:				remainder -= divider;
+./abstract-machine/libs/fixmath/src/fix16.c:415:				remainder -= divider;
+./abstract-machine/libs/fixmath/src/fix16.c:439:		result = -result;
+./abstract-machine/libs/fixmath/src/fix16.c:471:		while(x >=  y) x -= y;
+./abstract-machine/libs/fixmath/src/fix16.c:472:		while(x <= -y) x += y;
+./abstract-machine/libs/fixmath/src/fix16.c:488:	int64_t tempOut = int64_mul_i32_i32(inArg0, ((1 << 8) - inFract));
+./abstract-machine/libs/fixmath/src/fix16.c:490:	tempOut = int64_shift(tempOut, -8);
+./abstract-machine/libs/fixmath/src/fix16.c:496:	int64_t tempOut = int64_mul_i32_i32(inArg0, (((int32_t)1 << 16) - inFract));
+./abstract-machine/libs/fixmath/src/fix16.c:498:	tempOut = int64_shift(tempOut, -16);
+./abstract-machine/libs/fixmath/src/fix16.c:505:	tempOut  = ((int64_t)inArg0 * (0 - inFract));
+./abstract-machine/libs/fixmath/src/fix16_str.c:30:    uint32_t uvalue = (value >= 0) ? value : -value;
+./abstract-machine/libs/fixmath/src/fix16_str.c:32:        *buf++ = '-';
+./abstract-machine/libs/fixmath/src/fix16_str.c:44:        fracpart -= scale;    
+./abstract-machine/libs/fixmath/src/fix16_str.c:66:    bool negative = (*buf == '-');
+./abstract-machine/libs/fixmath/src/fix16_str.c:67:    if (*buf == '+' || *buf == '-')
+./abstract-machine/libs/fixmath/src/fix16_str.c:76:        intpart += *buf++ - '0';
+./abstract-machine/libs/fixmath/src/fix16_str.c:97:            fracpart += *buf++ - '0';
+./abstract-machine/libs/fixmath/src/fix16_str.c:112:    return negative ? -value : value;
+./abstract-machine/libs/fixmath/src/fix16_sqrt.c:6: * in order to use only 32-bit operations.
+./abstract-machine/libs/fixmath/src/fix16_sqrt.c:8: * Note that for negative numbers we return -sqrt(-inValue).
+./abstract-machine/libs/fixmath/src/fix16_sqrt.c:15:	uint32_t num = (neg ? -inValue : inValue);
+./abstract-machine/libs/fixmath/src/fix16_sqrt.c:40:				num -= result + bit;
+./abstract-machine/libs/fixmath/src/fix16_sqrt.c:58:				// num = a - (result + 0.5)^2
+./abstract-machine/libs/fixmath/src/fix16_sqrt.c:59:				//	 = num + result^2 - (result + 0.5)^2
+./abstract-machine/libs/fixmath/src/fix16_sqrt.c:60:				//	 = num - result - 0.5
+./abstract-machine/libs/fixmath/src/fix16_sqrt.c:61:				num -= result;
+./abstract-machine/libs/fixmath/src/fix16_sqrt.c:62:				num = (num << 16) - 0x8000;
+./abstract-machine/libs/fixmath/src/fix16_sqrt.c:83:	return (neg ? -(fix16_t)result : (fix16_t)result);
+./abstract-machine/libs/compiler-rt/moddi3.c:1:/*===-- moddi3.c - Implement __moddi3 -------------------------------------===
+./abstract-machine/libs/compiler-rt/moddi3.c:8: * ===----------------------------------------------------------------------===
+./abstract-machine/libs/compiler-rt/moddi3.c:12: * ===----------------------------------------------------------------------===
+./abstract-machine/libs/compiler-rt/moddi3.c:22:    const int bits_in_dword_m1 = (int)(sizeof(di_int) * CHAR_BIT) - 1;
+./abstract-machine/libs/compiler-rt/moddi3.c:23:    di_int s = b >> bits_in_dword_m1;  /* s = b < 0 ? -1 : 0 */
+./abstract-machine/libs/compiler-rt/moddi3.c:24:    b = (b ^ s) - s;                   /* negate if s == -1 */
+./abstract-machine/libs/compiler-rt/moddi3.c:25:    s = a >> bits_in_dword_m1;         /* s = a < 0 ? -1 : 0 */
+./abstract-machine/libs/compiler-rt/moddi3.c:26:    a = (a ^ s) - s;                   /* negate if s == -1 */
+./abstract-machine/libs/compiler-rt/moddi3.c:29:    return ((di_int)r ^ s) - s;                /* negate if s == -1 */
+./abstract-machine/libs/compiler-rt/udivdi3.c:1:/* ===-- udivdi3.c - Implement __udivdi3 -----------------------------------===
+./abstract-machine/libs/compiler-rt/udivdi3.c:8: * ===----------------------------------------------------------------------===
+./abstract-machine/libs/compiler-rt/udivdi3.c:12: * ===----------------------------------------------------------------------===
+./abstract-machine/libs/compiler-rt/udivmoddi4.c:1:/* ===-- udivmoddi4.c - Implement __udivmoddi4 -----------------------------===
+./abstract-machine/libs/compiler-rt/udivmoddi4.c:8: * ===----------------------------------------------------------------------===
+./abstract-machine/libs/compiler-rt/udivmoddi4.c:12: * ===----------------------------------------------------------------------===
+./abstract-machine/libs/compiler-rt/udivmoddi4.c:21:/* Translated from Figure 3-40 of The PowerPC Compiler Writer's Guide */
+./abstract-machine/libs/compiler-rt/udivmoddi4.c:41:             * ---
+./abstract-machine/libs/compiler-rt/udivmoddi4.c:49:         * ---
+./abstract-machine/libs/compiler-rt/udivmoddi4.c:62:             * ---
+./abstract-machine/libs/compiler-rt/udivmoddi4.c:73:             * ---
+./abstract-machine/libs/compiler-rt/udivmoddi4.c:85:         * ---
+./abstract-machine/libs/compiler-rt/udivmoddi4.c:88:        if ((d.s.high & (d.s.high - 1)) == 0)     /* if d is a power of 2 */
+./abstract-machine/libs/compiler-rt/udivmoddi4.c:93:                r.s.high = n.s.high & (d.s.high - 1);
+./abstract-machine/libs/compiler-rt/udivmoddi4.c:99:         * ---
+./abstract-machine/libs/compiler-rt/udivmoddi4.c:102:        sr = __builtin_clz(d.s.high) - __builtin_clz(n.s.high);
+./abstract-machine/libs/compiler-rt/udivmoddi4.c:103:        /* 0 <= sr <= n_uword_bits - 2 or sr large */
+./abstract-machine/libs/compiler-rt/udivmoddi4.c:104:        if (sr > n_uword_bits - 2)
+./abstract-machine/libs/compiler-rt/udivmoddi4.c:111:        /* 1 <= sr <= n_uword_bits - 1 */
+./abstract-machine/libs/compiler-rt/udivmoddi4.c:112:        /* q.all = n.all << (n_udword_bits - sr); */
+./abstract-machine/libs/compiler-rt/udivmoddi4.c:114:        q.s.high = n.s.low << (n_uword_bits - sr);
+./abstract-machine/libs/compiler-rt/udivmoddi4.c:117:        r.s.low = (n.s.high << (n_uword_bits - sr)) | (n.s.low >> sr);
+./abstract-machine/libs/compiler-rt/udivmoddi4.c:124:             * ---
+./abstract-machine/libs/compiler-rt/udivmoddi4.c:127:            if ((d.s.low & (d.s.low - 1)) == 0)     /* if d is a power of 2 */
+./abstract-machine/libs/compiler-rt/udivmoddi4.c:130:                    *rem = n.s.low & (d.s.low - 1);
+./abstract-machine/libs/compiler-rt/udivmoddi4.c:135:                q.s.low = (n.s.high << (n_uword_bits - sr)) | (n.s.low >> sr);
+./abstract-machine/libs/compiler-rt/udivmoddi4.c:139:             * ---
+./abstract-machine/libs/compiler-rt/udivmoddi4.c:142:            sr = 1 + n_uword_bits + __builtin_clz(d.s.low) - __builtin_clz(n.s.high);
+./abstract-machine/libs/compiler-rt/udivmoddi4.c:143:            /* 2 <= sr <= n_udword_bits - 1
+./abstract-machine/libs/compiler-rt/udivmoddi4.c:144:             * q.all = n.all << (n_udword_bits - sr);
+./abstract-machine/libs/compiler-rt/udivmoddi4.c:154:            else if (sr < n_uword_bits)  // 2 <= sr <= n_uword_bits - 1
+./abstract-machine/libs/compiler-rt/udivmoddi4.c:157:                q.s.high = n.s.low << (n_uword_bits - sr);
+./abstract-machine/libs/compiler-rt/udivmoddi4.c:159:                r.s.low = (n.s.high << (n_uword_bits - sr)) | (n.s.low >> sr);
+./abstract-machine/libs/compiler-rt/udivmoddi4.c:161:            else              // n_uword_bits + 1 <= sr <= n_udword_bits - 1
+./abstract-machine/libs/compiler-rt/udivmoddi4.c:163:                q.s.low = n.s.low << (n_udword_bits - sr);
+./abstract-machine/libs/compiler-rt/udivmoddi4.c:164:                q.s.high = (n.s.high << (n_udword_bits - sr)) |
+./abstract-machine/libs/compiler-rt/udivmoddi4.c:165:                           (n.s.low >> (sr - n_uword_bits));
+./abstract-machine/libs/compiler-rt/udivmoddi4.c:167:                r.s.low = n.s.high >> (sr - n_uword_bits);
+./abstract-machine/libs/compiler-rt/udivmoddi4.c:173:             * ---
+./abstract-machine/libs/compiler-rt/udivmoddi4.c:176:            sr = __builtin_clz(d.s.high) - __builtin_clz(n.s.high);
+./abstract-machine/libs/compiler-rt/udivmoddi4.c:177:            /* 0 <= sr <= n_uword_bits - 1 or sr large */
+./abstract-machine/libs/compiler-rt/udivmoddi4.c:178:            if (sr > n_uword_bits - 1)
+./abstract-machine/libs/compiler-rt/udivmoddi4.c:186:            /*  q.all = n.all << (n_udword_bits - sr); */
+./abstract-machine/libs/compiler-rt/udivmoddi4.c:196:                q.s.high = n.s.low << (n_uword_bits - sr);
+./abstract-machine/libs/compiler-rt/udivmoddi4.c:198:                r.s.low = (n.s.high << (n_uword_bits - sr)) | (n.s.low >> sr);
+./abstract-machine/libs/compiler-rt/udivmoddi4.c:204:     * q.all = n.all << (n_udword_bits - sr);
+./abstract-machine/libs/compiler-rt/udivmoddi4.c:206:     * 1 <= sr <= n_udword_bits - 1
+./abstract-machine/libs/compiler-rt/udivmoddi4.c:209:    for (; sr > 0; --sr)
+./abstract-machine/libs/compiler-rt/udivmoddi4.c:212:        r.s.high = (r.s.high << 1) | (r.s.low  >> (n_uword_bits - 1));
+./abstract-machine/libs/compiler-rt/udivmoddi4.c:213:        r.s.low  = (r.s.low  << 1) | (q.s.high >> (n_uword_bits - 1));
+./abstract-machine/libs/compiler-rt/udivmoddi4.c:214:        q.s.high = (q.s.high << 1) | (q.s.low  >> (n_uword_bits - 1));
+./abstract-machine/libs/compiler-rt/udivmoddi4.c:219:         *      r.all -= d.all;
+./abstract-machine/libs/compiler-rt/udivmoddi4.c:223:        const di_int s = (di_int)(d.all - r.all - 1) >> (n_udword_bits - 1);
+./abstract-machine/libs/compiler-rt/udivmoddi4.c:225:        r.all -= d.all & s;
+./abstract-machine/libs/compiler-rt/divdi3.c:1:/* ===-- divdi3.c - Implement __divdi3 -------------------------------------===
+./abstract-machine/libs/compiler-rt/divdi3.c:8: * ===----------------------------------------------------------------------===
+./abstract-machine/libs/compiler-rt/divdi3.c:12: * ===----------------------------------------------------------------------===
+./abstract-machine/libs/compiler-rt/divdi3.c:22:    const int bits_in_dword_m1 = (int)(sizeof(di_int) * CHAR_BIT) - 1;
+./abstract-machine/libs/compiler-rt/divdi3.c:23:    di_int s_a = a >> bits_in_dword_m1;           /* s_a = a < 0 ? -1 : 0 */
+./abstract-machine/libs/compiler-rt/divdi3.c:24:    di_int s_b = b >> bits_in_dword_m1;           /* s_b = b < 0 ? -1 : 0 */
+./abstract-machine/libs/compiler-rt/divdi3.c:25:    a = (a ^ s_a) - s_a;                         /* negate if s_a == -1 */
+./abstract-machine/libs/compiler-rt/divdi3.c:26:    b = (b ^ s_b) - s_b;                         /* negate if s_b == -1 */
+./abstract-machine/libs/compiler-rt/divdi3.c:28:    return (__udivmoddi4(a, b, (du_int*)0) ^ s_a) - s_a;  /* negate if s_a == -1 */
+./abstract-machine/libs/compiler-rt/umoddi3.c:1:/* ===-- umoddi3.c - Implement __umoddi3 -----------------------------------===
+./abstract-machine/libs/compiler-rt/umoddi3.c:8: * ===----------------------------------------------------------------------===
+./abstract-machine/libs/compiler-rt/umoddi3.c:12: * ===----------------------------------------------------------------------===
+./abstract-machine/libs/compiler-rt/divmoddi4.c:1:/*===-- divmoddi4.c - Implement __divmoddi4 --------------------------------===
+./abstract-machine/libs/compiler-rt/divmoddi4.c:8: * ===----------------------------------------------------------------------===
+./abstract-machine/libs/compiler-rt/divmoddi4.c:12: * ===----------------------------------------------------------------------===
+./abstract-machine/libs/compiler-rt/divmoddi4.c:23:  *rem = a - (d*b);
+./abstract-machine/libs/klib/src/intr.c:3:#include "../am/src/x86/x86-qemu.h"
+./abstract-machine/libs/klib/src/intr.c:19:    --ncli[cpu_id];
+./abstract-machine/libs/klib/src/string.c:49:    return *s1-*s2;
+./abstract-machine/libs/klib/src/string.c:57:        --n;
+./abstract-machine/libs/klib/src/string.c:59:    return *s1-*s2;
+./abstract-machine/libs/klib/src/string.c:85:          return ((char*)s2)[i]-((char*)s1)[i];
+./abstract-machine/libs/klib/src/stdio.c:12:    int i,n=vsnprintf(buf,-1,fmt,ap);
+./abstract-machine/libs/klib/src/stdio.c:27:    return vsnprintf(out,-1,fmt,ap);
+./abstract-machine/libs/klib/src/stdio.c:33:    return vsnprintf(out,-1,fmt,ap);
+./abstract-machine/libs/klib/src/stdio.c:47:    if(cnt<n-1){ \
+./abstract-machine/libs/klib/src/stdio.c:79:                fill_width += *p - '0';
+./abstract-machine/libs/klib/src/stdio.c:101:                            output(num[--i]);
+./abstract-machine/libs/klib/src/stdio.c:111:                                (uval >> ((sizeof(void *) << 3) - 4)) < 10 ?
+./abstract-machine/libs/klib/src/stdio.c:112:                                (uval >> ((sizeof(void *) << 3) - 4)) + '0' :
+./abstract-machine/libs/klib/src/stdio.c:113:                                (uval >> ((sizeof(void *) << 3) - 4)) - 10 + 'a');
+./abstract-machine/libs/klib/src/stdio.c:115:                        --i;
+./abstract-machine/libs/klib/src/stdio.c:121:                        output('-');
+./abstract-machine/libs/klib/src/stdio.c:122:                        ival = -ival;
+./abstract-machine/libs/klib/src/stdio.c:134:                            output(num[--i]);
+./abstract-machine/libs/klib/src/stdio.c:144:                        dval -= ((int) dval / d) * d;
+./abstract-machine/libs/klib/src/stdio.c:168:    return cnt-1;
+./abstract-machine/am/src/native/devices/timer.c:15:      long seconds = now.tv_sec - boot_time.tv_sec;
+./abstract-machine/am/src/native/devices/timer.c:16:      long useconds = now.tv_usec - boot_time.tv_usec;
+./abstract-machine/am/src/native/devices/timer.c:18:      uptime->hi = 0;
+./abstract-machine/am/src/native/devices/timer.c:19:      uptime->lo = seconds * 1000 + (useconds + 500) / 1000;
+./abstract-machine/am/src/native/devices/timer.c:26:      rtc->second = tm->tm_sec;
+./abstract-machine/am/src/native/devices/timer.c:27:      rtc->minute = tm->tm_min;
+./abstract-machine/am/src/native/devices/timer.c:28:      rtc->hour   = tm->tm_hour;
+./abstract-machine/am/src/native/devices/timer.c:29:      rtc->day    = tm->tm_mday;
+./abstract-machine/am/src/native/devices/timer.c:30:      rtc->month  = tm->tm_mon + 1;
+./abstract-machine/am/src/native/devices/timer.c:31:      rtc->year   = tm->tm_year + 1900;
+./abstract-machine/am/src/native/devices/input.c:60:      kbd->keydown = (k & KEYDOWN_MASK ? 1 : 0);
+./abstract-machine/am/src/native/devices/input.c:61:      kbd->keycode = k & ~KEYDOWN_MASK;
+./abstract-machine/am/src/native/devices/video.c:48:      info->width = W;
+./abstract-machine/am/src/native/devices/video.c:49:      info->height = H;
+./abstract-machine/am/src/native/devices/video.c:60:      int x = ctl->x, y = ctl->y, w = ctl->w, h = ctl->h;
+./abstract-machine/am/src/native/devices/video.c:61:      uint32_t *pixels = ctl->pixels;
+./abstract-machine/am/src/native/devices/video.c:62:      int cp_bytes = sizeof(uint32_t) * min(w, W - x);
+./abstract-machine/am/src/native/devices/video.c:67:      if (ctl->sync) {
+./abstract-machine/am/src/native/vme.c:16:  for (p = head; p != NULL; p = p->next)
+./abstract-machine/am/src/native/vme.c:31:  p->ptr = NULL;
+./abstract-machine/am/src/native/vme.c:32:  p->pgsize = PGSIZE;
+./abstract-machine/am/src/native/vme.c:43:  c->prot = cur_as;
+./abstract-machine/am/src/native/vme.c:49:  _AddressSpace *p = c->prot;
+./abstract-machine/am/src/native/vme.c:55:  list_foreach(pp, cur_as->ptr) {
+./abstract-machine/am/src/native/vme.c:56:    if (pp->is_mapped) {
+./abstract-machine/am/src/native/vme.c:57:      shm_munmap((void *)(pp->vpn << PGSHIFT));
+./abstract-machine/am/src/native/vme.c:58:      pp->is_mapped = false;
+./abstract-machine/am/src/native/vme.c:63:  list_foreach(pp, p->ptr) {
+./abstract-machine/am/src/native/vme.c:64:    shm_mmap((void *)(pp->vpn << PGSHIFT), (void *)(pp->ppn << PGSHIFT), 0);
+./abstract-machine/am/src/native/vme.c:65:    pp->is_mapped = true;
+./abstract-machine/am/src/native/vme.c:74:  list_foreach(pp, p->ptr) {
+./abstract-machine/am/src/native/vme.c:77:    // but we do this to catch unexcepted behavior from Nanos-lite
+./abstract-machine/am/src/native/vme.c:78:    if (pp->vpn == vpn) {
+./abstract-machine/am/src/native/vme.c:79:      printf("check remap: %p -> %p, but previously %p -> %p\n", va, pa, pp->vpn << PGSHIFT, pp->ppn << PGSHIFT);
+./abstract-machine/am/src/native/vme.c:80:      assert(pp->ppn == ((uintptr_t)pa >> PGSHIFT));
+./abstract-machine/am/src/native/vme.c:86:  pp->vpn = vpn;
+./abstract-machine/am/src/native/vme.c:87:  pp->ppn = (uintptr_t)pa >> PGSHIFT;
+./abstract-machine/am/src/native/vme.c:88:  pp->next = p->ptr;
+./abstract-machine/am/src/native/vme.c:89:  p->ptr = pp;
+./abstract-machine/am/src/native/vme.c:93:    shm_mmap((void *)(pp->vpn << PGSHIFT), (void *)(pp->ppn << PGSHIFT), 0);
+./abstract-machine/am/src/native/vme.c:94:    pp->is_mapped = true;
+./abstract-machine/am/src/native/vme.c:97:    pp->is_mapped = false;
+./abstract-machine/am/src/native/vme.c:106:  ustack.end -= 1 * sizeof(uintptr_t);  // 1 = retaddr
+./abstract-machine/am/src/native/vme.c:110:  _Context *c = (_Context*)ustack.end - 1;
+./abstract-machine/am/src/native/vme.c:112:  c->rip = (uintptr_t)entry;
+./abstract-machine/am/src/native/vme.c:113:  c->prot = p;
+./abstract-machine/am/src/native/vme.c:115:  c->uc.uc_mcontext.gregs[REG_RDI] = 0;
+./abstract-machine/am/src/native/vme.c:116:  c->uc.uc_mcontext.gregs[REG_RSI] = ret; // ???
+./abstract-machine/am/src/native/vme.c:117:  c->uc.uc_mcontext.gregs[REG_RDX] = ret; // ???
+./abstract-machine/am/src/native/cte.c:13:  getcontext(&c->uc);
+./abstract-machine/am/src/native/cte.c:17:  e.event = ((uint32_t)c->rax == -1 ? _EVENT_YIELD : _EVENT_SYSCALL);
+./abstract-machine/am/src/native/cte.c:24:  c->uc.uc_mcontext.gregs[REG_RIP] = (uintptr_t)ret_from_trap;
+./abstract-machine/am/src/native/cte.c:25:  c->uc.uc_mcontext.gregs[REG_RSP] = (uintptr_t)c;
+./abstract-machine/am/src/native/cte.c:27:  setcontext(&c->uc);
+./abstract-machine/am/src/native/cte.c:41:  _Context *c = (_Context*)stack.end - 1;
+./abstract-machine/am/src/native/cte.c:44:  c->rip = (uintptr_t)entry;
+./abstract-machine/am/src/native/cte.c:49:  asm volatile("call *0x100000": : "a"(-1));
+./abstract-machine/am/src/x86/qemu/devices/timer.c:1:#include "../../x86-qemu.h"
+./abstract-machine/am/src/x86/qemu/devices/timer.c:43:  uint32_t freq = (tsc2 - tsc1) >> 20;
+./abstract-machine/am/src/x86/qemu/devices/timer.c:44:  freq /= (t2 - t1);
+./abstract-machine/am/src/x86/qemu/devices/timer.c:51:    rtc->second = read_rtc(0);
+./abstract-machine/am/src/x86/qemu/devices/timer.c:52:    rtc->minute = read_rtc(2);
+./abstract-machine/am/src/x86/qemu/devices/timer.c:53:    rtc->hour   = read_rtc(4);
+./abstract-machine/am/src/x86/qemu/devices/timer.c:54:    rtc->day    = read_rtc(7);
+./abstract-machine/am/src/x86/qemu/devices/timer.c:55:    rtc->month  = read_rtc(8);
+./abstract-machine/am/src/x86/qemu/devices/timer.c:56:    rtc->year   = read_rtc(9) + 2000;
+./abstract-machine/am/src/x86/qemu/devices/timer.c:58:  } while (tmp != rtc->second);
+./abstract-machine/am/src/x86/qemu/devices/timer.c:70:      uint64_t tsc = rdtsc() - uptsc;
+./abstract-machine/am/src/x86/qemu/devices/timer.c:74:      uptime->hi = 0;
+./abstract-machine/am/src/x86/qemu/devices/timer.c:75:      uptime->lo = ms;
+./abstract-machine/am/src/x86/qemu/devices/pcdev.c:1:#include "../../x86-qemu.h"
+./abstract-machine/am/src/x86/qemu/devices/cpu.c:1:#include "../../x86-qemu.h"
+./abstract-machine/am/src/x86/qemu/devices/cpu.c:8:      volatile MPConf *conf = ((volatile MPDesc *)st)->conf;
+./abstract-machine/am/src/x86/qemu/devices/cpu.c:9:      lapic = conf->lapicaddr;
+./abstract-machine/am/src/x86/qemu/devices/cpu.c:11:                 ptr < (char *)conf + conf->length; ptr += 8) {
+./abstract-machine/am/src/x86/qemu/devices/cpu.c:22:  panic("seems not an x86-qemu virtual machine");
+./abstract-machine/am/src/x86/qemu/devices/cpu.c:26:  SegDesc *gdt = CPU->gdt;
+./abstract-machine/am/src/x86/qemu/devices/cpu.c:27:  TSS *tss = &CPU->tss;
+./abstract-machine/am/src/x86/qemu/devices/cpu.c:32:  gdt[SEG_TSS]   = SEG16(STS_T32A,      tss, sizeof(*tss)-1, DPL_KERN);
+./abstract-machine/am/src/x86/qemu/devices/cpu.c:38:  CPU->tss.ss0 = ss0;
+./abstract-machine/am/src/x86/qemu/devices/cpu.c:39:  CPU->tss.esp0 = esp0;
+./abstract-machine/am/src/x86/qemu/devices/cpu.c:48:  bootrec->is_ap = 1;
+./abstract-machine/am/src/x86/qemu/devices/cpu.c:49:  bootrec->entry = thiscpu_halt;
+./abstract-machine/am/src/x86/qemu/devices/input.c:1:#include "../../x86-qemu.h"
+./abstract-machine/am/src/x86/qemu/devices/input.c:17:  kbd->keydown = 0;
+./abstract-machine/am/src/x86/qemu/devices/input.c:18:  kbd->keycode = _KEY_NONE;
+./abstract-machine/am/src/x86/qemu/devices/input.c:29:          kbd->keydown = 1;
+./abstract-machine/am/src/x86/qemu/devices/input.c:30:          kbd->keycode = i;
+./abstract-machine/am/src/x86/qemu/devices/input.c:33:          kbd->keydown = 0;
+./abstract-machine/am/src/x86/qemu/devices/input.c:34:          kbd->keycode = i;
+./abstract-machine/am/src/x86/qemu/devices/video.c:1:#include "../../x86-qemu.h"
+./abstract-machine/am/src/x86/qemu/devices/video.c:57:  W = info->width;
+./abstract-machine/am/src/x86/qemu/devices/video.c:58:  H = info->height;
+./abstract-machine/am/src/x86/qemu/devices/video.c:59:  fb = (FBPixel*)(info->framebuffer);
+./abstract-machine/am/src/x86/qemu/devices/video.c:66:      info->width = W;
+./abstract-machine/am/src/x86/qemu/devices/video.c:67:      info->height = H;
+./abstract-machine/am/src/x86/qemu/devices/video.c:78:      int x = ctl->x, y = ctl->y, w = ctl->w, h = ctl->h;
+./abstract-machine/am/src/x86/qemu/devices/video.c:79:      uint32_t *pixels = ctl->pixels;
+./abstract-machine/am/src/x86/qemu/devices/video.c:80:      int len = (x + w >= W) ? W - x : w;
+./abstract-machine/am/src/x86/qemu/devices/video.c:87:            v->r = R(p); v->g = G(p); v->b = B(p);
+./abstract-machine/am/src/x86/qemu/devices/video.c:92:      if (ctl->sync) {
+./abstract-machine/am/src/x86/qemu/devices/apic.c:2:// (copy-paste from xv6)
+./abstract-machine/am/src/x86/qemu/devices/apic.c:4:#include "../../x86-qemu.h"
+./abstract-machine/am/src/x86/qemu/devices/apic.c:6:// The local APIC manages internal (non-I/O) interrupts.
+./abstract-machine/am/src/x86/qemu/devices/apic.c:75:  // Clear error status register (requires back-to-back writes).
+./abstract-machine/am/src/x86/qemu/devices/apic.c:82:  // Send an Init Level De-Assert to synchronise arbitration ID's.
+./abstract-machine/am/src/x86/qemu/devices/apic.c:128:  // Send INIT (level-triggered) interrupt to reset other CPU.
+./abstract-machine/am/src/x86/qemu/devices/apic.c:175:#define INT_LEVEL      0x00008000  // Level-triggered (vs edge-)
+./abstract-machine/am/src/x86/qemu/devices/apic.c:182:  ioapic->reg = reg;
+./abstract-machine/am/src/x86/qemu/devices/apic.c:183:  return ioapic->data;
+./abstract-machine/am/src/x86/qemu/devices/apic.c:189:  ioapic->reg = reg;
+./abstract-machine/am/src/x86/qemu/devices/apic.c:190:  ioapic->data = data;
+./abstract-machine/am/src/x86/qemu/devices/apic.c:201:  // Mark all interrupts edge-triggered, active high, disabled,
+./abstract-machine/am/src/x86/qemu/devices/apic.c:212:  // Mark interrupt edge-triggered, active high,
+./abstract-machine/am/src/x86/qemu/vme.c:1:#include "../x86-qemu.h"
+./abstract-machine/am/src/x86/qemu/vme.c:23:  if (_cpu() != 0) panic("init VME in non-bootstrap CPU");
+./abstract-machine/am/src/x86/qemu/vme.c:31:    if (!seg->physical) continue;
+./abstract-machine/am/src/x86/qemu/vme.c:32:    for (uint32_t pa =  (uint32_t)seg->area.start;
+./abstract-machine/am/src/x86/qemu/vme.c:33:                  pa != (uint32_t)seg->area.end;
+./abstract-machine/am/src/x86/qemu/vme.c:70:  PDE *upt = p->ptr;
+./abstract-machine/am/src/x86/qemu/vme.c:91:    return 1; // mapping an out-of-range address
+./abstract-machine/am/src/x86/qemu/vme.c:93:  PDE *upt = (PDE*)p->ptr;
+./abstract-machine/am/src/x86/qemu/vme.c:105:                 | (uint32_t)(pa);  // map @va -> @pa
+./abstract-machine/am/src/x86/qemu/boot/main.c:64:  int is_ap = boot->is_ap;
+./abstract-machine/am/src/x86/qemu/boot/main.c:66:    boot->entry();
+./abstract-machine/am/src/x86/qemu/boot/main.c:76:  ph = (struct ProgramHeader*)((char *)elf + elf->phoff);
+./abstract-machine/am/src/x86/qemu/boot/main.c:77:  eph = ph + elf->phnum;
+./abstract-machine/am/src/x86/qemu/boot/main.c:79:    pa = (unsigned char*)(ph->paddr);
+./abstract-machine/am/src/x86/qemu/boot/main.c:80:    readseg(pa, ph->filesz, ph->off);
+./abstract-machine/am/src/x86/qemu/boot/main.c:81:    for (i = pa + ph->filesz; i < pa + ph->memsz; *i ++ = 0);
+./abstract-machine/am/src/x86/qemu/boot/main.c:84:  ((void(*)(void))elf->entry)();
+./abstract-machine/am/src/x86/qemu/boot/main.c:113:  pa -= offset % SECTSIZE;
+./abstract-machine/am/src/x86/qemu/cte.c:1:#include "../x86-qemu.h"
+./abstract-machine/am/src/x86/qemu/cte.c:12:  if (_cpu() != 0) panic("init CTE in non-bootstrap CPU");
+./abstract-machine/am/src/x86/qemu/cte.c:28:  asm volatile ("int $0x80" : : "a"(-1));
+./abstract-machine/am/src/x86/qemu/cte.c:59:  ctx->esp0 -= sizeof(values);
+./abstract-machine/am/src/x86/qemu/cte.c:61:    ((uintptr_t *)ctx->esp0)[i] = (uintptr_t)values[i];
+./abstract-machine/am/src/x86/qemu/cte.c:78:    .eax = tf->eax, .ebx = tf->ebx, .ecx  = tf->ecx, .edx  = tf->edx,
+./abstract-machine/am/src/x86/qemu/cte.c:79:    .esi = tf->esi, .edi = tf->edi, .ebp  = tf->ebp, .esp3 = 0,
+./abstract-machine/am/src/x86/qemu/cte.c:80:    .eip = tf->eip, .eflags = tf->eflags,
+./abstract-machine/am/src/x86/qemu/cte.c:81:    .cs  = tf->cs,  .ds  = tf->ds,  .es   = tf->es,  .ss   = 0,
+./abstract-machine/am/src/x86/qemu/cte.c:83:    .prot = CPU->prot,
+./abstract-machine/am/src/x86/qemu/cte.c:86:  if (tf->cs & DPL_USER) { // interrupt at user code
+./abstract-machine/am/src/x86/qemu/cte.c:87:    ctx.ss = tf->ss;
+./abstract-machine/am/src/x86/qemu/cte.c:88:    ctx.esp3 = tf->esp;
+./abstract-machine/am/src/x86/qemu/cte.c:91:    ctx.esp0 -= sizeof(uint32_t) * 2;
+./abstract-machine/am/src/x86/qemu/cte.c:94:  // sending end-of-interrupt
+./abstract-machine/am/src/x86/qemu/cte.c:95:  if (IRQ 0 <= tf->irq && tf->irq < IRQ 32) {
+./abstract-machine/am/src/x86/qemu/cte.c:106:  switch (tf->irq) {
+./abstract-machine/am/src/x86/qemu/cte.c:112:      if ((int32_t)tf->eax == -1) {
+./abstract-machine/am/src/x86/qemu/cte.c:136:      if (tf->err & 0x1) ev.cause |= _PROT_NONE;
+./abstract-machine/am/src/x86/qemu/cte.c:137:      if (tf->err & 0x2) ev.cause |= _PROT_WRITE;
+./abstract-machine/am/src/x86/qemu/cte.c:143:      ev.cause = tf->err;
+./abstract-machine/am/src/x86/qemu/cte.c:163:#define push(r) "push %[" #r "];"      // -> push %[eax]
+./abstract-machine/am/src/x86/qemu/cte.c:164:#define def(r)  , [r] "m"(ret_ctx->r)  // -> [eax] "m"(ret_ctx->eax)
+./abstract-machine/am/src/x86/qemu/cte.c:166:  CPU->prot = ret_ctx->prot;
+./abstract-machine/am/src/x86/qemu/cte.c:167:  if (ret_ctx->cs & DPL_USER) { // return to user
+./abstract-machine/am/src/x86/qemu/cte.c:168:    _AddressSpace *prot = ret_ctx->prot;
+./abstract-machine/am/src/x86/qemu/cte.c:170:      set_cr3(prot->ptr);
+./abstract-machine/am/src/x86/qemu/cte.c:172:    thiscpu_setstk0(ret_ctx->ss0, ret_ctx->esp0);
+./abstract-machine/am/src/x86/qemu/cte.c:177:    : : [esp] "m"(ret_ctx->esp0)
+./abstract-machine/am/src/x86/qemu/cte.c:184:    : : [esp] "m"(ret_ctx->esp0)
+./abstract-machine/am/src/x86/qemu/ioe.c:1:#include "../x86-qemu.h"
+./abstract-machine/am/src/x86/qemu/ioe.c:35:  if (_cpu() != 0) panic("init IOE in non-bootstrap CPU");
+./abstract-machine/am/src/x86/qemu/trm.c:1:#include "../x86-qemu.h"
+./abstract-machine/am/src/x86/qemu/trm.c:17:void _putc(char ch) { // only works for x86-qemu
+./abstract-machine/am/src/x86/qemu/trm.c:19:  outb(COM1, ch); // first -serial device
+./abstract-machine/am/src/x86/qemu/trm.c:40:      break; // read-after-write fail
+./abstract-machine/am/src/x86/qemu/trace.c:1:#include "../x86-qemu.h"
+./abstract-machine/am/src/x86/qemu/mpe.c:1:#include "../x86-qemu.h"
+./abstract-machine/am/src/x86/qemu/mpe.c:38:      bootrec->is_ap = 1;
+./abstract-machine/am/src/x86/qemu/mpe.c:39:      bootrec->entry = percpu_entry;
+./abstract-machine/am/src/x86/qemu/mpe.c:61:  void *esp = CPU->stack + sizeof(CPU->stack);
+./abstract-machine/apps/typing/font.c:22:// Contains an 8x8 font map for unicode points U+0000 - U+007F (basic latin)
+./abstract-machine/apps/typing/font.c:69:    { 0x00, 0x00, 0x00, 0x3F, 0x00, 0x00, 0x00, 0x00},   // U+002D (-)
+./abstract-machine/apps/typing/game.c:77:  head->y = 0;
+./abstract-machine/apps/typing/game.c:78:  head->x = rand() % (W / 8 - 2) * 8 + 8;
+./abstract-machine/apps/typing/game.c:79:  head->v = (rand() % 1000)/(2000) + 1;
+./abstract-machine/apps/typing/game.c:80:  head->text = rand() % 26;
+./abstract-machine/apps/typing/game.c:81:  release_key(head->text);
+./abstract-machine/apps/typing/game.c:87:    fly_t next = it->_next;
+./abstract-machine/apps/typing/game.c:88:    it->y += it->v;
+./abstract-machine/apps/typing/game.c:89:    if (it->y < 0 || it->y + 8 > H){
+./abstract-machine/apps/typing/game.c:90:      if(it->y < 0)
+./abstract-machine/apps/typing/game.c:105:  int min = -100;
+./abstract-machine/apps/typing/game.c:106:  for(it = head; it != NULL; it = it->_next){
+./abstract-machine/apps/typing/game.c:107:    if(it->v > 0 && it->y > min && query_key(it->text)){
+./abstract-machine/apps/typing/game.c:108:      min = it->y;
+./abstract-machine/apps/typing/game.c:113:    release_key(target->text);
+./abstract-machine/apps/typing/game.c:114:    target->v = -3;
+./abstract-machine/apps/typing/keyboard.c:4:/* a-z对应的键盘扫描码 */
+./abstract-machine/apps/typing/draw.c:11:  int i = sizeof(s) - 1;
+./abstract-machine/apps/typing/draw.c:13:    s[--i] = n % 10 + '0';  
+./abstract-machine/apps/typing/draw.c:45:  for (it = characters(); it != NULL; it = it->_next) {
+./abstract-machine/apps/typing/draw.c:47:    buf[0] = it->text + 'A'; buf[1] = 0;
+./abstract-machine/apps/typing/draw.c:48:    draw_string(buf, it->x, it->y, 0xffffffff);
+./abstract-machine/apps/typing/draw.c:53:  draw_string(key, 0, H - 8, 0xffffffff);
+./abstract-machine/apps/typing/draw.c:55:  draw_string(hit, W - strlen(hit) * 8, 0, 0x00ff00);
+./abstract-machine/apps/typing/draw.c:57:  draw_string(miss, W - strlen(miss) * 8, H - 8, 0xfa5858);
+./abstract-machine/apps/typing/draw.c:72:  int x = (screen_width() - W) / 2;
+./abstract-machine/apps/typing/draw.c:73:  int y = (screen_height() - H) / 2;
+./abstract-machine/apps/dhrystone/dry.c:11: *              in two passes. Made program auto-compiling, and auto-running,
+./abstract-machine/apps/dhrystone/dry.c:16: *              pp. 1013 - 1030, together with the statistics
+./abstract-machine/apps/dhrystone/dry.c:20: *              - strcpy, strcmp (inside the measurement loop)
+./abstract-machine/apps/dhrystone/dry.c:21: *              - printf, scanf (outside the measurement loop)
+./abstract-machine/apps/dhrystone/dry.c:33: *                      Phone:  (201) 389-8963 (9-17 EST)               
+./abstract-machine/apps/dhrystone/dry.c:52: *      -DREG          (default: Not defined)
+./abstract-machine/apps/dhrystone/dry.c:55: *              - for local variables, if they are used (dynamically)
+./abstract-machine/apps/dhrystone/dry.c:57: *              - for parameters if they are used (dynamically)
+./abstract-machine/apps/dhrystone/dry.c:60: *              compiler-dependent, and that "register" declarations
+./abstract-machine/apps/dhrystone/dry.c:62: *      -DNOSTRUCTASSIGN        (default: Not defined)
+./abstract-machine/apps/dhrystone/dry.c:65: *      -DNOENUMS               (default: Not defined)
+./abstract-machine/apps/dhrystone/dry.c:68: *      -DTIMES                 (default)
+./abstract-machine/apps/dhrystone/dry.c:69: *      -DTIME
+./abstract-machine/apps/dhrystone/dry.c:74: *              multi-user machines where you cannot get single-user
+./abstract-machine/apps/dhrystone/dry.c:83: *      -DHZ=nnn
+./abstract-machine/apps/dhrystone/dry.c:113: *      Alan Smith and Rafael Saavedra-Barrera (UC at Berkeley)
+./abstract-machine/apps/dhrystone/dry.c:140: *      an impact - though a very minor one - on the distribution
+./abstract-machine/apps/dhrystone/dry.c:147: *      Because of the self-imposed limitation that the order and
+./abstract-machine/apps/dhrystone/dry.c:159: *      non-executed "else" part was added to the "if" statement in
+./abstract-machine/apps/dhrystone/dry.c:160: *      Func_3, and a non-executed "else" part removed from Proc_3.
+./abstract-machine/apps/dhrystone/dry.c:165: *	- Everything is in one file now, but compiled in 2 passes
+./abstract-machine/apps/dhrystone/dry.c:166: *	- Compile (and run) by running the file through the shell: 'sh dhry.c"
+./abstract-machine/apps/dhrystone/dry.c:167: *	- Uses the system definition of HZ if one can be found
+./abstract-machine/apps/dhrystone/dry.c:168: *	- HZ must be defined, otherwise it won't compile (no defaults here)
+./abstract-machine/apps/dhrystone/dry.c:169: *	- The (uninteresting) output is printed to stderr (dhry2 > /dev/null)
+./abstract-machine/apps/dhrystone/dry.c:170: *	- The number of loops is passed as a parameter, rather than read
+./abstract-machine/apps/dhrystone/dry.c:172: *	- If the number of loops is insufficient to get a good result,
+./abstract-machine/apps/dhrystone/dry.c:175: *	- Output says which sort of clock it is using, and the HZ value
+./abstract-machine/apps/dhrystone/dry.c:176: *	- You can use -DREG instead of the -DREG=register of previous versions
+./abstract-machine/apps/dhrystone/dry.c:177: *	- Some stylistic cleanups.
+./abstract-machine/apps/dhrystone/dry.c:184: *  - Separate compilation
+./abstract-machine/apps/dhrystone/dry.c:185: *  - No procedure merging
+./abstract-machine/apps/dhrystone/dry.c:186: *  - Otherwise, compiler optimizations are allowed but should be indicated
+./abstract-machine/apps/dhrystone/dry.c:187: *  - Default results are those without register declarations
+./abstract-machine/apps/dhrystone/dry.c:191: *  For 16-Bit processors (e.g. 80186, 80286), times for all compilation
+./abstract-machine/apps/dhrystone/dry.c:213: *    - statement type
+./abstract-machine/apps/dhrystone/dry.c:214: *    - operand type
+./abstract-machine/apps/dhrystone/dry.c:215: *    - operand locality
+./abstract-machine/apps/dhrystone/dry.c:221: *  -----------------             number
+./abstract-machine/apps/dhrystone/dry.c:230: *                                --
+./abstract-machine/apps/dhrystone/dry.c:233: *     X = Y +|-|"&&"|"|" Z        5
+./abstract-machine/apps/dhrystone/dry.c:234: *     X = Y +|-|"==" Constant     6
+./abstract-machine/apps/dhrystone/dry.c:235: *     X = X +|- 1                 3
+./abstract-machine/apps/dhrystone/dry.c:241: *                                --
+./abstract-machine/apps/dhrystone/dry.c:256: *                                --
+./abstract-machine/apps/dhrystone/dry.c:266: *                                --                                          
+./abstract-machine/apps/dhrystone/dry.c:268: *                                        ---
+./abstract-machine/apps/dhrystone/dry.c:275: *  ------------
+./abstract-machine/apps/dhrystone/dry.c:282: *       -                      7          11.1                              
+./abstract-machine/apps/dhrystone/dry.c:297: *       && (AND-THEN)          1            1.6
+./abstract-machine/apps/dhrystone/dry.c:301: *                           --          -----
+./abstract-machine/apps/dhrystone/dry.c:306: *  ---------------
+./abstract-machine/apps/dhrystone/dry.c:316: *                           ---       -------
+./abstract-machine/apps/dhrystone/dry.c:324: *  -------------------
+./abstract-machine/apps/dhrystone/dry.c:335: *                                 ---       -------
+./abstract-machine/apps/dhrystone/dry.c:476:  REG Rec_Pointer Next_Record = Ptr_Val_Par->Ptr_Comp;  
+./abstract-machine/apps/dhrystone/dry.c:478:  /* Local variable, initialized with Ptr_Val_Par->Ptr_Comp,    */
+./abstract-machine/apps/dhrystone/dry.c:481:  structassign (*Ptr_Val_Par->Ptr_Comp, *Ptr_Glob); 
+./abstract-machine/apps/dhrystone/dry.c:482:  Ptr_Val_Par->variant.var_1.Int_Comp = 5;
+./abstract-machine/apps/dhrystone/dry.c:483:  Next_Record->variant.var_1.Int_Comp 
+./abstract-machine/apps/dhrystone/dry.c:484:        = Ptr_Val_Par->variant.var_1.Int_Comp;
+./abstract-machine/apps/dhrystone/dry.c:485:  Next_Record->Ptr_Comp = Ptr_Val_Par->Ptr_Comp;
+./abstract-machine/apps/dhrystone/dry.c:486:  Proc_3 (&Next_Record->Ptr_Comp);
+./abstract-machine/apps/dhrystone/dry.c:487:    /* Ptr_Val_Par->Ptr_Comp->Ptr_Comp 
+./abstract-machine/apps/dhrystone/dry.c:488:                        == Ptr_Glob->Ptr_Comp */
+./abstract-machine/apps/dhrystone/dry.c:489:  if (Next_Record->Discr == Ident_1)
+./abstract-machine/apps/dhrystone/dry.c:492:    Next_Record->variant.var_1.Int_Comp = 6;
+./abstract-machine/apps/dhrystone/dry.c:493:    Proc_6 (Ptr_Val_Par->variant.var_1.Enum_Comp, 
+./abstract-machine/apps/dhrystone/dry.c:494:           &Next_Record->variant.var_1.Enum_Comp);
+./abstract-machine/apps/dhrystone/dry.c:495:    Next_Record->Ptr_Comp = Ptr_Glob->Ptr_Comp;
+./abstract-machine/apps/dhrystone/dry.c:496:    Proc_7 (Next_Record->variant.var_1.Int_Comp, 10, 
+./abstract-machine/apps/dhrystone/dry.c:497:           &Next_Record->variant.var_1.Int_Comp);
+./abstract-machine/apps/dhrystone/dry.c:500:    structassign (*Ptr_Val_Par, *Ptr_Val_Par->Ptr_Comp);
+./abstract-machine/apps/dhrystone/dry.c:519:      Int_Loc -= 1;
+./abstract-machine/apps/dhrystone/dry.c:520:      *Int_Par_Ref = Int_Loc - Int_Glob;
+./abstract-machine/apps/dhrystone/dry.c:537:    *Ptr_Ref_Par = Ptr_Glob->Ptr_Comp;
+./abstract-machine/apps/dhrystone/dry.c:538:  Proc_7 (10, Int_Glob, &Ptr_Glob->variant.var_1.Int_Comp);
+./abstract-machine/apps/dhrystone/dry.c:571:        while (l--) *d++ = *s++;
+./abstract-machine/apps/dhrystone/dry.c:651:  Arr_2_Par_Ref [Int_Loc] [Int_Loc-1] += 1;
+./abstract-machine/apps/dhrystone/dry.c:772:  Ptr_Glob->Ptr_Comp                    = Next_Ptr_Glob;
+./abstract-machine/apps/dhrystone/dry.c:773:  Ptr_Glob->Discr                       = Ident_1;
+./abstract-machine/apps/dhrystone/dry.c:774:  Ptr_Glob->variant.var_1.Enum_Comp     = Ident_3;
+./abstract-machine/apps/dhrystone/dry.c:775:  Ptr_Glob->variant.var_1.Int_Comp      = 40;
+./abstract-machine/apps/dhrystone/dry.c:776:  strcpy (Ptr_Glob->variant.var_1.Str_Comp, 
+./abstract-machine/apps/dhrystone/dry.c:783:        /* Warning: With 16-Bit processors and Number_Of_Runs > 32000,  */
+./abstract-machine/apps/dhrystone/dry.c:813:	Int_3_Loc = 5 * Int_1_Loc - Int_2_Loc;
+./abstract-machine/apps/dhrystone/dry.c:838:      Int_2_Loc = 7 * (Int_2_Loc - Int_3_Loc) - Int_1_Loc;
+./abstract-machine/apps/dhrystone/dry.c:851:    User_Time = End_Time - Begin_Time;
+./abstract-machine/apps/dhrystone/dry.c:881:  if (!check((int)Ptr_Glob->Discr == 0)) {
+./abstract-machine/apps/dhrystone/dry.c:882:    printf("Ptr_Glob->Discr:             %d\n", Ptr_Glob->Discr);
+./abstract-machine/apps/dhrystone/dry.c:885:  if (!check(Ptr_Glob->variant.var_1.Enum_Comp == 2)) {
+./abstract-machine/apps/dhrystone/dry.c:886:    printf("Ptr_Glob->Enum_Comp:         %d\n", Ptr_Glob->variant.var_1.Enum_Comp);
+./abstract-machine/apps/dhrystone/dry.c:889:  if (!check(Ptr_Glob->variant.var_1.Int_Comp == 17)) {
+./abstract-machine/apps/dhrystone/dry.c:890:    printf("Ptr_Glob->Int_Comp:          %d\n", Ptr_Glob->variant.var_1.Int_Comp);
+./abstract-machine/apps/dhrystone/dry.c:893:  if (!check(strcmp(Ptr_Glob->variant.var_1.Str_Comp, "DHRYSTONE PROGRAM, SOME STRING") == 0)) {
+./abstract-machine/apps/dhrystone/dry.c:894:    printf("Ptr_Glob->Str_Comp:          %s\n", Ptr_Glob->variant.var_1.Str_Comp);
+./abstract-machine/apps/dhrystone/dry.c:898:  if (!check((int)Next_Ptr_Glob->Discr == 0)) {
+./abstract-machine/apps/dhrystone/dry.c:899:    printf("Next_Ptr_Glob->Discr:             %d\n", Next_Ptr_Glob->Discr);
+./abstract-machine/apps/dhrystone/dry.c:902:  if (!check(Next_Ptr_Glob->variant.var_1.Enum_Comp == 1)) {
+./abstract-machine/apps/dhrystone/dry.c:903:    printf("Next_Ptr_Glob->Enum_Comp:         %d\n", Next_Ptr_Glob->variant.var_1.Enum_Comp);
+./abstract-machine/apps/dhrystone/dry.c:906:  if (!check(Next_Ptr_Glob->variant.var_1.Int_Comp == 18)) {
+./abstract-machine/apps/dhrystone/dry.c:907:    printf("Next_Ptr_Glob->Int_Comp:          %d\n", Next_Ptr_Glob->variant.var_1.Int_Comp);
+./abstract-machine/apps/dhrystone/dry.c:910:  if (!check(strcmp(Next_Ptr_Glob->variant.var_1.Str_Comp, "DHRYSTONE PROGRAM, SOME STRING") == 0)) {
+./abstract-machine/apps/dhrystone/dry.c:911:    printf("Next_Ptr_Glob->Str_Comp:          %s\n", Next_Ptr_Glob->variant.var_1.Str_Comp);
+./abstract-machine/apps/dhrystone/dry.c:945:  printk("                   vs. 100000 Marks (i7-6700 @ 3.40GHz)\n");
+./abstract-machine/apps/coremark/src/core_state.c:2:Author : Shay Gal-On, EEMBC
+./abstract-machine/apps/coremark/src/core_state.c:16:4354 Town Center Blvd. Suite 114-200
+./abstract-machine/apps/coremark/src/core_state.c:102:static ee_u8 *intpat[4]  ={(ee_u8 *)"5012",(ee_u8 *)"1234",(ee_u8 *)"-874",(ee_u8 *)"+122"};
+./abstract-machine/apps/coremark/src/core_state.c:103:static ee_u8 *floatpat[4]={(ee_u8 *)"35.54400",(ee_u8 *)".1234500",(ee_u8 *)"-110.700",(ee_u8 *)"+0.64400"};
+./abstract-machine/apps/coremark/src/core_state.c:104:static ee_u8 *scipat[4]  ={(ee_u8 *)"5.500e+3",(ee_u8 *)"-.123e-2",(ee_u8 *)"-87e+832",(ee_u8 *)"+0.6e-12"};
+./abstract-machine/apps/coremark/src/core_state.c:105:static ee_u8 *errpat[4]  ={(ee_u8 *)"T0.3e-1F",(ee_u8 *)"-T.T++Tq",(ee_u8 *)"1T3.4e4z",(ee_u8 *)"34.0e-T^"};
+./abstract-machine/apps/coremark/src/core_state.c:123:	size--;
+./abstract-machine/apps/coremark/src/core_state.c:178:	1 - an invalid input is detcted.
+./abstract-machine/apps/coremark/src/core_state.c:179:	2 - a valid number has been detected.
+./abstract-machine/apps/coremark/src/core_state.c:199:			else if( NEXT_SYMBOL == '+' || NEXT_SYMBOL == '-' ) {
+./abstract-machine/apps/coremark/src/core_state.c:246:			if( NEXT_SYMBOL == '+' || NEXT_SYMBOL == '-' ) {
+./abstract-machine/apps/coremark/src/core_portme.c:34:#define MYTIMEDIFF(fin,ini) ((fin)-(ini))
+./abstract-machine/apps/coremark/src/core_portme.c:46:	or zeroing some system parameters - e.g. setting the cpu clocks cycles to 0.
+./abstract-machine/apps/coremark/src/core_portme.c:55:	or other system parameters - e.g. reading the current value of cpu cycles counter.
+./abstract-machine/apps/coremark/src/core_portme.c:70:  return stop_time_val - start_time_val;
+./abstract-machine/apps/coremark/src/core_portme.c:97:	p->portable_id=1;
+./abstract-machine/apps/coremark/src/core_portme.c:104:	p->portable_id=0;
+./abstract-machine/apps/coremark/src/core_matrix.c:2:Author : Shay Gal-On, EEMBC
+./abstract-machine/apps/coremark/src/core_matrix.c:16:4354 Town Center Blvd. Suite 114-200
+./abstract-machine/apps/coremark/src/core_matrix.c:30:	NxN Matrix A - initialized with small values (upper 3/4 of the bits all zero).
+./abstract-machine/apps/coremark/src/core_matrix.c:31:	NxN Matrix B - initialized with medium values (upper half of the bits all zero).
+./abstract-machine/apps/coremark/src/core_matrix.c:32:	NxN Matrix C - used for the result.
+./abstract-machine/apps/coremark/src/core_matrix.c:82:	ee_u32 N=p->N;
+./abstract-machine/apps/coremark/src/core_matrix.c:83:	MATRES *C=p->C;
+./abstract-machine/apps/coremark/src/core_matrix.c:84:	MATDAT *A=p->A;
+./abstract-machine/apps/coremark/src/core_matrix.c:85:	MATDAT *B=p->B;
+./abstract-machine/apps/coremark/src/core_matrix.c:97:	N - Dimensions of the matrix.
+./abstract-machine/apps/coremark/src/core_matrix.c:98:	C - memory for result matrix.
+./abstract-machine/apps/coremark/src/core_matrix.c:99:	A - input matrix
+./abstract-machine/apps/coremark/src/core_matrix.c:100:	B - operator matrix (not changed during operations)
+./abstract-machine/apps/coremark/src/core_matrix.c:109:	1 - Add a constant value to all elements of a matrix.
+./abstract-machine/apps/coremark/src/core_matrix.c:110:	2 - Multiply a matrix by a constant.
+./abstract-machine/apps/coremark/src/core_matrix.c:111:	3 - Multiply a matrix by a vector.
+./abstract-machine/apps/coremark/src/core_matrix.c:112:	4 - Multiply a matrix by a matrix.
+./abstract-machine/apps/coremark/src/core_matrix.c:113:	5 - Add a constant value to all elements of a matrix.
+./abstract-machine/apps/coremark/src/core_matrix.c:146:	matrix_add_const(N,A,-val); /* return matrix to initial value */
+./abstract-machine/apps/coremark/src/core_matrix.c:154:	blksize - Size of memory to be initialized.
+./abstract-machine/apps/coremark/src/core_matrix.c:155:	memblk - Pointer to memory block.
+./abstract-machine/apps/coremark/src/core_matrix.c:156:	seed - Actual values chosen depend on the seed parameter.
+./abstract-machine/apps/coremark/src/core_matrix.c:157:	p - pointers to <mat_params> containing initialized matrixes.
+./abstract-machine/apps/coremark/src/core_matrix.c:178:	N=i-1;
+./abstract-machine/apps/coremark/src/core_matrix.c:195:	p->A=A;
+./abstract-machine/apps/coremark/src/core_matrix.c:196:	p->B=B;
+./abstract-machine/apps/coremark/src/core_matrix.c:197:	p->C=(MATRES *)align_mem(B+N*N);
+./abstract-machine/apps/coremark/src/core_matrix.c:198:	p->N=N;
+./abstract-machine/apps/coremark/src/core_list_join.c:2:Author : Shay Gal-On, EEMBC
+./abstract-machine/apps/coremark/src/core_list_join.c:16:4354 Town Center Blvd. Suite 114-200
+./abstract-machine/apps/coremark/src/core_list_join.c:42:	idx - An index that captures the initial order of the list.
+./abstract-machine/apps/coremark/src/core_list_join.c:43:	data - Variable data initialized based on the input parameters. The 16b are divided as follows:
+./abstract-machine/apps/coremark/src/core_list_join.c:46:	o Bits 0-2 indicate type of operation to perform to get a 7b value.
+./abstract-machine/apps/coremark/src/core_list_join.c:47:	o Bits 3-6 provide input for the operation.
+./abstract-machine/apps/coremark/src/core_list_join.c:70:		ee_s16 flag=data & 0x7; /* bits 0-2 is type of function to perform */
+./abstract-machine/apps/coremark/src/core_list_join.c:71:		ee_s16 dtype=((data>>3) & 0xf); /* bits 3-6 is specific data for the operation */
+./abstract-machine/apps/coremark/src/core_list_join.c:77:				retval=core_bench_state(res->size,res->memblock[3],res->seed1,res->seed2,dtype,res->crc);
+./abstract-machine/apps/coremark/src/core_list_join.c:78:				if (res->crcstate==0)
+./abstract-machine/apps/coremark/src/core_list_join.c:79:					res->crcstate=retval;
+./abstract-machine/apps/coremark/src/core_list_join.c:82:				retval=core_bench_matrix(&(res->mat),dtype,res->crc);
+./abstract-machine/apps/coremark/src/core_list_join.c:83:				if (res->crcmatrix==0)
+./abstract-machine/apps/coremark/src/core_list_join.c:84:					res->crcmatrix=retval;
+./abstract-machine/apps/coremark/src/core_list_join.c:90:		res->crc=crcu16(retval,res->crc);
+./abstract-machine/apps/coremark/src/core_list_join.c:102:	ee_s16 val1=calc_func(&(a->data16),res);
+./abstract-machine/apps/coremark/src/core_list_join.c:103:	ee_s16 val2=calc_func(&(b->data16),res);
+./abstract-machine/apps/coremark/src/core_list_join.c:104:	return val1 - val2;
+./abstract-machine/apps/coremark/src/core_list_join.c:114:		a->data16 = (a->data16 & 0xff00) | (0x00ff & (a->data16>>8));
+./abstract-machine/apps/coremark/src/core_list_join.c:115:		b->data16 = (b->data16 & 0xff00) | (0x00ff & (b->data16>>8));
+./abstract-machine/apps/coremark/src/core_list_join.c:117:	return a->idx - b->idx;
+./abstract-machine/apps/coremark/src/core_list_join.c:121:	to->data16=from->data16;
+./abstract-machine/apps/coremark/src/core_list_join.c:122:	to->idx=from->idx;
+./abstract-machine/apps/coremark/src/core_list_join.c:126:	- Try to find multiple data items.
+./abstract-machine/apps/coremark/src/core_list_join.c:127:	- List sort
+./abstract-machine/apps/coremark/src/core_list_join.c:128:	- Operate on data from list (crc)
+./abstract-machine/apps/coremark/src/core_list_join.c:129:	- Single remove/reinsert
+./abstract-machine/apps/coremark/src/core_list_join.c:135:	list_head *list=res->list;
+./abstract-machine/apps/coremark/src/core_list_join.c:136:	ee_s16 find_num=res->seed3;
+./abstract-machine/apps/coremark/src/core_list_join.c:150:			retval+=(list->next->info->data16 >> 8) & 1;
+./abstract-machine/apps/coremark/src/core_list_join.c:154:			if (this_find->info->data16 & 0x1) /* use found value */
+./abstract-machine/apps/coremark/src/core_list_join.c:155:				retval+=(this_find->info->data16 >> 9) & 1;
+./abstract-machine/apps/coremark/src/core_list_join.c:157:			if (this_find->next != NULL) {
+./abstract-machine/apps/coremark/src/core_list_join.c:158:				finder = this_find->next;
+./abstract-machine/apps/coremark/src/core_list_join.c:159:				this_find->next = finder->next;
+./abstract-machine/apps/coremark/src/core_list_join.c:160:				finder->next=list->next;
+./abstract-machine/apps/coremark/src/core_list_join.c:161:				list->next=finder;
+./abstract-machine/apps/coremark/src/core_list_join.c:170:	retval+=found*4-missed;
+./abstract-machine/apps/coremark/src/core_list_join.c:174:	remover=core_list_remove(list->next);
+./abstract-machine/apps/coremark/src/core_list_join.c:178:		finder=list->next;
+./abstract-machine/apps/coremark/src/core_list_join.c:180:		retval=crc16(list->info->data16,retval);
+./abstract-machine/apps/coremark/src/core_list_join.c:181:		finder=finder->next;
+./abstract-machine/apps/coremark/src/core_list_join.c:186:	remover=core_list_undo_remove(remover,list->next);
+./abstract-machine/apps/coremark/src/core_list_join.c:190:	finder=list->next;
+./abstract-machine/apps/coremark/src/core_list_join.c:192:		retval=crc16(list->info->data16,retval);
+./abstract-machine/apps/coremark/src/core_list_join.c:193:		finder=finder->next;
+./abstract-machine/apps/coremark/src/core_list_join.c:204:	blksize - Size of memory to be initialized.
+./abstract-machine/apps/coremark/src/core_list_join.c:205:	memblock - Pointer to memory block.
+./abstract-machine/apps/coremark/src/core_list_join.c:206:	seed - 	Actual values chosen depend on the seed parameter.
+./abstract-machine/apps/coremark/src/core_list_join.c:216:	ee_u32 size=(blksize/per_item)-2; /* to accomodate systems with 64b pointers, and make sure same code is executed, set max list elements */
+./abstract-machine/apps/coremark/src/core_list_join.c:226:	list->next=NULL;
+./abstract-machine/apps/coremark/src/core_list_join.c:227:	list->info=datablock;
+./abstract-machine/apps/coremark/src/core_list_join.c:228:	list->info->idx=0x0000;
+./abstract-machine/apps/coremark/src/core_list_join.c:229:	list->info->data16=(ee_s16)0x8080;
+./abstract-machine/apps/coremark/src/core_list_join.c:244:	finder=list->next;
+./abstract-machine/apps/coremark/src/core_list_join.c:246:	while (finder->next!=NULL) {
+./abstract-machine/apps/coremark/src/core_list_join.c:248:			finder->info->idx=i++;
+./abstract-machine/apps/coremark/src/core_list_join.c:251:			finder->info->idx=0x3fff & (((i & 0x07) << 8) | pat); /* make sure the mixed items end up after the ones in sequence */
+./abstract-machine/apps/coremark/src/core_list_join.c:253:		finder=finder->next;
+./abstract-machine/apps/coremark/src/core_list_join.c:260:		ee_printf("[%04x,%04x]",finder->info->idx,(ee_u16)finder->info->data16);
+./abstract-machine/apps/coremark/src/core_list_join.c:261:		finder=finder->next;
+./abstract-machine/apps/coremark/src/core_list_join.c:272:	insert_point - where to insert the item.
+./abstract-machine/apps/coremark/src/core_list_join.c:273:	info - data for the cell.
+./abstract-machine/apps/coremark/src/core_list_join.c:274:	memblock - pointer for the list header
+./abstract-machine/apps/coremark/src/core_list_join.c:275:	datablock - pointer for the list data
+./abstract-machine/apps/coremark/src/core_list_join.c:276:	memblock_end - end of region for list headers
+./abstract-machine/apps/coremark/src/core_list_join.c:277:	datablock_end - end of region for list data
+./abstract-machine/apps/coremark/src/core_list_join.c:293:	newitem->next=insert_point->next;
+./abstract-machine/apps/coremark/src/core_list_join.c:294:	insert_point->next=newitem;
+./abstract-machine/apps/coremark/src/core_list_join.c:296:	newitem->info=*datablock;
+./abstract-machine/apps/coremark/src/core_list_join.c:298:	copy_info(newitem->info,info);
+./abstract-machine/apps/coremark/src/core_list_join.c:318:	list_head *ret=item->next;
+./abstract-machine/apps/coremark/src/core_list_join.c:320:	tmp=item->info;
+./abstract-machine/apps/coremark/src/core_list_join.c:321:	item->info=ret->info;
+./abstract-machine/apps/coremark/src/core_list_join.c:322:	ret->info=tmp;
+./abstract-machine/apps/coremark/src/core_list_join.c:324:	item->next=item->next->next;
+./abstract-machine/apps/coremark/src/core_list_join.c:325:	ret->next=NULL;
+./abstract-machine/apps/coremark/src/core_list_join.c:338:	item_removed - Return value from the <core_list_remove>
+./abstract-machine/apps/coremark/src/core_list_join.c:339:	item_modified - List item that was modified during <core_list_remove>
+./abstract-machine/apps/coremark/src/core_list_join.c:348:	tmp=item_removed->info;
+./abstract-machine/apps/coremark/src/core_list_join.c:349:	item_removed->info=item_modified->info;
+./abstract-machine/apps/coremark/src/core_list_join.c:350:	item_modified->info=tmp;
+./abstract-machine/apps/coremark/src/core_list_join.c:352:	item_removed->next=item_modified->next;
+./abstract-machine/apps/coremark/src/core_list_join.c:353:	item_modified->next=item_removed;
+./abstract-machine/apps/coremark/src/core_list_join.c:364:	list - list head
+./abstract-machine/apps/coremark/src/core_list_join.c:365:	info - idx or data to find
+./abstract-machine/apps/coremark/src/core_list_join.c:371:	if (info->idx>=0) {
+./abstract-machine/apps/coremark/src/core_list_join.c:372:		while (list && (list->info->idx != info->idx))
+./abstract-machine/apps/coremark/src/core_list_join.c:373:			list=list->next;
+./abstract-machine/apps/coremark/src/core_list_join.c:376:		while (list && ((list->info->data16 & 0xff) != info->data16))
+./abstract-machine/apps/coremark/src/core_list_join.c:377:			list=list->next;
+./abstract-machine/apps/coremark/src/core_list_join.c:388:	list - list head
+./abstract-machine/apps/coremark/src/core_list_join.c:389:	info - idx or data to find
+./abstract-machine/apps/coremark/src/core_list_join.c:398:		tmp=list->next;
+./abstract-machine/apps/coremark/src/core_list_join.c:399:		list->next=next;
+./abstract-machine/apps/coremark/src/core_list_join.c:415:	list - list to be sorted.
+./abstract-machine/apps/coremark/src/core_list_join.c:416:	cmp - cmp function to use
+./abstract-machine/apps/coremark/src/core_list_join.c:446:			    q = q->next;
+./abstract-machine/apps/coremark/src/core_list_join.c:459:				    e = q; q = q->next; qsize--;
+./abstract-machine/apps/coremark/src/core_list_join.c:462:				    e = p; p = p->next; psize--;
+./abstract-machine/apps/coremark/src/core_list_join.c:463:				} else if (cmp(p->info,q->info,res) <= 0) {
+./abstract-machine/apps/coremark/src/core_list_join.c:465:				    e = p; p = p->next; psize--;
+./abstract-machine/apps/coremark/src/core_list_join.c:468:				    e = q; q = q->next; qsize--;
+./abstract-machine/apps/coremark/src/core_list_join.c:473:				    tail->next = e;
+./abstract-machine/apps/coremark/src/core_list_join.c:484:	    tail->next = NULL;
+./abstract-machine/apps/coremark/src/core_util.c:2:Author : Shay Gal-On, EEMBC
+./abstract-machine/apps/coremark/src/core_util.c:16:4354 Town Center Blvd. Suite 114-200
+./abstract-machine/apps/coremark/src/core_util.c:24:	1 - Using a volatile variable. This method is only valid if the compiler is forced to generate code that
+./abstract-machine/apps/coremark/src/core_util.c:27:	2 - Command line arguments. This is the preferred method if command line arguments are supported.
+./abstract-machine/apps/coremark/src/core_util.c:28:	3 - System function. If none of the first 2 methods is available on the platform,
+./abstract-machine/apps/coremark/src/core_util.c:68:	if (*valstring == '-') {
+./abstract-machine/apps/coremark/src/core_util.c:69:		neg=-1;
+./abstract-machine/apps/coremark/src/core_util.c:79:			ee_s32 digit=*valstring-'0';
+./abstract-machine/apps/coremark/src/core_util.c:81:				digit=10+*valstring-'a';
+./abstract-machine/apps/coremark/src/core_util.c:88:			ee_s32 digit=*valstring-'0';
+./abstract-machine/apps/coremark/src/core_main.c:2:Author : Shay Gal-On, EEMBC
+./abstract-machine/apps/coremark/src/core_main.c:16:4354 Town Center Blvd. Suite 114-200
+./abstract-machine/apps/coremark/src/core_main.c:29:		a - Initialize the data block for the algorithm.
+./abstract-machine/apps/coremark/src/core_main.c:30:		b - Execute the algorithm N times.
+./abstract-machine/apps/coremark/src/core_main.c:42:	ee_u32 iterations=res->iterations;
+./abstract-machine/apps/coremark/src/core_main.c:43:	res->crc=0;
+./abstract-machine/apps/coremark/src/core_main.c:44:	res->crclist=0;
+./abstract-machine/apps/coremark/src/core_main.c:45:	res->crcmatrix=0;
+./abstract-machine/apps/coremark/src/core_main.c:46:	res->crcstate=0;
+./abstract-machine/apps/coremark/src/core_main.c:50:		res->crc=crcu16(crc,res->crc);
+./abstract-machine/apps/coremark/src/core_main.c:51:		crc=core_bench_list(res,-1);
+./abstract-machine/apps/coremark/src/core_main.c:52:		res->crc=crcu16(crc,res->crc);
+./abstract-machine/apps/coremark/src/core_main.c:53:		if (i==0) res->crclist=res->crc;
+./abstract-machine/apps/coremark/src/core_main.c:75:	1 - Initialize input seeds from a source that cannot be determined at compile time.
+./abstract-machine/apps/coremark/src/core_main.c:76:	2 - Initialize memory block for use.
+./abstract-machine/apps/coremark/src/core_main.c:77:	3 - Run and time the benchmark.
+./abstract-machine/apps/coremark/src/core_main.c:78:	4 - Report results, testing the validity of the output if the seeds are known.
+./abstract-machine/apps/coremark/src/core_main.c:81:	1 - first seed  : Any value
+./abstract-machine/apps/coremark/src/core_main.c:82:	2 - second seed : Must be identical to first for iterations to be identical
+./abstract-machine/apps/coremark/src/core_main.c:83:	3 - third seed  : Any value, should be at least an order of magnitude less then the input size, but bigger then 32.
+./abstract-machine/apps/coremark/src/core_main.c:84:	4 - Iterations  : Special, if set to 0, iterations will be automatically determined such that the benchmark will run between 10 to 100 secs
+./abstract-machine/apps/coremark/src/core_main.c:96:	ee_s16 known_id=-1,total_errors=0;
+./abstract-machine/apps/coremark/src/core_main.c:266:			total_errors=-1;
+./abstract-machine/apps/coremark/src/core_main.c:274:				ee_printf("[%u]ERROR! list crc 0x%04x - should be 0x%04x\n",i,results[i].crclist,list_known_crc[known_id]);
+./abstract-machine/apps/coremark/src/core_main.c:279:				ee_printf("[%u]ERROR! matrix crc 0x%04x - should be 0x%04x\n",i,results[i].crcmatrix,matrix_known_crc[known_id]);
+./abstract-machine/apps/coremark/src/core_main.c:284:				ee_printf("[%u]ERROR! state crc 0x%04x - should be 0x%04x\n",i,results[i].crcstate,state_known_crc[known_id]);
+./abstract-machine/apps/coremark/src/core_main.c:322:	  ee_printf("                vs. 100000 Marks (i7-6700 @ 3.40GHz)\n");
+./abstract-machine/apps/litenes/src/cpu.c:104:void cpu_stack_pushb(byte data) { memory_writeb(0x100 + cpu.SP--, data);       }
+./abstract-machine/apps/litenes/src/cpu.c:105:void cpu_stack_pushw(word data) { memory_writew(0xFF + cpu.SP, data); cpu.SP -= 2; }
+./abstract-machine/apps/litenes/src/cpu.c:130:#define cpu_compare(reg) int result = reg - op_value; \
+./abstract-machine/apps/litenes/src/cpu.c:158:    int result = cpu.A - op_value - (cpu_flag_set(carry_bp) ? 0 : 1);
+./abstract-machine/apps/litenes/src/cpu.c:290:void cpu_op_jsr() { log("cpu.P=%x, cpu.PC=%x\n", cpu.P, cpu.PC); cpu_stack_pushw(cpu.PC - 1); cpu.PC = op_address; }
+./abstract-machine/apps/litenes/src/cpu.c:300:	cpu_stack_pushw(cpu.PC - 1);
+./abstract-machine/apps/litenes/src/cpu.c:338:void cpu_op_dec() { log("cpu.P=%x, cpu.PC=%x\n", cpu.P, cpu.PC); byte result = op_value - 1; memory_writeb(op_address, result); cpu_update_zn_flags(result); }
+./abstract-machine/apps/litenes/src/cpu.c:339:void cpu_op_dex() { log("cpu.P=%x, cpu.PC=%x\n", cpu.P, cpu.PC); cpu_update_zn_flags(--cpu.X); }
+./abstract-machine/apps/litenes/src/cpu.c:340:void cpu_op_dey() { log("cpu.P=%x, cpu.PC=%x\n", cpu.P, cpu.PC); cpu_update_zn_flags(--cpu.Y); }
+./abstract-machine/apps/litenes/src/cpu.c:358:    op_value--;
+./abstract-machine/apps/litenes/src/cpu.c:650:    cpu.SP -= 3;
+./abstract-machine/apps/litenes/src/cpu.c:688:        cycles -= cpu_op_cycles[op_code] + op_cycles;
+./abstract-machine/apps/litenes/src/cpu.c:689:        cpu_cycles -= cpu_op_cycles[op_code] + op_cycles;
+./abstract-machine/apps/litenes/src/common.c:4:// I could do this through non-void methods with returns in one copy,
+./abstract-machine/apps/litenes/src/cpu-addressing.c:73:        op_address -= 0x100;
+./abstract-machine/apps/litenes/src/fce.c:38:    if (memcmp(fce_rom_header->signature, "NES\x1A", 4)) {
+./abstract-machine/apps/litenes/src/fce.c:39:        return -1;
+./abstract-machine/apps/litenes/src/fce.c:42:    mmc_id = ((fce_rom_header->rom_type & 0xF0) >> 4);
+./abstract-machine/apps/litenes/src/fce.c:44:    int prg_size = fce_rom_header->prg_block_count * 0x4000;
+./abstract-machine/apps/litenes/src/fce.c:50:        if (fce_rom_header->prg_block_count == 1) {
+./abstract-machine/apps/litenes/src/fce.c:59:        return -1;
+./abstract-machine/apps/litenes/src/fce.c:64:    for (i = 0; i < fce_rom_header->chr_block_count; i++) {
+./abstract-machine/apps/litenes/src/fce.c:83:    ppu_set_mirroring(fce_rom_header->rom_type & 1);
+./abstract-machine/apps/litenes/src/fce.c:95:  while (cur - gtime < 1000 / FPS) {
+./abstract-machine/apps/litenes/src/fce.c:110:        while (scanlines-- > 0)
+./abstract-machine/apps/litenes/src/fce.c:169:  int pad = (w - h) / 2;
+./abstract-machine/apps/litenes/src/fce.c:171:    int y1 = y * (H - 1) / h + 1;
+./abstract-machine/apps/litenes/src/fce.c:172:    for (int x = pad; x < w - pad; x ++) {
+./abstract-machine/apps/litenes/src/fce.c:175:	// log("x:%d,y:%d,w:%d,h:%d\n", pad, y, w - 2 * pad, 1);
+./abstract-machine/apps/litenes/src/fce.c:177:	// log("(row + pad)[-]: %x, %x\n", row[pad + 15], row[pad + 50]);
+./abstract-machine/apps/litenes/src/fce.c:178:    draw_rect(row + pad, pad, y, w - 2 * pad, 1);
+./abstract-machine/apps/litenes/src/fce.c:192:  int pad = (w - h) / 2;
+./abstract-machine/apps/litenes/src/fce.c:193:  for (int x = pad; x < w - pad; x ++) {
+./abstract-machine/apps/litenes/src/fce.c:194:    xmap[x] = (x - pad) * W / h;
+./abstract-machine/apps/litenes/src/ppu.c:91:            return address;// - 0x1000;
+./abstract-machine/apps/litenes/src/ppu.c:97:            return address - 0x10;
+./abstract-machine/apps/litenes/src/ppu.c:152:    hi = n >> (32 - s);
+./abstract-machine/apps/litenes/src/ppu.c:156:    hi = n << (s - 32);
+./abstract-machine/apps/litenes/src/ppu.c:166:        int col = (((h >> (7 - x)) & 1) << 1) | ((l >> (7 - x)) & 1);
+./abstract-machine/apps/litenes/src/ppu.c:187:    int scroll_base = - ppu.PPUSCROLL_X + (mirror ? 256 : 0);
+./abstract-machine/apps/litenes/src/ppu.c:191:    word attribute_address = (ppu_base_nametable_address() + (mirror ? 0x400 : 0) + 0x3C0 +  -1 + ((ppu.scanline >> 5) << 3));
+./abstract-machine/apps/litenes/src/ppu.c:194:        // Skipping off-screen pixels
+./abstract-machine/apps/litenes/src/ppu.c:195:        if (((tile_x << 3) - ppu.PPUSCROLL_X + (mirror ? 256 : 0)) > 256)
+./abstract-machine/apps/litenes/src/ppu.c:226:                // lookup-table is much faster on x86.
+./abstract-machine/apps/litenes/src/ppu.c:227:                // byte color = (((h >> (7 - x)) & 1) << 1) | ((l >> (7 - x)) & 1);
+./abstract-machine/apps/litenes/src/ppu.c:269:        byte l = ppu_ram_read(tile_address + (vflip ? (7 - y_in_tile) : y_in_tile));
+./abstract-machine/apps/litenes/src/ppu.c:271:        byte h = ppu_ram_read(tile_address + (vflip ? (7 - y_in_tile) : y_in_tile) + 8);
+./abstract-machine/apps/litenes/src/ppu.c:277:            int color = hflip ? XHL[7 - x][h][l] : XHL[x][h][l];
+./abstract-machine/apps/litenes/src/ppu.c:311:    while (cycles-- > 0) {
+./abstract-machine/apps/litenes/src/ppu.c:341:        ppu.scanline = -1;
+./abstract-machine/apps/microbench/src/sieve/sieve.c:17:  N = setting->size;
+./abstract-machine/apps/microbench/src/sieve/sieve.c:41:  return ans == setting->checksum;
+./abstract-machine/apps/microbench/src/fib/fib.c:3:// f(n) = (f(n-1) + f(n-2) + .. f(n-m)) mod 2^32
+./abstract-machine/apps/microbench/src/fib/fib.c:35:  M = setting->size;
+./abstract-machine/apps/microbench/src/fib/fib.c:46:      uint32_t x = (i == M - 1 || j == i + 1);
+./abstract-machine/apps/microbench/src/fib/fib.c:63:  return get(ans, M-1, M-1) == setting->checksum;
+./abstract-machine/apps/microbench/src/bf/bf.c:2: Brainfuck-C ( http://github.com/kgabis/brainfuck-c )
+./abstract-machine/apps/microbench/src/bf/bf.c:28:#define CODE            ">>+>>>>>,[>+>>,]>+[--[+<<<-]<[<+>-]<[<[->[<<<+>>>>+<-]<<[>>+>[->]<<[<]" \
+./abstract-machine/apps/microbench/src/bf/bf.c:29:                        "<-]>]>>>+<[[-]<[>+<-]<]>[[>>>]+<<<-<[<<[<<<]>>+>[>>>]<-]<<[<<<]>[>>[>>" \
+./abstract-machine/apps/microbench/src/bf/bf.c:30:                        ">]<+<<[<<<]>-]]+<<<]+[->>>]>>]>>[.>>>]"
+./abstract-machine/apps/microbench/src/bf/bf.c:50:#define STACK_POP()     (STACK[--SP])
+./abstract-machine/apps/microbench/src/bf/bf.c:74:      case '-': PROGRAM[pc].operator = OP_DEC_VAL; break;
+./abstract-machine/apps/microbench/src/bf/bf.c:93:      default: pc--; break;
+./abstract-machine/apps/microbench/src/bf/bf.c:113:      case OP_DEC_DP: ptr--; break;
+./abstract-machine/apps/microbench/src/bf/bf.c:115:      case OP_DEC_VAL: data[ptr]--; break;
+./abstract-machine/apps/microbench/src/bf/bf.c:127:  ARR_SIZE = setting->size;
+./abstract-machine/apps/microbench/src/bf/bf.c:150:  return noutput == ARR_SIZE && cs == setting->checksum;
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:2:// Copyright (C) 2006-2011 Lasse Mikkel Reinhold
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:48:	return -1;
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:55:		n--;
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:66:		state->hash[i].offset = 0;
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:68:		state->hash_counter[i] = 0;
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:81:		state->hash_counter[i] = 0;
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:89:	return ((i >> 9) ^ (i >> 13) ^ i) & (QLZ_HASH_VALUES - 1);
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:91:	return ((i >> 12) ^ i) & (QLZ_HASH_VALUES - 1);
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:127:	r = r & (0xffffffff >> ((4 - n)*8));
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:136:	r = r & (0xffffffff >> ((4 - n)*8));
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:157:	state->hash[hash].offset = s;
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:158:	state->hash_counter[hash] = 1;
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:163:	c = state->hash_counter[hash];
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:164:	state->hash[hash].offset[c & (QLZ_POINTERS - 1)] = s;
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:166:	state->hash_counter[hash] = c;
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:185:	const unsigned char *last_byte = source + size - 1;
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:190:	const unsigned char *last_matchstart = last_byte - UNCONDITIONAL_MATCHLEN - UNCOMPRESSED_END; 
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:204:			if (src > source + (size >> 1) && dst - destination > src - source - ((src - source) >> 5))
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:220:			cached = fetch ^ state->hash[hash].cache;
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:221:			state->hash[hash].cache = fetch;
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:223:			o = state->hash[hash].offset + OFFSET_BASE;
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:224:			state->hash[hash].offset = CAST(src - OFFSET_BASE);
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:226:			if (cached == 0 && o != OFFSET_BASE && (src - o > MINOFFSET || (src == o + 1 && lits >= 3 && src > source + 3 && same(src - 3, 6))))
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:232:					fast_write((3 - 2) | hash, dst, 2);
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:245:					if(*(o + (src - old_src)) == *src)
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:248:						if(*(o + (src - old_src)) == *src)
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:250:							size_t q = last_byte - UNCOMPRESSED_END - (src - 5) + 1;
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:253:							while(*(o + (src - old_src)) == *src && (size_t)(src - old_src) < remaining)
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:258:					matchlen = src - old_src;
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:261:						fast_write((ui32)(matchlen - 2) | hash, dst, 2);
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:288:			size_t remaining = (last_byte - UNCOMPRESSED_END - src + 1) > 255 ? 255 : (last_byte - UNCOMPRESSED_END - src + 1);
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:296:			c = state->hash_counter[hash];
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:298:			offset2 = state->hash[hash].offset[0];
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:299:			if(offset2 < src - MINOFFSET && c > 0 && ((fast_read(offset2, 3) ^ fetch) & 0xffffff) == 0)
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:313:				o = state->hash[hash].offset[k];
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:315:				if(((fast_read(o, 3) ^ fetch) & 0xffffff) == 0 && o < src - MINOFFSET)
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:317:				if(*(src + matchlen) == *(o + matchlen)	&& ((fast_read(o, 3) ^ fetch) & 0xffffff) == 0 && o < src - MINOFFSET)
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:336:			state->hash[hash].offset[c & (QLZ_POINTERS - 1)] = src;
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:338:			state->hash_counter[hash] = c;
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:341:			if(matchlen > 2 && src - o < 131071)
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:344:				size_t offset = src - o;
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:349:					c = state->hash_counter[hash]++;
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:350:					state->hash[hash].offset[c & (QLZ_POINTERS - 1)] = src + u;
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:369:					ui32 f = ((matchlen - 3) << 2) | ((ui32)offset << 6) | 2;
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:376:					ui32 f = ((matchlen - 2) << 2) | ((ui32)offset << 7) | 3;
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:382:					ui32 f = ((matchlen - 3) << 7) | ((ui32)offset << 15) | 3;
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:403:					ui32 f = best_k | ((matchlen - 2) << 2) | (hash << 5);
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:435:		if (src <= last_byte - 3)
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:441:			state->hash[hash].offset = CAST(src - OFFSET_BASE);
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:442:			state->hash[hash].cache = fetch;
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:447:			c = state->hash_counter[hash];
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:448:			state->hash[hash].offset[c & (QLZ_POINTERS - 1)] = src;
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:450:			state->hash_counter[hash] = c;
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:466:	return dst - destination < 9 ? 9 : dst - destination;
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:473:	const unsigned char *last_destination_byte = destination + size - 1;
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:475:	const unsigned char *last_matchstart = last_destination_byte - UNCONDITIONAL_MATCHLEN - UNCOMPRESSED_END;
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:476:	unsigned char *last_hashed = destination - 1;
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:477:	const unsigned char *last_source_byte = source + qlz_size_compressed((const char *)source) - 1;
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:492:			if(src + CWORD_LEN - 1 > last_source_byte)
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:500:			if(src + 4 - 1 > last_source_byte)
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:515:			offset2 = (const unsigned char *)(size_t)state->hash[hash].offset;
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:534:			offset2 = state->hash[hash].offset[c];
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:581:			offset2 = dst - offset;
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:585:			if(offset2 < history || offset2 > dst - MINOFFSET - 1)
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:588:			if(matchlen > (ui32)(last_destination_byte - dst - UNCOMPRESSED_END + 1))
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:596:			update_hash_upto(state, &last_hashed, dst - matchlen);
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:597:			last_hashed = dst - 1;
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:610:				update_hash_upto(state, &last_hashed, dst - 3);		
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:633:				update_hash_upto(state, &last_hashed, last_destination_byte - 3); // todo, use constant
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:648:	if(size == 0 || size > 0xffffffff - 400)
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:657:	if (state->stream_counter + size - 1 >= QLZ_STREAMING_BUFFER)
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:675:		state->stream_counter = 0;
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:680:		unsigned char *src = state->stream_buffer + state->stream_counter;
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:696:		state->stream_counter += size;
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:727:	if (state->stream_counter + qlz_size_decompressed(source) - 1 >= QLZ_STREAMING_BUFFER) 
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:739:		state->stream_counter = 0;
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:745:		unsigned char *dst = state->stream_buffer + state->stream_counter;
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:748:			dsiz = qlz_decompress_core((const unsigned char *)source, dst, dsiz, state, (const unsigned char *)state->stream_buffer);
+./abstract-machine/apps/microbench/src/lzip/quicklz.c:756:		state->stream_counter += dsiz;
+./abstract-machine/apps/microbench/src/lzip/lzip.c:12:  SIZE = setting->size;
+./abstract-machine/apps/microbench/src/lzip/lzip.c:27:  return checksum(compress, compress + len) == setting->checksum;
+./abstract-machine/apps/microbench/src/bench.c:11:#define ROUNDUP(a, sz) ((((uintptr_t)a)+(sz)-1) & ~((sz)-1))
+./abstract-machine/apps/microbench/src/bench.c:29:  res->msec = uptime();
+./abstract-machine/apps/microbench/src/bench.c:37:  res->msec = uptime() - res->msec;
+./abstract-machine/apps/microbench/src/bench.c:41:  uintptr_t freesp = (uintptr_t)_heap.end - (uintptr_t)_heap.start;
+./abstract-machine/apps/microbench/src/bench.c:42:  if (freesp < setting->mlim) {
+./abstract-machine/apps/microbench/src/bench.c:50:  current->prepare();  // call bechmark's prepare function
+./abstract-machine/apps/microbench/src/bench.c:52:  current->run();      // run it
+./abstract-machine/apps/microbench/src/bench.c:54:  res->pass = current->validate();
+./abstract-machine/apps/microbench/src/bench.c:59:  return (REF_SCORE / 1000) * setting->ref / msec;
+./abstract-machine/apps/microbench/src/bench.c:74:    setting = &bench->settings[SETTING];
+./abstract-machine/apps/microbench/src/bench.c:76:    printk("[%s] %s: ", bench->name, bench->desc);
+./abstract-machine/apps/microbench/src/bench.c:117:  printk("Total time: %d ms\n", t1 - t0);
+./abstract-machine/apps/microbench/src/bench.c:131:  assert((uintptr_t)hbrk - (uintptr_t)_heap.start <= setting->mlim);
+./abstract-machine/apps/microbench/src/queen/queen.c:12:      pos -= p;
+./abstract-machine/apps/microbench/src/queen/queen.c:23:  FULL = (1 << setting->size) - 1;
+./abstract-machine/apps/microbench/src/queen/queen.c:31:  return ans == setting->checksum;
+./abstract-machine/apps/microbench/src/qsort/qsort.c:8:  N = setting->size;
+./abstract-machine/apps/microbench/src/qsort/qsort.c:43:  return checksum(data, data + N) == setting->checksum;
+./abstract-machine/apps/microbench/src/md5/md5.c:29:// r specifies the per-round shift amounts
+./abstract-machine/apps/microbench/src/md5/md5.c:36:#define LEFTROTATE(x, c) (((x) << (c)) | ((x) >> (32 - (c))))
+./abstract-machine/apps/microbench/src/md5/md5.c:63:    // Initialize variables - simple count in nibbles:
+./abstract-machine/apps/microbench/src/md5/md5.c:69:    //Pre-processing:
+./abstract-machine/apps/microbench/src/md5/md5.c:86:    // Process the message in successive 512-bit chunks:
+./abstract-machine/apps/microbench/src/md5/md5.c:87:    //for each 512-bit chunk of message:
+./abstract-machine/apps/microbench/src/md5/md5.c:90:        // break chunk into sixteen 32-bit words w[j], 0 ≤ j ≤ 15
+./abstract-machine/apps/microbench/src/md5/md5.c:133:    //var char digest[16] := h0 append h1 append h2 append h3 //(Output is in little-endian)
+./abstract-machine/apps/microbench/src/md5/md5.c:144:  N = setting->size;
+./abstract-machine/apps/microbench/src/md5/md5.c:158:  return checksum(digest, digest + 16) == setting->checksum;
+./amgame/src/font.c:49:    { 0x00, 0x00, 0x00, 0x3F, 0x00, 0x00, 0x00, 0x00},   // U+002D (-)
+./amgame/src/shape.c:9:    for(;cur_x>0;--cur_x){
+./amgame/src/shape.c:12:          mono_rect(x-cur_x,y+cur_y,2,2,fg_color);
+./amgame/src/shape.c:13:          mono_rect(x+cur_x,y-cur_y,2,2,fg_color);
+./amgame/src/shape.c:14:          mono_rect(x-cur_x,y-cur_y,2,2,fg_color);
+./amgame/src/shape.c:15:          --cur_y;
+./amgame/src/shape.c:20:    mono_rect(x,y-r,1,1,fg_color);
+./amgame/src/shape.c:26:        mono_rect(x-i,y+i,2,2,fg_color);
+./amgame/src/shape.c:27:        mono_rect(x+i,y-i,2,2,fg_color);
+./amgame/src/shape.c:28:        mono_rect(x-i,y-i,2,2,fg_color);
+./amgame/src/shape.c:58:      mono_rect((x+MARGIN) * SIDE*3+(6-i)*SIDE/4, (y+MARGIN) * SIDE*3+((direc&1?(10-i):(2+i))*SIDE)/4, SIDE/4, SIDE/4, color);
+./amgame/src/shape.c:59:      mono_rect((x+MARGIN) * SIDE*3+(5+i)*SIDE/4, (y+MARGIN) * SIDE*3+((direc&1?(10-i):(2+i))*SIDE)/4, SIDE/4, SIDE/4, color);
+./amgame/src/shape.c:64:      mono_rect((x+MARGIN) * SIDE*3+(direc&1?(10-i):(2+i))*SIDE/4, (y+MARGIN) * SIDE*3+((6-i)*SIDE)/4, SIDE/4, SIDE/4, color);
+./amgame/src/shape.c:65:      mono_rect((x+MARGIN) * SIDE*3+(direc&1?(10-i):(2+i))*SIDE/4, (y+MARGIN) * SIDE*3+((5+i)*SIDE)/4, SIDE/4, SIDE/4, color);
+./amgame/src/shape.c:81:  if(new_time-old_time>100){
+./amgame/src/shape.c:98:      (y+MARGIN) * SIDE*3+((9-i)*SIDE)/4,
+./amgame/src/draw.c:22:      int8_t delta_x=(idx[help_x][help_y]>>3)-cursor_x,
+./amgame/src/draw.c:23:              delta_y=(idx[help_x][help_y]&7 )-cursor_y;
+./amgame/src/logic.c:27:  color[GRID_NUM-1][GRID_NUM-1].alpha=1;//to fix
+./amgame/src/logic.c:28:  color[0][GRID_NUM-1].alpha=1;//specific
+./amgame/src/logic.c:29:  color[GRID_NUM-1][0].alpha=1;//grids
+./amgame/src/logic.c:33:  draw_str("Swap to\nput the\ncolors\nin order!",w-14*8,8*8,SIDE/8,0x3fff00);
+./amgame/src/logic.c:34:  draw_str("Press h for hints",0,h-2*8,SIDE/8,0x3fff00);
+./amgame/src/logic.c:83:        mono_rect(w/2+(k*3-13)*SIDE,h/2-(SIDE*5)/2,SIDE*3,SIDE*6,0xffffff);
+./amgame/src/logic.c:86:            "press r to restart",w/2-SIDE*12,h/2-2*SIDE,SIDE/8,0x3fff00);
+./amgame/src/logic.c:88:            "Edit include/game.h",w/2-SIDE*12,h/2+SIDE,SIDE/8,0x3fff00);
+./amgame/src/logic.c:95:    temp.r=((b.r-a.r)*i)/GRID_NUM+a.r;
+./amgame/src/logic.c:96:    temp.g=((b.g-a.g)*i)/GRID_NUM+a.g;
+./amgame/src/logic.c:97:    temp.b=((b.b-a.b)*i)/GRID_NUM+a.b;
+./amgame/src/logic.c:114:              ++cursor_x;if(cursor_x>=GRID_NUM)cursor_x-=GRID_NUM;break;
+./amgame/src/logic.c:116:              --cursor_x;if(cursor_x<0)cursor_x+=GRID_NUM;break;
+./amgame/src/logic.c:118:              ++cursor_y;if(cursor_y>=GRID_NUM)cursor_y-=GRID_NUM;break;
+./amgame/src/logic.c:120:              --cursor_y;if(cursor_y<0)cursor_y+=GRID_NUM;break;
+./amgame/src/logic.c:153:    if(new_time-old_time>50){
+./libco/co.c:37:    --pool_idx;
+./libco/co.c:56:      stack_top=current->stack
+./libco/co.c:58:                -STACK_SIZE/4;
+./libco/co.c:60:  //I used &name-__stack_backup to get the extra space, but failed
+./libco/co.c:63:      /* bias*/(((void*)&_para)-__stack_backup) \
+./libco/co.c:71:  if(!setjmp(current->tar_buf)){
+./libco/co.c:76:    current->stat&=~CO_ALIVE;
+./libco/co.c:77:    pool[pool_idx++]=current-routines;
+./libco/co.c:85:    if(!setjmp(current->tar_buf)){
+./libco/co.c:97:    while(thd->stat&CO_ALIVE){
+./libco/co.c:99:      longjmp(thd->tar_buf,1); 
+./libco/co.c:102:  thd->stat=0;
+./libco/tests/main.c:5:#include "co-test.h"
+./libco/tests/main.c:32:    struct co *thd1 = co_start("thread-1", work, "X");
+./libco/tests/main.c:33:    struct co *thd2 = co_start("thread-2", work, "Y");
+./libco/tests/main.c:41:// -----------------------------------------------
+./libco/tests/main.c:52:    item->data = (char*)malloc(10);
+./libco/tests/main.c:53:    if (!item->data) {
+./libco/tests/main.c:58:    memset(item->data, 0, 10);
+./libco/tests/main.c:59:    sprintf(item->data, "libco-%d", g_count++);
+./libco/tests/main.c:80:        printf("%s  ", (char *)item->data);
+./libco/tests/main.c:81:        free(item->data);
+./libco/tests/main.c:100:    struct co *thd1 = co_start("producer-1", producer, queue);
+./libco/tests/main.c:101:    struct co *thd2 = co_start("producer-2", producer, queue);
+./libco/tests/main.c:102:    struct co *thd3 = co_start("consumer-1", consumer, queue);
+./libco/tests/main.c:103:    struct co *thd4 = co_start("consumer-2", consumer, queue);
+./libco/tests/main.c:126:    printf("\nTest #2. Expect: (libco-){200, 201, 202, ..., 399}\n");
+./frecov/frecov.c:21:#define offset_of(member,struct) ((uintptr_t)&(((struct*)0)->member))
+./frecov/frecov.c:96:_Static_assert(offset_of(sector_per_fat_low,bpb_t)==0x16-0xb,"Offset of sector_per_fat_low is wrong!");
+./frecov/frecov.c:97:_Static_assert(offset_of(sector_per_fat_high,bpb_t)==0x24-0xb,"Offset of sector_per_fat_high is wrong!");
+./frecov/frecov.c:100:    return p->sector_per_fat_low==0?p->sector_per_fat_high:p->sector_per_fat_low;
+./frecov/frecov.c:110:    entry_t *e=(entry_t*)(uintptr_t)(((void*)fs)-0xb+
+./frecov/frecov.c:111:                ( fs->sectors_reserved+
+./frecov/frecov.c:112:                  fs->fat_cnt*sector_per_fat(fs)+
+./frecov/frecov.c:113:                  (fs->start_cluster-2)*fs->sectors_per_cluster )
+./frecov/frecov.c:114:                    *fs->bytes_per_sector);
+./frecov/frecov.c:116:                (void*)fs)-0xb+
+./frecov/frecov.c:117:                fs->sectors_cnt_high*
+./frecov/frecov.c:118:                fs->bytes_per_sector);
+./frecov/frecov.c:121:        if(e->suffix){
+./frecov/frecov.c:123:                print_unicode(e->file_name[i]);
+./kernel/framework/main.c:6:  _cte_init(os->trap);
+./kernel/framework/main.c:9:  os->init();
+./kernel/framework/main.c:10:  _mpe_init(os->run); // all cores call os->run()
+./kernel/src/alloc.c:15:#define align(_A,_B) (_A+=(_B)-(_A&((_B)-1)))
+./kernel/src/alloc.c:53:    while(--level!=shift){
+./kernel/src/alloc.c:75:        ((idx<<shift)&((1<<(DEPTH-1))-1))*PG_SIZE;
+./kernel/src/alloc.c:80:    (((uintptr_t)s)-((uintptr_t)bias))
+./kernel/src/alloc.c:82:    while(s->size>PG_SIZE){
+./kernel/src/alloc.c:84:        s->size-=PG_SIZE;
+./kernel/src/alloc.c:97:  printf("%x\n",(_heap.end-_heap.start)/(8 KB));
+./kernel/src/alloc.c:98:  printf("pages:%d\n",(pm_end-pm_start)/(PG_SIZE));
+./kernel/src/alloc.c:104:  for(i=0;i<(pm_end-pm_start)/(PG_SIZE)&&i<(1<<(DEPTH-1));++i){
+./kernel/src/alloc.c:105:    enable((1<<(DEPTH-1))+i,0);
+./kernel/src/alloc.c:123:        ret->size=size;
+./kernel/src/alloc.c:124:        ret->fence=0x13579ace;
+./kernel/src/alloc.c:125:        memset(&(ret->space),0,size);
+./kernel/src/alloc.c:126:        return &(ret->space);
+./kernel/src/alloc.c:129:            if(p->size>=size){
+./kernel/src/alloc.c:130:                if(p->size-size>sizeof(header)){
+./kernel/src/alloc.c:132:                    tail+=p->size;
+./kernel/src/alloc.c:133:                    tail-=size;//Get to the tail
+./kernel/src/alloc.c:135:                    ret->size=size;//record size for free
+./kernel/src/alloc.c:136:                    p->size-=size+sizeof(header);//Shrink current space
+./kernel/src/alloc.c:137:                    ret->fence=0x13579ace;
+./kernel/src/alloc.c:138:                    memset(&(ret->space),0,size);
+./kernel/src/alloc.c:139:                    return &(ret->space);
+./kernel/src/alloc.c:141:                    prevp->next=p->next;//"delete" p
+./kernel/src/alloc.c:142:                    p->fence=0x13579ace;
+./kernel/src/alloc.c:143:                    memset(&(p->space),0,size);
+./kernel/src/alloc.c:144:                    return &(p->space);
+./kernel/src/alloc.c:148:            p=p->next;
+./kernel/src/alloc.c:151:    prevp->next=big_page_alloc(0);//ask for a new page
+./kernel/src/alloc.c:152:    prevp->next->next=p;
+./kernel/src/alloc.c:153:    prevp->next->size=PG_SIZE-sizeof(header);
+./kernel/src/alloc.c:162:         *to_free=(header*)(ptr-sizeof(header));
+./kernel/src/alloc.c:163:  if(to_free->fence!=0x13579ace){
+./kernel/src/alloc.c:164:    printf("Fence at %x changed to %x!\n",&to_free->fence,to_free->fence);
+./kernel/src/alloc.c:167:  if(to_free->size> PG_SIZE/2){
+./kernel/src/alloc.c:171:  while((uintptr_t)ptr>(uintptr_t)&(p->space)&&p!=&free_list[cpu_id]){
+./kernel/src/alloc.c:173:    p=p->next;
+./kernel/src/alloc.c:175:  //*prevp---*to_free---*p
+./kernel/src/alloc.c:176:  if(((uintptr_t)to_free)==((uintptr_t)&prevp->space)+prevp->size){
+./kernel/src/alloc.c:177:    prevp->size+=sizeof(header)+to_free->size;
+./kernel/src/alloc.c:180:    to_free->next=prevp->next;
+./kernel/src/alloc.c:181:    prevp->next=to_free;
+./kernel/src/alloc.c:183:  if(((uintptr_t)p)==((uintptr_t)&to_free->space)+to_free->size){
+./kernel/src/alloc.c:184:    to_free->next=p->next;
+./kernel/src/alloc.c:185:    to_free->size+=sizeof(header)+p->size;
+./kernel/src/alloc.c:193:        printf("[%p,%p):%x\n",p,((void*)p)+p->size,p->size);
+./kernel/src/alloc.c:194:        p=p->next;
+./kernel/src/alloc.c:203:        ret+=p->size;
+./kernel/src/alloc.c:204:        p=p->next;
+./kernel/src/devices/tty/tty.c:10:// ------------------------------------------------------------------
+./kernel/src/devices/tty/tty.c:13:  *(q->rear++) = ch;
+./kernel/src/devices/tty/tty.c:14:  if (q->rear == q->end) {
+./kernel/src/devices/tty/tty.c:15:    q->rear = q->buf;
+./kernel/src/devices/tty/tty.c:17:  if (q->rear == q->front) panic("tty queue full");
+./kernel/src/devices/tty/tty.c:18:  *q->rear = '\0';
+./kernel/src/devices/tty/tty.c:22:  if (q->front != q->end) {
+./kernel/src/devices/tty/tty.c:23:    char *pos = q->rear;
+./kernel/src/devices/tty/tty.c:24:    if (pos == q->buf) pos = q->end;
+./kernel/src/devices/tty/tty.c:25:    if (*(pos - 1) != '\0') {
+./kernel/src/devices/tty/tty.c:26:      q->rear = pos - 1;
+./kernel/src/devices/tty/tty.c:27:      *q->rear = '\0';
+./kernel/src/devices/tty/tty.c:35:   int move_sz = tty->columns * (tty->lines - 1);
+./kernel/src/devices/tty/tty.c:36:   memmove(tty->buf, tty->buf + tty->columns, move_sz * sizeof(tty->buf[0]));
+./kernel/src/devices/tty/tty.c:37:   memmove(tty->dirty, tty->dirty + tty->columns, move_sz * sizeof(tty->dirty[0]));
+./kernel/src/devices/tty/tty.c:38:   tty->cursor -= tty->columns;
+./kernel/src/devices/tty/tty.c:39:   for (int i = 0; i < tty->columns; i++) {
+./kernel/src/devices/tty/tty.c:40:     tty->cursor[i] = tty_defaultch();
+./kernel/src/devices/tty/tty.c:45:  int x = (tty->cursor - tty->buf) % tty->columns;
+./kernel/src/devices/tty/tty.c:46:  tty->cursor -= x;
+./kernel/src/devices/tty/tty.c:50:  tty->cursor += tty->columns;
+./kernel/src/devices/tty/tty.c:54:  if (tty->cursor > tty->buf) {
+./kernel/src/devices/tty/tty.c:55:    tty->cursor--;
+./kernel/src/devices/tty/tty.c:56:    tty->cursor->ch = '\0';
+./kernel/src/devices/tty/tty.c:61:  tty->cursor->ch = ch;
+./kernel/src/devices/tty/tty.c:62:  tty->cursor++;
+./kernel/src/devices/tty/tty.c:67:  kmt->sem_wait(&tty->lock);
+./kernel/src/devices/tty/tty.c:68:  struct tty_queue *q = &tty->queue;
+./kernel/src/devices/tty/tty.c:73:      kmt->sem_signal(&tty->cooked);
+./kernel/src/devices/tty/tty.c:81:  kmt->sem_signal(&tty->lock);
+./kernel/src/devices/tty/tty.c:86:// ------------------------------------------------------------------
+./kernel/src/devices/tty/tty.c:89:  struct character *ch = tty->buf;
+./kernel/src/devices/tty/tty.c:90:  uint8_t *d = tty->dirty;
+./kernel/src/devices/tty/tty.c:91:  kmt->sem_wait(&tty->lock);
+./kernel/src/devices/tty/tty.c:92:  for (int y = 0; y < tty->lines; y++) {
+./kernel/src/devices/tty/tty.c:93:    for (int x = 0; x < tty->columns; x++) {
+./kernel/src/devices/tty/tty.c:95:        int draw = (ch == tty->cursor) ? 0xdb : ch->ch;
+./kernel/src/devices/tty/tty.c:98:            .display = tty->display, .texture = draw * 2 + 1, },
+./kernel/src/devices/tty/tty.c:100:            .display = tty->display, .texture = draw * 2 + 2, },
+./kernel/src/devices/tty/tty.c:102:        tty->fbdev->ops->write(tty->fbdev, SPRITE_BRK, &sp, sizeof(sp));
+./kernel/src/devices/tty/tty.c:107:  kmt->sem_signal(&tty->lock);
+./kernel/src/devices/tty/tty.c:111:  tty->dirty[ch - tty->buf] = 1;
+./kernel/src/devices/tty/tty.c:115:  int x = (ch - tty->buf) % tty->columns;
+./kernel/src/devices/tty/tty.c:116:  for (int i = 0; i < tty->columns; i++)
+./kernel/src/devices/tty/tty.c:117:    tty_mark(tty, ch - x + i);
+./kernel/src/devices/tty/tty.c:121:   for (int i = 0; i < tty->size; i++) {
+./kernel/src/devices/tty/tty.c:122:     tty_mark(tty, &tty->buf[i]);
+./kernel/src/devices/tty/tty.c:127:// ------------------------------------------------------------------
+./kernel/src/devices/tty/tty.c:133:      tty_mark_line(tty, tty->cursor);
+./kernel/src/devices/tty/tty.c:137:      tty_mark(tty, tty->cursor);
+./kernel/src/devices/tty/tty.c:138:      tty_mark(tty, tty->cursor + 1);
+./kernel/src/devices/tty/tty.c:143:      if (tty->cursor == tty->end) {
+./kernel/src/devices/tty/tty.c:147:        tty_mark_line(tty, tty->cursor - tty->columns);
+./kernel/src/devices/tty/tty.c:148:        tty_mark_line(tty, tty->cursor);
+./kernel/src/devices/tty/tty.c:153:      if (tty->cursor == tty->end) {
+./kernel/src/devices/tty/tty.c:157:        tty_mark(tty, tty->cursor - 1);
+./kernel/src/devices/tty/tty.c:158:        tty_mark(tty, tty->cursor);
+./kernel/src/devices/tty/tty.c:164:  tty_t *tty = dev->ptr;
+./kernel/src/devices/tty/tty.c:165:  tty->fbdev = dev_lookup("fb");
+./kernel/src/devices/tty/tty.c:166:  fb_t *fb = tty->fbdev->ptr;
+./kernel/src/devices/tty/tty.c:167:  tty->display = dev->id - 1; // tty1 is on display #0
+./kernel/src/devices/tty/tty.c:168:  tty->lines = fb->info->height / 16;
+./kernel/src/devices/tty/tty.c:169:  tty->columns = fb->info->width / 8;
+./kernel/src/devices/tty/tty.c:170:  tty->size = tty->columns * tty->lines;
+./kernel/src/devices/tty/tty.c:171:  tty->buf = pmm->alloc(tty->size * sizeof(tty->buf[0]));
+./kernel/src/devices/tty/tty.c:172:  tty->dirty = pmm->alloc(tty->size * sizeof(tty->dirty[0]));
+./kernel/src/devices/tty/tty.c:173:  tty->end = tty->buf + tty->size;
+./kernel/src/devices/tty/tty.c:174:  for (int i = 0; i < tty->size; i++) {
+./kernel/src/devices/tty/tty.c:175:    tty->buf[i] = tty_defaultch();
+./kernel/src/devices/tty/tty.c:176:    tty->dirty[i] = 1;
+./kernel/src/devices/tty/tty.c:178:  tty->cursor = tty->buf;
+./kernel/src/devices/tty/tty.c:179:  struct tty_queue *q = &tty->queue;
+./kernel/src/devices/tty/tty.c:180:  q->front = q->rear = q->buf = pmm->alloc(TTY_COOK_BUF_SZ);
+./kernel/src/devices/tty/tty.c:181:  q->end = q->buf + TTY_COOK_BUF_SZ;
+./kernel/src/devices/tty/tty.c:182:  kmt->sem_init(&tty->lock, "tty lock", 1);
+./kernel/src/devices/tty/tty.c:183:  kmt->sem_init(&tty->cooked, "tty cooked lines", 0);
+./kernel/src/devices/tty/tty.c:188:  tty_t *tty = dev->ptr;
+./kernel/src/devices/tty/tty.c:189:  kmt->sem_wait(&tty->cooked);
+./kernel/src/devices/tty/tty.c:190:  kmt->sem_wait(&tty->lock);
+./kernel/src/devices/tty/tty.c:193:  struct tty_queue *q = &tty->queue;
+./kernel/src/devices/tty/tty.c:195:    char ch = *q->front;
+./kernel/src/devices/tty/tty.c:197:      ((char *)buf)[nread] = *q->front;
+./kernel/src/devices/tty/tty.c:199:    q->front++;
+./kernel/src/devices/tty/tty.c:200:    if (q->front == q->end) q->front = q->buf;
+./kernel/src/devices/tty/tty.c:204:  kmt->sem_signal(&tty->lock);
+./kernel/src/devices/tty/tty.c:209:  tty_t *tty = dev->ptr;
+./kernel/src/devices/tty/tty.c:210:  kmt->sem_wait(&tty->lock);
+./kernel/src/devices/tty/tty.c:214:  kmt->sem_signal(&tty->lock);
+./kernel/src/devices/tty/tty.c:230:  tty_render(ttydev->ptr);
+./kernel/src/devices/tty/tty.c:233:    int nread = in->ops->read(in, 0, &ev, sizeof(ev));
+./kernel/src/devices/tty/tty.c:244:          tty_t *tty = ttydev->ptr;
+./kernel/src/devices/tty/tty.c:247:            .current = tty->display,
+./kernel/src/devices/tty/tty.c:250:          fb->ops->write(fb, 0, &info, sizeof(struct display_info));
+./kernel/src/devices/tty/tty.c:251:          ttydev->ops->write(ttydev, 0, "", 0);
+./kernel/src/devices/tty/tty.c:255:        if (ev.data == 'c') printf("Ctrl - c\n");
+./kernel/src/devices/tty/tty.c:259:        tty_t *tty = ttydev->ptr;
+./kernel/src/devices/tty/tty.c:261:          ttydev->ops->write(ttydev, 0, &ch, 1);
+./kernel/src/devices/dev.c:21:    if (strcmp(devices[i]->name, name) == 0)
+./kernel/src/devices/dev.c:28:  void *data = pmm->alloc(dev_size);
+./kernel/src/devices/dev.c:29:  device_t *dev = pmm->alloc(sizeof(device_t));
+./kernel/src/devices/dev.c:46:  devices[id]->ops->init(devices[id]);
+./kernel/src/devices/dev.c:52:  kmt->create(pmm->alloc(sizeof(task_t)), "input-task", input_task, NULL);
+./kernel/src/devices/dev.c:53:  kmt->create(pmm->alloc(sizeof(task_t)), "tty-task", tty_task, NULL);
+./kernel/src/devices/ramdisk/ramdisk.c:6:  rd_t *rd = dev->ptr;
+./kernel/src/devices/ramdisk/ramdisk.c:7:  if (dev->id == 1) {
+./kernel/src/devices/ramdisk/ramdisk.c:8:    rd->start = &initrd_start;
+./kernel/src/devices/ramdisk/ramdisk.c:9:    rd->end   = &initrd_end;
+./kernel/src/devices/ramdisk/ramdisk.c:11:    char *space = pmm->alloc(RD_SIZE);
+./kernel/src/devices/ramdisk/ramdisk.c:12:    rd->start = space;
+./kernel/src/devices/ramdisk/ramdisk.c:13:    rd->end   = space + RD_SIZE;
+./kernel/src/devices/ramdisk/ramdisk.c:19:  rd_t *rd = dev->ptr;
+./kernel/src/devices/ramdisk/ramdisk.c:20:  memcpy(buf, ((char *)rd->start) + offset, count);
+./kernel/src/devices/ramdisk/ramdisk.c:25:  rd_t *rd = dev->ptr;
+./kernel/src/devices/ramdisk/ramdisk.c:26:  memcpy(((char *)rd->start) + offset, buf, count);
+./kernel/src/devices/input/input.c:15:  kmt->spin_lock(&in->lock);
+./kernel/src/devices/input/input.c:16:  in->events[in->rear] = ev;
+./kernel/src/devices/input/input.c:17:  in->rear = (in->rear + 1) % NEVENTS;
+./kernel/src/devices/input/input.c:18:  if (in->rear == in->front) { panic("input queue full"); }
+./kernel/src/devices/input/input.c:19:  kmt->spin_unlock(&in->lock);
+./kernel/src/devices/input/input.c:20:  kmt->sem_signal(&in->event_sem);
+./kernel/src/devices/input/input.c:24:  kmt->sem_wait(&in->event_sem);
+./kernel/src/devices/input/input.c:25:  kmt->spin_lock(&in->lock);
+./kernel/src/devices/input/input.c:26:  if (in->rear == in->front) { panic("input queue empty"); }
+./kernel/src/devices/input/input.c:27:  int idx = in->front;
+./kernel/src/devices/input/input.c:28:  in->front = (in->front + 1) % NEVENTS;
+./kernel/src/devices/input/input.c:29:  struct input_event ret = in->events[idx];
+./kernel/src/devices/input/input.c:30:  kmt->spin_unlock(&in->lock);
+./kernel/src/devices/input/input.c:35:  input_t *in = dev->ptr;
+./kernel/src/devices/input/input.c:41:      case _KEY_CAPSLOCK: in->capslock     ^= 1; break; 
+./kernel/src/devices/input/input.c:42:      case _KEY_LCTRL:    in->ctrl_down[0]  = 1; break; 
+./kernel/src/devices/input/input.c:43:      case _KEY_RCTRL:    in->ctrl_down[1]  = 1; break; 
+./kernel/src/devices/input/input.c:44:      case _KEY_LALT:     in->alt_down[0]   = 1; break; 
+./kernel/src/devices/input/input.c:45:      case _KEY_RALT:     in->alt_down[1]   = 1; break; 
+./kernel/src/devices/input/input.c:46:      case _KEY_LSHIFT:   in->shift_down[0] = 1; break; 
+./kernel/src/devices/input/input.c:47:      case _KEY_RSHIFT:   in->shift_down[1] = 1; break; 
+./kernel/src/devices/input/input.c:51:          int shift = in->shift_down[0] || in->shift_down[1];
+./kernel/src/devices/input/input.c:52:          int ctrl = in->ctrl_down[0] || in->ctrl_down[1];
+./kernel/src/devices/input/input.c:53:          int alt = in->alt_down[0] || in->alt_down[1];
+./kernel/src/devices/input/input.c:59:              shift ^= in->capslock;
+./kernel/src/devices/input/input.c:72:      case _KEY_LCTRL:  in->ctrl_down[0]  = 0; break; 
+./kernel/src/devices/input/input.c:73:      case _KEY_RCTRL:  in->ctrl_down[1]  = 0; break; 
+./kernel/src/devices/input/input.c:74:      case _KEY_LALT:   in->alt_down[0]   = 0; break; 
+./kernel/src/devices/input/input.c:75:      case _KEY_RALT:   in->alt_down[1]   = 0; break; 
+./kernel/src/devices/input/input.c:76:      case _KEY_LSHIFT: in->shift_down[0] = 0; break; 
+./kernel/src/devices/input/input.c:77:      case _KEY_RSHIFT: in->shift_down[1] = 0; break; 
+./kernel/src/devices/input/input.c:83:  kmt->sem_signal(&sem_kbdirq);
+./kernel/src/devices/input/input.c:96:    kmt->sem_wait(&sem_kbdirq);
+./kernel/src/devices/input/input.c:101:  input_t *in = dev->ptr;
+./kernel/src/devices/input/input.c:102:  in->events = pmm->alloc(sizeof(in->events[0]) * NEVENTS);
+./kernel/src/devices/input/input.c:103:  in->front = in->rear = 0;
+./kernel/src/devices/input/input.c:104:  kmt->spin_init(&in->lock, "/dev/input lock");
+./kernel/src/devices/input/input.c:105:  kmt->sem_init(&in->event_sem, "events in queue", 0);
+./kernel/src/devices/input/input.c:106:  kmt->sem_init(&sem_kbdirq, "keyboard-interrupt", 0);
+./kernel/src/devices/input/input.c:108:  os->on_irq(0, _EVENT_IRQ_IODEV, input_notify);
+./kernel/src/devices/input/input.c:113:  struct input_event ev = pop_event(dev->ptr);
+./kernel/src/devices/input/keymaps.c:15:  [_KEY_MINUS] = '-',
+./kernel/src/devices/video/video.c:10:  uint32_t *px = tx->pixels;
+./kernel/src/devices/video/video.c:14:      *px++ = ((bitmask >> (7 - x)) & 1) ? fg : bg;
+./kernel/src/devices/video/video.c:20:    texture_fill(&fb->textures[ch * 2 + 1], 0, &font[16 * ch], 0xffffff, 0x000000);
+./kernel/src/devices/video/video.c:21:    texture_fill(&fb->textures[ch * 2 + 2], 1, &font[16 * ch], 0xffffff, 0x000000);
+./kernel/src/devices/video/video.c:26:  fb_t *fb = dev->ptr;
+./kernel/src/devices/video/video.c:27:  fb->info = pmm->alloc(sizeof(struct display_info));
+./kernel/src/devices/video/video.c:28:  fb->textures = pmm->alloc(sizeof(struct texture) * NTEXTURE);
+./kernel/src/devices/video/video.c:29:  fb->sprites = pmm->alloc(sizeof(struct sprite) * NSPRITE);
+./kernel/src/devices/video/video.c:30:  *(fb->info) = (struct display_info) {
+./kernel/src/devices/video/video.c:38:  kmt->sem_init(&fb_sem, dev->name, 1);
+./kernel/src/devices/video/video.c:44:  fb_t *fb = dev->ptr;
+./kernel/src/devices/video/video.c:47:  memcpy(buf, fb->info, sizeof(struct display_info));
+./kernel/src/devices/video/video.c:52:  fb_t *fb = dev->ptr;
+./kernel/src/devices/video/video.c:53:  kmt->sem_wait(&fb_sem);
+./kernel/src/devices/video/video.c:56:    if (fb->info->current != info->current) {
+./kernel/src/devices/video/video.c:57:      fb->info->current = info->current;
+./kernel/src/devices/video/video.c:60:    memcpy(((uint8_t *)fb->textures) + offset, buf, count);
+./kernel/src/devices/video/video.c:62:    // TODO: not remove stale sprites, and does not consider z-values
+./kernel/src/devices/video/video.c:68:      if (sp->texture > 0 && sp->display == fb->info->current) {
+./kernel/src/devices/video/video.c:69:        ctl.x = sp->x;
+./kernel/src/devices/video/video.c:70:        ctl.y = sp->y;
+./kernel/src/devices/video/video.c:71:        ctl.pixels = fb->textures[sp->texture].pixels;
+./kernel/src/devices/video/video.c:76:  kmt->sem_signal(&fb_sem);
+./kernel/src/helper.c:1://No lock, so can be called by gdb when dead-locked.
+./kernel/src/helper.c:14:    printf(",%d",(int)tasks[0]->attr);
+./kernel/src/helper.c:16:        printf(",%d",(int)tasks[i]->attr);
+./kernel/src/os.c:16:    .event=-1,
+./kernel/src/os.c:26:        kmt->sem_wait(&echo_sem);
+./kernel/src/os.c:35:        kmt->sem_signal(&echo_sem);
+./kernel/src/os.c:37:        kmt->sem_signal(&echo_sem);
+./kernel/src/os.c:43:    pmm->init();
+./kernel/src/os.c:44:    kmt->init();
+./kernel/src/os.c:45:    dev->init();
+./kernel/src/os.c:46:    kmt->create(pmm->alloc(sizeof(task_t)),"sem-test1",sem_test,"!");
+./kernel/src/os.c:47:    //kmt->create(pmm->alloc(sizeof(task_t)),"sem-test2",sem_test,"!");
+./kernel/src/os.c:48:    kmt->create(pmm->alloc(sizeof(task_t)),"echo-test:n",echo_test,"n");
+./kernel/src/os.c:49:    kmt->create(pmm->alloc(sizeof(task_t)),"echo-test:m",echo_test,"m");
+./kernel/src/os.c:50:    kmt->create(pmm->alloc(sizeof(task_t)),"echo-test:s",echo_test,"s");
+./kernel/src/os.c:51:    kmt->create(pmm->alloc(sizeof(task_t)),"echo-test:l",echo_test,"l");
+./kernel/src/os.c:52:    kmt->sem_init(&echo_sem,"echo-sem",10);
+./kernel/src/os.c:54:    //kmt->create(pmm->alloc(sizeof(task_t)), "print", echo_task, "tty1");
+./kernel/src/os.c:55:    //kmt->create(pmm->alloc(sizeof(task_t)), "print", echo_task, "tty2");
+./kernel/src/os.c:56:    //kmt->create(pmm->alloc(sizeof(task_t)), "print", echo_task, "tty3");
+./kernel/src/os.c:57:    //kmt->create(pmm->alloc(sizeof(task_t)), "print", echo_task, "tty4");
+./kernel/src/os.c:66:  //My printf is thread-safe
+./kernel/src/os.c:68:    //printf("Hello from CPU #%d for the %d-th time\n",_cpu(),++cnt);
+./kernel/src/os.c:93:    irq_idx+=sprintf(irq_log+irq_idx,"[cpu%d]task%dlock\n",_cpu(),currents[_cpu()]);irq_idx&=(1<<16)-1;*/
+./kernel/src/os.c:101:        handler=handler->next){
+./kernel/src/os.c:102:        if (handler->event == _EVENT_NULL || handler->event == ev.event) {
+./kernel/src/os.c:105:            _Context *next = handler->handler(ev, context);
+./kernel/src/os.c:125://prev->new->p
+./kernel/src/os.c:127:        if(p->seq>seq||p==&irq_guard)break;
+./kernel/src/os.c:129:        p=p->next;
+./kernel/src/os.c:131:    prev->next=new(irq_handler);
+./kernel/src/os.c:132:    prev->next->next=p;
+./kernel/src/os.c:134:    prev->next->seq=seq;
+./kernel/src/os.c:135:    prev->next->event=event;
+./kernel/src/os.c:136:    prev->next->handler=handler;
+./kernel/src/os.c:142:        ((void(*)(void))p->handler)();
+./kernel/src/os.c:143:        p=p->next;
+./kernel/src/os.c:151:    int nread = tty->ops->read(tty, 0, line, sizeof(line));
+./kernel/src/os.c:152:    line[nread - 1] = '\0';
+./kernel/src/kmt.c:5:    dest=pmm->alloc(strlen(src)+1); \
+./kernel/src/kmt.c:28:int currents[4]={-1,-1,-1,-1},tasks_cnt=0;
+./kernel/src/kmt.c:33:    for(p=sem->head;p!=sem->tail;++p){
+./kernel/src/kmt.c:34:        printf("%s->",sem->pool[p]->name);
+./kernel/src/kmt.c:36:    printf("%s->",sem->pool[p]->name);
+./kernel/src/kmt.c:42:    printf("%s",tasks[0]->name);
+./kernel/src/kmt.c:44:        printf("->%s",tasks[i]->name);
+./kernel/src/kmt.c:69:    if(current==-1){
+./kernel/src/kmt.c:70:        current=tasks_cnt-1;
+./kernel/src/kmt.c:71:        //kmt->create(pmm->alloc(sizeof(task_t)),"os_run",NULL,NULL);
+./kernel/src/kmt.c:72:        //current=tasks_cnt-1;
+./kernel/src/kmt.c:74:        tasks[current]->context=*c;
+./kernel/src/kmt.c:82:    //log("context switch from (%d)%s\n",current,tasks[current]->name);
+./kernel/src/kmt.c:92:            if((tasks[current]->attr&TASK_SLEEP)==0)return &tasks[current]->context;
+./kernel/src/kmt.c:96:    }while(tasks[new]->attr);
+./kernel/src/kmt.c:98:    tasks[current]->cpu=-1;
+./kernel/src/kmt.c:99:    neg_flag(tasks[current]->attr,TASK_RUNNING);
+./kernel/src/kmt.c:101:    tasks[new]->cpu=cpu_id;
+./kernel/src/kmt.c:102:    set_flag(tasks[new]->attr,TASK_RUNNING);
+./kernel/src/kmt.c:103:    tasks[current]->sleep_flag=0;
+./kernel/src/kmt.c:108:        if(tasks[current]->fence1[i]!=0x13579ace||tasks[current]->fence2[i]!=0xeca97531){
+./kernel/src/kmt.c:113:    return &tasks[current]->context;
+./kernel/src/kmt.c:116:    os->on_irq(INT_MIN, _EVENT_NULL, kmt_context_save);
+./kernel/src/kmt.c:117:    os->on_irq(INT_MAX, _EVENT_NULL, kmt_context_switch);
+./kernel/src/kmt.c:118:    //kmt->spin_init(&tasks_lk, "tasks-lock");
+./kernel/src/kmt.c:123:        --ignore_num;
+./kernel/src/kmt.c:126:    //task->id=tasks_cnt;
+./kernel/src/kmt.c:130:    task->cpu=-1;
+./kernel/src/kmt.c:131:    task->attr=TASK_RUNABLE;
+./kernel/src/kmt.c:132:    copy_name(task->name,name);
+./kernel/src/kmt.c:134:    task->context = *_kcontext(
+./kernel/src/kmt.c:135:            (_Area){(void*)task->stack,&(task->stack_end)}, entry, arg);
+./kernel/src/kmt.c:138:        task->fence1[i]=0x13579ace;
+./kernel/src/kmt.c:139:        task->fence2[i]=0xeca97531;
+./kernel/src/kmt.c:146:    pmm->free(task->name);
+./kernel/src/kmt.c:150:    lk->locked=PTHREAD_MUTEX_INITIALIZER;
+./kernel/src/kmt.c:151:    copy_name(lk->name,name);
+./kernel/src/kmt.c:161:        if(lk->locked){
+./kernel/src/kmt.c:162:            if(lk->owner==_cpu()){
+./kernel/src/kmt.c:163:                ++lk->reen;
+./kernel/src/kmt.c:166:                while(lk->locked){
+./kernel/src/kmt.c:179:        pthread_mutex_lock(&lk->locked);
+./kernel/src/kmt.c:180:        lk->reen=1;
+./kernel/src/kmt.c:181:        lk->owner=_cpu();
+./kernel/src/kmt.c:192:    if(lk->locked){
+./kernel/src/kmt.c:193:        if(lk->owner!=_cpu()){
+./kernel/src/kmt.c:194:            log("Lock[%s] isn't holded by this CPU!\n",lk->name);
+./kernel/src/kmt.c:196:            if(lk->reen==1){
+./kernel/src/kmt.c:197:                lk->owner=-1;
+./kernel/src/kmt.c:199:                pthread_mutex_unlock(&(lk->locked));
+./kernel/src/kmt.c:201:                --lk->reen;
+./kernel/src/kmt.c:205:        Assert(0,"Lock[%s] isn't locked!\n",lk->name);
+./kernel/src/kmt.c:211:    copy_name(sem->name,name);
+./kernel/src/kmt.c:212:    sem->value=value;
+./kernel/src/kmt.c:213:    kmt->spin_init(&(sem->lock),name);
+./kernel/src/kmt.c:214:    sem->head=0;
+./kernel/src/kmt.c:215:    sem->tail=0;
+./kernel/src/kmt.c:216:    //log("%s: %d",sem->name,sem->value);
+./kernel/src/kmt.c:225:    addrm_idx+=sprintf(addrm_log+addrm_idx,"add:[%d]:%x",sem->tail,tasks[current]);
+./kernel/src/kmt.c:227:    sem->pool[sem->tail++]=tasks[current];
+./kernel/src/kmt.c:228:    set_flag(tasks[current]->attr,TASK_SLEEP);
+./kernel/src/kmt.c:229:    tasks[current]->sleep_flag|=2;
+./kernel/src/kmt.c:230:    addrm_idx+=sprintf(addrm_log+addrm_idx,"(%d)\n",tasks[current]->attr);
+./kernel/src/kmt.c:231:    if(sem->tail>=POOL_LEN)sem->tail-=POOL_LEN;
+./kernel/src/kmt.c:233:    kmt->spin_unlock(&(sem->lock));
+./kernel/src/kmt.c:237:    addrm_idx+=sprintf(addrm_log+addrm_idx,"remove:[%d]:%x",sem->head,sem->pool[sem->head]);
+./kernel/src/kmt.c:239:    neg_flag(sem->pool[sem->head++]->attr,TASK_SLEEP);
+./kernel/src/kmt.c:240:    sem->pool[(sem->head+19)%20]->sleep_flag|=1;
+./kernel/src/kmt.c:241:    addrm_idx+=sprintf(addrm_log+addrm_idx,"(%d)\n",sem->pool[(sem->head+19)%20]->attr);
+./kernel/src/kmt.c:242:    if(sem->head>=POOL_LEN)sem->head-=POOL_LEN;
+./kernel/src/kmt.c:246:    kmt->spin_lock(&(sem->lock));
+./kernel/src/kmt.c:247:    --(sem->value);
+./kernel/src/kmt.c:249:    if(sem->value<0){
+./kernel/src/kmt.c:252:    kmt->spin_unlock(&(sem->lock));
+./kernel/src/kmt.c:255:    kmt->spin_lock(&(sem->lock));
+./kernel/src/kmt.c:256:    ++(sem->value);
+./kernel/src/kmt.c:258:    if(sem->value<=0){
+./kernel/src/kmt.c:261:    kmt->spin_unlock(&(sem->lock));

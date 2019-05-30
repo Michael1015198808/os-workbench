@@ -81,20 +81,22 @@ typedef union bpb{
         uint8_t sectors_per_cluster;
         uint16_t sectors_reserved;
         uint8_t fat_cnt;
-        uint8_t unused1[5];
+        uint8_t unused1[2];
+        uint16_t sectors_cnt_low;
+        uint8_t unused2[1];
         uint16_t sector_per_fat_low;
-        uint8_t unused2[12];
+        uint8_t unused3[8];
+        uint32_t sectors_cnt_high;
         uint32_t sector_per_fat_high;
-        uint8_t unused3[4];
+        uint8_t unused4[4];
         uint32_t start_cluster;
         uint8_t unused_[42];
     };
 }bpb_t;
 _Static_assert(offset_of(sector_per_fat_low,bpb_t)==0x16-0xb,"Offset of sector_per_fat_low is wrong!");
 _Static_assert(offset_of(sector_per_fat_high,bpb_t)==0x24-0xb,"Offset of sector_per_fat_high is wrong!");
-_Static_assert(sizeof(bpb_t)>=79,"Size of bpb is wrong!");
-_Static_assert(sizeof(bpb_t)<=79,"Size of bpb is wrong!");
-inline uint32_t sector_per_fat(const bpb_t *p){
+_Static_assert(sizeof(bpb_t)==79,"Size of bpb is wrong!");
+uint32_t sector_per_fat(const bpb_t *p){
     return p->sector_per_fat_low==0?p->sector_per_fat_high:p->sector_per_fat_low;
 }
 
@@ -105,14 +107,24 @@ int main(int argc, char *argv[]) {
     const bpb_t *fs = 0xb+mmap(NULL, st.st_size, PROT_READ , MAP_SHARED, fd, 0);
 
     (void)fs;
-    entry_t *e=(entry_t*)(uintptr_t)(((void*)fs)+
+    entry_t *e=(entry_t*)(uintptr_t)(((void*)fs)-0xb+
                 ( fs->sectors_reserved+
                   fs->fat_cnt*sector_per_fat(fs)+
                   (fs->start_cluster-2)*fs->sectors_per_cluster )
                     *fs->bytes_per_sector);
-    printf("%p\n",e);
-    printf("%x\n",(unsigned)(0x100400-(uintptr_t)e)/fs->bytes_per_sector);
-    printf("%lld\n",(e->clus_high*1LL<<16)+e->clus_low);
+    entry_t *end=(entry_t*)(uintptr_t)((
+                (void*)fs)-0xb+
+                fs->sectors_cnt_high*
+                fs->bytes_per_sector);
+
+    while(e<end){
+        if(e->suffix){
+            for(int i=0;i<4;++i){
+                print_unicode(e->file_name[i]);
+            }
+        };
+        ++e;
+    }
     close(fd);
     return 0;
 }
