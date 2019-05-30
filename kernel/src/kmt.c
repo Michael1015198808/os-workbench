@@ -246,6 +246,7 @@ static void sem_remove_task(sem_t *sem){
     assert_lock=0;
 
     neg_flag(sem->pool[sem->head],TASK_SLEEP);
+    for(volatile int i=0;i<100;++i);
     neg_flag(sem->pool[sem->head],TASK_SLEEP);
     if(++sem->head>=POOL_LEN)sem->head-=POOL_LEN;
 }
