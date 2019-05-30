@@ -112,7 +112,6 @@ int main(int argc, char *argv[]) {
                     *fs->bytes_per_sector);
     printf("%p\n",e);
     printf("%x\n",(unsigned)(0x100400-(uintptr_t)e)/fs->bytes_per_sector);
-    e=((void*)fs)+0x00100440;
     printf("%lld\n",(e->clus_high*1LL<<16)+e->clus_low);
     close(fd);
     return 0;
