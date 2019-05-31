@@ -24,7 +24,7 @@ void show_free_pages(void){
       printf("%4d:%2x\n",i,pages[i]);
   }
 }
-void enable(int idx,uintptr_t shift){
+static void enable(int idx,uintptr_t shift){
     if(idx==0)return;
     pages[idx]|=1<<shift;
     if(pages[idx>>1]&(1<<shift)){
@@ -35,7 +35,7 @@ void enable(int idx,uintptr_t shift){
         enable(idx>>1,shift);
     }
 }
-void disable(int idx,uintptr_t shift){
+static void disable(int idx,uintptr_t shift){
     if(idx==0)return;
     pages[idx]&=~(1<<shift);
     if(pages[idx>>1]&(1<<(shift+1))){
@@ -122,7 +122,6 @@ static void *kalloc(size_t size) {
         header *ret=big_page_alloc(shift);
         ret->size=size;
         ret->fence=0x13579ace;
-        memset(&(ret->space),0,size);
         return &(ret->space);
     }else{
         do{
@@ -135,12 +134,10 @@ static void *kalloc(size_t size) {
                     ret->size=size;//record size for free
                     p->size-=size+sizeof(header);//Shrink current space
                     ret->fence=0x13579ace;
-                    memset(&(ret->space),0,size);
                     return &(ret->space);
                 }else{
                     prevp->next=p->next;//"delete" p
                     p->fence=0x13579ace;
-                    memset(&(p->space),0,size);
                     return &(p->space);
                 }
             }
@@ -155,6 +152,7 @@ static void *kalloc(size_t size) {
 }
 static void *wrap_kalloc(size_t size){
     void* p=kalloc(size);
+    memset(p,0,size);
     //printf("Return %x,%p\n",size,p);
     return p;
 }
