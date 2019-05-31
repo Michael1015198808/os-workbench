@@ -155,7 +155,7 @@ static void *kalloc(size_t size) {
 }
 static void *wrap_kalloc(size_t size){
     void* p=kalloc(size);
-    printf("Return %x,%p\n",size,p);
+    //printf("Return %x,%p\n",size,p);
     return p;
 }
 
