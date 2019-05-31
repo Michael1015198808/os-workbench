@@ -100,6 +100,8 @@ void intr_open();
 #define Assert(cond,...) \
     do { \
       if(!(cond)){ \
+        asm volatile("nop;"); \
+/* Make it easier to set breakpoints.*/\
         printf("\33[1;31m"); \
         log("Assertion " #cond " fails!\n" __VA_ARGS__); \
         printf("\33[0m"); \
