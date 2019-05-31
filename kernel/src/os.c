@@ -120,10 +120,8 @@ static _Context *os_trap(_Event ev, _Context *context) {
         }
     }
     intr_open();
-    Assert(ncli[_cpu()]==0);
-    if(ret==NULL){
-        log("\nkmt_context_switch returns NULL\n");
-    };
+    Assert(ncli[_cpu()]==0,"%d",ncli[_cpu()]);
+    Assert(ret!=NULL,"\nkmt_context_switch returns NULL\n");
     return ret;
 }
 
