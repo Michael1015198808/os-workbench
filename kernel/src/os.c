@@ -100,7 +100,7 @@ static void os_run() {
         asm volatile("int $3");
     }
     hello();
-    _intr_write(1);
+    _intr_write(0);
     while (1) {
         _yield();
     }
