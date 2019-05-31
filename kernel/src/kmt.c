@@ -124,7 +124,7 @@ void kmt_init(void){
     //kmt->spin_init(&tasks_lk, "tasks-lock");
 }
 int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), void *arg){
-    static int ignore_num=0;
+    static int ignore_num=2;
     if(ignore_num>0){
         --ignore_num;
         return 0;
