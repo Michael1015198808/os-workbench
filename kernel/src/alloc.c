@@ -37,7 +37,7 @@ static void enable(int idx,uintptr_t shift){
 }
 static void disable(int idx,uintptr_t shift){
     if(idx==0)return;
-    pages[idx]&=~(1<<shift);
+    pages[idx]&=~((1<<(shift+1))-1);
     if(pages[idx>>1]&(1<<(shift+1))){
          disable(idx>>1,shift+1);
     }else{
