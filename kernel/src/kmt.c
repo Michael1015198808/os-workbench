@@ -53,18 +53,22 @@ static void add_task(task_t *task){
 
 #define set_flag(A,B) \
     { \
+        Assert(!(A->attr&B)); \
         pthread_mutex_lock(&A->attr_lock); \
         uintptr_t p=(uintptr_t)&A->attr; \
         asm volatile("lock or %1,(%0)"::"r"(p),"g"((B))); \
         pthread_mutex_unlock(&A->attr_lock); \
+        Assert(A->attr&B); \
     }
 
 #define neg_flag(A,B) \
     { \
+        Assert(A->attr&B); \
         pthread_mutex_lock(&A->attr_lock); \
         uintptr_t p=(uintptr_t)&A->attr; \
         asm volatile("lock and %1,(%0)"::"r"(p),"g"(~(B))); \
         pthread_mutex_unlock(&A->attr_lock); \
+        Assert(!(A->attr&B)); \
     }
 
 static _Context* kmt_context_save(_Event ev, _Context *c){
@@ -252,9 +256,7 @@ static void sem_remove_task(sem_t *sem){
     --add_rm_cnt;
     assert_lock=0;
 
-    for(volatile int i=0;i<5;++i){
-        neg_flag(sem->pool[sem->head],TASK_SLEEP);
-    }
+    neg_flag(sem->pool[sem->head],TASK_SLEEP);
     if(++sem->head>=POOL_LEN)sem->head-=POOL_LEN;
 }
 
