@@ -8,7 +8,7 @@ struct header{
     struct header *next;
     uintptr_t size;
     uint32_t fence;
-    struct{}space;//space doesn't take any storage
+    __attribute__((aligned(0x10)))struct{}space;//space doesn't take any storage
     //directly return &space
 }static free_list[4]={};//Sentinels
 typedef struct header header;
