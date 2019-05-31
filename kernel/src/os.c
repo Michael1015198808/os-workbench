@@ -1,6 +1,7 @@
 #include <common.h>
 #include <amtrace.h>
 #include <klib.h>
+#include <device.h>
 
 typedef struct irq{
     int seq,event;
