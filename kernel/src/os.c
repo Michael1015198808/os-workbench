@@ -44,12 +44,21 @@ void sem_test(void *arg){
         _yield();
     }
 }
+void echo_task(void *name) {
+  device_t *tty = dev_lookup(name);
+  while (1) {
+    char line[128], text[128];
+    sprintf(text, "(%s) $ ", name); tty_write(tty, text);
+    int nread = tty->ops->read(tty, 0, line, sizeof(line));
+    line[nread - 1] = '\0';
+    sprintf(text, "Echo: %s.\n", line); tty_write(tty, text);
+  }
+}
 static void os_init() {
     pmm->init();
     kmt->init();
     dev->init();
-    kmt->create(pmm->alloc(sizeof(task_t)),"idle1",idle,NULL);
-    /*
+    //kmt->create(pmm->alloc(sizeof(task_t)),"idle1",idle,NULL);
     kmt->create(pmm->alloc(sizeof(task_t)),"sem-test1",sem_test,"!");
     //kmt->create(pmm->alloc(sizeof(task_t)),"sem-test2",sem_test,"!");
     kmt->create(pmm->alloc(sizeof(task_t)),"echo-test:n",echo_test,"n");
@@ -57,7 +66,6 @@ static void os_init() {
     //kmt->create(pmm->alloc(sizeof(task_t)),"echo-test:s",echo_test,"s");
     //kmt->create(pmm->alloc(sizeof(task_t)),"echo-test:l",echo_test,"l");
     kmt->sem_init(&echo_sem,"echo-sem",10);
-    */
     log("Os init finished\n");
     //kmt->create(pmm->alloc(sizeof(task_t)), "print", echo_task, "tty1");
     //kmt->create(pmm->alloc(sizeof(task_t)), "print", echo_task, "tty2");
@@ -151,16 +159,6 @@ void irq_test(){
         p=p->next;
     }
 }
-/*void echo_task(void *name) {
-  device_t *tty = dev_lookup(name);
-  while (1) {
-    char line[128], text[128];
-    sprintf(text, "(%s) $ ", name); tty_write(tty, text);
-    int nread = tty->ops->read(tty, 0, line, sizeof(line));
-    line[nread - 1] = '\0';
-    sprintf(text, "Echo: %s.\n", line); tty_write(tty, text);
-  }
-}*/
 
 MODULE_DEF(os) {
   .init   = os_init,
