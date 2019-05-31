@@ -36,10 +36,14 @@ static void enable(int idx,uintptr_t shift){
     pages[idx]|=(1<<shift);
     recur_enable(idx,shift);
 }
-static void disable(int idx,uintptr_t shift){
+static void recur_disable(int idx,uintptr_t shift){
     if(idx==0)return;
     pages[idx]=pages[idx<<1]|pages[(idx<<1)^1];
     disable(idx>>1,shift+1);
+}
+static void disable(int idx,uintptr_t shift){
+    pages[idx]=0;
+    recur_disable(idx>>1,shift+1);
 }
 static pthread_mutex_t alloc_lock=PTHREAD_MUTEX_INITIALIZER;
 static void* big_page_alloc(uintptr_t shift){
@@ -66,7 +70,6 @@ static void* big_page_alloc(uintptr_t shift){
     }
     assert(pages[idx]&(1<<shift));
     Assert((idx>>(DEPTH-1-shift))==1);
-    pages[idx]=0;
     disable(idx,shift);
     pthread_mutex_unlock(&alloc_lock);
     return bias+
