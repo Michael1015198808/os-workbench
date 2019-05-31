@@ -21,7 +21,6 @@ static irq_handler irq_guard={
 };
 
 sem_t echo_sem;
-int currents[4];
 void echo_test(void *arg){
     _intr_write(0);
     while(1){
@@ -63,6 +62,7 @@ static void os_init() {
     kmt->init();
     dev->init();
     //kmt->create(pmm->alloc(sizeof(task_t)),"idle1",idle,NULL);
+    /*
     kmt->create(pmm->alloc(sizeof(task_t)),"sem-test1",sem_test,"!");
     kmt->create(pmm->alloc(sizeof(task_t)),"sem-test1",sem_test,"!");
     kmt->create(pmm->alloc(sizeof(task_t)),"echo-test:n",echo_test,"n");
@@ -70,6 +70,7 @@ static void os_init() {
     kmt->create(pmm->alloc(sizeof(task_t)),"echo-test:s",echo_test,"s");
     kmt->create(pmm->alloc(sizeof(task_t)),"echo-test:l",echo_test,"l");
     kmt->sem_init(&echo_sem,"echo-sem",10);
+    */
     log("Os init finished\n");
     //kmt->create(pmm->alloc(sizeof(task_t)), "print", echo_task, "tty1");
     //kmt->create(pmm->alloc(sizeof(task_t)), "print", echo_task, "tty2");
@@ -101,39 +102,24 @@ static void os_run() {
     }
 }
 
-/* For debug */
-/*char irq_log[65600];
-int irq_idx=0;*/
-int currents[4];
-/* For debug */
-
 pthread_mutex_t irq_lk;
 static _Context *os_trap(_Event ev, _Context *context) {
-    /*pthread_mutex_lock(&irq_lk);
-    irq_idx+=sprintf(irq_log+irq_idx,"[cpu%d]task%dlock\n",_cpu(),currents[_cpu()]);irq_idx&=(1<<16)-1;*/
-    //log("intr:%d\n",_intr_read());
-    _Context *ret = context;
     intr_close();
+    _Context *ret = context;
 
     for(struct irq *handler=irq_guard.next;
         handler!=&irq_guard;
         handler=handler->next){
         if (handler->event == _EVENT_NULL || handler->event == ev.event) {
-            //log("Call one handler\n");
-            //log("%d\n",ret);
             _Context *next = handler->handler(ev, context);
             if (next) ret = next;
         }
     }
-    /*irq_idx+=sprintf(irq_log+irq_idx,"[cpu%d]task%dunlock\n",_cpu(),currents[_cpu()]);
-    pthread_mutex_unlock(&irq_lk);*/
-    //log("ret%p\n",ret);
     intr_open();
     Assert(ncli[_cpu()]==0);
     if(ret==NULL){
         log("\nkmt_context_switch returns NULL\n");
     };
-    //log("intr:%d\n",_intr_read());
     return ret;
 }
 
