@@ -105,8 +105,6 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
 
     current=new;
     
-    log_idx+=sprintf(log+log_idx,"[%d%d](%d%d) ",currents[0],currents[1],tasks[0]->attr,tasks[1]->attr);
-
     trace_pthread_mutex_unlock(&tasks_lk);
     for(int i=0;i<4;++i){
         if(tasks[current]->fence1[i]!=0x13579ace||tasks[current]->fence2[i]!=0xeca97531){
