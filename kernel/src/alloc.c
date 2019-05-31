@@ -24,27 +24,18 @@ void show_free_pages(void){
       printf("%4d:%2x\n",i,pages[i]);
   }
 }
+#define father (idx>>1)
 static void enable(int idx,uintptr_t shift){
     if(idx==0)return;
-    pages[idx]|=1<<shift;
-    if(pages[idx>>1]&(1<<shift)){
-        if(pages[idx^1]&(1<<shift)){
-            enable(idx>>1,shift+1);
-        }
-    }else{
-        enable(idx>>1,shift);
-    }
+    pages[father]|=pages[idx];
+    if(pages[idx]&pages[idx^1]&(1<<shift))
+        pages[father]|=1<<(shift+1);
+    enable(father,shift+1);
 }
 static void disable(int idx,uintptr_t shift){
     if(idx==0)return;
-    pages[idx]&=~(1<<shift);
-    if(pages[idx>>1]&(1<<(shift+1))){
-         disable(idx>>1,shift+1);
-    }else{
-        if(!(pages[idx^1]&(1<<shift))){
-            disable(idx>>1,shift);
-        }
-    }
+    pages[idx]=pages[idx<<1]|pages[(idx<<1)+1];
+    disable(idx>>1,shift+1);
 }
 static pthread_mutex_t alloc_lock=PTHREAD_MUTEX_INITIALIZER;
 static void* big_page_alloc(uintptr_t shift){
@@ -69,7 +60,8 @@ static void* big_page_alloc(uintptr_t shift){
 #endif
         }
     }
-    pages[idx]&=~((1<<(shift+1))-1);
+    pages[idx]=0;
+    Assert((idx>>(DEPTH-shift))==1)
     disable(idx,shift);
     pthread_mutex_unlock(&alloc_lock);
     return bias+
@@ -81,10 +73,12 @@ static void big_page_free(header *s){
     (((uintptr_t)s)-((uintptr_t)bias))
     /PG_SIZE;
     while(s->size>PG_SIZE){
-        enable(++idx,0);
+        pages[++idx]|=1;
+        enable(idx,0);
         s->size-=PG_SIZE;
     }
-    enable(++idx,0);
+    pages[++idx]|=1;
+    enable(idx,0);
     pthread_mutex_unlock(&alloc_lock);
 }
 static void pmm_init() {
