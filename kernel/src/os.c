@@ -94,7 +94,7 @@ static void os_run() {
     /*if(_cpu()==0){
         printf("%d\n",*(int*)0);
     }*/
-    _intr_write(1);
+    _intr_write(0);
     hello();
     while (1) {
         _yield();
@@ -112,7 +112,6 @@ static _Context *os_trap(_Event ev, _Context *context) {
     /*pthread_mutex_lock(&irq_lk);
     irq_idx+=sprintf(irq_log+irq_idx,"[cpu%d]task%dlock\n",_cpu(),currents[_cpu()]);irq_idx&=(1<<16)-1;*/
     //log("intr:%d\n",_intr_read());
-    printf("%d ",ev);
     _Context *ret = context;
     intr_close();
 
