@@ -106,10 +106,6 @@ static void pmm_init() {
   }
 }
 
-static void *wrap_kalloc(size_t size){
-    void* p=kalloc(size);
-    printf("Return %p",p);
-}
 static void *kalloc(size_t size) {
     align(size,0x10);
     int cpu_id=_cpu();//Call once
@@ -156,6 +152,10 @@ static void *kalloc(size_t size) {
     prevp->next->next=p;
     prevp->next->size=PG_SIZE-sizeof(header);
     return kalloc(size);
+}
+static void *wrap_kalloc(size_t size){
+    void* p=kalloc(size);
+    printf("Return %p",p);
 }
 
 static void kfree(void *ptr) {
