@@ -96,6 +96,9 @@ static void os_run() {
     /*if(_cpu()==0){
         printf("%d\n",*(int*)0);
     }*/
+    while(1){
+        asm volatile("int $3");
+    }
     hello();
     _intr_write(1);
     while (1) {
