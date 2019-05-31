@@ -64,8 +64,9 @@ static void* big_page_alloc(uintptr_t shift){
 #endif
         }
     }
-    pages[idx]=0;
+    assert(pages[idx]&(1<<shift));
     Assert((idx>>(DEPTH-1-shift))==1);
+    pages[idx]=0;
     disable(idx,shift);
     pthread_mutex_unlock(&alloc_lock);
     return bias+
