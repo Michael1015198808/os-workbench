@@ -98,7 +98,6 @@ static void os_run() {
     }*/
     _intr_write(1);
     hello();
-    while(1);
     while (1) {
         _yield();
     }
