@@ -26,11 +26,15 @@ void show_free_pages(void){
 }
 #define father (idx>>1)
 static void enable(int idx,uintptr_t shift){
+    pages[idx]|=(1<<shift);
+    recur_enable(idx,shift);
+}
+static void recur_enable(int idx,uintptr_t shift){
     if(idx==0)return;
     pages[father]|=pages[idx];
     if(pages[idx]&pages[idx^1]&(1<<shift))
         pages[father]|=1<<(shift+1);
-    enable(father,shift+1);
+    recur_enable(father,shift+1);
 }
 static void disable(int idx,uintptr_t shift){
     if(idx==0)return;
@@ -73,12 +77,10 @@ static void big_page_free(header *s){
     (((uintptr_t)s)-((uintptr_t)bias))
     /PG_SIZE;
     while(s->size>PG_SIZE){
-        pages[++idx]|=1;
-        enable(idx,0);
+        enable(++idx,0);
         s->size-=PG_SIZE;
     }
-    pages[++idx]|=1;
-    enable(idx,0);
+    enable(++idx,0);
     pthread_mutex_unlock(&alloc_lock);
 }
 static void pmm_init() {
