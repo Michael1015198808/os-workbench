@@ -12,7 +12,7 @@ struct header{
     //directly return &space
 }static free_list[4]={};//Sentinels
 typedef struct header header;
-#define align(_A,_B) (_A+=(_B)-(_A&((_B)-1)))
+#define align(_A,_B) (_A=( (_A+_B-1)/_B)*_B)
 #define PG_SIZE (8 KB)
 
 #define DEPTH 14
