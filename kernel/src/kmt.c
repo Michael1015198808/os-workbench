@@ -264,6 +264,7 @@ static void sem_remove_task(sem_t *sem){
     --add_rm_cnt;
     assert_lock=0;
 
+    while(sem->pool[sem->head]&TASK_RUNNING);
     neg_flag(sem->pool[sem->head],TASK_SLEEP);
     if(++sem->head>=POOL_LEN)sem->head-=POOL_LEN;
 }
