@@ -156,6 +156,7 @@ static void *kalloc(size_t size) {
 static void *wrap_kalloc(size_t size){
     void* p=kalloc(size);
     printf("Return %p",p);
+    return p;
 }
 
 static void kfree(void *ptr) {
