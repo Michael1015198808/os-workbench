@@ -95,6 +95,7 @@ static _Context* kmt_context_save(_Event ev, _Context *c){
 int log_idx=0;
 char log[120000]={};
 static _Context* kmt_context_switch(_Event ev, _Context *c){
+    Assert(_intr_read()==0,"%d",_cpu());
     trace_pthread_mutex_lock(&tasks_lk);
     int cpu_id=_cpu(),new=0;
     //log("context switch from (%d)%s\n",current,tasks[current]->name);
