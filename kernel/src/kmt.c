@@ -75,7 +75,15 @@ static _Context* kmt_context_save(_Event ev, _Context *c){
     //trace_pthread_mutex_lock(&tasks_lk);
     int cpu_id=_cpu();
     if(current==-1){
-        current=tasks_cnt-1;
+        trace_pthread_mutex_lock(&tasks_lk);
+        for(int i=0;i<tasks_cnt;++i){
+            if(!tasks[i]->attr){
+                current=i;
+                set_flag(tasks[i],TASK_RUNNING);
+                break;
+            }
+        }
+        trace_pthread_mutex_unlock(&tasks_lk);
         //kmt->create(pmm->alloc(sizeof(task_t)),"os_run",NULL,NULL);
         //current=tasks_cnt-1;
     }else{
