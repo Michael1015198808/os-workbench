@@ -106,6 +106,10 @@ static void pmm_init() {
   }
 }
 
+static void *wrap_kalloc(size_t size){
+    void* p=kalloc(size);
+    printf("Return %p",p);
+}
 static void *kalloc(size_t size) {
     align(size,0x10);
     int cpu_id=_cpu();//Call once
@@ -208,6 +212,6 @@ uintptr_t cnt_free_list(void){
 
 MODULE_DEF(pmm) {
   .init = pmm_init,
-  .alloc = kalloc,
+  .alloc = wrap_kalloc,
   .free = kfree,
 };
