@@ -2,7 +2,7 @@
 
 submit:
 	@cd $(dir $(abspath $(lastword $(MAKEFILE_LIST)))) && \
-	  curl -sS 'http://moon.nju.edu.cn/%7ejyy/teach/submit.sh' | bash
+	  curl -sSL 'http://moon.nju.edu.cn/%7ejyy/teach/submit.sh' | bash
 
 git:
 	@git add $(shell find . -name "*.c") $(shell find . -name "*.h") -A --ignore-errors
