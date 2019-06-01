@@ -120,7 +120,7 @@ void spin_test(){
     for(volatile int i=0;i<1000;++i);
     kmt->spin_lock(&test_spin);
     printf("cpu %d gets the final lock\n",_cpu());
-    while(0);
+    while(1);
 }
 static void os_run() {
     hello();
