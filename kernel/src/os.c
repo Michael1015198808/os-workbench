@@ -85,7 +85,7 @@ inline void check(uint8_t *p,int a,int b,long long len){
 void memory_test(){
     int a[100],b[100];
     long long len[100];
-    void p[100];
+    void *p[100];
     for(int i=0;i<100;++i){
         len[i]=rand()*1LL;
         a[i]=rand();
@@ -96,7 +96,7 @@ void memory_test(){
     for(int j=0;j<100;++j){
         int i=rand()%100;
         check(p[i],a[i],b[i],len[i]);
-        free(p[i]);
+        pmm->free(p[i]);
         len[i]=rand()*1LL;
         if(i&1){
             len[i]+=(rand()*1LL)<<8;
