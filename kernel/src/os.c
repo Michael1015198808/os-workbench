@@ -107,13 +107,11 @@ void memory_test(){
         fill(p[i],a[i],b[i],len[i]);
     }
     printf("[cpu%d] finish memory test.\n",_cpu());
-    return;
+    while(1);
 }
 static void os_run() {
     hello();
     _intr_write(0);
-    memory_test();
-    while(1);
     while (1) {
         _yield();
     }
