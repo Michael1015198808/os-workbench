@@ -163,11 +163,10 @@ void kmt_spin_init(spinlock_t *lk, const char *name){
 
 void kmt_spin_lock(spinlock_t *lk){
     intr_close();
-    /*
-    int cpu_id=_cpu();(void)cpu_id;
+    int cpu_id=_cpu();
     while(1){
         if(lk->locked){
-            if(lk->owner==_cpu()){
+            if(lk->owner==cpu_id){
                 Assert(0,"Reentrance!");
                 ++lk->reen;
                 break;
@@ -175,17 +174,13 @@ void kmt_spin_lock(spinlock_t *lk){
                 while(lk->locked);
             }
         }
-        */
         pthread_mutex_lock(&lk->locked);
-        /*
         lk->reen=1;
-        lk->owner=_cpu();
+        lk->owner=cpu_id;
         break;
     }//Use break to release lock and restore intr
-    */
 }
 void kmt_spin_unlock(spinlock_t *lk){
-    /*
     if(lk->locked){
         if(lk->owner!=_cpu()){
             log("Lock[%s] isn't holded by this CPU!\n",lk->name);
@@ -193,9 +188,7 @@ void kmt_spin_unlock(spinlock_t *lk){
             if(lk->reen==1){
                 lk->owner=-1;
                 //True but sometimes slow
-                */
                 pthread_mutex_unlock(&(lk->locked));
-                /*
             }else{
                 --lk->reen;
             }
@@ -203,7 +196,6 @@ void kmt_spin_unlock(spinlock_t *lk){
     }else{
         Assert(0,"Lock[%s] isn't locked!\n",lk->name);
     }
-    */
     intr_open();
 }
 void kmt_sem_init(sem_t *sem, const char *name, int value){
