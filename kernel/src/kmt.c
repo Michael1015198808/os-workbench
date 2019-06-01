@@ -79,6 +79,7 @@ static _Context* kmt_context_save(_Event ev, _Context *c){
     }
     Assert(current>=0);
     tasks[current]->context=*c;
+    tasks[current]->attr|=TASK_RUNNING;
     return NULL;
 }
 int log_idx=0;
