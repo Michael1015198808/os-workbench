@@ -6,7 +6,6 @@
     memcpy(dest,src,strlen(src)+1);
 
 task_t *tasks[20]={};
-//static spinlock_t tasks_lk;
 static pthread_mutex_t tasks_lk;
 int tasks_idx=0,tasks_old=0;
 char tasks_log[66000];
@@ -72,7 +71,6 @@ static void add_task(task_t *task){
     }
 
 static _Context* kmt_context_save(_Event ev, _Context *c){
-    //trace_pthread_mutex_lock(&tasks_lk);
     int cpu_id=_cpu();
     if(current==-1){
         trace_pthread_mutex_lock(&tasks_lk);
@@ -84,12 +82,9 @@ static _Context* kmt_context_save(_Event ev, _Context *c){
             }
         }
         trace_pthread_mutex_unlock(&tasks_lk);
-        //kmt->create(pmm->alloc(sizeof(task_t)),"os_run",NULL,NULL);
-        //current=tasks_cnt-1;
     }else{
         tasks[current]->context=*c;
     }
-    //trace_pthread_mutex_unlock(&tasks_lk);
     return NULL;
 }
 int log_idx=0;
@@ -135,7 +130,6 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
 void kmt_init(void){
     os->on_irq(INT_MIN, _EVENT_NULL, kmt_context_save);
     os->on_irq(INT_MAX, _EVENT_NULL, kmt_context_switch);
-    //kmt->spin_init(&tasks_lk, "tasks-lock");
 }
 int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), void *arg){
     static int ignore_num=2;
