@@ -44,10 +44,12 @@ void show(){
     }
     printf("\n");
 }
-static void add_task(task_t *task){
+static int add_task(task_t *task){
     pthread_mutex_lock(&tasks_lk);
+    int ret=tasks_cnt;
     tasks[tasks_cnt++]=task;
     pthread_mutex_unlock(&tasks_lk);
+    return ret;
 }
 
 #define set_flag(A,B) \
@@ -74,17 +76,11 @@ static _Context* kmt_context_save(_Event ev, _Context *c){
     int cpu_id=_cpu();
     if(current==-1){
         trace_pthread_mutex_lock(&tasks_lk);
-        for(int i=0;i<tasks_cnt;++i){
-            if(!tasks[i]->attr){
-                current=i;
-                set_flag(tasks[i],TASK_RUNNING);
-                break;
-            }
-        }
+        current=kmt->create(pmm->alloc(sizeof(task_t)),"os_run",os_run,NULL);
         trace_pthread_mutex_unlock(&tasks_lk);
-    }else{
-        tasks[current]->context=*c;
     }
+    Assert(current>=0);
+    tasks[current]->context=*c;
     return NULL;
 }
 int log_idx=0;
@@ -139,7 +135,7 @@ int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), void *a
     }
     //task->id=tasks_cnt;
     log("create (%d)%s\n",tasks_cnt,name);
-    add_task(task);
+    int task_idx=add_task(task);
     Assert(tasks_cnt<LEN(tasks),"%d\n",tasks_cnt);
     task->cpu=-1;
     task->attr=TASK_RUNABLE;
@@ -154,7 +150,7 @@ int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), void *a
         task->fence2[i]=0xeca97531;
     }
 #endif
-    return 0;
+    return task_idx;
 }
 void kmt_teardown(task_t *task){
     Assert(0);
