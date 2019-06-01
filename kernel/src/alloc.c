@@ -152,6 +152,8 @@ static void *kalloc(size_t size) {
     Assert(0,"Should not reach here");
 }
 static void *wrap_kalloc(size_t size){
+    static uint64_t cnt=0;
+    cnt+=size;
     void* p=kalloc(size);
     memset(p,0,size);
     //printf("Return %x,%p\n",size,p);
