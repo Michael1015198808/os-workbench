@@ -260,23 +260,28 @@ static void sem_remove_task(sem_t *sem){
     if(++sem->head>=POOL_LEN)sem->head-=POOL_LEN;
 }
 
+pthread_mutex_t semlock=0;
 void kmt_sem_wait(sem_t *sem){
-    kmt->spin_lock(&(sem->lock));
+    pthread_mutex_lock(&semlock);
+    //kmt->spin_lock(&(sem->lock));
     --(sem->value);
 
     if(sem->value<0){
         return sem_add_task(sem);
     }
-    kmt->spin_unlock(&(sem->lock));
+    //kmt->spin_unlock(&(sem->lock));
+    pthread_mutex_unlock(&semlock);
 }
 void kmt_sem_signal(sem_t *sem){
-    kmt->spin_lock(&(sem->lock));
+    pthread_mutex_lock(&semlock);
+    //kmt->spin_lock(&(sem->lock));
     ++(sem->value);
 
     if(sem->value<=0){
         sem_remove_task(sem);
     }
-    kmt->spin_unlock(&(sem->lock));
+    //kmt->spin_unlock(&(sem->lock));
+    pthread_mutex_unlock(&semlock);
 }
 
 MODULE_DEF(kmt) {
