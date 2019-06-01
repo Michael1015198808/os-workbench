@@ -151,21 +151,23 @@ static void *kalloc(size_t size) {
     }while(1);
     Assert(0,"Should not reach here");
 }
+uint64_t alloc_cnt=0;
 static void *wrap_kalloc(size_t size){
-    static uint64_t cnt=0;
-    cnt+=size;
+    alloc_cnt+=size;
     void* p=kalloc(size);
     memset(p,0,size);
     //printf("Return %x,%p\n",size,p);
     return p;
 }
 
-static void kfree(void *ptr) {
+uint64_t free_cnt=0;
+static inline void kfree(void *ptr) {
   if(ptr==NULL)return;
   int cpu_id=_cpu();//Call once
   header *p=free_list[cpu_id].next,
          *prevp=&free_list[cpu_id],
          *to_free=(header*)(ptr-sizeof(header));
+  free_cnt+=to_free->size;
   if(to_free->fence!=0x13579ace){
     printf("Fence at %x changed to %x!\n",&to_free->fence,to_free->fence);
     //while(1);
@@ -190,6 +192,9 @@ static void kfree(void *ptr) {
     to_free->next=p->next;
     to_free->size+=sizeof(header)+p->size;
   }
+}
+static void wrap_kfree(void *ptr){
+    kfree(ptr);
 }
 
 void show_free_list(void){
@@ -216,5 +221,5 @@ uintptr_t cnt_free_list(void){
 MODULE_DEF(pmm) {
   .init = pmm_init,
   .alloc = wrap_kalloc,
-  .free = kfree,
+  .free = wrap_kfree,
 };
