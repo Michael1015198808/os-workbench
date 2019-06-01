@@ -73,6 +73,7 @@ static int add_task(task_t *task){
 static _Context* kmt_context_save(_Event ev, _Context *c){
     int cpu_id=_cpu();
     if(current==-1){
+        break;
         kmt->spin_lock(&tasks_lk);
         current=kmt->create(pmm->alloc(sizeof(task_t)),"os_run",os->run,NULL);
         tasks[current]->attr|=TASK_RUNNING;
@@ -88,7 +89,6 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
     Assert(_intr_read()==0,"%d",_cpu());
     kmt->spin_lock(&tasks_lk);
     int cpu_id=_cpu(),new=0;
-    //log("context switch from (%d)%s\n",current,tasks[current]->name);
     new=current;
     uint16_t cnt=0;
     do{
@@ -104,8 +104,10 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
         }
     }while(tasks[new]->attr);
 
-    tasks[current]->cpu=-1;
-    neg_flag(tasks[current],TASK_RUNNING);
+    if(current!=-1){
+        tasks[current]->cpu=-1;
+        neg_flag(tasks[current],TASK_RUNNING);
+    }
 
     tasks[new]->cpu=cpu_id;
     set_flag(tasks[new],TASK_RUNNING);
