@@ -93,15 +93,12 @@ static void pmm_init() {
   align(pm_start,PG_SIZE);
   pm_end   = (uintptr_t)_heap.end;
   bias=(void*)pm_start;
-  /*printf("(%x,%x)\n",_heap.start,_heap.end);
-  printf("%x\n",8 KB);
-  printf("%x\n",(_heap.end-_heap.start)/(8 KB));
-  printf("pages:%d\n",(pm_end-pm_start)/(PG_SIZE));
-  while(1);*/
+
   for(i=0;i<cpu_cnt;++i){
       free_list[i].next=&free_list[i];
       free_list[i].size=0;
   }
+
   for(i=0;i<(pm_end-pm_start)/(PG_SIZE)&&i<(1<<(DEPTH-1));++i){
     enable((1<<(DEPTH-1))+i,0);
   }
@@ -124,7 +121,8 @@ static void *kalloc(size_t size) {
         ret->size=size;
         ret->fence=0x13579ace;
         return &(ret->space);
-    }else{
+    }
+    do{
         do{
             if(p->size>=size){
                 if(p->size-size>sizeof(header)){
@@ -145,11 +143,13 @@ static void *kalloc(size_t size) {
             prevp=p;
             p=p->next;
         }while(p!=&free_list[cpu_id]);
-    }
-    prevp->next=big_page_alloc(0);//ask for a new page
-    prevp->next->next=p;
-    prevp->next->size=PG_SIZE-sizeof(header);
-    return kalloc(size);
+
+        prevp->next=big_page_alloc(0);//ask for a new page
+        Assert(prevp->next!=NULL);
+        prevp->next->next=p;
+        prevp->next->size=PG_SIZE-sizeof(header);
+    }while(1);
+    Assert(0,"Should not reach here");
 }
 static void *wrap_kalloc(size_t size){
     void* p=kalloc(size);
@@ -189,6 +189,7 @@ static void kfree(void *ptr) {
     to_free->size+=sizeof(header)+p->size;
   }
 }
+
 void show_free_list(void){
     int cpu_id=_cpu();
     header *p=&free_list[cpu_id];
