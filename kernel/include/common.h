@@ -17,7 +17,7 @@
 #define TASK_FENCE
 
 #define STK_SZ ((1<<12)-64)
-int ncli[4];
+volatile int ncli[4];
 void intr_close();
 void intr_open();
 
