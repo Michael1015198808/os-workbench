@@ -111,7 +111,7 @@ void memory_test(){
 }
 static void os_run() {
     hello();
-    _intr_write(1);
+    _intr_write(0);
     while (1) {
         _yield();
     }
