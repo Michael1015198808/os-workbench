@@ -114,6 +114,7 @@ static void os_run() {
     hello();
     _intr_write(0);
     memory_test();
+    while(1);
     while (1) {
         _yield();
     }
