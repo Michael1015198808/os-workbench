@@ -6,9 +6,7 @@
     memcpy(dest,src,strlen(src)+1);
 
 task_t *tasks[20]={};
-static pthread_mutex_t tasks_lk;
-int tasks_idx=0,tasks_old=0;
-char tasks_log[66000];
+static spinlock_t tasks_lk;
 #define trace_pthread_mutex_lock(_lk) \
     pthread_mutex_lock(_lk); \
     detail_log(tasks_log,tasks_idx,"lock"); \
@@ -45,10 +43,10 @@ void show(){
     printf("\n");
 }
 static int add_task(task_t *task){
-    pthread_mutex_lock(&tasks_lk);
+    kmt->spin_lock(&tasks_lk);
     int ret=tasks_cnt;
     tasks[tasks_cnt++]=task;
-    pthread_mutex_unlock(&tasks_lk);
+    kmt->spin_unlock(&tasks_lk);
     return ret;
 }
 
@@ -86,7 +84,7 @@ int log_idx=0;
 char log[120000]={};
 static _Context* kmt_context_switch(_Event ev, _Context *c){
     Assert(_intr_read()==0,"%d",_cpu());
-    trace_pthread_mutex_lock(&tasks_lk);
+    kmt->spin_lock(&tasks_lk);
     int cpu_id=_cpu(),new=0;
     //log("context switch from (%d)%s\n",current,tasks[current]->name);
     new=current;
@@ -97,10 +95,10 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
         ++cnt;
         new%=tasks_cnt;
         if(cnt==0){
-            trace_pthread_mutex_unlock(&tasks_lk);
+            kmt->spin_unlock(&tasks_lk);
             if((tasks[current]->attr&TASK_SLEEP)==0)return &tasks[current]->context;
             for(volatile uint32_t sleep=1;sleep<10000000;++sleep);//Sleep if can't get any process to run
-            trace_pthread_mutex_lock(&tasks_lk);
+            kmt->spin_unlock(&tasks_lk);
         }
     }while(tasks[new]->attr);
 
@@ -113,7 +111,7 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
     current=new;
     
     printf("%d",current);
-    trace_pthread_mutex_unlock(&tasks_lk);
+    kmt->spin_unlock(&tasks_lk);
     for(int i=0;i<4;++i){
         if(tasks[current]->fence1[i]!=0x13579ace||tasks[current]->fence2[i]!=0xeca97531){
             log("Stack over/under flow!\n");
