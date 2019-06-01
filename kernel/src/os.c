@@ -47,6 +47,7 @@ void idle(void *arg){
 }
 
 static void os_init() {
+    kmt->spin_init(&test_spin,"test spin");
     pmm->init();
     kmt->init();
     dev->init();
@@ -112,7 +113,6 @@ void memory_test(){
 spinlock_t test_spin;
 void spin_test(){
     _intr_write(0);
-    kmt->spin_init(&test_spin,"test spin");
     kmt->spin_lock(&test_spin);
     kmt->spin_lock(&test_spin);
     kmt->spin_unlock(&test_spin);
