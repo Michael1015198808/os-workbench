@@ -89,12 +89,12 @@ void pthread_mutex_unlock(pthread_mutex_t* locked);
 }
 #endif
 
-#endif
 
 //Below is my functions.
 //intr.c
-void intr_close();
-void intr_open();
+void _intr_close();
+void _intr_open();
+void intr_log(char *);
 
 #define log(fmt,...) printf("[cpu%d]%s %3d:\n    " fmt,_cpu(),__FILE__,__LINE__,##__VA_ARGS__)
 #define Assert(cond,...) \
@@ -110,8 +110,24 @@ void intr_open();
     }while(0)
 
 #define intr_close() \
-    intr_log(__FILE__":" __LINE__ "(" __func__ ")close") \
-    _intr_close()
+    do{ \
+        intr_log("%s:%d(%s)close\n",__FILE__,__LINE__,__func__); \
+        _intr_close(); \
+    }while(0)
 #define intr_open() \
-    intr_log(__FILE__":" __LINE__ "(" __func__ ")open") \
-    _intr_open()
+    do{ \
+        intr_log("%s:%d(%s)open\n",__FILE__,__LINE__,__func__); \
+        _intr_open(); \
+    }while(0)
+
+int intr_idx;
+pthread_mutex_t intr_lk;
+#define LOG(...) intr_idx+=sprintf(intr_log_string+intr_idx,__VA_ARGS__)
+#define intr_log(...) \
+    pthread_mutex_lock(&intr_lk); \
+    LOG(__VA_ARGS__); \
+    LOG("[%d,%d]\n",ncli[0],ncli[1]); \
+    pthread_mutex_unlock(&intr_lk);
+
+#endif
+//__KLIB_H__
