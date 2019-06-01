@@ -83,10 +83,10 @@ inline void check(uint8_t *p,int a,int b,long long len){
     }
 }
 void memory_test(){
-    int a[100],b[100];
-    long long len[100];
-    void *p[100];
-    for(int i=0;i<100;++i){
+    int a[50],b[50];
+    long long len[50];
+    void *p[50];
+    for(int i=0;i<50;++i){
         len[i]=rand()*1LL;
         a[i]=rand();
         b[i]=rand();
@@ -94,8 +94,7 @@ void memory_test(){
         fill(p[i],a[i],b[i],len[i]);
     }
     for(int j=0;j<1000;++j){
-        printf("%d\n",j);
-        int i=rand()%100;
+        int i=rand()%50;
         check(p[i],a[i],b[i],len[i]);
         pmm->free(p[i]);
         len[i]=rand()&((1<<11)-1);
