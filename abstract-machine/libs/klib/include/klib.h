@@ -109,4 +109,9 @@ void intr_open();
       } \
     }while(0)
 
-
+#define intr_close() \
+    intr_log(__FILE__":" __LINE__ "(" __func__ ")close") \
+    _intr_close()
+#define intr_open() \
+    intr_log(__FILE__":" __LINE__ "(" __func__ ")open") \
+    _intr_open()

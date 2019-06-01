@@ -8,14 +8,14 @@ volatile int idx=0;
 char intr_log_string[66000];
 pthread_mutex_t log_lk=PTHREAD_MUTEX_INITIALIZER;
 int intr_idx_=0;
-static inline void _intr_close(){
+void _intr_close(){
     int cpu_id=_cpu();
     Assert(ncli[cpu_id]>=0);
     ori[cpu_id]|=_intr_read();
     _intr_write(0);
     ++ncli[cpu_id];
 }
-static inline void _intr_open(){
+void _intr_open(){
     int cpu_id=_cpu();
     --ncli[cpu_id];
     if(ncli[cpu_id]==0){
