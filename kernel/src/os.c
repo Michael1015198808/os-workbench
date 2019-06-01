@@ -112,7 +112,7 @@ void memory_test(){
 spinlock_t test_spin;
 void spin_test(){
     _intr_write(0);
-    kmt->spin_init(&test_spin);
+    kmt->spin_init(&test_spin,"test spin");
     kmt->spin_lock(&test_spin);
     kmt->spin_lock(&test_spin);
     printf("%d",ncli[0]);
