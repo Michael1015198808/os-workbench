@@ -87,7 +87,7 @@ void memory_test(){
     long long len[50];
     void *p[50];
     for(int i=0;i<50;++i){
-        len[i]=rand()*1LL;
+        len[i]=rand()&((1<<11)-1);
         a[i]=rand();
         b[i]=rand();
         p[i]=pmm->alloc(len[i]);
