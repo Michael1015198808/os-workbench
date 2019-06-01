@@ -22,7 +22,7 @@ static irq_handler irq_guard={
 
 sem_t echo_sem;
 void echo_test(void *arg){
-    _intr_write(0);
+    //_intr_write(0);
     while(1){
         Assert(_intr_read()==0);
         printf("%c",((char*)arg)[0]);
@@ -31,7 +31,7 @@ void echo_test(void *arg){
     }
 }
 void sem_test(void *arg){
-    _intr_write(0);
+    //_intr_write(0);
     while(1){
         Assert(_intr_read()==0);
         for(volatile int i=0;i<100;++i);
