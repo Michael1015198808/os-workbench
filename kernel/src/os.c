@@ -93,12 +93,12 @@ void memory_test(){
         p[i]=pmm->alloc(len[i]);
         fill(p[i],a[i],b[i],len[i]);
     }
-    for(int j=0;j<100;++j){
+    for(int j=0;j<1000;++j){
         printf("%d\n",j);
         int i=rand()%100;
         check(p[i],a[i],b[i],len[i]);
         pmm->free(p[i]);
-        len[i]=rand()&((1<<12)-1);
+        len[i]=rand()&((1<<11)-1);
         if(i&1){
             len[i]+=1<<12;
         }
