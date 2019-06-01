@@ -109,8 +109,24 @@ void memory_test(){
     printf("[cpu%d] finish memory test.\n",_cpu());
     while(1);
 }
+spinlock_t test_spin;
+void spin_test(){
+    _intr_write(0);
+    kmt->spin_init(&test_spin);
+    kmt->spin_lock(&test_spin);
+    kmt->spin_lock(&test_spin);
+    printf("%d",ncli[0]);
+    kmt->spin_unlock(&test_spin);
+    printf("%d",ncli[0]);
+    kmt->spin_unlock(&test_spin);
+    kmt->spin_lock(&test_spin);
+    kmt->spin_unlock(&test_spin);
+    kmt->spin_unlock(&test_spin);
+    while(0);
+}
 static void os_run() {
     hello();
+    spin_test();
     _intr_write(1);
     while (1) {
         _yield();
