@@ -100,7 +100,7 @@ void memory_test(){
         pmm->free(p[i]);
         len[i]=rand()*1LL;
         if(i&1){
-            len[i]+=(rand()*1LL)<<8;
+            len[i]+=1<<13;
         }
         a[i]=rand();
         b[i]=rand();
