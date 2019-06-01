@@ -94,6 +94,7 @@ void memory_test(){
         fill(p[i],a[i],b[i],len[i]);
     }
     for(int j=0;j<100;++j){
+        printf("%d\n",j);
         int i=rand()%100;
         check(p[i],a[i],b[i],len[i]);
         pmm->free(p[i]);
