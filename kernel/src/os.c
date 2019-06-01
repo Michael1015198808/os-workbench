@@ -43,15 +43,17 @@ void sem_test(void *arg){
     }
 }
 void idle(void *arg){
-    while(1);
+    while(1){
+        for(volatile int i=0;i<10000;++i)_yield();
+    };
 }
 
 static void os_init() {
     pmm->init();
     kmt->init();
     dev->init();
-    /*
     kmt->create(pmm->alloc(sizeof(task_t)),"idle1",idle,NULL);
+    /*
     kmt->create(pmm->alloc(sizeof(task_t)),"idle2",idle,NULL);
     */
     kmt->create(pmm->alloc(sizeof(task_t)),"sem-test1",sem_test,"!");
