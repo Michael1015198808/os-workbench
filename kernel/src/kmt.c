@@ -166,7 +166,6 @@ void kmt_spin_lock(spinlock_t *lk){
     while(1){
         if(lk->locked){
             if(lk->owner==cpu_id){
-                Assert(0,"Reentrance!");
                 ++lk->reen;
                 break;
             }else{
