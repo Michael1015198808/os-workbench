@@ -172,10 +172,10 @@ void kmt_spin_init(spinlock_t *lk, const char *name){
     copy_name(lk->name,name);
 }
 static pthread_mutex_t inner_lock=PTHREAD_MUTEX_INITIALIZER;
-//static char inner_log[66000];
-//static int inner_idx=0;
+
 void kmt_spin_lock(spinlock_t *lk){
     int cpu_id=_cpu();(void)cpu_id;
+    intr_close();
     pthread_mutex_lock(&inner_lock);
     /*
     while(1){
@@ -197,7 +197,9 @@ void kmt_spin_lock(spinlock_t *lk){
                 };
             }
         }
+        */
         pthread_mutex_lock(&lk->locked);
+        /*
         lk->reen=1;
         lk->owner=_cpu();
         intr_close();
@@ -217,7 +219,9 @@ void kmt_spin_unlock(spinlock_t *lk){
             if(lk->reen==1){
                 lk->owner=-1;
                 //True but sometimes slow
+                */
                 pthread_mutex_unlock(&(lk->locked));
+                /*
             }else{
                 --lk->reen;
             }
@@ -227,6 +231,7 @@ void kmt_spin_unlock(spinlock_t *lk){
     }
     */
     pthread_mutex_unlock(&inner_lock);
+    intr_open();
 }
 void kmt_sem_init(sem_t *sem, const char *name, int value){
     copy_name(sem->name,name);
