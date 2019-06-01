@@ -177,27 +177,20 @@ void kmt_spin_lock(spinlock_t *lk){
     int cpu_id=_cpu();(void)cpu_id;
     intr_close();
     pthread_mutex_lock(&inner_lock);
-    /*
     while(1){
         if(lk->locked){
             if(lk->owner==_cpu()){
+                Assert(0,"Reentrance!");
                 ++lk->reen;
                 break;
             }else{
                 while(lk->locked){
                     pthread_mutex_unlock(&inner_lock);
-                    intr_log("open");
-                    intr_open();
-                    _yield();
-                    //while(1);
-                    intr_close();
-                    intr_log("close");
                     for(volatile int i=0;i<10000;++i);
                     pthread_mutex_lock(&inner_lock);
                 };
             }
         }
-        */
         pthread_mutex_lock(&lk->locked);
         /*
         lk->reen=1;
@@ -205,8 +198,8 @@ void kmt_spin_lock(spinlock_t *lk){
         intr_close();
         intr_log("close");
         break;
-    }//Use break to release lock and restore intr
     */
+    }//Use break to release lock and restore intr
     pthread_mutex_unlock(&inner_lock);
 }
 void kmt_spin_unlock(spinlock_t *lk){
