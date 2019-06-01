@@ -5,6 +5,7 @@
     dest=pmm->alloc(strlen(src)+1); \
     memcpy(dest,src,strlen(src)+1);
 
+int lk_cnt[4]={};
 task_t *tasks[20]={};
 static spinlock_t tasks_lk;
 #define trace_pthread_mutex_lock(_lk) \
@@ -185,6 +186,7 @@ void kmt_spin_lock(spinlock_t *lk){
         pthread_mutex_lock(&lk->locked);
         lk->reen=1;
         lk->owner=cpu_id;
+        ++lk_cnt[cpu_id];
         break;
     }//Use break to release lock and restore intr
 }
