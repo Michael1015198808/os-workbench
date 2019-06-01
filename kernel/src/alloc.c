@@ -38,7 +38,7 @@ static void enable(int idx,uintptr_t shift){
 }
 static void recur_disable(int idx,uintptr_t shift){
     if(idx==0)return;
-    pages[idx]=pages[idx<<1]|pages[(idx<<1)^1];
+    pages[idx]=pages[idx<<1]|pages[(idx<<1)|1];
     recur_disable(idx>>1,shift+1);
 }
 static void disable(int idx,uintptr_t shift){

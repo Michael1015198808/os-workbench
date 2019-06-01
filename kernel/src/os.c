@@ -30,9 +30,6 @@ void echo_test(void *arg){
         _yield();
     }
 }
-void idle(void *arg){
-    while(1);
-}
 void sem_test(void *arg){
     _intr_write(0);
     while(1){
@@ -44,19 +41,10 @@ void sem_test(void *arg){
         _yield();
     }
 }
-
-/*
-void echo_task(void *name) {
-  device_t *tty = dev_lookup(name);
-  while (1) {
-    char line[128], text[128];
-    sprintf(text, "(%s) $ ", name); tty_write(tty, text);
-    int nread = tty->ops->read(tty, 0, line, sizeof(line));
-    line[nread - 1] = '\0';
-    sprintf(text, "Echo: %s.\n", line); tty_write(tty, text);
-  }
+void idle(void *arg){
+    while(1);
 }
-*/
+
 static void os_init() {
     pmm->init();
     kmt->init();
@@ -81,24 +69,11 @@ static void os_init() {
 
 //volatile static _Thread_local int cnt=0;
 static void hello() {
-  /*for (const char *ptr = "Hello from CPU #"; *ptr; ptr++) {
-    _putc(*ptr);
-  }
-  _putc("12345678"[_cpu()]); _putc('\n');*/
-  //My printf is thread-safe
-  //while(1){
-    //printf("Hello from CPU #%d for the %d-th time\n",_cpu(),++cnt);
+    //My printf is thread-safe
     printf("nmsl from CPU #%d\n",_cpu());
-  //}
 }
 
 static void os_run() {
-    /*if(_cpu()==0){
-        printf("%d\n",*(int*)0);
-    }*/
-    while(1){
-        asm volatile("int $3");
-    }
     hello();
     _intr_write(0);
     while (1) {
@@ -129,7 +104,7 @@ static _Context *os_trap(_Event ev, _Context *context) {
 static void os_on_irq(int seq, int event, handler_t handler) {
     pthread_mutex_lock(&irq_lk);
     irq_handler *prev=&irq_guard,*p=irq_guard.next;
-//prev->new->p
+    //prev->new->p
     while(p){
         if(p->seq>seq||p==&irq_guard)break;
         prev=p;
@@ -142,13 +117,6 @@ static void os_on_irq(int seq, int event, handler_t handler) {
     prev->next->event=event;
     prev->next->handler=handler;
     pthread_mutex_unlock(&irq_lk);
-}
-void irq_test(){
-    irq_handler *p=irq_guard.next;
-    while(p){
-        ((void(*)(void))p->handler)();
-        p=p->next;
-    }
 }
 
 MODULE_DEF(os) {
