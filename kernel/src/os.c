@@ -34,6 +34,7 @@ void sem_test(void *arg){
     _intr_write(0);
     while(1){
         Assert(_intr_read()==0);
+        for(volatile int i=0;i<100;++i);
         printf("~");
         kmt->sem_signal(&echo_sem);
         //printf("~");
@@ -67,21 +68,56 @@ static void os_init() {
     //kmt->create(pmm->alloc(sizeof(task_t)), "print", echo_task, "tty4");
 }
 
-//volatile static _Thread_local int cnt=0;
 static void hello() {
     //My printf is thread-safe
     printf("nmsl from CPU #%d\n",_cpu());
 }
-
+inline void fill(uint8_t *p,int a,int b,int len){
+    for(int i=0;i<len;++i){
+        p[i]=(a+=b);
+    }
+}
+inline void check(uint8_t *p,int a,int b,long long len){
+    for(int i=0;i<len;++i){
+        Assert(p[i]==(a+=b));
+    }
+}
+void memory_test(){
+    int a[100],b[100];
+    long long len[100];
+    void p[100];
+    for(int i=0;i<100;++i){
+        len[i]=rand()*1LL;
+        a[i]=rand();
+        b[i]=rand();
+        p[i]=pmm->alloc(len[i]);
+        fill(p[i],a[i],b[i],len[i]);
+    }
+    for(int j=0;j<100;++j){
+        int i=rand()%100;
+        check(p[i],a[i],b[i],len[i]);
+        free(p[i]);
+        len[i]=rand()*1LL;
+        if(i&1){
+            len[i]+=(rand()*1LL)<<8;
+        }
+        a[i]=rand();
+        b[i]=rand();
+        p[i]=pmm->alloc(len[i]);
+        fill(p[i],a[i],b[i],len[i]);
+    }
+    printf("[cpu%d] finish memory test.\n",_cpu());
+    return;
+}
 static void os_run() {
     hello();
     _intr_write(0);
+    memory_test();
     while (1) {
         _yield();
     }
 }
 
-pthread_mutex_t irq_lk;
 static _Context *os_trap(_Event ev, _Context *context) {
     intr_close();
     _Context *ret = context;
@@ -102,7 +138,6 @@ static _Context *os_trap(_Event ev, _Context *context) {
 
 
 static void os_on_irq(int seq, int event, handler_t handler) {
-    pthread_mutex_lock(&irq_lk);
     irq_handler *prev=&irq_guard,*p=irq_guard.next;
     //prev->new->p
     while(p){
@@ -116,7 +151,6 @@ static void os_on_irq(int seq, int event, handler_t handler) {
     prev->next->seq=seq;
     prev->next->event=event;
     prev->next->handler=handler;
-    pthread_mutex_unlock(&irq_lk);
 }
 
 MODULE_DEF(os) {
