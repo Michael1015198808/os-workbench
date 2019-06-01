@@ -119,7 +119,7 @@ static void os_run() {
 
 static _Context *os_trap(_Event ev, _Context *context) {
     intr_close();
-    //Assert(ncli[_cpu()]==1,"%d",ncli[_cpu()]);
+    Assert(ncli[_cpu()]==1,"%d",ncli[_cpu()]);
     _Context *ret = context;
 
     for(struct irq *handler=irq_guard.next;
