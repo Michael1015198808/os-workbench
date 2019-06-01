@@ -50,8 +50,8 @@ static void os_init() {
     pmm->init();
     kmt->init();
     dev->init();
-    kmt->create(pmm->alloc(sizeof(task_t)),"idle1",idle,NULL);
     /*
+    kmt->create(pmm->alloc(sizeof(task_t)),"idle1",idle,NULL);
     kmt->create(pmm->alloc(sizeof(task_t)),"idle2",idle,NULL);
     */
     kmt->create(pmm->alloc(sizeof(task_t)),"sem-test1",sem_test,"!");
@@ -111,7 +111,7 @@ void memory_test(){
 }
 static void os_run() {
     hello();
-    _intr_write(1);
+    _intr_write(0);
     while (1) {
         _yield();
     }
