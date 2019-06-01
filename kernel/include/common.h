@@ -18,8 +18,6 @@
 
 #define STK_SZ ((1<<12)-64)
 volatile int ncli[4];
-void intr_close();
-void intr_open();
 
 #define TASK_RUNABLE 0
 #define TASK_SLEEP 1
