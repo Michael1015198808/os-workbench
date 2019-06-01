@@ -110,7 +110,6 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
 
     current=new;
     
-    printf("%d",current);
     kmt->spin_unlock(&tasks_lk);
     for(int i=0;i<4;++i){
         if(tasks[current]->fence1[i]!=0x13579ace||tasks[current]->fence2[i]!=0xeca97531){
