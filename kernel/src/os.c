@@ -46,6 +46,7 @@ void idle(void *arg){
     };
 }
 
+spinlock_t test_spin;
 static void os_init() {
     kmt->spin_init(&test_spin,"test spin");
     pmm->init();
