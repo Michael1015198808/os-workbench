@@ -134,7 +134,7 @@ int main(int argc, char *argv[]) {
             }
             //printf("tmp:%p\n",tmp);
             entry_t *old_e=e;
-            e=(entry_t*)tmp;
+            //e=(entry_t*)tmp;
             //printf("e:%p\n",e);
             char* file_name=full_file_name+strlen("./recov/");
             do{
