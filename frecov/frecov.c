@@ -182,6 +182,7 @@ int main(int argc, char *argv[]) {
 outer:;
             printf("%2x ",e->info[0]);
             if( (e->info[0]!=0xe5)&&
+                (e->size!=0)&&
                 !strncmp(file_name+strlen(file_name)-4,".bmp",4)){
                 if(e->clus_high){
                     //asm volatile("mov %0, %%rax"::"g"(e));
