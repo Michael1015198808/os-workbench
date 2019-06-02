@@ -159,7 +159,7 @@ int color_test(bmp_t* bmp){
     #define RECOV_DIREC "./"
 #endif
 char full_file_name[70]=RECOV_DIREC;
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[],char *envp[]) {
     if(argc!=2){
         fprintf(stderr,"Usage: frecov [file]\n");
         return -1;
@@ -269,8 +269,8 @@ outer:;
 #ifndef LOCAL
                 int pid=fork();
                 if(pid==0){
-                    char *argv[3]={"/usr/bin/sha1sum",full_file_name+2,NULL},*envp[1]={NULL};
-                    execve("/usr/bin/sha1sum",argv,envp);
+                    char *new_argv[3]={"/usr/bin/sha1sum",full_file_name+2,NULL};
+                    execve("/usr/bin/sha1sum",new_argv,envp);
                 }else if(pid<0){
                     fprintf(stderr,"Can't fork a thread to calculate sha1sum!\nSee %s:%d for more info.\n",__FILE__,__LINE__);
                     while(1);
