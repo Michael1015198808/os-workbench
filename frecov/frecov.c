@@ -253,7 +253,7 @@ outer:;
                         if(--cnt<0){
                             uint32_t diff=0;
 #define abs(x) ((x)>0?(x):-(x))
-                            for(int i=0;i<bmp->dibh.width;++i){
+                            for(int i=0;i<bmp->dibh.width*3;i+=4){
                                 diff+=abs(current[i]-current[i-width_bytes]);
                             }
                             printf("%d\n",diff);
@@ -266,7 +266,7 @@ outer:;
                                                 *fs->bytes_per_sector);
                                 while(find!=(uint8_t*)end){
                                     diff=0;
-                                    for(int i=0;i<bmp->dibh.width;++i){
+                                    for(int i=0;i<bmp->dibh.width*3;i+=4){
                                         diff+=abs(find[i]-current[i-width_bytes]);
                                     }
                                     if(diff/bmp->dibh.width<10){
