@@ -28,7 +28,7 @@
 #include <time.h>
 #include <unistd.h>
 
-#define LOCAL
+//#define LOCAL
 #define HOMOCOLOR_HYPOTHESIS
 #define SIG_TRAP asm volatile("int $3")
 #define offset_of(member,struct) ((uintptr_t)&(((struct*)0)->member))
@@ -226,13 +226,12 @@ outer:;
 
                 uint8_t* file=begin+((e->clus_high*1LL<<16)+e->clus_low)*fs->bytes_per_sector;
                 int recov_file = open(full_file_name, O_WRONLY | O_CREAT, 0777);
-                if(color_test((bmp_t*)file)){
+                bmp_t* bmp=(bmp_t*)file;
+                if(color_test(bmp)){
                     //homo color
-                    bmp_t* bmp=(bmp_t*)file;
 #ifdef LOCAL
                     printf("(Homo)");
 #endif
-                    (void)bmp;
                     /*
                     write(recov_file,file,bmp->bfh.offset);
                     for(int i=0;i<bmp->dibh.height;++i){
@@ -245,9 +244,17 @@ outer:;
                 }else{
                     uint8_t* current=file;
                     uint32_t remain_size=e->size;
+                    uint16_t width_bytes=bmp->dibh.width+((bmp->dibh.width)&3);
                     while(remain_size>fs->bytes_per_sector){
                         write(recov_file,current,fs->bytes_per_sector);
                         current+=fs->bytes_per_sector;
+                        int diff=0;
+                        for(int i=0;i<bmp->dibh.width;++i){
+#define abs(x) ((x)>0?(x):-(x))
+                            diff+=abs(current[i]-current[i-width_bytes]);
+                            printf("%d\n",diff/bmp->dibh.width);
+                            if(diff/bmp->dibh.width);
+                        }
                         remain_size-=fs->bytes_per_sector;
                     }
                     write(recov_file,current,remain_size);
