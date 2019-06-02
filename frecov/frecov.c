@@ -203,8 +203,8 @@ outer:;
                 uint8_t* file=begin+((e->clus_high*1LL<<16)+e->clus_low)*fs->bytes_per_sector;
                 int recov_file = open(full_file_name, O_WRONLY | O_CREAT, 0777);
                 if(color_test((bmp_t*)file)){
-                    printf("(Homo)");
                     bmp_t* bmp=(bmp_t*)file;
+                    printf("(Homo,%x)",bmp->dibh.height);
                     //homo color
                     write(recov_file,file,bmp->bfh.offset);
                     for(int i=0;i<bmp->dibh.height;++i){
