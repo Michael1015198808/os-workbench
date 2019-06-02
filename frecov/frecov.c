@@ -129,7 +129,7 @@ int main(int argc, char *argv[]) {
                 fs->bytes_per_sector);
     void *begin=((void*)e)-(2*fs->sectors_per_cluster*fs->bytes_per_sector);
     //printf("%llx\n",1LL*(begin-disk));
-    while((uintptr_t)e!=(uintptr_t)end||finish()){
+    while((uintptr_t)e!=(uintptr_t)end&&finish()){
         if(e->attr==0xf){
             long_entry_t *tmp=(void*)e;
             int idx=0;
@@ -164,21 +164,22 @@ int main(int argc, char *argv[]) {
 #undef NAME
             }while((void*)tmp!=(void*)old_e);
 outer:;
-            if(strncmp(file_name+strlen(file_name)-4,".bmp",4))break;
-            printf("0x%08llx: ",1LL*(((void*)e)-disk));
-            puts(file_name);
-            //printf("e:%p\n",e);
-            //printf("high:%x low:%x\n",e->clus_high,e->clus_low);
-            //printf("%llx %x\n",((e->clus_high*1LL<<32)+e->clus_low),fs->bytes_per_sector);
-            uint8_t* file=begin+((e->clus_high*1LL<<32)+e->clus_low)*fs->bytes_per_sector;
-            //printf("%llx",((uintptr_t)file-(uintptr_t)fs)+0xbLL);
-            int recov_file = open(full_file_name, O_WRONLY | O_CREAT, 0777);
-            write(recov_file,file,e->size);
-            close(recov_file);
-            /*for(uint32_t i=0;i<e->size;++i){
-                putchar(file[i]);
+            if(!strncmp(file_name+strlen(file_name)-4,".bmp",4)){
+                printf("0x%08llx: ",1LL*(((void*)e)-disk));
+                puts(file_name);
+                //printf("e:%p\n",e);
+                //printf("high:%x low:%x\n",e->clus_high,e->clus_low);
+                //printf("%llx %x\n",((e->clus_high*1LL<<32)+e->clus_low),fs->bytes_per_sector);
+                uint8_t* file=begin+((e->clus_high*1LL<<32)+e->clus_low)*fs->bytes_per_sector;
+                //printf("%llx",((uintptr_t)file-(uintptr_t)fs)+0xbLL);
+                int recov_file = open(full_file_name, O_WRONLY | O_CREAT, 0777);
+                write(recov_file,file,e->size);
+                close(recov_file);
+                /*for(uint32_t i=0;i<e->size;++i){
+                    putchar(file[i]);
+                }
+                if(e->size>0)putchar('\n');*/
             }
-            if(e->size>0)putchar('\n');*/
         };
         ++e;
     }
