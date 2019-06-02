@@ -125,7 +125,7 @@ int main(int argc, char *argv[]) {
                     *fs->bytes_per_sector);
     entry_t *end=(entry_t*)(uintptr_t)(
                 disk+
-                ((fs->sectors_cnt_high*1LL<<16)+fs->sectors_cnt_low)*
+                ((fs->sectors_cnt_high*1LL)+fs->sectors_cnt_low)*
                 fs->bytes_per_sector);
     void *begin=((void*)e)-(2*fs->sectors_per_cluster*fs->bytes_per_sector);
     //printf("%llx\n",1LL*(begin-disk));
