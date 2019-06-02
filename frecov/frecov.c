@@ -264,19 +264,21 @@ outer:;
                                             fs->fat_cnt*sector_per_fat(fs)+
                                             (fs->start_cluster-2)*fs->sectors_per_cluster )*1LL
                                                 *fs->bytes_per_sector);
-                                find=current;
+                                uint8_t *best_part=NULL;
+                                uint32_t best_val=-1;
                                 while(find!=(uint8_t*)end){
                                     diff=0;
                                     for(int i=0;i<bmp->dibh.width*3;i+=4){
                                         diff+=squ(abs(find[i]-current[i-width_bytes]));
                                     }
-                                    if(diff/bmp->dibh.width<7500){
-                                        printf("%x,%d\n",remain_size,diff);
-                                        current=find;
+                                    if(diff/bmp->dibh.width<best_val){
+                                        best_val=diff/bmp->dibh.width;
+                                        best_part=find;
                                         break;
                                     }
                                     find+=fs->bytes_per_sector;
                                 }
+                                current=best_part;
                                 cnt=16;
                             }
                         }
