@@ -278,6 +278,7 @@ outer:;
                                     }
                                     find+=fs->bytes_per_sector;
                                 }
+                                printf("find %d\n",best_val);
                                 current=best_part;
                                 cnt=16;
                             }
