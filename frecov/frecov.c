@@ -28,7 +28,7 @@
 #include <time.h>
 #include <unistd.h>
 
-//#define LOCAL
+#define LOCAL
 #define HOMOCOLOR_HYPOTHESIS
 #define SIG_TRAP asm volatile("int $3")
 #define offset_of(member,struct) ((uintptr_t)&(((struct*)0)->member))
@@ -230,7 +230,7 @@ outer:;
                     //homo color
                     bmp_t* bmp=(bmp_t*)file;
 #ifdef LOCAL
-                    printf("(Homo)",bmp->dibh.width);
+                    printf("(Homo)");
 #endif
                     write(recov_file,file,bmp->bfh.offset);
                     for(int i=0;i<bmp->dibh.height;++i){
@@ -240,8 +240,15 @@ outer:;
                         write(recov_file,zeros,(bmp->dibh.width)&3);
                     }
                 }else{
+                    uint8_t* current=file;
+                    uint16_t remain_size=e->size;
+                    while(remain_size>fs->bytes_per_sector){
+                        write(recov_file,current,fs->bytes_per_sector);
+                        current+=fs->bytes_per_sector;
+                        remain_size-=fs->bytes_per_sector;
+                    }
                     //TODO: fancy algorithm for bmp recovery
-                    write(recov_file,file,e->size);
+                    write(recov_file,current,remain_size);
                 }
 #ifdef LOCAL
                 puts(file_name);
