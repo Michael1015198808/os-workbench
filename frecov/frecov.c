@@ -60,40 +60,6 @@ typedef union entry{
 }entry_t;
 _Static_assert(sizeof(entry_t)==0x20,"Size of entry is wrong!");
 
-typedef union bmp{
-    uint8_t info[0];
-    pstruct{
-        pstruct {
-            uint16_t type;
-            uint32_t size;
-            uint16_t unused[2];
-            uint32_t offset;
-        }bfh;
-        //Bitmap file header
-        pstruct{
-            uint32_t size;
-            uint32_t width,height;
-            uint16_t planes;
-            uint16_t bit_per_pixel;
-        }dibh;
-        //DIB header
-    };
-}bmp_t;
-int color_test(bmp_t* bmp){
-    uint8_t pixel[3];
-    for(int i=0;i<3;++i){
-        pixel[i]=bmp->info[bmp->bfh.offset+i];
-    }
-    for(int i=1;i<10;++i){
-        for(int j=0;j<3;++j){
-            if(pixel[j]!=bmp->info[bmp->bfh.offset+i*3+j])return 0;
-        }
-    }
-    return 1;
-}
-
-_Static_assert(offset_of(dibh,bmp_t)==14,"Offset of DIB header is wrong!");
-
 typedef union bpb{
     uint8_t info[0];
     pstruct{
@@ -113,6 +79,7 @@ typedef union bpb{
         uint8_t unused_[42];
     };
 }bpb_t;
+const bpb_t *fs=NULL;
 _Static_assert(offset_of(sector_per_fat_low,bpb_t)==0x16-0xb,"Offset of sector_per_fat_low is wrong!");
 _Static_assert(offset_of(sector_per_fat_high,bpb_t)==0x24-0xb,"Offset of sector_per_fat_high is wrong!");
 _Static_assert(sizeof(bpb_t)==79,"Size of bpb is wrong!");
@@ -124,7 +91,53 @@ long long get_off(void *p){
     return p-disk;
 }
 
-#define RECOV_DIREC "./"
+typedef union bmp{
+    uint8_t info[0];
+    pstruct{
+        pstruct {
+            uint16_t type;
+            uint32_t size;
+            uint16_t unused[2];
+            uint32_t offset;
+        }bfh;
+        //Bitmap file header
+        pstruct{
+            uint32_t size;
+            uint32_t width,height;
+            uint16_t planes;
+            uint16_t bit_per_pixel;
+        }dibh;
+        //DIB header
+    };
+}bmp_t;
+_Static_assert(offset_of(dibh,bmp_t)==14,"Offset of DIB header is wrong!");
+
+int color_test(bmp_t* bmp){
+    uint8_t pixel[3];
+    for(int i=0;i<3;++i){
+        pixel[i]=bmp->info[bmp->bfh.offset+i];
+    }
+    uint8_t *current=bmp->info+bmp->bfh.offset;
+    while(1){
+        for(int i=0;i<bmp->dibh.height;++i){
+            for(int j=0;j<bmp->dibh.width;++j){
+                for(int k=0;k<3;++k){
+                    if(((uintptr_t)current)&(fs->bytes_per_sector-1)){
+                        if(*current!=pixel[k]){
+                            return 0;
+                        }
+                    }else return 1;
+                    ++current;
+                }
+            }
+            current+=bmp->dibh.width&3;
+        }
+    }
+}
+
+
+//#define RECOV_DIREC "./"
+#define RECOV_DIREC "./recov/"
 char full_file_name[70]=RECOV_DIREC;
 int main(int argc, char *argv[]) {
     if(argc!=2){
@@ -137,7 +150,7 @@ int main(int argc, char *argv[]) {
     fstat(fd, &st);
     //disk = mmap(NULL, st.st_size, PROT_READ , MAP_SHARED, fd, 0);
     disk = mmap(NULL, st.st_size, PROT_READ, MAP_SHARED, fd, 0);
-    const bpb_t *const fs=disk+0xb;
+    fs=disk+0xb;
 
     entry_t *e=(entry_t*)(uintptr_t)(disk+
                 ( fs->sectors_reserved+
