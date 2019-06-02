@@ -121,7 +121,7 @@ int main(int argc, char *argv[]) {
                 (void*)fs)-0xb+
                 fs->sectors_cnt_high*
                 fs->bytes_per_sector);
-    void *begin=((void*)e)-2*fs->sectors_per_cluster;
+    void *begin=((void*)e)-(2*fs->sectors_per_cluster);
     while(e<end){
         if(e->attr==0xf){
             long_entry_t *tmp=(void*)e;
