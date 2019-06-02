@@ -260,52 +260,7 @@ outer:;
                         write(recov_file,zeros,(bmp->dibh.width)&3);
                     }
                 }else{
-                    uint8_t* current=file;
-                    uint32_t remain_size=e->size;
-                    width_bytes=bmp->dibh.width+((bmp->dibh.width)&3);
-                    int cnt=16;
-                    while(remain_size>fs->bytes_per_sector){
-                        write(recov_file,current,fs->bytes_per_sector);
-                        remain_size-=fs->bytes_per_sector;
-                        current+=fs->bytes_per_sector;
-                        if(--cnt<0){
-                            uint32_t diff=0;
-                            for(int i=0;i<bmp->dibh.width*3;i+=3){
-                                diff+=calculate_diff(current,current,i);
-                            }
-#ifdef LOCAL
-                            printf("(%d)%d\n",cnt,diff/bmp->dibh.width);
-#endif
-                            //if(diff/bmp->dibh.width>450000){
-                            if(cnt==-190){
-                                uint8_t *find=(uint8_t*)(uintptr_t)(disk+
-                                            ( fs->sectors_reserved+
-                                            fs->fat_cnt*sector_per_fat(fs)+
-                                            (fs->start_cluster-2)*fs->sectors_per_cluster )*1LL
-                                                *fs->bytes_per_sector);
-                                uint8_t *best_part=NULL;
-                                uint32_t best_val=-1;
-                                while(find!=(uint8_t*)end){
-                                    diff=0;
-                                    for(int i=0;i<bmp->dibh.width*3;i+=3){
-                                        diff+=calculate_diff(find,current,i);
-                                    }
-                                    if(diff/bmp->dibh.width<best_val){
-                                        best_val=diff/bmp->dibh.width;
-                                        best_part=find;
-                                        break;
-                                    }
-                                    find+=fs->bytes_per_sector;
-                                }
-#ifdef LOCAL
-                                printf("find %d\n",best_val);
-#endif
-                                current=best_part;
-                                cnt=16;
-                            }
-                        }
-                    }
-                    write(recov_file,current,remain_size);
+                    write(recov_file,file,e->size);
                 }
 #ifdef LOCAL
                 puts(file_name);
@@ -316,6 +271,7 @@ outer:;
                 if(pid==0){
                     char *new_argv[3]={"/usr/bin/sha1sum",full_file_name,NULL};
                     execve("/usr/bin/sha1sum",new_argv,envp);
+                    fflush(stdout);
                 }else if(pid<0){
                     fprintf(stderr,"Can't fork a thread to calculate sha1sum!\nSee %s:%d for more info.\n",__FILE__,__LINE__);
                     while(1);
