@@ -244,7 +244,7 @@ outer:;
                     */
                 }else{
                     uint8_t* current=file;
-                    uint16_t remain_size=e->size;
+                    uint32_t remain_size=e->size;
                     write(recov_file,current,remain_size);
                     /*
                     while(remain_size>fs->bytes_per_sector){
