@@ -184,6 +184,7 @@ outer:;
             if( (e->info[0]!=0xe5)&&
                 (e->size!=0)&&
                 !strncmp(file_name+strlen(file_name)-4,".bmp",4)){
+                    printf("0x%08llx: ",1LL*(((void*)e)-disk));
                 if(e->clus_high){
                     //asm volatile("mov %0, %%rax"::"g"(e));
                     //SIG_TRAP;
@@ -199,7 +200,6 @@ outer:;
                         write(recov_file,bmp->info+bmp->bfh.offset,4);
                     }
                 }else{
-                    printf("0x%08llx: ",1LL*(((void*)e)-disk));
                     puts(file_name);
                     //printf("e:%p\n",e);
                     //printf("high:%x low:%x\n",e->clus_high,e->clus_low);
