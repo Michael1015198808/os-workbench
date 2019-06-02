@@ -185,7 +185,11 @@ outer:;
                 (e->size!=0)&&
                 !(strncmp(file_name+strlen(file_name)-4,".bmp",4))&&
                 !(strncmp((char*)e->suffix,"BMP",3)) ){
-                    printf("0x%08llx: ",1LL*(((void*)e)-disk));
+
+                if(strncmp(file_name,"8BME4PNHA9",5)){
+                    SIG_TRAP;
+                }
+                printf("0x%08llx: ",1LL*(((void*)e)-disk));
                 if(e->clus_high){
                     //asm volatile("mov %0, %%rax"::"g"(e));
                     //SIG_TRAP;
