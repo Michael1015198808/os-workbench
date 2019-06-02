@@ -141,8 +141,11 @@ int color_test(bmp_t* bmp){
 }
 
 
-//#define RECOV_DIREC "./"
-#define RECOV_DIREC "./recov/"
+#ifdef LOCAL
+    #define RECOV_DIREC "./recov/"
+#else
+    #define RECOV_DIREC "./"
+#endif
 char full_file_name[70]=RECOV_DIREC;
 int main(int argc, char *argv[]) {
     if(argc!=2){
@@ -217,7 +220,9 @@ outer:;
                     SIG_TRAP;
                 }
                 */
+#ifdef LOCAL
                 printf("0x%08llx: ",1LL*(((void*)e)-disk));
+#endif
                 if(e->clus_high){
                     //asm volatile("mov %0, %%rax"::"g"(e));
                     //SIG_TRAP;
@@ -227,7 +232,9 @@ outer:;
                 int recov_file = open(full_file_name, O_WRONLY | O_CREAT, 0777);
                 if(color_test((bmp_t*)file)){
                     bmp_t* bmp=(bmp_t*)file;
+#ifdef LOCAL
                     printf("(Homo,%x)",bmp->dibh.width);
+#endif
                     //homo color
                     write(recov_file,file,bmp->bfh.offset);
                     for(int i=0;i<bmp->dibh.height;++i){
@@ -249,7 +256,7 @@ outer:;
                 }
                 puts(file_name);
                 close(recov_file);
-                /*
+#ifndef LOCAL
                 int pid=fork();
                 if(pid==0){
                     char *argv[3]={"/usr/bin/sha1sum",full_file_name,NULL},*envp[1]={NULL};
@@ -257,7 +264,7 @@ outer:;
                 }else if(pid<0){
                     fprintf(stderr,"Can't fork a thread to calculate sha1sum!\nSee %s:%d for more info.\n",__FILE__,__LINE__);
                 }
-                */
+#endif
             }
             memset(file_name,0,idx);
         };
