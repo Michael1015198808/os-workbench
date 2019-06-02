@@ -248,6 +248,8 @@ outer:;
                     while(remain_size>fs->bytes_per_sector){
                         write(recov_file,current,fs->bytes_per_sector);
                         current+=fs->bytes_per_sector;
+                        (void)width_bytes;
+                        /*
                         int diff=0;
                         for(int i=0;i<bmp->dibh.width;++i){
 #define abs(x) ((x)>0?(x):-(x))
@@ -255,6 +257,7 @@ outer:;
                             printf("%d\n",diff/bmp->dibh.width);
                             if(diff/bmp->dibh.width);
                         }
+                        */
                         remain_size-=fs->bytes_per_sector;
                     }
                     write(recov_file,current,remain_size);
