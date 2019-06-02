@@ -109,19 +109,21 @@ int main(int argc, char *argv[]) {
     int fd = open(argv[1], O_RDONLY);
     struct stat st;
     fstat(fd, &st);
-    const bpb_t *fs = 0xb+mmap(NULL, st.st_size, PROT_READ , MAP_SHARED, fd, 0);
+    void *const disk = mmap(NULL, st.st_size, PROT_READ , MAP_SHARED, fd, 0);
+    const bpb_t *const fs=disk+0xb;
 
     (void)fs;
-    entry_t *e=(entry_t*)(uintptr_t)(((void*)fs)-0xb+
+    entry_t *e=(entry_t*)(uintptr_t)(disk+
                 ( fs->sectors_reserved+
                   fs->fat_cnt*sector_per_fat(fs)+
                   (fs->start_cluster-2)*fs->sectors_per_cluster )
                     *fs->bytes_per_sector);
-    entry_t *end=(entry_t*)(uintptr_t)((
-                (void*)fs)-0xb+
+    entry_t *end=(entry_t*)(uintptr_t)(
+                disk+
                 fs->sectors_cnt_high*
                 fs->bytes_per_sector);
     void *begin=((void*)e)-(2*fs->sectors_per_cluster);
+    printf("%llx\n",1LL*(begin-disk));
     while(e<end){
         if(e->attr==0xf){
             long_entry_t *tmp=(void*)e;
