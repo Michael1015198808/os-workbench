@@ -204,7 +204,7 @@ outer:;
                     //homo color
                     write(recov_file,file,bmp->bfh.offset);
                     for(int i=0;i<bmp->dibh.size;++i){
-                        write(recov_file,bmp->info+bmp->bfh.offset,3);
+                        write(recov_file,&bmp->info[bmp->bfh.offset],3);
                     }
                 }else{
                     //printf("e:%p\n",e);
