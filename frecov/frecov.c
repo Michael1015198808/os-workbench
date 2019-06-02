@@ -274,6 +274,7 @@ outer:;
                                     }
                                     find+=fs->bytes_per_sector;
                                 }
+                                cnt=16;
                             }
                         }
                         remain_size-=fs->bytes_per_sector;
