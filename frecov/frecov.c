@@ -248,6 +248,7 @@ outer:;
                     int cnt=16;
                     while(remain_size>fs->bytes_per_sector){
                         write(recov_file,current,fs->bytes_per_sector);
+                        remain_size-=fs->bytes_per_sector;
                         current+=fs->bytes_per_sector;
                         (void)width_bytes;
                         if(--cnt<0){
@@ -259,6 +260,10 @@ outer:;
                             }
                             printf("(%d)%d\n",cnt,diff/bmp->dibh.width);
                             if(diff/bmp->dibh.width>10000){
+                                while(remain_size--){
+                                    write(recov_file,zeros,1);
+                                }
+                                break;
                                 uint8_t *find=(uint8_t*)(uintptr_t)(disk+
                                             ( fs->sectors_reserved+
                                             fs->fat_cnt*sector_per_fat(fs)+
@@ -283,10 +288,6 @@ outer:;
                                 cnt=16;
                             }
                         }
-                        remain_size-=fs->bytes_per_sector;
-                    }
-                    while(remain_size--){
-                        write(recov_file,zeros,1);
                     }
                     write(recov_file,current,remain_size);
                 }
