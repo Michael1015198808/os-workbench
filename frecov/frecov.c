@@ -245,15 +245,12 @@ outer:;
                 }else{
                     uint8_t* current=file;
                     uint32_t remain_size=e->size;
-                    write(recov_file,current,remain_size);
-                    /*
                     while(remain_size>fs->bytes_per_sector){
                         write(recov_file,current,fs->bytes_per_sector);
                         current+=fs->bytes_per_sector;
                         remain_size-=fs->bytes_per_sector;
                     }
                     write(recov_file,current,remain_size);
-                    */
                 }
 #ifdef LOCAL
                 puts(file_name);
