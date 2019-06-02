@@ -254,7 +254,7 @@ outer:;
                         if(--cnt<0){
                             uint32_t diff=0;
                             (void)diff;
-                            if(cnt==-185){
+                            if(cnt==-195){
                                 while(remain_size--)write(recov_file,zeros,1);
                                 break;
                             }
