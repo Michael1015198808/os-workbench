@@ -121,7 +121,7 @@ int main(int argc, char *argv[]) {
                 (void*)fs)-0xb+
                 fs->sectors_cnt_high*
                 fs->bytes_per_sector);
-
+    void *begin=e;
     while(e<end){
         if(e->attr==0xf){
             long_entry_t *tmp=(void*)e;
@@ -156,6 +156,10 @@ int main(int argc, char *argv[]) {
             }while((void*)tmp!=(void*)old_e);
 outer:;
             puts(file_name);
+            uint8_t* file=begin+((e->clus_high*1LL<<32)+e->clus_low)*fs->bytes_per_sector;
+            for(uint32_t i=0;i<e->size;++i){
+                putchar(file[i]);
+            }
         };
         ++e;
     }
