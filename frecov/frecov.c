@@ -164,6 +164,7 @@ int main(int argc, char *argv[]) {
                     for(int i=0;i<len(tmp->NAME);++i){ \
                         file_name[idx++]=tmp->NAME[i]; \
                         if(tmp->NAME[i]==EOF){ \
+                            file_name[idx-1]='\0'; \
                             goto outer; \
                         } \
                     } \
@@ -179,7 +180,6 @@ int main(int argc, char *argv[]) {
 #undef NAME
             }while((void*)tmp!=(void*)old_e);
 outer:;
-            file_name[idx-1]='\0';
             //printf("%2x ",e->info[0]);
             if( (e->info[0]!=0xe5)&&
                 (e->size!=0)&&
@@ -213,6 +213,7 @@ outer:;
                 }
                 close(recov_file);
             }
+            memset(file_name,0,idx);
         };
         ++e;
     }
