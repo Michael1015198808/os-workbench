@@ -131,7 +131,6 @@ int main(int argc, char *argv[]) {
     void *const disk = mmap(NULL, st.st_size, PROT_READ , MAP_SHARED, fd, 0);
     const bpb_t *const fs=disk+0xb;
 
-    (void)fs;
     entry_t *e=(entry_t*)(uintptr_t)(disk+
                 ( fs->sectors_reserved+
                   fs->fat_cnt*sector_per_fat(fs)+
@@ -181,9 +180,10 @@ int main(int argc, char *argv[]) {
 #undef NAME
             }while((void*)tmp!=(void*)old_e);
 outer:;
-            if(!strncmp(file_name+strlen(file_name)-4,".bmp",4)){
+            if( (e->info[0]!=0xe5)&&
+                !strncmp(file_name+strlen(file_name)-4,".bmp",4)){
                 if(e->clus_high){
-                    asm volatile("mov %0, %%rax"::"g"(e));
+                    //asm volatile("mov %0, %%rax"::"g"(e));
                     SIG_TRAP;
                 }
                 uint8_t* file=begin+((e->clus_high*1LL<<16)+e->clus_low)*fs->bytes_per_sector;
