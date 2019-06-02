@@ -232,6 +232,8 @@ outer:;
 #ifdef LOCAL
                     printf("(Homo)");
 #endif
+                    (void)bmp;
+                    /*
                     write(recov_file,file,bmp->bfh.offset);
                     for(int i=0;i<bmp->dibh.height;++i){
                         for(int j=0;j<bmp->dibh.width;++j){
@@ -239,15 +241,19 @@ outer:;
                         }
                         write(recov_file,zeros,(bmp->dibh.width)&3);
                     }
+                    */
                 }else{
                     uint8_t* current=file;
                     uint16_t remain_size=e->size;
+                    write(recov_file,current,remain_size);
+                    /*
                     while(remain_size>fs->bytes_per_sector){
                         write(recov_file,current,fs->bytes_per_sector);
-                        //current+=fs->bytes_per_sector;
+                        current+=fs->bytes_per_sector;
                         remain_size-=fs->bytes_per_sector;
                     }
                     write(recov_file,current,remain_size);
+                    */
                 }
 #ifdef LOCAL
                 puts(file_name);
