@@ -119,6 +119,10 @@ _Static_assert(sizeof(bpb_t)==79,"Size of bpb is wrong!");
 uint32_t sector_per_fat(const bpb_t *p){
     return p->sector_per_fat_low==0?p->sector_per_fat_high:p->sector_per_fat_low;
 }
+void *disk;
+long long get_off(void *p){
+    return p-disk;
+}
 
 char full_file_name[70]="./recov/";
 int main(int argc, char *argv[]) {
@@ -129,7 +133,7 @@ int main(int argc, char *argv[]) {
     int fd = open(argv[1], O_RDONLY);
     struct stat st;
     fstat(fd, &st);
-    void *const disk = mmap(NULL, st.st_size, PROT_READ , MAP_SHARED, fd, 0);
+    disk = mmap(NULL, st.st_size, PROT_READ , MAP_SHARED, fd, 0);
     const bpb_t *const fs=disk+0xb;
 
     entry_t *e=(entry_t*)(uintptr_t)(disk+
