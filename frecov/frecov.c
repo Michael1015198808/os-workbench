@@ -253,19 +253,13 @@ outer:;
                         (void)width_bytes;
                         if(--cnt<0){
                             uint32_t diff=0;
-                            (void)diff;
-                            if(cnt==-190){
-                                while(remain_size--)write(recov_file,zeros,1);
-                                break;
-                            }
-                            /*
 #define abs(x) ((x)>0?(x):-(x))
 #define squ(x) ((x)*(x))
 #define round(x) (x>1600?1600:(x))
                             for(int i=0;i<bmp->dibh.width*3;i+=4){
                                 diff+=round(squ(abs(current[i]+current[i-width_bytes*2]-2*current[i-width_bytes])))+
-                                      squ(abs(current[i]-current[i+1-width_bytes]))+
-                                      squ(abs(current[i]-current[i-1-width_bytes]));
+                                      round(squ(abs(current[i]-current[i+1-width_bytes])))+
+                                      round(squ(abs(current[i]-current[i-1-width_bytes])));
                             }
                             printf("(%d)%d\n",cnt,diff/bmp->dibh.width);
                             if(diff/bmp->dibh.width>37500){
@@ -294,7 +288,6 @@ outer:;
                                 current=best_part;
                                 cnt=16;
                             }
-                            */
                         }
                     }
                     write(recov_file,current,remain_size);
