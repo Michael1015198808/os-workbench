@@ -232,7 +232,6 @@ outer:;
 #ifdef LOCAL
                     printf("(Homo)");
 #endif
-                    /*
                     write(recov_file,file,bmp->bfh.offset);
                     for(int i=0;i<bmp->dibh.height;++i){
                         for(int j=0;j<bmp->dibh.width;++j){
@@ -240,7 +239,6 @@ outer:;
                         }
                         write(recov_file,zeros,(bmp->dibh.width)&3);
                     }
-                    */
                 }else{
                     uint8_t* current=file;
                     uint32_t remain_size=e->size;
@@ -269,7 +267,7 @@ outer:;
 #ifndef LOCAL
                 int pid=fork();
                 if(pid==0){
-                    char *new_argv[3]={"/usr/bin/sha1sum",full_file_name+2,NULL};
+                    char *new_argv[3]={"/usr/bin/sha1sum",full_file_name,NULL};
                     execve("/usr/bin/sha1sum",new_argv,envp);
                 }else if(pid<0){
                     fprintf(stderr,"Can't fork a thread to calculate sha1sum!\nSee %s:%d for more info.\n",__FILE__,__LINE__);
