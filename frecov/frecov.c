@@ -177,6 +177,7 @@ outer:;
         };
         ++e;
     }
+    printf("%p\n",end);
     close(fd);
     return 0;
 }
