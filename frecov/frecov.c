@@ -267,7 +267,7 @@ outer:;
                                     for(int i=0;i<bmp->dibh.width*3;i+=4){
                                         diff+=abs(find[i]-current[i-width_bytes]);
                                     }
-                                    if(diff/bmp->dibh.width<70){
+                                    if(diff/bmp->dibh.width<60){
                                         printf("%x,%d\n",remain_size,diff);
                                         current=find;
                                         break;
