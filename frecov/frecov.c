@@ -249,9 +249,9 @@ outer:;
                         write(recov_file,current,fs->bytes_per_sector);
                         current+=fs->bytes_per_sector;
                         (void)width_bytes;
-                        int diff=0;
+                        uint32_t diff=0;
 #define abs(x) ((x)>0?(x):-(x))
-                        for(int i=0;i<bmp->dibh.width;++i){
+                        for(int i=0;i<3*bmp->dibh.width;++i){
                             diff+=abs(current[i]-current[i-width_bytes]);
                         }
                         if(diff/bmp->dibh.width>16){
@@ -262,11 +262,11 @@ outer:;
                                             *fs->bytes_per_sector);
                             while(find!=(uint8_t*)end){
                                 diff=0;
-                                for(int i=0;i<bmp->dibh.width;++i){
+                                for(int i=0;i<3*bmp->dibh.width;++i){
                                     diff+=abs(find[i]-current[i-width_bytes]);
                                 }
                                 printf("%d\n",diff);
-                                if(diff/bmp->dibh.width<5){
+                                if(diff/bmp->dibh.width<3){
                                     current=find;
                                     break;
                                 }
