@@ -168,7 +168,7 @@ outer:;
             for(uint32_t i=0;i<e->size;++i){
                 putchar(file[i]);
             }
-            return 0;
+            if(e->size>0)putchar('\n');
         };
         ++e;
     }
