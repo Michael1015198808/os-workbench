@@ -211,7 +211,7 @@ outer:;
                         for(int j=0;j<bmp->dibh.width;++j){
                             write(recov_file,&bmp->info[bmp->bfh.offset],3);
                         }
-                        //write(recov_file,zeros,(4-bmp->dibh.width)&3);
+                        write(recov_file,zeros,(4-bmp->dibh.width)&3);
                     }
                 }else{
                     //printf("e:%p\n",e);
