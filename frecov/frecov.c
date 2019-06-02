@@ -130,6 +130,9 @@ int main(int argc, char *argv[]) {
     void *begin=((void*)e)-(2*fs->sectors_per_cluster*fs->bytes_per_sector);
     //printf("%llx\n",1LL*(begin-disk));
     while(e!=end){
+        if(e==(entry_t*)0x7ffff7bcf000){
+            asm volatile("int $3");// Condition Breakpoint in gdb is too slow
+        }
         if(e->attr==0xf){
             long_entry_t *tmp=(void*)e;
             int idx=0;
