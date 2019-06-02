@@ -79,13 +79,13 @@ typedef union bmp{
     };
 }bmp_t;
 int color_test(bmp_t* bmp){
-    uint8_t pixel[4];
-    for(int i=0;i<4;++i){
+    uint8_t pixel[3];
+    for(int i=0;i<3;++i){
         pixel[i]=bmp->info[bmp->bfh.offset+i];
     }
     for(int i=1;i<10;++i){
-        for(int j=0;j<4;++j){
-            if(pixel[j]!=bmp->info[bmp->bfh.offset+i*4+j])return 0;
+        for(int j=0;j<3;++j){
+            if(pixel[j]!=bmp->info[bmp->bfh.offset+i*3+j])return 0;
         }
     }
     return 1;
