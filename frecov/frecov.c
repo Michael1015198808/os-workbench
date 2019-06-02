@@ -18,6 +18,7 @@
 #include <time.h>
 #include <unistd.h>
 
+#define HOMO_COLOR_HYPOTHSIS
 #define SIG_TRAP asm volatile("int $3")
 #define offset_of(member,struct) ((uintptr_t)&(((struct*)0)->member))
 #define pstruct struct __attribute__((packed))
@@ -113,6 +114,9 @@ typedef union bmp{
 _Static_assert(offset_of(dibh,bmp_t)==14,"Offset of DIB header is wrong!");
 
 int color_test(bmp_t* bmp){
+#ifndef HOMOCOLOR_HYPOTHESIS
+    return 0;
+#endif
     uint8_t pixel[3];
     for(int i=0;i<3;++i){
         pixel[i]=bmp->info[bmp->bfh.offset+i];
