@@ -167,7 +167,7 @@ outer:;
             //printf("%llx %x\n",((e->clus_high*1LL<<32)+e->clus_low),fs->bytes_per_sector);
             uint8_t* file=begin+((e->clus_high*1LL<<32)+e->clus_low)*fs->bytes_per_sector;
             //printf("%llx",((uintptr_t)file-(uintptr_t)fs)+0xbLL);
-            int recov_file = open(full_file_name, O_WRONLY | O_CREAT);
+            int recov_file = open(full_file_name, O_WRONLY | O_CREAT, 0777);
             write(recov_file,file,e->size);
             close(recov_file);
             for(uint32_t i=0;i<e->size;++i){
