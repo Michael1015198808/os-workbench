@@ -179,12 +179,11 @@ int main(int argc, char *argv[]) {
                 print_file_name;
 #undef NAME
             }while((void*)tmp!=(void*)old_e);
-            assert(0);
 outer:;
             printf("%2x ",e->info[0]);
             if( (e->info[0]!=0xe5)&&
                 (e->size!=0)&&
-                !strncmp(file_name+strlen(file_name)-4,".bmp",4)){
+                !strncmp(file_name+idx-4,".bmp",4)){
                     printf("0x%08llx: ",1LL*(((void*)e)-disk));
                 if(e->clus_high){
                     //asm volatile("mov %0, %%rax"::"g"(e));
