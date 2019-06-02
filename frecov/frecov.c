@@ -28,7 +28,7 @@
 #include <time.h>
 #include <unistd.h>
 
-#define LOCAL
+//#define LOCAL
 #define HOMOCOLOR_HYPOTHESIS
 #define SIG_TRAP asm volatile("int $3")
 #define offset_of(member,struct) ((uintptr_t)&(((struct*)0)->member))
