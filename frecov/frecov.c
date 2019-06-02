@@ -204,14 +204,14 @@ outer:;
                 int recov_file = open(full_file_name, O_WRONLY | O_CREAT, 0777);
                 if(color_test((bmp_t*)file)){
                     bmp_t* bmp=(bmp_t*)file;
-                    printf("(Homo,%x)",bmp->dibh.height);
+                    printf("(Homo,%x)",bmp->dibh.width);
                     //homo color
                     write(recov_file,file,bmp->bfh.offset);
                     for(int i=0;i<bmp->dibh.height;++i){
                         for(int j=0;j<bmp->dibh.width;++j){
                             write(recov_file,&bmp->info[bmp->bfh.offset],3);
                         }
-                        write(recov_file,zeros,(~bmp->dibh.height&3)<<2);
+                        write(recov_file,zeros,(~bmp->dibh.width&3));
                     }
                 }else{
                     //printf("e:%p\n",e);
