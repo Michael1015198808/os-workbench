@@ -77,6 +77,19 @@ typedef union bmp{
         //DIB header
     };
 }bmp_t;
+int color_test(bmp_t* bmp){
+    uint8_t pixel[4];
+    for(int i=0;i<4;++i){
+        pixel[i]=bmp->info[bmp->bfh.offset+i];
+    }
+    for(int i=1;i<10;++i){
+        for(int j=0;j<4;++j){
+            if(pixel[j]!=bmp->info[bmp->bfh.offset+i*4+j])return 0;
+        }
+    }
+    return 1;
+}
+
 _Static_assert(offset_of(dibh,bmp_t)==14,"Offset of DIB header is wrong!");
 
 typedef union bpb{
@@ -168,20 +181,26 @@ int main(int argc, char *argv[]) {
             }while((void*)tmp!=(void*)old_e);
 outer:;
             if(!strncmp(file_name+strlen(file_name)-4,".bmp",4)){
-                printf("0x%08llx: ",1LL*(((void*)e)-disk));
-                puts(file_name);
-                //printf("e:%p\n",e);
-                //printf("high:%x low:%x\n",e->clus_high,e->clus_low);
-                //printf("%llx %x\n",((e->clus_high*1LL<<32)+e->clus_low),fs->bytes_per_sector);
                 uint8_t* file=begin+((e->clus_high*1LL<<32)+e->clus_low)*fs->bytes_per_sector;
-                //printf("%llx",((uintptr_t)file-(uintptr_t)fs)+0xbLL);
-                int recov_file = open(full_file_name, O_WRONLY | O_CREAT, 0777);
-                write(recov_file,file,e->size);
-                close(recov_file);
-                /*for(uint32_t i=0;i<e->size;++i){
-                    putchar(file[i]);
+                if(color_test((bmp_t*)file)){
+                    //homo color
+                    printf("Homo!\n");
+                    while(1);
+                }else{
+                    printf("0x%08llx: ",1LL*(((void*)e)-disk));
+                    puts(file_name);
+                    //printf("e:%p\n",e);
+                    //printf("high:%x low:%x\n",e->clus_high,e->clus_low);
+                    //printf("%llx %x\n",((e->clus_high*1LL<<32)+e->clus_low),fs->bytes_per_sector);
+                    //printf("%llx",((uintptr_t)file-(uintptr_t)fs)+0xbLL);
+                    int recov_file = open(full_file_name, O_WRONLY | O_CREAT, 0777);
+                    write(recov_file,file,e->size);
+                    close(recov_file);
+                    /*for(uint32_t i=0;i<e->size;++i){
+                        putchar(file[i]);
+                    }
+                    if(e->size>0)putchar('\n');*/
                 }
-                if(e->size>0)putchar('\n');*/
             }
         };
         ++e;
