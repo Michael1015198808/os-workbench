@@ -244,10 +244,9 @@ outer:;
                     uint16_t remain_size=e->size;
                     while(remain_size>fs->bytes_per_sector){
                         write(recov_file,current,fs->bytes_per_sector);
-                        current+=fs->bytes_per_sector;
+                        //current+=fs->bytes_per_sector;
                         remain_size-=fs->bytes_per_sector;
                     }
-                    //TODO: fancy algorithm for bmp recovery
                     write(recov_file,current,remain_size);
                 }
 #ifdef LOCAL
