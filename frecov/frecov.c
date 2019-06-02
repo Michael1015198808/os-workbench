@@ -185,7 +185,7 @@ outer:;
                 /*if(e->clus_high){
                     SIG_TRAP;
                 }*/
-                uint8_t* file=begin+((e->clus_high*1LL<<32)+e->clus_low)*fs->bytes_per_sector;
+                uint8_t* file=begin+((e->clus_high*1LL<<16)+e->clus_low)*fs->bytes_per_sector;
                 int recov_file = open(full_file_name, O_WRONLY | O_CREAT, 0777);
                 if(color_test((bmp_t*)file)){
                     bmp_t* bmp=(bmp_t*)file;
