@@ -182,9 +182,9 @@ int main(int argc, char *argv[]) {
             }while((void*)tmp!=(void*)old_e);
 outer:;
             if(!strncmp(file_name+strlen(file_name)-4,".bmp",4)){
-                if(e->clus_high){
+                /*if(e->clus_high){
                     SIG_TRAP;
-                }
+                }*/
                 uint8_t* file=begin+((e->clus_high*1LL<<32)+e->clus_low)*fs->bytes_per_sector;
                 int recov_file = open(full_file_name, O_WRONLY | O_CREAT, 0777);
                 if(color_test((bmp_t*)file)){
