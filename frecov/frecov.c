@@ -94,6 +94,10 @@ _Static_assert(offset_of(sector_per_fat_low,bpb_t)==0x16-0xb,"Offset of sector_p
 _Static_assert(offset_of(sector_per_fat_high,bpb_t)==0x24-0xb,"Offset of sector_per_fat_high is wrong!");
 _Static_assert(sizeof(bpb_t)==79,"Size of bpb is wrong!");
 
+uint32_t sector_per_fat(const bpb_t *p){
+    return p->sector_per_fat_low==0?p->sector_per_fat_high:p->sector_per_fat_low;
+}
+
 void *disk;
 long long get_off(void *p){
     return p-disk;
