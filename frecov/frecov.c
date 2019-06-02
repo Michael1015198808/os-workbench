@@ -6,6 +6,7 @@
  * Fancy designs:
  *      declare a zeros array to write 00...00 faster.
  *      Macro around Line 200 to print file's name
+ *      full_file_name and file_name
  */
 #include <assert.h>
 #include <dlfcn.h>
@@ -27,13 +28,14 @@
 #include <time.h>
 #include <unistd.h>
 
-#define LOCAL
+//#define LOCAL
 #define HOMOCOLOR_HYPOTHESIS
 #define SIG_TRAP asm volatile("int $3")
 #define offset_of(member,struct) ((uintptr_t)&(((struct*)0)->member))
 #define pstruct struct __attribute__((packed))
 #define my_cmp(pat, ptr) strncmp(pat,(const char*)ptr,sizeof(pat))
 #define len(Array) (sizeof(Array)/sizeof(Array[0]))
+
 const uint8_t zeros[16]={};
 inline void print_unicode(uint16_t c){
     if(c>>8){
@@ -41,10 +43,7 @@ inline void print_unicode(uint16_t c){
     }
     putchar(c);
 }
-int finish(void){
-    asm volatile("int $3");
-    return 0;
-}
+
 typedef union long_entry{
     uint8_t info[0];
     pstruct{
@@ -94,9 +93,7 @@ const bpb_t *fs=NULL;
 _Static_assert(offset_of(sector_per_fat_low,bpb_t)==0x16-0xb,"Offset of sector_per_fat_low is wrong!");
 _Static_assert(offset_of(sector_per_fat_high,bpb_t)==0x24-0xb,"Offset of sector_per_fat_high is wrong!");
 _Static_assert(sizeof(bpb_t)==79,"Size of bpb is wrong!");
-uint32_t sector_per_fat(const bpb_t *p){
-    return p->sector_per_fat_low==0?p->sector_per_fat_high:p->sector_per_fat_low;
-}
+
 void *disk;
 long long get_off(void *p){
     return p-disk;
@@ -126,7 +123,7 @@ _Static_assert(offset_of(dibh,bmp_t)==14,"Offset of DIB header is wrong!");
 int color_test(bmp_t* bmp){
 #ifndef HOMOCOLOR_HYPOTHESIS
     return 0;
-#endif
+#else
     uint8_t pixel[3];
     for(int i=0;i<3;++i){
         pixel[i]=bmp->info[bmp->bfh.offset+i];
@@ -148,6 +145,7 @@ int color_test(bmp_t* bmp){
         current+=bmp->dibh.width&3;
     }
     return 1;
+#endif
 }
 
 
@@ -162,11 +160,9 @@ int main(int argc, char *argv[]) {
         fprintf(stderr,"Usage: frecov [file]\n");
         return -1;
     }
-    //int fd = open(argv[1], O_RDONLY);
     int fd = open(argv[1], O_RDONLY);
     struct stat st;
     fstat(fd, &st);
-    //disk = mmap(NULL, st.st_size, PROT_READ , MAP_SHARED, fd, 0);
     disk = mmap(NULL, st.st_size, PROT_READ, MAP_SHARED, fd, 0);
     fs=disk+0xb;
 
@@ -175,10 +171,12 @@ int main(int argc, char *argv[]) {
                   fs->fat_cnt*sector_per_fat(fs)+
                   (fs->start_cluster-2)*fs->sectors_per_cluster )*1LL
                     *fs->bytes_per_sector);
+
     entry_t *end=(entry_t*)(uintptr_t)(
                 disk+
                 ((fs->sectors_cnt_high*1LL)+fs->sectors_cnt_low)*
                 fs->bytes_per_sector);
+
     void *begin=((void*)e)-(2*fs->sectors_per_cluster*fs->bytes_per_sector);
     while(e!=end){
         if(e->attr==0xf){
@@ -213,32 +211,23 @@ int main(int argc, char *argv[]) {
 #undef NAME
             }while((void*)tmp!=(void*)old_e);
 outer:;
-            if( (e->info[0]!=0xe5)&&
-                (e->size!=0)&&
-                !(strncmp(file_name+strlen(file_name)-4,".bmp",4))&&
-                !(strncmp((char*)e->suffix,"BMP",3)) ){
+            if( (e->info[0]!=0xe5)&&//Deleted?
+                (e->size!=0)&&//Deleted?
+                !(strncmp(file_name+strlen(file_name)-4,".bmp",4))&&//.bmp?
+                !(strncmp((char*)e->suffix,"BMP",3)) ){//bmp file?
 
-                /*
-                if(strncmp(file_name,"VQKIX1MBOQ",5)){
-                    SIG_TRAP;
-                }
-                */
 #ifdef LOCAL
                 printf("0x%08llx: ",1LL*(((void*)e)-disk));
 #endif
-                if(e->clus_high){
-                    //asm volatile("mov %0, %%rax"::"g"(e));
-                    //SIG_TRAP;
-                    fflush(stdout);
-                }
+
                 uint8_t* file=begin+((e->clus_high*1LL<<16)+e->clus_low)*fs->bytes_per_sector;
                 int recov_file = open(full_file_name, O_WRONLY | O_CREAT, 0777);
                 if(color_test((bmp_t*)file)){
+                    //homo color
                     bmp_t* bmp=(bmp_t*)file;
 #ifdef LOCAL
-                    printf("(Homo,%x)",bmp->dibh.width);
+                    printf("(Homo)",bmp->dibh.width);
 #endif
-                    //homo color
                     write(recov_file,file,bmp->bfh.offset);
                     for(int i=0;i<bmp->dibh.height;++i){
                         for(int j=0;j<bmp->dibh.width;++j){
@@ -247,11 +236,8 @@ outer:;
                         write(recov_file,zeros,(bmp->dibh.width)&3);
                     }
                 }else{
+                    //TODO: fancy algorithm for bmp recovery
                     write(recov_file,file,e->size);
-                    /*for(uint32_t i=0;i<e->size;++i){
-                        putchar(file[i]);
-                    }
-                    if(e->size>0)putchar('\n');*/
                 }
 #ifdef LOCAL
                 puts(file_name);
@@ -264,6 +250,7 @@ outer:;
                     execve("/usr/bin/sha1sum",argv,envp);
                 }else if(pid<0){
                     fprintf(stderr,"Can't fork a thread to calculate sha1sum!\nSee %s:%d for more info.\n",__FILE__,__LINE__);
+                    while(1);
                 }
 #endif
             }
