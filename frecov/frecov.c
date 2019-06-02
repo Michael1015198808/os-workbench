@@ -130,10 +130,10 @@ int main(int argc, char *argv[]) {
         fprintf(stderr,"Usage: frecov [file]\n");
         return -1;
     }
-    int fd = open(argv[1], O_RDWR);
+    int fd = open(argv[1], O_RDONLY);
     struct stat st;
     fstat(fd, &st);
-    disk = mmap(NULL, st.st_size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+    disk = mmap(NULL, st.st_size, PROT_READ , MAP_SHARED, fd, 0);
     const bpb_t *const fs=disk+0xb;
 
     entry_t *e=(entry_t*)(uintptr_t)(disk+
@@ -211,7 +211,7 @@ outer:;
                         for(int j=0;j<bmp->dibh.width;++j){
                             write(recov_file,&bmp->info[bmp->bfh.offset],3);
                         }
-                        write(recov_file,zeros,(4-bmp->dibh.width)&3);
+                        //write(recov_file,zeros,(4-bmp->dibh.width)&3);
                     }
                 }else{
                     //printf("e:%p\n",e);
@@ -227,7 +227,6 @@ outer:;
                 puts(file_name);
                 close(recov_file);
             }
-            return 0;//Temp setting
             memset(file_name,0,idx);
         };
         ++e;
