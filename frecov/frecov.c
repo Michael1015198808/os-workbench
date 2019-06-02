@@ -159,7 +159,7 @@ int main(int argc, char *argv[]) {
 #undef NAME
             }while((void*)tmp!=(void*)old_e);
 outer:;
-            if(strncmp(file_name+strlen(file_name)-4,".bmp",4))break;
+            //if(strncmp(file_name+strlen(file_name)-4,".bmp",4))break;
             puts(file_name);
             //printf("e:%p\n",e);
             //printf("high:%x low:%x\n",e->clus_high,e->clus_low);
