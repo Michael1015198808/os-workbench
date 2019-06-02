@@ -125,7 +125,7 @@ int main(int argc, char *argv[]) {
                 fs->bytes_per_sector);
     void *begin=((void*)e)-(2*fs->sectors_per_cluster*fs->bytes_per_sector);
     //printf("%llx\n",1LL*(begin-disk));
-    while(e<end){
+    while((uintptr_t)e<(uintptr_t)end){
         if(e->attr==0xf){
             long_entry_t *tmp=(void*)e;
             int idx=0;
@@ -161,7 +161,7 @@ int main(int argc, char *argv[]) {
             }while((void*)tmp!=(void*)old_e);
 outer:;
             if(strncmp(file_name+strlen(file_name)-4,".bmp",4))break;
-            printf("%llx: ",1LL*(((void*)e)-disk));
+            printf("0x%08llx: ",1LL*(((void*)e)-disk));
             puts(file_name);
             //printf("e:%p\n",e);
             //printf("high:%x low:%x\n",e->clus_high,e->clus_low);
