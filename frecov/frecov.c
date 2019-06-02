@@ -245,37 +245,38 @@ outer:;
                     uint8_t* current=file;
                     uint32_t remain_size=e->size;
                     uint16_t width_bytes=bmp->dibh.width+((bmp->dibh.width)&3);
+                    int cnt=16;
                     while(remain_size>fs->bytes_per_sector){
                         write(recov_file,current,fs->bytes_per_sector);
                         current+=fs->bytes_per_sector;
                         (void)width_bytes;
-                        uint32_t diff=0;
+                        if(--cnt<0){
+                            break;
+                            uint32_t diff=0;
 #define abs(x) ((x)>0?(x):-(x))
-                        for(int i=0;i<bmp->dibh.width;++i){
-                            diff+=abs(current[i]-current[i-width_bytes]);
-                        }
-                        break;
-                        /*
-                        if(diff/bmp->dibh.width>40){
-                            uint8_t *find=(uint8_t*)(uintptr_t)(disk+
-                                        ( fs->sectors_reserved+
-                                        fs->fat_cnt*sector_per_fat(fs)+
-                                        (fs->start_cluster-2)*fs->sectors_per_cluster )*1LL
-                                            *fs->bytes_per_sector);
-                            while(find!=(uint8_t*)end){
-                                diff=0;
-                                for(int i=0;i<bmp->dibh.width;++i){
-                                    diff+=abs(find[i]-current[i-width_bytes]);
+                            for(int i=0;i<bmp->dibh.width;++i){
+                                diff+=abs(current[i]-current[i-width_bytes]);
+                            }
+                            if(diff/bmp->dibh.width>40){
+                                uint8_t *find=(uint8_t*)(uintptr_t)(disk+
+                                            ( fs->sectors_reserved+
+                                            fs->fat_cnt*sector_per_fat(fs)+
+                                            (fs->start_cluster-2)*fs->sectors_per_cluster )*1LL
+                                                *fs->bytes_per_sector);
+                                while(find!=(uint8_t*)end){
+                                    diff=0;
+                                    for(int i=0;i<bmp->dibh.width;++i){
+                                        diff+=abs(find[i]-current[i-width_bytes]);
+                                    }
+                                    if(diff/bmp->dibh.width<10){
+                                        printf("%x,%d\n",remain_size,diff);
+                                        current=find;
+                                        break;
+                                    }
+                                    find+=fs->bytes_per_sector;
                                 }
-                                if(diff/bmp->dibh.width<10){
-                                    printf("%x,%d\n",remain_size,diff);
-                                    current=find;
-                                    break;
-                                }
-                                find+=fs->bytes_per_sector;
                             }
                         }
-                        */
                         remain_size-=fs->bytes_per_sector;
                     }
                     while(remain_size--){
