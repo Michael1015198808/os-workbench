@@ -23,7 +23,7 @@
 #define pstruct struct __attribute__((packed))
 #define my_cmp(pat, ptr) strncmp(pat,(const char*)ptr,sizeof(pat))
 #define len(Array) (sizeof(Array)/sizeof(Array[0]))
-const uint8_t zeros[8]={};
+const uint8_t zeros[16]={};
 inline void print_unicode(uint16_t c){
     if(c>>8){
         putchar(c>>8);
@@ -211,7 +211,7 @@ outer:;
                         for(int j=0;j<bmp->dibh.width;++j){
                             write(recov_file,&bmp->info[bmp->bfh.offset],3);
                         }
-                        write(recov_file,zeros,(bmp->dibh.height&3)<<1);
+                        write(recov_file,zeros,(~bmp->dibh.height&3)<<2);
                     }
                 }else{
                     //printf("e:%p\n",e);
