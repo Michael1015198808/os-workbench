@@ -253,6 +253,10 @@ outer:;
                         (void)width_bytes;
                         if(--cnt<0){
                             uint32_t diff=0;
+                            if(cnt==-15){
+                                while(remain_size--)write(recov_file,zeros,1);
+                                break;
+                            }
 #define abs(x) ((x)>0?(x):-(x))
 #define squ(x) ((x)*(x))
 #define round(x) (x>1600?1600:(x))
