@@ -253,9 +253,12 @@ outer:;
                         if(--cnt<0){
                             uint32_t diff=0;
 #define abs(x) ((x)>0?(x):-(x))
+#define squ(x) ((x)*(x))
                             for(int i=0;i<bmp->dibh.width*3;i+=4){
-                                diff+=abs(current[i]-current[i-width_bytes]);
+                                diff+=squ(abs(current[i]-current[i-width_bytes]));
                             }
+                            printf("%x\n",diff/bmp->dibh.width);
+                            /*
                             if(diff/bmp->dibh.width>80){
                                 uint8_t *find=(uint8_t*)(uintptr_t)(disk+
                                             ( fs->sectors_reserved+
@@ -265,9 +268,9 @@ outer:;
                                 while(find!=(uint8_t*)end){
                                     diff=0;
                                     for(int i=0;i<bmp->dibh.width*3;i+=4){
-                                        diff+=abs(find[i]-current[i-width_bytes]);
+                                        diff+=squ(abs(find[i]-current[i-width_bytes]));
                                     }
-                                    if(diff/bmp->dibh.width<60){
+                                    if(diff/bmp->dibh.width<50){
                                         printf("%x,%d\n",remain_size,diff);
                                         current=find;
                                         break;
@@ -276,6 +279,7 @@ outer:;
                                 }
                                 cnt=16;
                             }
+                            */
                         }
                         remain_size-=fs->bytes_per_sector;
                     }
