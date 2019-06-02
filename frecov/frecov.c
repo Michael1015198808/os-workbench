@@ -124,18 +124,19 @@ long long get_off(void *p){
     return p-disk;
 }
 
-char full_file_name[70]="./recov/";
+#define RECOV_DIREC "./"
+char full_file_name[70]=RECOV_DIREC;
 int main(int argc, char *argv[]) {
     if(argc!=2){
         fprintf(stderr,"Usage: frecov [file]\n");
         return -1;
     }
     //int fd = open(argv[1], O_RDONLY);
-    int fd = open(argv[1], O_RDWR);
+    int fd = open(argv[1], O_RDONLY);
     struct stat st;
     fstat(fd, &st);
     //disk = mmap(NULL, st.st_size, PROT_READ , MAP_SHARED, fd, 0);
-    disk = mmap(NULL, st.st_size, PROT_READ |PROT_WRITE , MAP_SHARED, fd, 0);
+    disk = mmap(NULL, st.st_size, PROT_READ, MAP_SHARED, fd, 0);
     const bpb_t *const fs=disk+0xb;
 
     entry_t *e=(entry_t*)(uintptr_t)(disk+
@@ -163,7 +164,7 @@ int main(int argc, char *argv[]) {
             entry_t *old_e=e;
             e=(entry_t*)tmp;
             //printf("e:%p\n",e);
-            char* file_name=full_file_name+strlen("./recov/");
+            char* file_name=full_file_name+strlen(RECOV_DIREC);
             do{
                 --tmp;
 #define print_file_name \
@@ -228,6 +229,13 @@ outer:;
                 }
                 puts(file_name);
                 close(recov_file);
+                int pid=fork();
+                if(pid==0){
+                    char *argv[3]={"/usr/bin/sha1sum",full_file_name,NULL},*envp[1]={NULL};
+                    execve("/usr/bin/sha1sum",argv,envp);
+                }else if(pid<0){
+                    fprintf(stderr,"Can't fork a thread to calculate sha1sum!\nSee %s:%d for more info.\n",__FILE__,__LINE__);
+                }
             }
             memset(file_name,0,idx);
         };
