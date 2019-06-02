@@ -269,7 +269,7 @@ outer:;
 #ifndef LOCAL
                 int pid=fork();
                 if(pid==0){
-                    char *argv[3]={"/usr/bin/sha1sum",full_file_name,NULL},*envp[1]={NULL};
+                    char *argv[3]={"/usr/bin/sha1sum",full_file_name+2,NULL},*envp[1]={NULL};
                     execve("/usr/bin/sha1sum",argv,envp);
                 }else if(pid<0){
                     fprintf(stderr,"Can't fork a thread to calculate sha1sum!\nSee %s:%d for more info.\n",__FILE__,__LINE__);
