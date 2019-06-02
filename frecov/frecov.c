@@ -43,13 +43,13 @@
 uint16_t width_bytes;
 uint32_t calculate_diff(uint8_t *find,uint8_t *current,int i){
     uint32_t r=round(squ(abs(
-                    find[i]+current[i-width_bytes*2]-2*current[i-width_bytes])),2500);
+                    find[i]+current[i-width_bytes*2]-2*current[i-width_bytes])),6400);
     ++i;
     uint32_t g=round(squ(abs(
-                    find[i]+current[i-width_bytes*2]-2*current[i-width_bytes])),2500);
+                    find[i]+current[i-width_bytes*2]-2*current[i-width_bytes])),6400);
     ++i;
     uint32_t b=round(squ(abs(
-                    find[i]+current[i-width_bytes*2]-2*current[i-width_bytes])),2500);
+                    find[i]+current[i-width_bytes*2]-2*current[i-width_bytes])),6400);
     ++i;
     return r+g+b+3*max(max(r,g),b);
 }
