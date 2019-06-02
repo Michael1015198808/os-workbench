@@ -254,7 +254,9 @@ outer:;
                         for(int i=0;i<bmp->dibh.width;++i){
                             diff+=abs(current[i]-current[i-width_bytes]);
                         }
-                        if(diff/bmp->dibh.width>20){
+                        printf("%d\n",diff/bmp->dibh.width);
+                        return 0;
+                        if(diff/bmp->dibh.width>50){
                             uint8_t *find=(uint8_t*)(uintptr_t)(disk+
                                         ( fs->sectors_reserved+
                                         fs->fat_cnt*sector_per_fat(fs)+
@@ -265,7 +267,7 @@ outer:;
                                 for(int i=0;i<3*bmp->dibh.width;++i){
                                     diff+=abs(find[i]-current[i-width_bytes]);
                                 }
-                                if(diff/bmp->dibh.width<10){
+                                if(diff/bmp->dibh.width<30){
                                     printf("%d\n",diff);
                                     current=find;
                                     break;
