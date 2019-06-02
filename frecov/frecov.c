@@ -256,12 +256,15 @@ outer:;
 #define abs(x) ((x)>0?(x):-(x))
 #define squ(x) ((x)*(x))
 #define round(x) (x>1600?1600:(x))
-                            for(int i=0;i<bmp->dibh.width*3;++i){
-                                if(cnt==-189||cnt==-190)
-                                printf("%x,%x\n",current[i],current[i-width_bytes]);
-                                diff+=round(squ(abs(current[i]+current[i-width_bytes*2]-2*current[i-width_bytes])))+
-                                      round(squ(abs(current[i]-current[i+1-width_bytes])))+
-                                      round(squ(abs(current[i]-current[i-1-width_bytes])));
+#define max(x,y) ((x)>(y)?(x):(y))
+                            for(int i=0;i<bmp->dibh.width*3;){
+                                uint32_t r=abs(current[i]+current[i-width_bytes*2]-2*current[i-width_bytes]);
+                                ++i;
+                                uint32_t g=abs(current[i]+current[i-width_bytes*2]-2*current[i-width_bytes]);
+                                ++i;
+                                uint32_t b=abs(current[i]+current[i-width_bytes*2]-2*current[i-width_bytes]);
+                                ++i;
+                                diff+=max(max(r,g),b);
                             }
                             printf("(%d)%d\n",cnt,diff/bmp->dibh.width);
                             if(diff/bmp->dibh.width>37500){
