@@ -180,7 +180,7 @@ int main(int argc, char *argv[]) {
 #undef NAME
             }while((void*)tmp!=(void*)old_e);
 outer:;
-            printf("%2x ",e->info[0]);
+            //printf("%2x ",e->info[0]);
             if( (e->info[0]!=0xe5)&&
                 (e->size!=0)&&
                 !strncmp(file_name+idx-4,".bmp",4)){
