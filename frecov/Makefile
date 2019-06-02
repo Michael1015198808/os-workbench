@@ -7,7 +7,7 @@ include ../Makefile.lab
 .PHONY: run
 BITS := 64
 IMG := "test.img"
-run: all
+run: all git
 	./$(NAME)-$(BITS) $(IMG)
 gdb:all
 	gdb ./$(NAME)-$(BITS)

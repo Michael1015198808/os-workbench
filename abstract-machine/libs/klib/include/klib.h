@@ -111,22 +111,24 @@ void intr_log(char *);
 
 #define intr_close() \
     do{ \
-        intr_log("%s:%d(%s)close\n",__FILE__,__LINE__,__func__); \
+        intr_log("[cpu%d]%s:%d(%s)close\n",_cpu(),__FILE__,__LINE__,__func__); \
         _intr_close(); \
     }while(0)
 #define intr_open() \
     do{ \
-        intr_log("%s:%d(%s)open\n",__FILE__,__LINE__,__func__); \
+        intr_log("[cpu%d]%s:%d(%s)open\n",_cpu(),__FILE__,__LINE__,__func__); \
         _intr_open(); \
     }while(0)
 
-int intr_idx;
+volatile int intr_idx;
 pthread_mutex_t intr_lk;
+char intr_log_string[66000];
+volatile int ncli[4];
 #define LOG(...) intr_idx+=sprintf(intr_log_string+intr_idx,__VA_ARGS__)
 #define intr_log(...) \
     pthread_mutex_lock(&intr_lk); \
-    LOG(__VA_ARGS__); \
     LOG("[%d,%d]\n",ncli[0],ncli[1]); \
+    LOG(__VA_ARGS__); \
     pthread_mutex_unlock(&intr_lk);
 
 #endif

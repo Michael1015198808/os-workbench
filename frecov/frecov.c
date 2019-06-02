@@ -130,6 +130,8 @@ int main(int argc, char *argv[]) {
             while(tmp->mark==0xf){
                 ++tmp;
             }
+            entry_t *old_e=e;
+            e=(entry_t*)tmp;
             do{
                 --tmp;
 #define print_file_name \
@@ -151,7 +153,7 @@ int main(int argc, char *argv[]) {
 #define NAME name3
                 print_file_name;
 #undef NAME
-            }while((void*)tmp!=(void*)e);
+            }while((void*)tmp!=(void*)old_e);
 outer:;
             puts(file_name);
         };

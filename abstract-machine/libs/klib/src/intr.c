@@ -3,9 +3,10 @@
 #include "../am/src/x86/x86-qemu.h"
 //Only for the macro MAX_CPU
 
-int ncli[MAX_CPU]={},ori[MAX_CPU]={};
+//volatile int ncli[MAX_CPU]={},ori[MAX_CPU]={};
+volatile int ncli[4]={},ori[4]={};
 
-int intr_idx=0;
+volatile int intr_idx=0;
 pthread_mutex_t intr_lk=PTHREAD_MUTEX_INITIALIZER;
 char intr_log_string[66000];
 pthread_mutex_t log_lk=PTHREAD_MUTEX_INITIALIZER;
