@@ -264,6 +264,7 @@ outer:;
                                             fs->fat_cnt*sector_per_fat(fs)+
                                             (fs->start_cluster-2)*fs->sectors_per_cluster )*1LL
                                                 *fs->bytes_per_sector);
+                                find=current;
                                 while(find!=(uint8_t*)end){
                                     diff=0;
                                     for(int i=0;i<bmp->dibh.width*3;i+=4){
