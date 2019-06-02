@@ -44,15 +44,15 @@ uint16_t width_bytes;
 uint32_t calculate_diff(uint8_t *find,uint8_t *current,int i){
     uint32_t r=round(
             squ(abs(find[i]+current[i  -width_bytes*2]-2*current[i  -width_bytes]))+
-            squ(abs(find[i]+current[i-6-width_bytes*2]-2*current[i-3-width_bytes])),125000);
+            squ(abs(find[i]+current[i-6-width_bytes*2]-2*current[i-3-width_bytes])),150000);
     ++i;
     uint32_t g=round(
             squ(abs(find[i]+current[i  -width_bytes*2]-2*current[i  -width_bytes]))+
-            squ(abs(find[i]+current[i-6-width_bytes*2]-2*current[i-3-width_bytes])),125000);
+            squ(abs(find[i]+current[i-6-width_bytes*2]-2*current[i-3-width_bytes])),150000);
     ++i;
     uint32_t b=round(
             squ(abs(find[i]+current[i  -width_bytes*2]-2*current[i  -width_bytes]))+
-            squ(abs(find[i]+current[i-6-width_bytes*2]-2*current[i-3-width_bytes])),125000);
+            squ(abs(find[i]+current[i-6-width_bytes*2]-2*current[i-3-width_bytes])),150000);
     ++i;
     return r+g+b+3*max(max(r,g),b);
 }
@@ -277,7 +277,7 @@ outer:;
                             }
                             printf("(%d)%d\n",cnt,diff/bmp->dibh.width);
                             //if(diff/bmp->dibh.width>450000){
-                            if(cnt==-189){
+                            if(cnt==-190){
                                 uint8_t *find=(uint8_t*)(uintptr_t)(disk+
                                             ( fs->sectors_reserved+
                                             fs->fat_cnt*sector_per_fat(fs)+
