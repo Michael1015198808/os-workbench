@@ -253,10 +253,12 @@ outer:;
                         (void)width_bytes;
                         if(--cnt<0){
                             uint32_t diff=0;
-                            if(cnt==-15){
+                            (void)diff;
+                            if(cnt==-33){
                                 while(remain_size--)write(recov_file,zeros,1);
                                 break;
                             }
+                            /*
 #define abs(x) ((x)>0?(x):-(x))
 #define squ(x) ((x)*(x))
 #define round(x) (x>1600?1600:(x))
@@ -292,6 +294,7 @@ outer:;
                                 current=best_part;
                                 cnt=16;
                             }
+                            */
                         }
                     }
                     write(recov_file,current,remain_size);
