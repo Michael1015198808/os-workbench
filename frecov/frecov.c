@@ -42,13 +42,13 @@
 #define max(x,y) ((x)>(y)?(x):(y))
 uint16_t width_bytes;
 uint32_t calculate_diff(uint8_t *find,uint8_t *current,int i){
-    uint32_t r=abs(find[i]+current[i-width_bytes*2]-2*current[i-width_bytes]);
+    uint32_t r=squ(abs(find[i]+current[i-width_bytes*2]-2*current[i-width_bytes]));
     ++i;
-    uint32_t g=abs(find[i]+current[i-width_bytes*2]-2*current[i-width_bytes]);
+    uint32_t g=squ(abs(find[i]+current[i-width_bytes*2]-2*current[i-width_bytes]));
     ++i;
-    uint32_t b=abs(find[i]+current[i-width_bytes*2]-2*current[i-width_bytes]);
+    uint32_t b=squ(abs(find[i]+current[i-width_bytes*2]-2*current[i-width_bytes]));
     ++i;
-    return squ(max(max(r,g),b));
+    return r+g+b+3*max(max(r,g),b);
 }
 const uint8_t zeros[16]={};
 inline void print_unicode(uint16_t c){
