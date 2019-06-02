@@ -186,9 +186,9 @@ outer:;
                 !(strncmp(file_name+strlen(file_name)-4,".bmp",4))&&
                 !(strncmp((char*)e->suffix,"BMP",3)) ){
 
-                if(strncmp(file_name,"8BME4PNHA9",5)){
+                /*if(strncmp(file_name,"8BME4PNHA9",5)){
                     SIG_TRAP;
-                }
+                }*/
                 printf("0x%08llx: ",1LL*(((void*)e)-disk));
                 if(e->clus_high){
                     //asm volatile("mov %0, %%rax"::"g"(e));
@@ -198,6 +198,7 @@ outer:;
                 uint8_t* file=begin+((e->clus_high*1LL<<16)+e->clus_low)*fs->bytes_per_sector;
                 int recov_file = open(full_file_name, O_WRONLY | O_CREAT, 0777);
                 if(color_test((bmp_t*)file)){
+                    printf("Homo!");
                     bmp_t* bmp=(bmp_t*)file;
                     //homo color
                     write(recov_file,file,bmp->bfh.offset);
