@@ -227,6 +227,7 @@ outer:;
                 puts(file_name);
                 close(recov_file);
             }
+            return 0;//Temp setting
             memset(file_name,0,idx);
         };
         ++e;
