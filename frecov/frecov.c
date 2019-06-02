@@ -101,6 +101,7 @@ uint32_t sector_per_fat(const bpb_t *p){
     return p->sector_per_fat_low==0?p->sector_per_fat_high:p->sector_per_fat_low;
 }
 
+char full_file_name[70]="./recov/";
 int main(int argc, char *argv[]) {
     if(argc!=2){
         fprintf(stderr,"Usage: frecov [file]\n");
@@ -128,7 +129,6 @@ int main(int argc, char *argv[]) {
         if(e->attr==0xf){
             long_entry_t *tmp=(void*)e;
             int idx=0;
-            char full_file_name[70],*file_name=full_file_name+strlen("./recov/");
             while(tmp->mark==0xf){
                 ++tmp;
             }
@@ -136,6 +136,7 @@ int main(int argc, char *argv[]) {
             entry_t *old_e=e;
             e=(entry_t*)tmp;
             //printf("e:%p\n",e);
+            char* file_name=full_file_name+strlen("./recov/");
             do{
                 --tmp;
 #define print_file_name \
