@@ -1,3 +1,12 @@
+/* 
+ * Author: Michael Yan
+ * STUID: 171240518
+ * Features:
+ *      Auto guess whether a bmp file is homo-color, if so, auto compele its color 
+ * Fancy designs:
+ *      declare a zeros array to write 00...00 faster.
+ *      Macro around Line 200 to print file's name
+ */
 #include <assert.h>
 #include <dlfcn.h>
 #include <fcntl.h>
@@ -186,7 +195,7 @@ int main(int argc, char *argv[]) {
                 do{ \
                     for(int i=0;i<len(tmp->NAME);++i){ \
                         file_name[idx++]=tmp->NAME[i]; \
-                        if(tmp->NAME[i]==EOF){ \
+                        if(tmp->NAME[i]&0x80){ \
                             file_name[idx-1]='\0'; \
                             goto outer; \
                         } \
