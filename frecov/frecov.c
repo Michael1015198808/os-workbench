@@ -256,7 +256,7 @@ outer:;
 #define abs(x) ((x)>0?(x):-(x))
 #define squ(x) ((x)*(x))
                             for(int i=0;i<bmp->dibh.width*3;i+=4){
-                                diff+=squ(abs(current[i]-current[i-width_bytes]))+
+                                diff+=squ(abs(current[i]+current[i-width_bytes*2]-2*current[i-width_bytes]))+
                                       squ(abs(current[i]-current[i+1-width_bytes]))+
                                       squ(abs(current[i]-current[i-1-width_bytes]));
                             }
@@ -272,7 +272,7 @@ outer:;
                                 while(find!=(uint8_t*)end){
                                     diff=0;
                                     for(int i=0;i<bmp->dibh.width*3;i+=4){
-                                        diff+=squ(abs(find[i]-current[i-width_bytes]))+
+                                        diff+=squ(abs(find[i]+find[i-width_bytes*2]-2*current[i-width_bytes]))+
                                               squ(abs(find[i]-current[i+1-width_bytes]))+
                                               squ(abs(find[i]-current[i-1-width_bytes]));
                                     }
