@@ -36,6 +36,20 @@
 #define my_cmp(pat, ptr) strncmp(pat,(const char*)ptr,sizeof(pat))
 #define len(Array) (sizeof(Array)/sizeof(Array[0]))
 
+#define abs(x) ((x)>0?(x):-(x))
+#define squ(x) ((x)*(x))
+#define round(x) (x>1600?1600:(x))
+#define max(x,y) ((x)>(y)?(x):(y))
+uint16_t width_bytes;
+uint32_t calculate_diff(uint8_t *find,uint8_t *current,int i){
+    uint32_t r=abs(find[i]+current[i-width_bytes*2]-2*current[i-width_bytes]);
+    ++i;
+    uint32_t g=abs(find[i]+current[i-width_bytes*2]-2*current[i-width_bytes]);
+    ++i;
+    uint32_t b=abs(find[i]+current[i-width_bytes*2]-2*current[i-width_bytes]);
+    ++i;
+    return squ(max(max(r,g),b));
+}
 const uint8_t zeros[16]={};
 inline void print_unicode(uint16_t c){
     if(c>>8){
@@ -244,27 +258,16 @@ outer:;
                 }else{
                     uint8_t* current=file;
                     uint32_t remain_size=e->size;
-                    uint16_t width_bytes=bmp->dibh.width+((bmp->dibh.width)&3);
+                    width_bytes=bmp->dibh.width+((bmp->dibh.width)&3);
                     int cnt=16;
                     while(remain_size>fs->bytes_per_sector){
                         write(recov_file,current,fs->bytes_per_sector);
                         remain_size-=fs->bytes_per_sector;
                         current+=fs->bytes_per_sector;
-                        (void)width_bytes;
                         if(--cnt<0){
                             uint32_t diff=0;
-#define abs(x) ((x)>0?(x):-(x))
-#define squ(x) ((x)*(x))
-#define round(x) (x>1600?1600:(x))
-#define max(x,y) ((x)>(y)?(x):(y))
-                            for(int i=0;i<bmp->dibh.width*3;){
-                                uint32_t r=abs(current[i]+current[i-width_bytes*2]-2*current[i-width_bytes]);
-                                ++i;
-                                uint32_t g=abs(current[i]+current[i-width_bytes*2]-2*current[i-width_bytes]);
-                                ++i;
-                                uint32_t b=abs(current[i]+current[i-width_bytes*2]-2*current[i-width_bytes]);
-                                ++i;
-                                diff+=squ(max(max(r,g),b));
+                            for(int i=0;i<bmp->dibh.width*3;i+=3){
+                                diff+=calculate_diff(current,current,i);
                             }
                             printf("(%d)%d\n",cnt,diff/bmp->dibh.width);
                             if(diff/bmp->dibh.width>60000){
