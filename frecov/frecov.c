@@ -242,6 +242,7 @@ outer:;
                 }
                 puts(file_name);
                 close(recov_file);
+                /*
                 int pid=fork();
                 if(pid==0){
                     char *argv[3]={"/usr/bin/sha1sum",full_file_name,NULL},*envp[1]={NULL};
@@ -249,6 +250,7 @@ outer:;
                 }else if(pid<0){
                     fprintf(stderr,"Can't fork a thread to calculate sha1sum!\nSee %s:%d for more info.\n",__FILE__,__LINE__);
                 }
+                */
             }
             memset(file_name,0,idx);
         };
