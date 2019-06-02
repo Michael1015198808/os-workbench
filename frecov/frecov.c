@@ -270,7 +270,7 @@ outer:;
                                 diff+=calculate_diff(current,current,i);
                             }
                             printf("(%d)%d\n",cnt,diff/bmp->dibh.width);
-                            if(diff/bmp->dibh.width>300000){
+                            if(diff/bmp->dibh.width>200000){
                                 uint8_t *find=(uint8_t*)(uintptr_t)(disk+
                                             ( fs->sectors_reserved+
                                             fs->fat_cnt*sector_per_fat(fs)+
