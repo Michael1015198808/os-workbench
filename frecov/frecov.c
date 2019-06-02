@@ -117,11 +117,11 @@ int main(int argc, char *argv[]) {
     entry_t *e=(entry_t*)(uintptr_t)(disk+
                 ( fs->sectors_reserved+
                   fs->fat_cnt*sector_per_fat(fs)+
-                  (fs->start_cluster-2)*fs->sectors_per_cluster )
+                  (fs->start_cluster-2)*fs->sectors_per_cluster )*1LL
                     *fs->bytes_per_sector);
     entry_t *end=(entry_t*)(uintptr_t)(
                 disk+
-                fs->sectors_cnt_high*
+                fs->sectors_cnt_high*1LL*
                 fs->bytes_per_sector);
     void *begin=((void*)e)-(2*fs->sectors_per_cluster*fs->bytes_per_sector);
     //printf("%llx\n",1LL*(begin-disk));
