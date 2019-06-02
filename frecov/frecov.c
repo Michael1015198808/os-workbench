@@ -262,7 +262,7 @@ outer:;
                                             *fs->bytes_per_sector);
                             while(find!=(uint8_t*)end){
                                 diff=0;
-                                for(int i=0;i<3*bmp->dibh.width;++i){
+                                for(int i=0;i<bmp->dibh.width;++i){
                                     diff+=abs(find[i]-current[i-width_bytes]);
                                 }
                                 if(diff/bmp->dibh.width<20){
