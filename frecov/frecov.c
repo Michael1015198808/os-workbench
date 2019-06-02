@@ -256,7 +256,9 @@ outer:;
 #define abs(x) ((x)>0?(x):-(x))
 #define squ(x) ((x)*(x))
 #define round(x) (x>1600?1600:(x))
-                            for(int i=0;i<bmp->dibh.width*3;i+=4){
+                            for(int i=0;i<bmp->dibh.width*3;++i){
+                                if(cnt==190)
+                                printf("%x,%x",current[i],current[i-width_bytes]);
                                 diff+=round(squ(abs(current[i]+current[i-width_bytes*2]-2*current[i-width_bytes])))+
                                       round(squ(abs(current[i]-current[i+1-width_bytes])))+
                                       round(squ(abs(current[i]-current[i-1-width_bytes])));
