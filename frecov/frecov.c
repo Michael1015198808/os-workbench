@@ -123,7 +123,7 @@ int main(int argc, char *argv[]) {
                 fs->sectors_cnt_high*
                 fs->bytes_per_sector);
     void *begin=((void*)e)-(2*fs->sectors_per_cluster*fs->bytes_per_sector);
-    printf("%llx\n",1LL*(begin-disk));
+    //printf("%llx\n",1LL*(begin-disk));
     while(e<end){
         if(e->attr==0xf){
             long_entry_t *tmp=(void*)e;
@@ -132,10 +132,10 @@ int main(int argc, char *argv[]) {
             while(tmp->mark==0xf){
                 ++tmp;
             }
-            printf("tmp:%p\n",tmp);
+            //printf("tmp:%p\n",tmp);
             entry_t *old_e=e;
             e=(entry_t*)tmp;
-            printf("e:%p\n",e);
+            //printf("e:%p\n",e);
             do{
                 --tmp;
 #define print_file_name \
@@ -160,11 +160,11 @@ int main(int argc, char *argv[]) {
             }while((void*)tmp!=(void*)old_e);
 outer:;
             puts(file_name);
-            printf("e:%p\n",e);
-            printf("high:%x low:%x\n",e->clus_high,e->clus_low);
-            printf("%llx %x\n",((e->clus_high*1LL<<32)+e->clus_low),fs->bytes_per_sector);
+            //printf("e:%p\n",e);
+            //printf("high:%x low:%x\n",e->clus_high,e->clus_low);
+            //printf("%llx %x\n",((e->clus_high*1LL<<32)+e->clus_low),fs->bytes_per_sector);
             uint8_t* file=begin+((e->clus_high*1LL<<32)+e->clus_low)*fs->bytes_per_sector;
-            printf("%llx",((uintptr_t)file-(uintptr_t)fs)+0xbLL);
+            //printf("%llx",((uintptr_t)file-(uintptr_t)fs)+0xbLL);
             for(uint32_t i=0;i<e->size;++i){
                 putchar(file[i]);
             }
