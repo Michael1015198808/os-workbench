@@ -275,7 +275,9 @@ outer:;
                             for(int i=0;i<bmp->dibh.width*3;i+=3){
                                 diff+=calculate_diff(current,current,i);
                             }
+#ifdef LOCAL
                             printf("(%d)%d\n",cnt,diff/bmp->dibh.width);
+#endif
                             //if(diff/bmp->dibh.width>450000){
                             if(cnt==-190){
                                 uint8_t *find=(uint8_t*)(uintptr_t)(disk+
@@ -297,7 +299,9 @@ outer:;
                                     }
                                     find+=fs->bytes_per_sector;
                                 }
+#ifdef LOCAL
                                 printf("find %d\n",best_val);
+#endif
                                 current=best_part;
                                 cnt=16;
                             }
