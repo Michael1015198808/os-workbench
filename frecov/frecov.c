@@ -38,15 +38,18 @@
 
 #define abs(x) ((x)>0?(x):-(x))
 #define squ(x) ((x)*(x))
-#define round(x) (x>1600?1600:(x))
+#define round(x,y) ((x)>(y)?(y):(x))
 #define max(x,y) ((x)>(y)?(x):(y))
 uint16_t width_bytes;
 uint32_t calculate_diff(uint8_t *find,uint8_t *current,int i){
-    uint32_t r=squ(abs(find[i]+current[i-width_bytes*2]-2*current[i-width_bytes]));
+    uint32_t r=round(squ(abs(
+                    find[i]+current[i-width_bytes*2]-2*current[i-width_bytes])),2500);
     ++i;
-    uint32_t g=squ(abs(find[i]+current[i-width_bytes*2]-2*current[i-width_bytes]));
+    uint32_t g=round(squ(abs(
+                    find[i]+current[i-width_bytes*2]-2*current[i-width_bytes])),2500);
     ++i;
-    uint32_t b=squ(abs(find[i]+current[i-width_bytes*2]-2*current[i-width_bytes]));
+    uint32_t b=round(squ(abs(
+                    find[i]+current[i-width_bytes*2]-2*current[i-width_bytes])),2500);
     ++i;
     return r+g+b+3*max(max(r,g),b);
 }
