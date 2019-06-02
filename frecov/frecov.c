@@ -179,6 +179,7 @@ int main(int argc, char *argv[]) {
                 print_file_name;
 #undef NAME
             }while((void*)tmp!=(void*)old_e);
+            assert(0);
 outer:;
             printf("%2x ",e->info[0]);
             if( (e->info[0]!=0xe5)&&
