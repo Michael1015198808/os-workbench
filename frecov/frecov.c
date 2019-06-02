@@ -131,7 +131,7 @@ int main(int argc, char *argv[]) {
                 ++tmp;
             }
             entry_t *old_e=e;
-            e=(entry_t*)tmp;
+            //e=(entry_t*)tmp;
             do{
                 --tmp;
 #define print_file_name \
