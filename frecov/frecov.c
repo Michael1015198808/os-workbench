@@ -170,10 +170,10 @@ outer:;
             int recov_file = open(full_file_name, O_WRONLY | O_CREAT, 0777);
             write(recov_file,file,e->size);
             close(recov_file);
-            for(uint32_t i=0;i<e->size;++i){
+            /*for(uint32_t i=0;i<e->size;++i){
                 putchar(file[i]);
             }
-            if(e->size>0)putchar('\n');
+            if(e->size>0)putchar('\n');*/
         };
         ++e;
     }
