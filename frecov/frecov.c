@@ -42,14 +42,17 @@
 #define max(x,y) ((x)>(y)?(x):(y))
 uint16_t width_bytes;
 uint32_t calculate_diff(uint8_t *find,uint8_t *current,int i){
-    uint32_t r=round(squ(abs(
-                    find[i]+current[i-width_bytes*2]-2*current[i-width_bytes])),64000);
+    uint32_t r=round(
+            squ(abs(find[i]+current[i  -width_bytes*2]-2*current[i  -width_bytes]))+
+            squ(abs(find[i]+current[i-6-width_bytes*2]-2*current[i-3-width_bytes])),125000);
     ++i;
-    uint32_t g=round(squ(abs(
-                    find[i]+current[i-width_bytes*2]-2*current[i-width_bytes])),64000);
+    uint32_t g=round(
+            squ(abs(find[i]+current[i  -width_bytes*2]-2*current[i  -width_bytes]))+
+            squ(abs(find[i]+current[i-6-width_bytes*2]-2*current[i-3-width_bytes])),125000);
     ++i;
-    uint32_t b=round(squ(abs(
-                    find[i]+current[i-width_bytes*2]-2*current[i-width_bytes])),64000);
+    uint32_t b=round(
+            squ(abs(find[i]+current[i  -width_bytes*2]-2*current[i  -width_bytes]))+
+            squ(abs(find[i]+current[i-6-width_bytes*2]-2*current[i-3-width_bytes])),125000);
     ++i;
     return r+g+b+3*max(max(r,g),b);
 }
