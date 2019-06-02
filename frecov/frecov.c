@@ -264,7 +264,7 @@ outer:;
                                 ++i;
                                 uint32_t b=abs(current[i]+current[i-width_bytes*2]-2*current[i-width_bytes]);
                                 ++i;
-                                diff+=max(max(r,g),b);
+                                diff+=squ(max(max(r,g),b));
                             }
                             printf("(%d)%d\n",cnt,diff/bmp->dibh.width);
                             if(diff/bmp->dibh.width>37500){
