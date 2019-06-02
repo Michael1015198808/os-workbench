@@ -178,6 +178,7 @@ outer:;
         };
         ++e;
     }
+    printf("%p\n%p\n",e,end);
     close(fd);
     return 0;
 }
