@@ -259,7 +259,7 @@ outer:;
                                 diff+=squ(abs(current[i]-current[i-width_bytes]));
                             }
                             printf("(%d)%d\n",cnt,diff/bmp->dibh.width);
-                            if(diff/bmp->dibh.width>10000){
+                            if(diff/bmp->dibh.width>12000){
                                 while(remain_size--){
                                     write(recov_file,zeros,1);
                                 }
