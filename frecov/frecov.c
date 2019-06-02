@@ -126,7 +126,7 @@ int color_test(bmp_t* bmp){
         for(int j=0;j<bmp->dibh.width;++j){
             for(int k=0;k<3;++k){
                 if(*current!=pixel[k]){
-                    if((((uintptr_t)current)&(fs->bytes_per_sector-1))<8){
+                    if((((uintptr_t)current)&(fs->bytes_per_sector-1))<4){
                         return 1;
                     }else{
                         return 0;
