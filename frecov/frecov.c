@@ -18,6 +18,7 @@
 #include <time.h>
 #include <unistd.h>
 
+#define SIG_TRAP asm volatile("int $3")
 #define offset_of(member,struct) ((uintptr_t)&(((struct*)0)->member))
 #define pstruct struct __attribute__((packed))
 #define my_cmp(pat, ptr) strncmp(pat,(const char*)ptr,sizeof(pat))
@@ -181,11 +182,18 @@ int main(int argc, char *argv[]) {
             }while((void*)tmp!=(void*)old_e);
 outer:;
             if(!strncmp(file_name+strlen(file_name)-4,".bmp",4)){
+                if(e->clus_high){
+                    SIG_TRAP;
+                }
                 uint8_t* file=begin+((e->clus_high*1LL<<32)+e->clus_low)*fs->bytes_per_sector;
+                int recov_file = open(full_file_name, O_WRONLY | O_CREAT, 0777);
                 if(color_test((bmp_t*)file)){
+                    bmp_t* bmp=(bmp_t*)file;
                     //homo color
-                    printf("Homo!\n");
-                    while(1);
+                    write(recov_file,file,bmp->bfh.offset);
+                    for(int i=0;i<bmp->dibh.size;++i){
+                        write(recov_file,bmp->info+bmp->bfh.offset,4);
+                    }
                 }else{
                     printf("0x%08llx: ",1LL*(((void*)e)-disk));
                     puts(file_name);
@@ -193,14 +201,13 @@ outer:;
                     //printf("high:%x low:%x\n",e->clus_high,e->clus_low);
                     //printf("%llx %x\n",((e->clus_high*1LL<<32)+e->clus_low),fs->bytes_per_sector);
                     //printf("%llx",((uintptr_t)file-(uintptr_t)fs)+0xbLL);
-                    int recov_file = open(full_file_name, O_WRONLY | O_CREAT, 0777);
                     write(recov_file,file,e->size);
-                    close(recov_file);
                     /*for(uint32_t i=0;i<e->size;++i){
                         putchar(file[i]);
                     }
                     if(e->size>0)putchar('\n');*/
                 }
+                close(recov_file);
             }
         };
         ++e;
