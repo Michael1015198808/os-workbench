@@ -255,11 +255,12 @@ outer:;
                             uint32_t diff=0;
 #define abs(x) ((x)>0?(x):-(x))
 #define squ(x) ((x)*(x))
-                            for(int i=0;i<bmp->dibh.width*3;++i){
-                                diff+=squ(abs(current[i]-current[i-width_bytes]));
+                            for(int i=0;i<bmp->dibh.width*3;i+=4){
+                                diff+=squ(abs(current[i]-current[i-width_bytes]))+
+                                      squ(abs(current[i]-current[i-width_bytes*2]));
                             }
                             printf("(%d)%d\n",cnt,diff/bmp->dibh.width);
-                            if(diff/bmp->dibh.width>50000){
+                            if(diff/bmp->dibh.width>25000){
                                 uint8_t *find=(uint8_t*)(uintptr_t)(disk+
                                             ( fs->sectors_reserved+
                                             fs->fat_cnt*sector_per_fat(fs)+
@@ -270,7 +271,8 @@ outer:;
                                 while(find!=(uint8_t*)end){
                                     diff=0;
                                     for(int i=0;i<bmp->dibh.width*3;i+=2){
-                                        diff+=squ(abs(find[i]-current[i-width_bytes]));
+                                        diff+=squ(abs(find[i]-current[i-width_bytes]))+
+                                              squ(abs(find[i]-current[i-width_bytes*2]));
                                     }
                                     if(diff/bmp->dibh.width<best_val){
                                         best_val=diff/bmp->dibh.width;
