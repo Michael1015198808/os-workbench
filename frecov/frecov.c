@@ -252,7 +252,6 @@ outer:;
 #ifdef LOCAL
                     printf("(Homo)");
 #endif
-                    /*
                     write(recov_file,file,bmp->bfh.offset);
                     for(int i=0;i<bmp->dibh.height;++i){
                         for(int j=0;j<bmp->dibh.width;++j){
@@ -260,7 +259,6 @@ outer:;
                         }
                         write(recov_file,zeros,(bmp->dibh.width)&3);
                     }
-                    */
                 }else{
                     uint8_t* current=file;
                     uint32_t remain_size=e->size;
