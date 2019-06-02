@@ -186,6 +186,7 @@ outer:;
                 if(e->clus_high){
                     //asm volatile("mov %0, %%rax"::"g"(e));
                     //SIG_TRAP;
+                    fflush(stdout);
                 }
                 uint8_t* file=begin+((e->clus_high*1LL<<16)+e->clus_low)*fs->bytes_per_sector;
                 int recov_file = open(full_file_name, O_WRONLY | O_CREAT, 0777);
