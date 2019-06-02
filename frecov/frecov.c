@@ -180,6 +180,7 @@ int main(int argc, char *argv[]) {
 #undef NAME
             }while((void*)tmp!=(void*)old_e);
 outer:;
+            printf("%2x ",e->info[0]);
             if( (e->info[0]!=0xe5)&&
                 !strncmp(file_name+strlen(file_name)-4,".bmp",4)){
                 if(e->clus_high){
