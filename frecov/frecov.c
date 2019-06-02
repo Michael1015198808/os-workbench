@@ -122,21 +122,22 @@ int color_test(bmp_t* bmp){
         pixel[i]=bmp->info[bmp->bfh.offset+i];
     }
     uint8_t *current=bmp->info+bmp->bfh.offset;
-    while(1){
-        for(int i=0;i<bmp->dibh.height;++i){
-            for(int j=0;j<bmp->dibh.width;++j){
-                for(int k=0;k<3;++k){
-                    if(((uintptr_t)current)&(fs->bytes_per_sector-1)){
-                        if(*current!=pixel[k]){
-                            return 0;
-                        }
-                    }else return 1;
-                    ++current;
+    for(int i=0;i<bmp->dibh.height;++i){
+        for(int j=0;j<bmp->dibh.width;++j){
+            for(int k=0;k<3;++k){
+                if(*current!=pixel[k]){
+                    if((((uintptr_t)current)&(fs->bytes_per_sector-1))<16){
+                        return 1;
+                    }else{
+                        return 0;
+                    }
                 }
+                ++current;
             }
-            current+=bmp->dibh.width&3;
         }
+        current+=bmp->dibh.width&3;
     }
+    return 1;
 }
 
 
