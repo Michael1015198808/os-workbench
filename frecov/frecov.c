@@ -28,6 +28,10 @@ inline void print_unicode(uint16_t c){
     }
     putchar(c);
 }
+int finish(void){
+    asm volatile("int $3");
+    return 0;
+}
 typedef union long_entry{
     uint8_t info[0];
     pstruct{
@@ -125,7 +129,7 @@ int main(int argc, char *argv[]) {
                 fs->bytes_per_sector);
     void *begin=((void*)e)-(2*fs->sectors_per_cluster*fs->bytes_per_sector);
     //printf("%llx\n",1LL*(begin-disk));
-    while((uintptr_t)e!=(uintptr_t)end){
+    while((uintptr_t)e!=(uintptr_t)end||finish()){
         if(e->attr==0xf){
             long_entry_t *tmp=(void*)e;
             int idx=0;
