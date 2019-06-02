@@ -21,6 +21,7 @@
 #define offset_of(member,struct) ((uintptr_t)&(((struct*)0)->member))
 #define pstruct struct __attribute__((packed))
 #define my_cmp(pat, ptr) strncmp(pat,(const char*)ptr,sizeof(pat))
+#define len(Array) (sizeof(Array)/sizeof(Array[0]))
 inline void print_unicode(uint16_t c){
     if(c>>8){
         putchar(c>>8);
@@ -43,8 +44,8 @@ _Static_assert(sizeof(long_entry_t)==0x20,"Size of long entry is wrong!");
 typedef union entry{
     uint8_t info[0];
     pstruct{
-        char file_name[8];
-        char suffix[3];
+        uint16_t file_name[4];
+        uint8_t suffix[3];
         uint8_t attr,unused,creat;
         uint16_t creat_time,creat_date,last_access,
                  clus_high,last_edit_time,last_edit_date,clus_low;
@@ -101,7 +102,11 @@ uint32_t sector_per_fat(const bpb_t *p){
 }
 
 int main(int argc, char *argv[]) {
-    int fd = open("./test.img", O_RDONLY);
+    if(argc!=2){
+        fprintf(stderr,"Usage: frecov [file]\n");
+        return -1;
+    }
+    int fd = open(argv[1], O_RDONLY);
     struct stat st;
     fstat(fd, &st);
     const bpb_t *fs = 0xb+mmap(NULL, st.st_size, PROT_READ , MAP_SHARED, fd, 0);
@@ -118,10 +123,40 @@ int main(int argc, char *argv[]) {
                 fs->bytes_per_sector);
 
     while(e<end){
-        if(e->suffix){
-            for(int i=0;i<4;++i){
-                print_unicode(e->file_name[i]);
+        long_entry_t *tmp=(long_entry_t*)e;
+        while(e->attr==0xf){
+            ++e;
+        }
+        if(e->attr==0xf){
+            int idx=0;
+            char file_name[50];
+            while(tmp->mark==0xf){
+                ++tmp;
             }
+            do{
+                --tmp;
+#define print_file_name \
+                do{ \
+                    for(int i=0;i<len(tmp->NAME);++i){ \
+                        file_name[idx++]=tmp->NAME[i]; \
+                        if(tmp->NAME[i]==EOF){ \
+                            file_name[idx-1]='\0'; \
+                            goto outer; \
+                        } \
+                    } \
+                }while(0)
+#define NAME name1
+                print_file_name;
+#undef NAME
+#define NAME name2
+                print_file_name;
+#undef NAME
+#define NAME name3
+                print_file_name;
+#undef NAME
+            }while((void*)tmp!=(void*)e);
+outer:;
+            puts(file_name);
         };
         ++e;
     }
