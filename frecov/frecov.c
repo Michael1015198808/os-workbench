@@ -23,6 +23,7 @@
 #define pstruct struct __attribute__((packed))
 #define my_cmp(pat, ptr) strncmp(pat,(const char*)ptr,sizeof(pat))
 #define len(Array) (sizeof(Array)/sizeof(Array[0]))
+const uint8_t zeros[8]={};
 inline void print_unicode(uint16_t c){
     if(c>>8){
         putchar(c>>8);
@@ -206,8 +207,11 @@ outer:;
                     bmp_t* bmp=(bmp_t*)file;
                     //homo color
                     write(recov_file,file,bmp->bfh.offset);
-                    for(int i=0;i<bmp->dibh.size;++i){
-                        write(recov_file,&bmp->info[bmp->bfh.offset],3);
+                    for(int i=0;i<bmp->dibh.height;++i){
+                        for(int j=0;j<bmp->dibh.width;++j){
+                            write(recov_file,&bmp->info[bmp->bfh.offset],3);
+                        }
+                        write(recov_file,zeros,2);
                     }
                 }else{
                     //printf("e:%p\n",e);
