@@ -133,7 +133,7 @@ int main(int argc, char *argv[]) {
     int fd = open(argv[1], O_RDWR);
     struct stat st;
     fstat(fd, &st);
-    disk = mmap(NULL, st.st_size, PROT_READ , MAP_SHARED, fd, 0);
+    disk = mmap(NULL, st.st_size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
     const bpb_t *const fs=disk+0xb;
 
     entry_t *e=(entry_t*)(uintptr_t)(disk+
