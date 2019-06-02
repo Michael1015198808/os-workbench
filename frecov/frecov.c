@@ -161,6 +161,7 @@ int main(int argc, char *argv[]) {
             }while((void*)tmp!=(void*)old_e);
 outer:;
             if(strncmp(file_name+strlen(file_name)-4,".bmp",4))break;
+            printf("%llx: ",1LL*(((void*)e)-disk));
             puts(file_name);
             //printf("e:%p\n",e);
             //printf("high:%x low:%x\n",e->clus_high,e->clus_low);
@@ -177,7 +178,6 @@ outer:;
         };
         ++e;
     }
-    printf("%p\n",end);
     close(fd);
     return 0;
 }
