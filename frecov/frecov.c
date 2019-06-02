@@ -170,21 +170,15 @@ int main(int argc, char *argv[]) {
                 ((fs->sectors_cnt_high*1LL)+fs->sectors_cnt_low)*
                 fs->bytes_per_sector);
     void *begin=((void*)e)-(2*fs->sectors_per_cluster*fs->bytes_per_sector);
-    //printf("%llx\n",1LL*(begin-disk));
     while(e!=end){
-        if(e==(entry_t*)0x7ffff7bcf000){
-            asm volatile("int $3");// Condition Breakpoint in gdb is too slow
-        }
         if(e->attr==0xf){
             long_entry_t *tmp=(void*)e;
             int idx=0;
             while(tmp->mark==0xf){
                 ++tmp;
             }
-            //printf("tmp:%p\n",tmp);
             entry_t *old_e=e;
             e=(entry_t*)tmp;
-            //printf("e:%p\n",e);
             char* file_name=full_file_name+strlen(RECOV_DIREC);
             do{
                 --tmp;
@@ -209,7 +203,6 @@ int main(int argc, char *argv[]) {
 #undef NAME
             }while((void*)tmp!=(void*)old_e);
 outer:;
-            //printf("%2x ",e->info[0]);
             if( (e->info[0]!=0xe5)&&
                 (e->size!=0)&&
                 !(strncmp(file_name+strlen(file_name)-4,".bmp",4))&&
@@ -244,17 +237,15 @@ outer:;
                         write(recov_file,zeros,(bmp->dibh.width)&3);
                     }
                 }else{
-                    //printf("e:%p\n",e);
-                    //printf("high:%x low:%x\n",e->clus_high,e->clus_low);
-                    //printf("%llx %x\n",((e->clus_high*1LL<<32)+e->clus_low),fs->bytes_per_sector);
-                    //printf("%llx",((uintptr_t)file-(uintptr_t)fs)+0xbLL);
                     write(recov_file,file,e->size);
                     /*for(uint32_t i=0;i<e->size;++i){
                         putchar(file[i]);
                     }
                     if(e->size>0)putchar('\n');*/
                 }
+#ifdef LOCAL
                 puts(file_name);
+#endif
                 close(recov_file);
 #ifndef LOCAL
                 int pid=fork();
@@ -270,7 +261,6 @@ outer:;
         };
         ++e;
     }
-    printf("%p\n%p\n",e,end);
     close(fd);
     return 0;
 }
