@@ -161,6 +161,7 @@ outer:;
             printf("e:%p\n",e);
             printf("high:%x low:%x\n",e->clus_high,e->clus_low);
             uint8_t* file=begin+((e->clus_high*1LL<<32)+e->clus_low)*fs->bytes_per_sector;
+            printf("%llx",((uintptr_t)file-(uintptr_t)fs)+0xbLL);
             for(uint32_t i=0;i<e->size;++i){
                 putchar(file[i]);
             }
