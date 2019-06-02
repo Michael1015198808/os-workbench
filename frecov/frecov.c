@@ -28,7 +28,7 @@
 #include <time.h>
 #include <unistd.h>
 
-//#define LOCAL
+#define LOCAL
 #define HOMOCOLOR_HYPOTHESIS
 #define SIG_TRAP asm volatile("int $3")
 #define offset_of(member,struct) ((uintptr_t)&(((struct*)0)->member))
@@ -247,15 +247,29 @@ outer:;
                         write(recov_file,current,fs->bytes_per_sector);
                         current+=fs->bytes_per_sector;
                         (void)width_bytes;
-                        /*
                         int diff=0;
-                        for(int i=0;i<bmp->dibh.width;++i){
 #define abs(x) ((x)>0?(x):-(x))
+                        for(int i=0;i<bmp->dibh.width;++i){
                             diff+=abs(current[i]-current[i-width_bytes]);
-                            printf("%d\n",diff/bmp->dibh.width);
-                            if(diff/bmp->dibh.width);
                         }
-                        */
+                        if(diff/bmp->dibh.width>16){
+                            uint8_t *find=(uint8_t*)(uintptr_t)(disk+
+                                        ( fs->sectors_reserved+
+                                        fs->fat_cnt*sector_per_fat(fs)+
+                                        (fs->start_cluster-2)*fs->sectors_per_cluster )*1LL
+                                            *fs->bytes_per_sector);
+                            while(find!=(uint8_t*)end){
+                                diff=0;
+                                for(int i=0;i<bmp->dibh.width;++i){
+                                    diff+=abs(find[i]-current[i-width_bytes]);
+                                }
+                                if(diff/bmp->dibh.width<5){
+                                    current=find;
+                                    break;
+                                }
+                                find+=fs->bytes_per_sector;
+                            }
+                        }
                         remain_size-=fs->bytes_per_sector;
                     }
                     write(recov_file,current,remain_size);
