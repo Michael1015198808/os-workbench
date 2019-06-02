@@ -123,11 +123,8 @@ int main(int argc, char *argv[]) {
                 fs->bytes_per_sector);
 
     while(e<end){
-        long_entry_t *tmp=(long_entry_t*)e;
-        while(e->attr==0xf){
-            ++e;
-        }
         if(e->attr==0xf){
+            long_entry_t *tmp=(void*)e;
             int idx=0;
             char file_name[50];
             while(tmp->mark==0xf){
