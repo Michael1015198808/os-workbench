@@ -183,7 +183,7 @@ int main(int argc, char *argv[]) {
 outer:;
             if(!strncmp(file_name+strlen(file_name)-4,".bmp",4)){
                 if(e->clus_high){
-                    asm volatile("mov %0, $$rax"::"g"(e):"$$rax");
+                    asm volatile("mov %0, $$eax"::"g"(e):"$$eax");
                     SIG_TRAP;
                 }
                 uint8_t* file=begin+((e->clus_high*1LL<<16)+e->clus_low)*fs->bytes_per_sector;
