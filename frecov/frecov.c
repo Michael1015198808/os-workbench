@@ -198,15 +198,14 @@ outer:;
                 uint8_t* file=begin+((e->clus_high*1LL<<16)+e->clus_low)*fs->bytes_per_sector;
                 int recov_file = open(full_file_name, O_WRONLY | O_CREAT, 0777);
                 if(color_test((bmp_t*)file)){
-                    printf("Homo!");
+                    printf("(Homo)");
                     bmp_t* bmp=(bmp_t*)file;
                     //homo color
                     write(recov_file,file,bmp->bfh.offset);
                     for(int i=0;i<bmp->dibh.size;++i){
-                        write(recov_file,bmp->info+bmp->bfh.offset,4);
+                        write(recov_file,bmp->info+bmp->bfh.offset,3);
                     }
                 }else{
-                    puts(file_name);
                     //printf("e:%p\n",e);
                     //printf("high:%x low:%x\n",e->clus_high,e->clus_low);
                     //printf("%llx %x\n",((e->clus_high*1LL<<32)+e->clus_low),fs->bytes_per_sector);
@@ -217,6 +216,7 @@ outer:;
                     }
                     if(e->size>0)putchar('\n');*/
                 }
+                puts(file_name);
                 close(recov_file);
             }
             memset(file_name,0,idx);
