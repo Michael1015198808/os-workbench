@@ -261,9 +261,7 @@ outer:;
                                       squ(abs(current[i]-current[i-1-width_bytes]));
                             }
                             printf("(%d)%d\n",cnt,diff/bmp->dibh.width);
-                            if(diff/bmp->dibh.width>25000){
-                                printf("%llx\n",get_off(current));
-                                return 0;
+                            if(diff/bmp->dibh.width>37500){
                                 uint8_t *find=(uint8_t*)(uintptr_t)(disk+
                                             ( fs->sectors_reserved+
                                             fs->fat_cnt*sector_per_fat(fs)+
