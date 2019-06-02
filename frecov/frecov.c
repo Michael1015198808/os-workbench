@@ -257,7 +257,8 @@ outer:;
 #define squ(x) ((x)*(x))
                             for(int i=0;i<bmp->dibh.width*3;i+=4){
                                 diff+=squ(abs(current[i]-current[i-width_bytes]))+
-                                      squ(abs(current[i]-current[i-width_bytes*2]));
+                                      squ(abs(current[i]-current[i+1-width_bytes]))+
+                                      squ(abs(current[i]-current[i-1-width_bytes]));
                             }
                             printf("(%d)%d\n",cnt,diff/bmp->dibh.width);
                             if(diff/bmp->dibh.width>25000){
@@ -270,9 +271,10 @@ outer:;
                                 uint32_t best_val=-1;
                                 while(find!=(uint8_t*)end){
                                     diff=0;
-                                    for(int i=0;i<bmp->dibh.width*3;i+=2){
+                                    for(int i=0;i<bmp->dibh.width*3;i+=4){
                                         diff+=squ(abs(find[i]-current[i-width_bytes]))+
-                                              squ(abs(find[i]-current[i-width_bytes*2]));
+                                              squ(abs(find[i]-current[i+1-width_bytes]))+
+                                              squ(abs(find[i]-current[i-1-width_bytes]));
                                     }
                                     if(diff/bmp->dibh.width<best_val){
                                         best_val=diff/bmp->dibh.width;
