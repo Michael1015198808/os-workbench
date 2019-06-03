@@ -7,6 +7,8 @@
  *      declare a zeros array to write 00...00 faster.
  *      Macro around Line 200 to print file's name
  *      full_file_name and file_name
+ * 
+ * Tried to fix bmp cross sectors but failed
  */
 #include <assert.h>
 #include <dlfcn.h>
@@ -28,7 +30,7 @@
 #include <time.h>
 #include <unistd.h>
 
-#define LOCAL
+//#define LOCAL
 #define HOMOCOLOR_HYPOTHESIS
 #define SIG_TRAP asm volatile("int $3")
 #define offset_of(member,struct) ((uintptr_t)&(((struct*)0)->member))
@@ -36,26 +38,6 @@
 #define my_cmp(pat, ptr) strncmp(pat,(const char*)ptr,sizeof(pat))
 #define len(Array) (sizeof(Array)/sizeof(Array[0]))
 
-#define abs(x) ((x)>0?(x):-(x))
-#define squ(x) ((x)*(x))
-#define round(x,y) ((x)>(y)?(y):(x))
-#define max(x,y) ((x)>(y)?(x):(y))
-uint16_t width_bytes;
-uint32_t calculate_diff(uint8_t *find,uint8_t *current,int i){
-    uint32_t r=round(
-            squ(abs(find[i]+current[i  -width_bytes*2]-2*current[i  -width_bytes]))+
-            squ(abs(find[i]+current[i-6-width_bytes*2]-2*current[i-3-width_bytes])),150000);
-    ++i;
-    uint32_t g=round(
-            squ(abs(find[i]+current[i  -width_bytes*2]-2*current[i  -width_bytes]))+
-            squ(abs(find[i]+current[i-6-width_bytes*2]-2*current[i-3-width_bytes])),150000);
-    ++i;
-    uint32_t b=round(
-            squ(abs(find[i]+current[i  -width_bytes*2]-2*current[i  -width_bytes]))+
-            squ(abs(find[i]+current[i-6-width_bytes*2]-2*current[i-3-width_bytes])),150000);
-    ++i;
-    return r+g+b+3*max(max(r,g),b);
-}
 const uint8_t zeros[16]={};
 inline void print_unicode(uint16_t c){
     if(c>>8){
