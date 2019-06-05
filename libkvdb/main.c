@@ -6,7 +6,7 @@
     { \
     int ret=(Sentence); \
         if(ret){ \
-            fprintf(stderr,__FILE__ ":%d %s",__LINE__, ##Sentence); \
+            fprintf(stderr,__FILE__ ":%d %s",__LINE__, #Sentence); \
         }; \
     }
 int main(){
