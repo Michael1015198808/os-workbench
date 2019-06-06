@@ -89,11 +89,9 @@ off_t alloc_str(const char* src,int fd){
         write(fd,&cur,sizeof(off_t));
     }
     write(fd,src,len);
-    write(fd,zeros,((4-len)&3));
-    write(fd,zeros,sizeof(off_t));
-    //write(fd,zeros,
-///*align to 4*/(~(len&3)) 
-///*set next=0*/+sizeof(off_t));
+    write(fd,zeros,
+/*align to 4*/((4-len)&3)
+/*set next=0*/+sizeof(off_t));
     return ret;
 }
 
