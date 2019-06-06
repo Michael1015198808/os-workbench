@@ -1,0 +1,25 @@
+.PHONY: test-all test-64 test-32 gdb run lib
+
+BITS := 64
+
+test-all: test-64 test-32 lib
+	@echo "==== TEST 64 bit ===="
+	@LD_LIBRARY_PATH=.. ./$(TEST_FILE)-64
+	@echo "==== TEST 32 bit ===="
+	@LD_LIBRARY_PATH=.. ./$(TEST_FILE)-32
+
+lib:
+	cd .. && make -s all
+
+test-64: $(TEST_FILE)-64 lib
+	gcc -g -I.. -L.. -m64 $(TEST_FILE).c -o $(TEST_FILE)-64 -lkvdb-64
+
+test-32: $(TEST_FILE)-32 lib
+	gcc -g -I.. -L.. -m32 $(TEST_FILE).c -o $(TEST_FILE)-32 -lkvdb-32
+
+gdb: test-$(BITS) lib
+	gdb --init-command=gdbinit ./$(TEST_FILE)-$(BITS)
+
+run: test-$(BITS)
+	LD_LIBRARY_PATH=.. ./$(TEST_FILE)-$(BITS)
+

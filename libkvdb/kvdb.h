@@ -2,7 +2,8 @@
 #define __KVDB_H__
 
 
-struct kvdb {
+struct kvdb{
+    int fd;
 };
 typedef struct kvdb kvdb_t;
 
