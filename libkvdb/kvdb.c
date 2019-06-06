@@ -50,7 +50,6 @@ static int read_db(int fd,off_t off,off_t len,void *dst){
 }
 
 static int write_db(int fd,off_t off,off_t len,void *src){
-    (void)write_db;
     lseek(fd,HEADER_LEN+off,SEEK_SET);
     return write(fd,src,len);
 }
@@ -132,6 +131,8 @@ static inline int _kvdb_put(kvdb_t *db, const char *key, const char *value){
     cur_tab.value_len=strlen(value);
     cur_tab.key=alloc_str(key,db->fd);
     cur_tab.key_len=strlen(key);
+    cur_tab.next=lseek(db->fd,0,SEEK_END);
+    write_db(db->fd,cur_tab.next,sizeof(off_t),zeros);
     write_db(db->fd,cur_off,sizeof(tab),&cur_tab);
     return 0;
 }
