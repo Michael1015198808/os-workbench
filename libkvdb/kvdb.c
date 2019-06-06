@@ -49,11 +49,11 @@ static int read_db(int fd,off_t off,off_t len,void *dst){
     return read(fd,dst,len);
 }
 
-/*static int write_db(int fd,off_t off,off_t len,void *src){
+static int write_db(int fd,off_t off,off_t len,void *src){
     (void)write_db;
     lseek(fd,HEADER_LEN+off,SEEK_SET);
     return write(fd,src,len);
-}*/
+}
 //Read/Write reserverd area isn't supported by these API
 
 static int string_cmp(const char* key,string str,int fd){
@@ -119,11 +119,16 @@ static inline int _kvdb_put(kvdb_t *db, const char *key, const char *value){
         read_db(db->fd,cur_tab.key,sizeof(string),&key_str);
         if(!string_cmp(key,key_str,db->fd)){
             cur_tab.value=alloc_str(value,db->fd);
+            cur_tab.value_len=strlen(value);
+            write_db(db->fd,cur_off,sizeof(tab),&cur_tab);
             return 0;
         }
     }
     cur_tab.value=alloc_str(value,db->fd);
+    cur_tab.value_len=strlen(value);
     cur_tab.key=alloc_str(key,db->fd);
+    cur_tab.key=strlen(key);
+    write_db(db->fd,cur_off,sizeof(tab),&cur_tab);
     return 0;
 }
 int kvdb_put(kvdb_t *db, const char *key, const char *value){
