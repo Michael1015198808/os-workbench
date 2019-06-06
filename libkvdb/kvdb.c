@@ -28,6 +28,7 @@
     }
 
 #define HEADER_LEN 0x100
+uint8_t zeros[HEADER_LEN]={};
 //Reserved in case for further usage
 #define BLOCK_LEN 0x20
 
@@ -40,22 +41,28 @@ typedef struct tab{
     off_t next,key,key_len,value,value_len;
 }tab;
 
-static void read_db(int fd,off_t off,off_t len,void *dst){
+static int read_db(int fd,off_t off,off_t len,void *dst){
     lseek(fd,HEADER_LEN+off,SEEK_SET);
-    read(fd,dst,len);
+    return read(fd,dst,len);
 }
 
+static int write_db(int fd,off_t off,off_t len,void *src){
+    lseek(fd,HEADER_LEN+off,SEEK_SET);
+    return write(fd,src,len);
+}
+//Read/Write reserverd area isn't supported by these API
+
 static int string_cmp(const char* key,string str,int fd){
-    while(str.next!=-1){
-        int ret;
-        ret=strncmp(str.info,key,BLOCK_LEN);
+    while(str.next!=0){
+        int ret=strncmp(key,str.info,BLOCK_LEN);
         if(ret)return ret;
+        key+=BLOCK_LEN;
         read_db(fd,str.next,sizeof(string),&str);
     }
-    return strncmp(str.info,key,BLOCK_LEN);
+    return strncmp(key,str.info,BLOCK_LEN);
 }
 static void string_cpy(char* dst,string str,int fd){
-    while(str.next!=-1){
+    while(str.next!=0){
         strncpy(dst,str.info,BLOCK_LEN);
         dst+=BLOCK_LEN;
         read_db(fd,str.next,sizeof(string),&str);
@@ -63,62 +70,73 @@ static void string_cpy(char* dst,string str,int fd){
     strcpy(dst,str.info);
 }
 
+static off_t alloc_block(void){
+    return 0;
+}
+
+
+#define SET_VALUE (1<<0)
+#define SET_KEY   (1<<1)
+#define set_value(...) 
+off_t alloc_str(const char* src,int fd){
+    off_t ret=lseek(fd,0,SEEK_END),cur=ret;
+    size_t len=strlen(src);
+    while(len>0){
+        write(fd,src,BLOCK_LEN);
+        src+=BLOCK_LEN;
+        len-=BLOCK_LEN;
+        cur+=BLOCK_LEN+sizeof(off_t);
+        write(fd,&cur,sizeof(off_t));
+    }
+    return ret;
+}
+
 int kvdb_open(kvdb_t *db, const char *filename){
     db->fd=open(filename,O_RDWR|O_CREAT,0777);
-    return db->fd>=0;
+    if(db->fd<0)return db->fd;
+    flock(db->fd,LOCK_EX);
+    if(lseek(db->fd,0,SEEK_END)<HEADER_LEN){
+        //Database initialization
+        lseek(db->fd,0,SEEK_SET);
+        write(db->fd,zeros,HEADER_LEN);
+        write(db->fd,zeros,sizeof(tab));
+    }
+    flock(db->fd,LOCK_UN);
+    return 0;
 }
 
 int kvdb_close(kvdb_t *db){
     return close(db->fd);
 }
-static off_t alloc_block(void){
-    return 0;
-}
-static void set_value(int fd,tab t,const char* value){
-    off_t len=strlen(value);
-    string val_str;
-    if(t.value!=-1){
-        read_db(fd,t.value,sizeof(string),&val_str);
-    }else{
-        //Alloc a string
-    }
-    while(len>0){
-        strncpy(val_str.info,value,BLOCK_LEN);
-        value+=BLOCK_LEN;
-        len-=BLOCK_LEN;
-        if(val_str.next==-1){
-            //Alloc a string
-        }else{
-            read_db(fd, val_str.next, sizeof(string), &val_str);
-        }
-    }
-    return;
-}
 
 static inline int _kvdb_put(kvdb_t *db, const char *key, const char *value){
     tab cur_tab={.next=0};
-    do{
-        read_db(db->fd,cur_tab.next,sizeof(tab),&cur_tab);
+    off_t cur_off=0;(void)cur_off;
+    while(  cur_off=cur_tab.next,
+            read_db(db->fd,cur_tab.next,sizeof(tab),&cur_tab),
+            cur_tab.next!=0){
         string key_str;
         read_db(db->fd,cur_tab.key,sizeof(string),&key_str);
         if(!string_cmp(key,key_str,db->fd)){
-            set_value(db->fd,cur_tab,value);
+            cur_tab.value=alloc_str(value,db->fd);
             return 0;
         }
-    }while(cur_tab.next!=-1);
-    set_value(db->fd,cur_tab,value);
+    }
+    cur_tab.value=alloc_str(value,db->fd);
+    cur_tab.key=alloc_str(key,db->fd);
     return 0;
 }
 int kvdb_put(kvdb_t *db, const char *key, const char *value){
     flock(db->fd,LOCK_EX);
-    return _kvdb_put(db,key,value);
+    int ret=_kvdb_put(db,key,value);
     flock(db->fd,LOCK_UN);
+    return ret;
 }
 
 static inline char *_kvdb_get(kvdb_t *db, const char *key){
     tab cur_tab={.next=0};
-    do{
-        read_db(db->fd,cur_tab.next,sizeof(tab),&cur_tab);
+    while(read_db(db->fd,cur_tab.next,sizeof(tab),&cur_tab),
+            cur_tab.next!=0){
         string key_str;
         read_db(db->fd,cur_tab.key,sizeof(string),&key_str);
         if(!string_cmp(key,key_str,db->fd)){
@@ -128,7 +146,7 @@ static inline char *_kvdb_get(kvdb_t *db, const char *key){
             string_cpy(ret,val_str,db->fd);
             return ret;
         }
-    }while(cur_tab.next!=-1);
+    }
     return NULL;
 }
 char *kvdb_get(kvdb_t *db, const char *key){
