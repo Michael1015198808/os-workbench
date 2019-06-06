@@ -31,7 +31,7 @@
     }
 
 #define HEADER_LEN 0x100
-uint8_t zeros[HEADER_LEN]={};
+uint8_t zeros[HEADER_LEN+16]={};
 //Reserved in case for further usage
 #define BLOCK_LEN 0x20
 
@@ -81,13 +81,17 @@ static void string_cpy(char* dst,string str,int fd){
 off_t alloc_str(const char* src,int fd){
     off_t ret=lseek(fd,0,SEEK_END),cur=ret;
     int len=strlen(src);
-    while(len>0){
+    while(len>BLOCK_LEN){
         write(fd,src,BLOCK_LEN);
         src+=BLOCK_LEN;
         len-=BLOCK_LEN;
         cur+=BLOCK_LEN+sizeof(off_t);
         write(fd,&cur,sizeof(off_t));
     }
+    write(fd,src,len);
+    write(fd,zeros,
+/*align to 4*/(~(len&3)) 
+/*set next=0*/+sizeof(off_t));
     return ret;
 }
 
