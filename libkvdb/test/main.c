@@ -42,18 +42,15 @@
         exit(0); \
       } \
     }while(0)
+void check_puts(char *s){
+    if(s)puts(s);
+}
 
 int main(){
-    int fd=open("test.txt",O_RDWR);
-    Assert(fd>=0);
-    struct stat st;
-    fstat(fd,&st);
-    uint8_t *disk = mmap(NULL, st.st_size+0x10, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
-    puts(disk);
-    while(1){
-        int idx,c;
-        scanf("%d %c",&idx,&c);
-        disk[idx]=c;
-    }
+    kvdb_t *first=malloc(sizeof(kvdb_t));
+    kvdb_open(first, "first.db");
+    check_puts(kvdb_get(first,"username"));
+    kvdb_put(first,"username","Michael Yan");
+    check_puts(kvdb_get(first,"username"));
     return 0;
 }

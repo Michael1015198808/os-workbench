@@ -21,6 +21,9 @@
 
 #include "kvdb.h"
 
+#define log(pat, ...) \
+    printf("%d" pat, __LINE__##__VA_ARGS__)
+
 #define safe_do(Sentence) \
     { \
         if(Sentence) \
@@ -46,10 +49,11 @@ static int read_db(int fd,off_t off,off_t len,void *dst){
     return read(fd,dst,len);
 }
 
-static int write_db(int fd,off_t off,off_t len,void *src){
+/*static int write_db(int fd,off_t off,off_t len,void *src){
+    (void)write_db;
     lseek(fd,HEADER_LEN+off,SEEK_SET);
     return write(fd,src,len);
-}
+}*/
 //Read/Write reserverd area isn't supported by these API
 
 static int string_cmp(const char* key,string str,int fd){
@@ -70,17 +74,13 @@ static void string_cpy(char* dst,string str,int fd){
     strcpy(dst,str.info);
 }
 
-static off_t alloc_block(void){
-    return 0;
-}
-
 
 #define SET_VALUE (1<<0)
 #define SET_KEY   (1<<1)
 #define set_value(...) 
 off_t alloc_str(const char* src,int fd){
     off_t ret=lseek(fd,0,SEEK_END),cur=ret;
-    size_t len=strlen(src);
+    int len=strlen(src);
     while(len>0){
         write(fd,src,BLOCK_LEN);
         src+=BLOCK_LEN;
