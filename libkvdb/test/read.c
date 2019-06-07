@@ -27,9 +27,10 @@ int main(){
     while(1){
         for(int i=0;i<10;++i){
             sprintf(s,"%d",i);
+            printf("%d: ",i);
+            puts(value=kvdb_get(first,s));
+            free(value);
         }
-        puts(value=kvdb_get(first,s));
-        free(value);
     }
     kvdb_close(first);
     return 0;
