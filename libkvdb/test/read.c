@@ -25,7 +25,7 @@ int main(){
     char s[10];
     char *values[10];
     kvdb_t first;
-    kvdb_open(&first,"./first.db");
+    kvdb_open(&first,DB_FILE);
     while(1){
         for(int i=0;i<10;++i){
             sprintf(s,"%d",i);

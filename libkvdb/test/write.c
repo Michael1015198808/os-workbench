@@ -23,7 +23,7 @@
 int main(){
     kvdb_t *first=malloc(sizeof(kvdb_t));
     char s1[100],s2[100];
-    kvdb_open(first, "first.db");
+    kvdb_open(first, DB_FILE);
     while(1){
         scanf("%s",s1);
         scanf("%s",s2);
