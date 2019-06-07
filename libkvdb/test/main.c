@@ -49,6 +49,7 @@ void check_puts(char *s){
 int main(){
     kvdb_t *first=malloc(sizeof(kvdb_t));
     kvdb_open(first, "first.db");
+    kvdb_put(first,"username","Michael Yan");
     check_puts(kvdb_get(first,"username"));
     kvdb_put(first,"username","Michael Yan NJU");
     check_puts(kvdb_get(first,"username"));
