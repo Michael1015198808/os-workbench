@@ -91,6 +91,13 @@ static void string_cpy(char* dst,string str,int fd){
     }
     strcpy(dst,str.info);
 }
+static void string_puts(string str,int fd){
+    while(str.next!=0){
+        printf("%.*s",BLOCK_LEN,str.info);
+        read_db(fd,str.next,&str,sizeof(str));
+    }
+    puts(str.info);
+}
 
 
 #define SET_VALUE (1<<0)
@@ -180,4 +187,15 @@ char *kvdb_get(kvdb_t *db, const char *key){
     char *ret=_kvdb_get(db,key);
     flock(db->fd,LOCK_UN);
     return ret;
+}
+void kvdb_traverse(kvdb_t *db){
+    tab cur_tab={.next=0};
+    while(read_db(db->fd,cur_tab.next,&cur_tab,sizeof(tab)),
+            cur_tab.next!=0){
+        string key_str,val_str;
+        read_db(db->fd,cur_tab.key,&key_str,sizeof(string));
+        string_puts(key_str,db->fd);
+        read_db(db->fd,cur_tab.value,&val_str,sizeof(string));
+        string_puts(val_str,db->fd);
+    }
 }
