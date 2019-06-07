@@ -25,7 +25,7 @@ int main(){
     char key[3],value[10000000];
     for(int i=0;i<10000000;++i){
         sprintf(key,"%d",i%10);
-        sprintf(value"%d",i);
+        sprintf(value,"%d",i);
     }
     kvdb_close(first);
     return 0;
