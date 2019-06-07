@@ -9,17 +9,29 @@ test-all: test-64 test-32 lib
 	@LD_LIBRARY_PATH=.. ./$(TEST_FILE)-32
 
 lib:
-	cd .. && make -s all
+	@cd .. && make -s all git
 
-test-64: $(TEST_FILE)-64 lib
-	gcc -g -I.. -L.. -m64 $(TEST_FILE).c -o $(TEST_FILE)-64 -lkvdb-64
+test-64: $(TEST_FILE).c lib
+	@gcc -g -I.. -L.. -m64 $(TEST_FILE).c -o $(TEST_FILE)-64 -lkvdb-64
 
-test-32: $(TEST_FILE)-32 lib
-	gcc -g -I.. -L.. -m32 $(TEST_FILE).c -o $(TEST_FILE)-32 -lkvdb-32
+test-32: $(TEST_FILE).c lib
+	@gcc -g -I.. -L.. -m32 $(TEST_FILE).c -o $(TEST_FILE)-32 -lkvdb-32
 
 gdb: test-$(BITS) lib
-	gdb --init-command=gdbinit ./$(TEST_FILE)-$(BITS)
+	@LD_LIBRARY_PATH=.. gdb ./$(TEST_FILE)-$(BITS)
+	@cp $(DB_FILE) backup.db
 
 run: test-$(BITS)
-	LD_LIBRARY_PATH=.. ./$(TEST_FILE)-$(BITS)
+	@LD_LIBRARY_PATH=.. ./$(TEST_FILE)-$(BITS)
+	@cp $(DB_FILE) backup.db
 
+watch:
+	@while true; \
+	touch $(DB_FILE); \
+	do \
+		while inotifywait -e modify $(DB_FILE); \
+		do \
+			echo "00000000:  0 1  2 3  4 5  6 7  8 9  a b  c d  e f" ; \
+			xxd $(DB_FILE); \
+		done; \
+	done;
