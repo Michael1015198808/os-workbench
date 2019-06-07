@@ -147,7 +147,7 @@ static inline int _kvdb_put(kvdb_t *db, const char *key, const char *value){
     cur_tab.value_len=strlen(value);
     cur_tab.key=alloc_str(key,db->fd);
     cur_tab.key_len=strlen(key);
-    cur_tab.next=lseek(db->fd,0,SEEK_END)-BLOCK_LEN;
+    cur_tab.next=lseek(db->fd,0,SEEK_END)-HEADER_LEN;
     write(db->fd,zeros,sizeof(tab));
     write_db(db->fd,cur_off,&cur_tab,sizeof(tab));
     return 0;
