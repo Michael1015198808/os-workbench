@@ -108,8 +108,8 @@ off_t alloc_str(const char* src,int fd){
     }
     write(fd,src,len);
     write(fd,zeros,
-/*align to 4*/((4-len)&3)
-/*set next=0*/+sizeof(off_t));
+/*   align   */(BLOCK_LEN-len)
+/*set .next=0*/+sizeof(off_t));
     return ret;
 }
 
