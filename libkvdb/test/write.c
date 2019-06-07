@@ -22,6 +22,8 @@
 
 int main(){
     kvdb_t *first=malloc(sizeof(kvdb_t));
+    puts(DB_FILE);
+    return 0;
     char s1[100],s2[100];
     kvdb_open(first, DB_FILE);
     while(1){
