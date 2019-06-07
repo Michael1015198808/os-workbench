@@ -23,15 +23,16 @@
 int main(){
     int i=0;
     char s[10],*value;
-    kvdb_t *first=malloc(sizeof(kvdb_t));
+    kvdb_t first;
+    kvdb_open(&first,"./first.db");
     while(1){
         for(int i=0;i<10;++i){
             sprintf(s,"%d",i);
             printf("%d: ",i);
-            puts(value=kvdb_get(first,s));
+            puts(value=kvdb_get(&first,s));
             free(value);
         }
     }
-    kvdb_close(first);
+    kvdb_close(&first);
     return 0;
 }
