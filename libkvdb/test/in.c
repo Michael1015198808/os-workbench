@@ -2,8 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 int main(){
-kvdb_t *db=malloc(sizeof(kvdb_t))
-kvdb_open(db,"./auto.db")
+kvdb_t *db=malloc(sizeof(kvdb_t));
+kvdb_open(db,"./auto.db");
 /* srand seed: 1024*/
 char* mystr;
 kvdb_put(db, "KKK", "fnk");
@@ -134,6 +134,6 @@ kvdb_put(db, "GGG", "wvdcpadlnbvegfxdbphiwds");
 printf("%s\n", (mystr = kvdb_get(db, "BBB")) == NULL ? "(null)" : mystr);
 kvdb_put(db, "HHH", "spxmrvkcrwjevdhsotrrb");
 kvdb_put(db, "BBB", "aswurxodrkjadrscpbawode");
-kvdb_cloce(db)
+kvdb_cloce(db);
 return 0;
 }
