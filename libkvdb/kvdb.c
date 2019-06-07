@@ -194,8 +194,10 @@ void kvdb_traverse(kvdb_t *db){
             cur_tab.next!=0){
         string key_str,val_str;
         read_db(db->fd,cur_tab.key,&key_str,sizeof(string));
+        printf("Key:  ");
         string_puts(key_str,db->fd);
         read_db(db->fd,cur_tab.value,&val_str,sizeof(string));
+        printf("Val:  ");
         string_puts(val_str,db->fd);
     }
 }

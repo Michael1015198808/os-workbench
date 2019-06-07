@@ -25,7 +25,8 @@ int main(){
     char s1[100],s2[100];
     kvdb_open(first, "first.db");
     while(1){
-        scanf("%s:%s",s1,s2);
+        scanf("%s",s1);
+        scanf("%s",s2);
         kvdb_put(first,s1,s2);
     }
     kvdb_close(first);
