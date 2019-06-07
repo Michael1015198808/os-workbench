@@ -21,8 +21,9 @@
 #include "kvdb.h"
 
 int main(){
-    kvdb_t *first=malloc(sizeof(kvdb_t));
     char key[3],value[100];
+    kvdb_t *first=malloc(sizeof(kvdb_t));
+    kvdb_open(first,DB_FILE);
     for(int i=0;i<10000000;++i){
         sprintf(key,"%d",i%10);
         sprintf(value,"%d",i);
