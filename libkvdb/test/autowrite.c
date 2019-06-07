@@ -22,12 +22,10 @@
 
 int main(){
     kvdb_t *first=malloc(sizeof(kvdb_t));
-    char s1[100],s2[100];
-    kvdb_open(first, DB_FILE);
-    while(1){
-        if(scanf("%s",s1)!=1)return 0;
-        if(scanf("%s",s2)!=1)return 0;
-        kvdb_put(first,s1,s2);
+    char key[3],value[10000000];
+    for(int i=0;i<10000000;++i){
+        sprintf(key,"%d",i%10);
+        sprintf(value"%d",i);
     }
     kvdb_close(first);
     return 0;
