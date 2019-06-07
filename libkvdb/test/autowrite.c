@@ -26,6 +26,8 @@ int main(){
     for(int i=0;i<10000000;++i){
         sprintf(key,"%d",i%10);
         sprintf(value,"%d",i);
+        printf("%d\n",i%10);
+        printf("%d\n",i);
     }
     kvdb_close(first);
     return 0;
