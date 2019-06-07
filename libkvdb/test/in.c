@@ -1,4 +1,6 @@
 #include "kvdb.h"
+#include <stdio.h>
+#include <stdlib.h>
 int main(){
 kvdb_t *db=malloc(sizeof(kvdb_t))
 kvdb_open(db,"./auto.db")
