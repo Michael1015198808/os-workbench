@@ -23,7 +23,7 @@
 int main(){
     int i=0;
     char s[10];
-    char values[10];
+    char *values[10];
     kvdb_t first;
     kvdb_open(&first,"./first.db");
     while(1){
