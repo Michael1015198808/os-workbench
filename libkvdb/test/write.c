@@ -20,9 +20,9 @@
 
 #include "kvdb.h"
 
+char s1[100],s2[100000];
 int main(){
     kvdb_t *first=malloc(sizeof(kvdb_t));
-    char s1[100],s2[100];
     kvdb_open(first, DB_FILE);
     while(1){
         if(scanf("%s",s1)!=1)return 0;
