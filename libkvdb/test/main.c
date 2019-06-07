@@ -50,7 +50,7 @@ int main(){
     kvdb_t *first=malloc(sizeof(kvdb_t));
     kvdb_open(first, "first.db");
     check_puts(kvdb_get(first,"username"));
-    kvdb_put("username","Michael Yan NJU");
+    kvdb_put(first,"username","Michael Yan NJU");
     check_puts(kvdb_get(first,"username"));
     kvdb_close(first);
     return 0;
