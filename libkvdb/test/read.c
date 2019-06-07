@@ -29,11 +29,11 @@ int main(){
     while(1){
         for(int i=0;i<10;++i){
             sprintf(s,"%d",i);
-            printf("%d: ",i);
-            puts(values[i]=kvdb_get(&first,s));
+            values[i]=kvdb_get(&first,s);
         }
         //To make output flexible
         for(int i=0;i<10;++i){
+            printf("%d: ",i);
             puts(values[i]);
         }
         for(int i=0;i<10;++i){
