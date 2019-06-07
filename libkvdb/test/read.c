@@ -39,7 +39,7 @@ int main(){
         for(int i=0;i<10;++i){
             free(values[i]);
         }
-        for(volatile int i=0;i<25000;++i);
+        sleep(1);
     }
     kvdb_close(&first);
     return 0;
