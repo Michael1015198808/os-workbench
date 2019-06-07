@@ -39,7 +39,7 @@ int main(){
         for(int i=0;i<10;++i){
             free(values[i]);
         }
-        sleep(1);
+        usleep(100);
     }
     kvdb_close(&first);
     return 0;
