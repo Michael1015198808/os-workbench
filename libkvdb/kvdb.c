@@ -31,7 +31,6 @@
     }
 
 #define HEADER_LEN 0x100
-uint8_t zeros[HEADER_LEN+16]={};
 //Reserved in case for further usage
 #define BLOCK_LEN 0x20
 
@@ -43,6 +42,16 @@ typedef struct string{
 typedef struct tab{
     off_t next,key,key_len,value,value_len;
 }tab;
+
+static struct{
+    union{
+        //Make sure zeros is as longer as the longest constant considered
+        uint8_t info1[HEADER_LEN];
+        uint8_t info2[sizeof(tab)];
+    };
+    uint8_t margin[0x10];
+}padding={};
+void *zeros=&padding;
 
 static int read_db(int fd,off_t off,void *dst,off_t len){
     lseek(fd,HEADER_LEN+off,SEEK_SET);
@@ -132,7 +141,7 @@ static inline int _kvdb_put(kvdb_t *db, const char *key, const char *value){
     cur_tab.key=alloc_str(key,db->fd);
     cur_tab.key_len=strlen(key);
     cur_tab.next=lseek(db->fd,0,SEEK_END);
-    write(db->fd,zeros,sizeof(off_t));
+    write(db->fd,zeros,sizeof(tab));
     write_db(db->fd,cur_off,&cur_tab,sizeof(tab));
     return 0;
 }
