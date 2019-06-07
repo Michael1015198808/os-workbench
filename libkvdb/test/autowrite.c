@@ -28,6 +28,7 @@ int main(){
         sprintf(key,"%d",i%10);
         sprintf(value,"%d",i);
         kvdb_put(first,key,value);
+        usleep(100);
     }
     kvdb_close(first);
     return 0;
