@@ -34,6 +34,7 @@
 //Reserved in case for further usage
 #define BLOCK_LEN 0x20
 
+//All offset doesn't consider header
 typedef struct string{
     char info[BLOCK_LEN];
     off_t next;
@@ -53,6 +54,9 @@ static struct{
 }padding={};
 void *zeros=&padding;
 
+//[read|write]_db considers the offset caused by header
+//manually add HEADER_LEN only when you use lseek/write instead
+//If possible, use [read|write]_db to decrease bug.
 static int read_db(int fd,off_t off,void *dst,off_t len){
     lseek(fd,HEADER_LEN+off,SEEK_SET);
     return read(fd,dst,len);
@@ -61,6 +65,12 @@ static int read_db(int fd,off_t off,void *dst,off_t len){
 static int write_db(int fd,off_t off,void *src,off_t len){
     lseek(fd,HEADER_LEN+off,SEEK_SET);
     return write(fd,src,len);
+}
+//To prevent write in kvdb_ s
+static inline void init_db(int fd){
+        lseek(fd,0,SEEK_SET);
+        write(fd,zeros,HEADER_LEN);
+        write(fd,zeros,sizeof(tab));
 }
 //Read/Write reserverd area isn't supported by these API
 
@@ -87,7 +97,7 @@ static void string_cpy(char* dst,string str,int fd){
 #define SET_KEY   (1<<1)
 #define set_value(...) 
 off_t alloc_str(const char* src,int fd){
-    off_t ret=lseek(fd,0,SEEK_END),cur=ret;
+    off_t ret=lseek(fd,0,SEEK_END)-HEADER_LEN,cur=ret;
     int len=strlen(src);
     while(len>BLOCK_LEN){
         write(fd,src,BLOCK_LEN);
@@ -108,10 +118,7 @@ int kvdb_open(kvdb_t *db, const char *filename){
     if(db->fd<0)return db->fd;
     flock(db->fd,LOCK_EX);
     if(lseek(db->fd,0,SEEK_END)<HEADER_LEN){
-        //Database initialization
-        lseek(db->fd,0,SEEK_SET);
-        write(db->fd,zeros,HEADER_LEN);
-        write(db->fd,zeros,sizeof(tab));
+        init_db(db->fd);
     }
     flock(db->fd,LOCK_UN);
     return 0;
@@ -140,7 +147,7 @@ static inline int _kvdb_put(kvdb_t *db, const char *key, const char *value){
     cur_tab.value_len=strlen(value);
     cur_tab.key=alloc_str(key,db->fd);
     cur_tab.key_len=strlen(key);
-    cur_tab.next=lseek(db->fd,0,SEEK_END);
+    cur_tab.next=lseek(db->fd,0,SEEK_END)-BLOCK_LEN;
     write(db->fd,zeros,sizeof(tab));
     write_db(db->fd,cur_off,&cur_tab,sizeof(tab));
     return 0;
