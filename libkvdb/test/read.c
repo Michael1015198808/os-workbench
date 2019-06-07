@@ -22,16 +22,24 @@
 
 int main(){
     int i=0;
-    char s[10],*value;
+    char s[10];
+    char values[10];
     kvdb_t first;
     kvdb_open(&first,"./first.db");
     while(1){
         for(int i=0;i<10;++i){
             sprintf(s,"%d",i);
             printf("%d: ",i);
-            puts(value=kvdb_get(&first,s));
-            free(value);
+            puts(values[i]=kvdb_get(&first,s));
         }
+        //To make output flexible
+        for(int i=0;i<10;++i){
+            puts(values[i]);
+        }
+        for(int i=0;i<10;++i){
+            free(values[i]);
+        }
+        for(volatile int i=0;i<10000;++i);
     }
     kvdb_close(&first);
     return 0;
