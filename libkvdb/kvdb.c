@@ -32,7 +32,7 @@
 
 #define HEADER_LEN 0x100
 //Reserved in case for further usage
-#define BLOCK_LEN 0x100
+#define BLOCK_LEN 0x20
 
 #include "header.h"
 
@@ -110,6 +110,19 @@ static void string_puts(string str,int fd){
 #define SET_KEY   (1<<1)
 #define set_value(...) 
 
+void add_free_list(int fd,off_t cur){
+    off_t tail_old;
+    lseek(fd,sizeof(off_t),SEEK_SET);
+    read(fd,&tail_old,sizeof(off_t));
+    write_db(fd, tail_old, &cur, sizeof(off_t));
+    off_t prev=cur;
+    while(cur!=0){
+        read_db(fd,cur+BLOCK_LEN,&cur,sizeof(off_t));
+        prev=cur;
+    }
+    lseek(fd,sizeof(off_t),SEEK_SET);
+    write(fd,&prev,sizeof(off_t));
+}
 off_t alloc_str(const char* src,int fd){
     lseek(fd,0,SEEK_SET);
     off_t list[2],ret;
@@ -124,27 +137,33 @@ off_t alloc_str(const char* src,int fd){
         ret=lseek(fd,0,SEEK_END)-HEADER_LEN;
         flag=0;
     }
-    off_t cur=ret;
+    off_t prev=ret,cur=ret;
+    (void)prev;
     int64_t len=strlen(src);
-    while(len>BLOCK_LEN){
-        write(fd,src,BLOCK_LEN);
+    while(len>0){
+        if(len<BLOCK_LEN){
+            write(fd,src,len);
+            write(fd,zeros,BLOCK_LEN-len);
+        }else{
+            write(fd,src,BLOCK_LEN);
+        }
         src+=BLOCK_LEN;
         len-=BLOCK_LEN;
         if(flag){
             read(fd,&cur,sizeof(off_t));
-            if(cur==list[1]){
-                flag=0;
-                cur=lseek(fd,0,SEEK_END)-HEADER_LEN;
-            }
         }else{
             cur+=sizeof(string);
         }
+        lseek(fd,prev+BLOCK_LEN,SEEK_SET);
         write(fd,&cur,sizeof(off_t));
+        prev=cur;
     }
-    write(fd,src,len);
-    write(fd,zeros,
-/*   align   */(BLOCK_LEN-len)
-/*set .next=0*/+sizeof(off_t));
+    lseek(fd,0,SEEK_SET);
+    if(flag){
+        write(fd,&cur,sizeof(off_t));
+    }else{
+        write(fd,&list[1],sizeof(off_t));
+    }
     return ret;
 }
 
@@ -172,12 +191,15 @@ static inline int _kvdb_put(kvdb_t *db, const char *key, const char *value){
         string key_str;
         read_db(db->fd,cur_tab.key,&key_str,sizeof(string));
         if(!string_cmp(key,key_str,db->fd)){
+            off_t backup_val=cur_tab.value;
             cur_tab.value=alloc_str(value,db->fd);
             cur_tab.value_len=strlen(value);
             write_db(db->fd,cur_off,&cur_tab,sizeof(tab));
+            add_free_list(db->fd,backup_val);
             return 0;
         }
     }
+    off_t backup_val=cur_tab.value,backup_key=cur_tab.key;
     cur_tab.value=alloc_str(value,db->fd);
     cur_tab.value_len=strlen(value);
     cur_tab.key=alloc_str(key,db->fd);
@@ -185,6 +207,8 @@ static inline int _kvdb_put(kvdb_t *db, const char *key, const char *value){
     cur_tab.next=lseek(db->fd,0,SEEK_END)-HEADER_LEN;
     write(db->fd,zeros,sizeof(tab));
     write_db(db->fd,cur_off,&cur_tab,sizeof(tab));
+    add_free_list(db->fd,backup_val);
+    add_free_list(db->fd,backup_key);
     return 0;
 }
 int kvdb_put(kvdb_t *db, const char *key, const char *value){
