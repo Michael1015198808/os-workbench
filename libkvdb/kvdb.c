@@ -32,7 +32,7 @@
 
 #define HEADER_LEN 0x100
 //Reserved in case for further usage
-#define BLOCK_LEN 0x20
+#define BLOCK_LEN (0x20-sizeof(off_t))
 
 #include "header.h"
 
@@ -99,7 +99,7 @@ static void string_cpy(char* dst,string str,int fd){
 }
 static void string_puts(string str,int fd){
     while(str.next!=0){
-        printf("%.*s",BLOCK_LEN,str.info);
+        printf("%.*s",(int)BLOCK_LEN,str.info);
         read_db(fd,str.next,&str,sizeof(str));
     }
     puts(str.info);
