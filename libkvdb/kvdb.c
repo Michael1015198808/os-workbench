@@ -33,18 +33,18 @@
 
 #define HEADER_LEN 0x100
 //Reserved in case for further usage
-#define BLOCK_LEN (0x20-sizeof(off_t))
+#define BLOCK_LEN (0x20-sizeof(uint32_t))
 
 #include "header.h"
 
 //All offset doesn't consider header
 typedef struct string{
     char info[BLOCK_LEN];
-    off_t next;
+    uint32_t next;
 }string;
 
 typedef struct tab{
-    off_t next,key,key_len,value,value_len;
+    uint32_t next,key,key_len,value,value_len;
 }tab;
 
 static struct{
@@ -60,22 +60,22 @@ void *zeros=&padding;
 //[read|write]_db considers the offset caused by header
 //manually add HEADER_LEN only when you use lseek/write instead
 //If possible, use [read|write]_db to decrease bug.
-static int read_db(int fd,off_t off,void *dst,off_t len){
+static int read_db(int fd,uint32_t off,void *dst,uint32_t len){
     lseek(fd,HEADER_LEN+off,SEEK_SET);
     return read(fd,dst,len);
 }
 
-static int write_db(int fd,off_t off,void *src,off_t len){
+static int write_db(int fd,uint32_t off,void *src,uint32_t len){
     lseek(fd,HEADER_LEN+off,SEEK_SET);
     return write(fd,src,len);
 }
 //To prevent write in kvdb_ s
 static inline void init_db(int fd){
         lseek(fd,0,SEEK_SET);
-        off_t off=sizeof(tab);
-        write(fd,&off,sizeof(off_t));//BLOCK list's head
-        write(fd,&off,sizeof(off_t));//BLOCK list's tail
-        write(fd,zeros,HEADER_LEN-sizeof(off_t)*2);
+        uint32_t off=sizeof(tab);
+        write(fd,&off,sizeof(uint32_t));//BLOCK list's head
+        write(fd,&off,sizeof(uint32_t));//BLOCK list's tail
+        write(fd,zeros,HEADER_LEN-sizeof(uint32_t)*2);
         write(fd,zeros,sizeof(tab));
         write(fd,zeros,sizeof(string));//BLOCK list's first node(to simplify code)
 }
@@ -111,23 +111,23 @@ static void string_puts(string str,int fd){
 #define SET_KEY   (1<<1)
 #define set_value(...) 
 
-void add_free_list(int fd,off_t cur){
-    off_t tail_old;
-    lseek(fd,sizeof(off_t),SEEK_SET);
-    read(fd,&tail_old,sizeof(off_t));
-    write_db(fd, tail_old+BLOCK_LEN, &cur, sizeof(off_t));
-    off_t prev=cur;
+void add_free_list(int fd,uint32_t cur){
+    uint32_t tail_old;
+    lseek(fd,sizeof(uint32_t),SEEK_SET);
+    read(fd,&tail_old,sizeof(uint32_t));
+    write_db(fd, tail_old+BLOCK_LEN, &cur, sizeof(uint32_t));
+    uint32_t prev=cur;
     while(cur!=0){
         prev=cur;
-        read_db(fd,cur+BLOCK_LEN,&cur,sizeof(off_t));
+        read_db(fd,cur+BLOCK_LEN,&cur,sizeof(uint32_t));
     }
-    lseek(fd,sizeof(off_t),SEEK_SET);
-    write(fd,&prev,sizeof(off_t));
+    lseek(fd,sizeof(uint32_t),SEEK_SET);
+    write(fd,&prev,sizeof(uint32_t));
 }
-off_t alloc_str(const char* src,int fd){
+uint32_t alloc_str(const char* src,int fd){
     lseek(fd,0,SEEK_SET);
-    off_t list[2],ret;
-    read(fd,list,sizeof(off_t)*2);
+    uint32_t list[2],ret;
+    read(fd,list,sizeof(uint32_t)*2);
     int flag=1;//flag of left blocks
     if(list[0]!=list[1]){
         //If there are blocks left, starts from there
@@ -138,7 +138,7 @@ off_t alloc_str(const char* src,int fd){
         ret=lseek(fd,0,SEEK_END)-HEADER_LEN;
         flag=0;
     }
-    off_t prev=ret,cur=ret;
+    uint32_t prev=ret,cur=ret;
     int64_t len=strlen(src);
     while(len>0){
         lseek(fd,cur+HEADER_LEN,SEEK_SET);
@@ -151,7 +151,7 @@ off_t alloc_str(const char* src,int fd){
         src+=BLOCK_LEN;
         len-=BLOCK_LEN;
         if(flag){
-            read(fd,&cur,sizeof(off_t));
+            read(fd,&cur,sizeof(uint32_t));
             if(cur==list[1]){
                 cur=lseek(fd,0,SEEK_END)-HEADER_LEN;
                 flag=0;
@@ -161,14 +161,14 @@ off_t alloc_str(const char* src,int fd){
         }
         write_db(fd, prev+BLOCK_LEN,
                 len>0? &cur:zeros,
-                sizeof(off_t));
+                sizeof(uint32_t));
         prev=cur;
     }
     lseek(fd,0,SEEK_SET);
     if(flag){
-        write(fd,&cur,sizeof(off_t));
+        write(fd,&cur,sizeof(uint32_t));
     }else{
-        write(fd,&list[1],sizeof(off_t));
+        write(fd,&list[1],sizeof(uint32_t));
     }
     return ret;
 }
@@ -190,14 +190,14 @@ int kvdb_close(kvdb_t *db){
 
 static inline int _kvdb_put(kvdb_t *db, const char *key, const char *value){
     tab cur_tab={.next=0};
-    off_t cur_off=0;(void)cur_off;
+    uint32_t cur_off=0;(void)cur_off;
     while(  cur_off=cur_tab.next,
             read_db(db->fd,cur_tab.next,&cur_tab,sizeof(tab)),
             cur_tab.next!=0){
         string key_str;
         read_db(db->fd,cur_tab.key,&key_str,sizeof(string));
         if(!string_cmp(key,key_str,db->fd)){
-            off_t backup_val=cur_tab.value;
+            uint32_t backup_val=cur_tab.value;
             cur_tab.value=alloc_str(value,db->fd);
             cur_tab.value_len=strlen(value);
             write_db(db->fd,cur_off,&cur_tab,sizeof(tab));
