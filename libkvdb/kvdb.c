@@ -32,7 +32,10 @@
 
 #define HEADER_LEN 0x100
 //Reserved in case for further usage
-#define BLOCK_LEN 0x20
+#define BLOCK_LEN 0x100
+
+#include "header.h"
+//Since sometimes we only change a little members, this works as an index;
 
 //All offset doesn't consider header
 typedef struct string{
@@ -69,8 +72,12 @@ static int write_db(int fd,off_t off,void *src,off_t len){
 //To prevent write in kvdb_ s
 static inline void init_db(int fd){
         lseek(fd,0,SEEK_SET);
-        write(fd,zeros,HEADER_LEN);
+        off_t off=sizeof(tab);
+        write(fd,&off,sizeof(off_t));//BLOCK list's head
+        write(fd,&off,sizeof(off_t));//BLOCK list's tail
+        write(fd,zeros,HEADER_LEN-sizeof(off_t)*2);
         write(fd,zeros,sizeof(tab));
+        write(fd,zeros,sizeof(string));//BLOCK list's first node(to simplify code)
 }
 //Read/Write reserverd area isn't supported by these API
 
