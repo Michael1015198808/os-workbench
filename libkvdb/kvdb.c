@@ -138,9 +138,9 @@ off_t alloc_str(const char* src,int fd){
         flag=0;
     }
     off_t prev=ret,cur=ret;
-    (void)prev;
     int64_t len=strlen(src);
     while(len>0){
+        lseek(fd,cur+HEADER_LEN,SEEK_SET);
         if(len<BLOCK_LEN){
             write(fd,src,len);
             write(fd,zeros,BLOCK_LEN-len);
