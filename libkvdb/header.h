@@ -11,14 +11,22 @@
 
 typedef struct{
     struct{
-        uint32_t head,tail;
-    }free_list;
+        uint32_t head,tail,size;
+    }free_list,backup_list;
+    tab backup_tab;
+    uint32_t pos;
+    uint8_t backup_flag;
 }header;
 //Since sometimes we only change a little members, this only works as an index;
 
 _Static_assert(sizeof(header)<=HEADER_LEN,"size of header is larger than macro HEADER_LEN!");
-entry(free_list.head,0);
-entry(free_list.tail,off_len);
+entry( free_list.head , 0*off_len);
+entry( free_list.tail , 1*off_len);
+entry( free_list.size , 2*off_len);
+entry( backup_list    , 3*off_len);
+entry( backup_tab     , 6*off_len);
+entry( pos            ,11*off_len);
+entry( backup_flag    ,12*off_len);
 
 #undef entry
 #undef off_len

@@ -35,7 +35,6 @@
 //Reserved in case for further usage
 #define BLOCK_LEN (0x20-sizeof(uint32_t))
 
-#include "header.h"
 
 //All offset doesn't consider header
 typedef struct string{
@@ -47,7 +46,9 @@ typedef struct tab{
     uint32_t next,key,key_len,value,value_len;
 }tab;
 
-static struct{
+#include "header.h"
+
+const static struct{
     union{
         //Make sure zeros is as longer as the longest constant considered
         uint8_t info1[HEADER_LEN];
@@ -55,7 +56,8 @@ static struct{
     };
     uint8_t margin[0x10];
 }padding={};
-void *zeros=&padding;
+const void const*zeros=&padding;
+const uint8_t ones[1]={1};
 
 //[read|write]_db considers the offset caused by header
 //manually add HEADER_LEN only when you use lseek/write instead
@@ -65,7 +67,7 @@ static int read_db(int fd,uint32_t off,void *dst,uint32_t len){
     return read(fd,dst,len);
 }
 
-static int write_db(int fd,uint32_t off,void *src,uint32_t len){
+static int write_db(int fd,uint32_t off,const void *src,uint32_t len){
     lseek(fd,HEADER_LEN+off,SEEK_SET);
     return write(fd,src,len);
 }
@@ -172,6 +174,42 @@ uint32_t alloc_str(const char* src,int fd){
     return ret;
 }
 
+static inline void neg_backup(int fd){
+    lseek(fd,offsetof(header,backup_flag),SEEK_SET);
+    write(fd,zeros,1);
+}
+void check_backup(int fd){
+    uint8_t flag=0;
+    lseek(fd,offsetof(header,backup_flag),SEEK_SET);
+    read(fd,&flag,sizeof(flag));
+    if(flag){
+        header h;
+        lseek(fd,0,SEEK_SET);
+        read(fd,&h,sizeof(header));
+        lseek(fd,0,SEEK_SET);
+        write(fd, &(h.backup_list),sizeof(h.backup_list));
+        write_db(fd,h.pos,&(h.backup_tab),sizeof(h.backup_tab));
+        neg_backup(fd);
+    }
+}
+
+void start_backup(int fd,uint32_t pos){
+    static const uint32_t size=sizeof(((header*)NULL)->free_list);
+    uint8_t origin_info[size];
+    tab origin_tab;
+    if(pos!=-1u){
+        read_db(fd,pos,&origin_tab,sizeof(tab));
+    }
+    lseek(fd,0,SEEK_SET);
+    read(fd,origin_info,size);
+    write(fd,origin_info,size);
+    if(pos!=-1u){
+        write(fd,&origin_tab,sizeof(tab));
+        write(fd,&pos,sizeof(pos));
+    }
+    write(fd,ones,1);//set backup's flag
+}
+
 int kvdb_open(kvdb_t *db, const char *filename){
     db->fd=open(filename,O_RDWR|O_CREAT,0777);
     if(db->fd<0)return db->fd;
@@ -197,6 +235,7 @@ static inline int _kvdb_put(kvdb_t *db, const char *key, const char *value){
         read_db(db->fd,cur_tab.key,&key_str,sizeof(string));
         if(!string_cmp(key,key_str,db->fd)){
             uint32_t backup_val=cur_tab.value;
+            start_backup(db->fd,cur_off);
             cur_tab.value=alloc_str(value,db->fd);
             cur_tab.value_len=strlen(value);
             write_db(db->fd,cur_off,&cur_tab,sizeof(tab));
@@ -204,6 +243,7 @@ static inline int _kvdb_put(kvdb_t *db, const char *key, const char *value){
             return 0;
         }
     }
+    start_backup(db->fd,-1);
     cur_tab.value=alloc_str(value,db->fd);
     cur_tab.value_len=strlen(value);
     cur_tab.key=alloc_str(key,db->fd);
@@ -215,7 +255,9 @@ static inline int _kvdb_put(kvdb_t *db, const char *key, const char *value){
 }
 int kvdb_put(kvdb_t *db, const char *key, const char *value){
     flock(db->fd,LOCK_EX);
+    check_backup(db->fd);
     int ret=_kvdb_put(db,key,value);
+    neg_backup(db->fd);
     flock(db->fd,LOCK_UN);
     return ret;
 }
