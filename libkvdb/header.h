@@ -7,11 +7,11 @@
             offsetof(header,member)==offset, \
             "offset of " #member " is wrong!") 
 
-#define off_len sizeof(off_t)
+#define off_len sizeof(uint32_t)
 
 typedef struct{
     struct{
-        off_t head,tail;
+        uint32_t head,tail;
     }free_list;
 }header;
 //Since sometimes we only change a little members, this only works as an index;
