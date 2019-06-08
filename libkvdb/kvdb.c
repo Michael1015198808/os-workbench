@@ -188,9 +188,7 @@ void check_backup(int fd){
         read(fd,&h,sizeof(header));
         lseek(fd,0,SEEK_SET);
         write(fd, &(h.backup_list),sizeof(h.backup_list));
-        if(h.pos!=-1u){
-            write_db(fd,h.pos,&(h.backup_tab),sizeof(h.backup_tab));
-        }
+        write_db(fd,h.pos,&(h.backup_tab),sizeof(h.backup_tab));
         neg_backup(fd);
     }
 }
@@ -241,7 +239,7 @@ static inline int _kvdb_put(kvdb_t *db, const char *key, const char *value){
             return 0;
         }
     }
-    start_backup(db->fd,-1);
+    start_backup(db->fd,cur_off);
     cur_tab.value=alloc_str(value,db->fd);
     cur_tab.value_len=strlen(value);
     cur_tab.key=alloc_str(key,db->fd);
