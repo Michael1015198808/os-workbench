@@ -200,7 +200,6 @@ static inline int _kvdb_put(kvdb_t *db, const char *key, const char *value){
             return 0;
         }
     }
-    off_t backup_val=cur_tab.value,backup_key=cur_tab.key;
     cur_tab.value=alloc_str(value,db->fd);
     cur_tab.value_len=strlen(value);
     cur_tab.key=alloc_str(key,db->fd);
@@ -208,8 +207,6 @@ static inline int _kvdb_put(kvdb_t *db, const char *key, const char *value){
     cur_tab.next=lseek(db->fd,0,SEEK_END)-HEADER_LEN;
     write(db->fd,zeros,sizeof(tab));
     write_db(db->fd,cur_off,&cur_tab,sizeof(tab));
-    add_free_list(db->fd,backup_val);
-    add_free_list(db->fd,backup_key);
     return 0;
 }
 int kvdb_put(kvdb_t *db, const char *key, const char *value){
