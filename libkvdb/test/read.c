@@ -20,23 +20,23 @@
 
 #include "kvdb.h"
 
+char *s[]={"STUID"};
+#define LEN_S sizeof(s)/sizeof(s[0])
 int main(){
     int i=0;
-    char s[10];
-    char *values[10];
+    char *values[LEN_S];
     kvdb_t first;
     kvdb_open(&first,DB_FILE);
     while(1){
-        for(int i=0;i<10;++i){
-            sprintf(s,"%d",i);
-            values[i]=kvdb_get(&first,s);
+        for(int i=0;i<LEN_S;++i){
+            values[i]=kvdb_get(&first,s[i]);
         }
         //To make output flexible
-        for(int i=0;i<10;++i){
-            printf("%d: ",i);
+        for(int i=0;i<LEN_S;++i){
+            printf("%s: ",s[i]);
             puts(values[i]);
         }
-        for(int i=0;i<10;++i){
+        for(int i=0;i<LEN_S;++i){
             free(values[i]);
         }
         usleep(10000);
