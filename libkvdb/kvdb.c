@@ -114,11 +114,11 @@ void add_free_list(int fd,off_t cur){
     off_t tail_old;
     lseek(fd,sizeof(off_t),SEEK_SET);
     read(fd,&tail_old,sizeof(off_t));
-    write_db(fd, tail_old, &cur, sizeof(off_t));
+    write_db(fd, tail_old+BLOCK_LEN, &cur, sizeof(off_t));
     off_t prev=cur;
     while(cur!=0){
-        read_db(fd,cur+BLOCK_LEN,&cur,sizeof(off_t));
         prev=cur;
+        read_db(fd,cur+BLOCK_LEN,&cur,sizeof(off_t));
     }
     lseek(fd,sizeof(off_t),SEEK_SET);
     write(fd,&prev,sizeof(off_t));
