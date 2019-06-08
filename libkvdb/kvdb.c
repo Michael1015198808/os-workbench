@@ -154,12 +154,9 @@ off_t alloc_str(const char* src,int fd){
         }else{
             cur+=sizeof(string);
         }
-        lseek(fd,prev+BLOCK_LEN,SEEK_SET);
-        if(len>0){
-            write(fd,&cur,sizeof(off_t));
-        }else{
-            write(fd,zeros,sizeof(off_t));
-        }
+        write_db(fd, prev+BLOCK_LEN,
+                len>0? &cur:zeros,
+                sizeof(off_t));
         prev=cur;
     }
     lseek(fd,0,SEEK_SET);
