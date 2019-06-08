@@ -7,6 +7,7 @@
 #include <regex.h>
 #include <setjmp.h>
 #include <signal.h>
+#include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -153,6 +154,7 @@ off_t alloc_str(const char* src,int fd){
             read(fd,&cur,sizeof(off_t));
             if(cur==list[1]){
                 cur=lseek(fd,0,SEEK_END)-HEADER_LEN;
+                flag=0;
             }
         }else{
             cur+=sizeof(string);
