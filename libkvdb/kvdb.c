@@ -178,7 +178,7 @@ static inline void neg_backup(int fd){
     lseek(fd,offsetof(header,backup_flag),SEEK_SET);
     write(fd,zeros,1);
 }
-void check_backup(int fd){
+void recov_backup(int fd){
     uint8_t flag=0;
     lseek(fd,offsetof(header,backup_flag),SEEK_SET);
     read(fd,&flag,sizeof(flag));
@@ -204,6 +204,21 @@ void start_backup(int fd,uint32_t pos){
     write(fd,&origin_tab,sizeof(tab));
     write(fd,&pos,sizeof(pos));
     write(fd,ones,1);//set backup's flag
+}
+
+int check_backup(int fd,uint32_t key_pos){
+    uint8_t flag=0;
+    uint32_t backup_pos;
+    lseek(fd,offsetof(header,backup_flag),SEEK_SET);
+    read(fd,&flag,sizeof(flag));
+    if(flag){
+        lseek(fd,offsetof(header,backup_tab.key),SEEK_SET);
+        read(fd,&backup_pos,sizeof(uint32_t));
+        if(backup_pos==key_pos){
+            return 1;
+        }
+    }
+    return 0;
 }
 
 int kvdb_open(kvdb_t *db, const char *filename){
@@ -251,7 +266,7 @@ static inline int _kvdb_put(kvdb_t *db, const char *key, const char *value){
 }
 int kvdb_put(kvdb_t *db, const char *key, const char *value){
     flock(db->fd,LOCK_EX);
-    check_backup(db->fd);
+    recov_backup(db->fd);
     int ret=_kvdb_put(db,key,value);
     neg_backup(db->fd);
     flock(db->fd,LOCK_UN);
@@ -266,6 +281,10 @@ static inline char *_kvdb_get(kvdb_t *db, const char *key){
         read_db(db->fd,cur_tab.key,&key_str,sizeof(string));
         if(!string_cmp(key,key_str,db->fd)){
             string val_str;
+            if(check_backup(db->fd,cur_tab.key)){
+                lseek(db->fd,offsetof(header,backup_tab),SEEK_SET);
+                read(db->fd,&cur_tab,sizeof(tab));
+            }
             read_db(db->fd,cur_tab.value,&val_str,sizeof(string));
             char *ret=malloc(cur_tab.value_len+1);
             string_cpy(ret,val_str,db->fd);
