@@ -35,7 +35,6 @@
 #define BLOCK_LEN 0x100
 
 #include "header.h"
-//Since sometimes we only change a little members, this works as an index;
 
 //All offset doesn't consider header
 typedef struct string{
