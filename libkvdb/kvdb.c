@@ -129,14 +129,13 @@ uint32_t alloc_str(const char* src,int fd){
     uint32_t list[2],ret;
     read(fd,list,sizeof(uint32_t)*2);
     int flag=1;//flag of left blocks
-    if(list[0]!=list[1]){
+    if( ( flag=(list[0]!=list[1]) )  ){
         //If there are blocks left, starts from there
         ret=list[0];
         lseek(fd,ret+HEADER_LEN,SEEK_SET);
     }else{
         //Otherwise, starts from end
         ret=lseek(fd,0,SEEK_END)-HEADER_LEN;
-        flag=0;
     }
     uint32_t prev=ret,cur=ret;
     int64_t len=strlen(src);
