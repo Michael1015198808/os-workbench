@@ -109,14 +109,36 @@ static void string_puts(string str,int fd){
 #define SET_VALUE (1<<0)
 #define SET_KEY   (1<<1)
 #define set_value(...) 
+
 off_t alloc_str(const char* src,int fd){
-    off_t ret=lseek(fd,0,SEEK_END)-HEADER_LEN,cur=ret;
-    int len=strlen(src);
+    lseek(fd,0,SEEK_SET);
+    off_t list[2],ret;
+    read(fd,list,sizeof(off_t)*2);
+    int flag=1;//flag of left blocks
+    if(list[0]!=list[1]){
+        //If there are blocks left, starts from there
+        ret=list[0];
+        lseek(fd,ret+HEADER_LEN,SEEK_SET);
+    }else{
+        //Otherwise, starts from end
+        ret=lseek(fd,0,SEEK_END)-HEADER_LEN;
+        flag=0;
+    }
+    off_t cur=ret;
+    int64_t len=strlen(src);
     while(len>BLOCK_LEN){
         write(fd,src,BLOCK_LEN);
         src+=BLOCK_LEN;
         len-=BLOCK_LEN;
-        cur+=BLOCK_LEN+sizeof(off_t);
+        if(flag){
+            read(fd,&cur,sizeof(off_t));
+            if(cur==list[1]){
+                flag=0;
+                cur=lseek(fd,0,SEEK_END)-HEADER_LEN;
+            }
+        }else{
+            cur+=sizeof(string);
+        }
         write(fd,&cur,sizeof(off_t));
     }
     write(fd,src,len);
