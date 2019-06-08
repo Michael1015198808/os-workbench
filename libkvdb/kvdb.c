@@ -188,7 +188,9 @@ void check_backup(int fd){
         read(fd,&h,sizeof(header));
         lseek(fd,0,SEEK_SET);
         write(fd, &(h.backup_list),sizeof(h.backup_list));
-        write_db(fd,h.pos,&(h.backup_tab),sizeof(h.backup_tab));
+        if(h.pos!=-1u){
+            write_db(fd,h.pos,&(h.backup_tab),sizeof(h.backup_tab));
+        }
         neg_backup(fd);
     }
 }
@@ -197,16 +199,12 @@ void start_backup(int fd,uint32_t pos){
     static const uint32_t size=sizeof(((header*)NULL)->free_list);
     uint8_t origin_info[size];
     tab origin_tab;
-    if(pos!=-1u){
-        read_db(fd,pos,&origin_tab,sizeof(tab));
-    }
+    read_db(fd,pos,&origin_tab,sizeof(tab));
     lseek(fd,0,SEEK_SET);
     read(fd,origin_info,size);
     write(fd,origin_info,size);
-    if(pos!=-1u){
-        write(fd,&origin_tab,sizeof(tab));
-        write(fd,&pos,sizeof(pos));
-    }
+    write(fd,&origin_tab,sizeof(tab));
+    write(fd,&pos,sizeof(pos));
     write(fd,ones,1);//set backup's flag
 }
 
