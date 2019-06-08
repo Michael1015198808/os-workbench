@@ -32,7 +32,7 @@
 
 #define HEADER_LEN 0x100
 //Reserved in case for further usage
-#define BLOCK_LEN (0x20-sizeof(off_t))
+#define BLOCK_LEN (0x100-sizeof(off_t))
 
 #include "header.h"
 
