@@ -155,7 +155,11 @@ off_t alloc_str(const char* src,int fd){
             cur+=sizeof(string);
         }
         lseek(fd,prev+BLOCK_LEN,SEEK_SET);
-        write(fd,&cur,sizeof(off_t));
+        if(len>0){
+            write(fd,&cur,sizeof(off_t));
+        }else{
+            write(fd,zeros,sizeof(off_t));
+        }
         prev=cur;
     }
     lseek(fd,0,SEEK_SET);
