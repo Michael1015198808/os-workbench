@@ -151,6 +151,9 @@ off_t alloc_str(const char* src,int fd){
         len-=BLOCK_LEN;
         if(flag){
             read(fd,&cur,sizeof(off_t));
+            if(cur==list[1]){
+                cur=lseek(fd,0,SEEK_END)-HEADER_LEN;
+            }
         }else{
             cur+=sizeof(string);
         }
