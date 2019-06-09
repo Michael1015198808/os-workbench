@@ -179,6 +179,8 @@ uint32_t alloc_str(const char* src,int fd){
             }
         }else{
             cur+=sizeof(string);
+            lseek(fd,offsetof(header,free_list.size),SEEK_SET);
+            write(fd,&cur,sizeof(uint32_t));
         }
         if(len>0){
             write_db(fd, prev+BLOCK_LEN,&cur,sizeof(uint32_t));
