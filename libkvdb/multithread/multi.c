@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
  
     pthread_t pt[THREADS];
     for(int i = 0; i < THREADS; i ++) {
-        args[i][0]=db;
+        args[i][0]=(uintptr_t)db;
         args[i][1]=i&1;
         args[i][2]=rand();
         pthread_create(&pt[i], NULL, test, args[i]);
