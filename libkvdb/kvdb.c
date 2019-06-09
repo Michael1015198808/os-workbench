@@ -231,25 +231,27 @@ int check_backup(int fd,uint32_t key_pos){
     return 0;
 }
 static void kvdb_lock(kvdb_t *db,int op){
-    uint32_t *p=&db->reen;
+    pthread_mutex_lock(&db->lk);
+    int flag=0;
     if(op==LOCK_UN){
-        asm volatile("lock sub $1,(%0)"::"r"(p));
-        if(*p==0){
-            flock(db->fd,op);
-        }
+        flag=(db->reen==0);
+        if(db->reen==-1)db->reen=0;
+        else --db->reen;
     }else{
-        if(*p==0){
-            flock(db->fd,op);
-        }
-        asm volatile("lock add $1,(%0)"::"r"(p));
+        flag=(db->reen==0);
+        if(op==LOCK_EX)db->reen=-1;
+        else ++db->reen;
+    }
+    pthread_mutex_unlock(&db->lk);
+    if(flag){
+        flock(db->fd,op);
     }
 }
 
 int kvdb_open(kvdb_t *db, const char *filename){
     db->fd=open(filename,O_RDWR|O_CREAT,0777);
     db->reen=0;
-    pthread_mutex_t lk=PTHREAD_MUTEX_INITIALIZER;
-    //db->lk=;
+    pthread_mutex_init(&db->lk,NULL);
     if(db->fd<0)return db->fd;
     kvdb_lock(db,LOCK_EX);
     if(lseek(db->fd,0,SEEK_END)<HEADER_LEN){
