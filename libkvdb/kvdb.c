@@ -199,8 +199,8 @@ void recov_backup(int fd){
         read(fd,&h,sizeof(header));
         lseek(fd,0,SEEK_SET);
         write(fd, &(h.backup_list),sizeof(h.backup_list));
-        write_db(fd,h.pos,&(h.backup_tab),sizeof(h.backup_tab));
-        write_db(fd,h.free_list.head,&(h.backup_prev),sizeof(h.backup_prev));
+        write_db(fd,h.pos        ,&(h.backup_tab)    ,sizeof(h.backup_tab));
+        write_db(fd,h.backup_prev,&(h.free_list.head),sizeof(h.backup_prev));
         neg_backup(fd);
     }
 }
