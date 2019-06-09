@@ -22,7 +22,7 @@
 
 char *s[]={
     "STUID",
-    //"STUNAME",
+    "STUNAME"
 };
 #define LEN_S sizeof(s)/sizeof(s[0])
 int main(){
