@@ -24,9 +24,10 @@ void *test(void *arg) {
 int main(int argc, char *argv[]) {
     kvdb_t *db = malloc(sizeof(kvdb_t));
     uintptr_t args[THREADS][ARGS];
+
     if(db == NULL) { panic("malloc failed. \n"); return 1; }
  
-    if(kvdb_open(db, argv[1])) { panic("cannot open. \n"); return 1; }
+    if(kvdb_open(db, DB_FILE)) { panic("cannot open. \n"); return 1; }
  
     pthread_t pt[THREADS];
     for(int i = 0; i < THREADS; i ++) {
