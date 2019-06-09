@@ -153,7 +153,13 @@ uint32_t alloc_str(const char* src,int fd){
         len-=BLOCK_LEN;
         if(flag){
             read(fd,&cur,sizeof(uint32_t));
+            if(len<0){
+                lseek(fd,offsetof(header,backup_next),SEEK_SET);
+                write(fd,&prev,sizeof(uint32_t));
+            }
             if(cur==list[1]){
+                lseek(fd,0,SEEK_SET);
+                write(fd,&list[1],sizeof(uint32_t));
                 cur=lseek(fd,0,SEEK_END)-HEADER_LEN;
                 flag=0;
             }
@@ -163,10 +169,10 @@ uint32_t alloc_str(const char* src,int fd){
         if(len>0){
             write_db(fd, prev+BLOCK_LEN,&cur,sizeof(uint32_t));
         }else{
-            lseek(fd,0,SEEK_SET);
-            write(fd,&cur,sizeof(uint32_t));
-            lseek(fd,offsetof(header,backup_next),SEEK_SET);
-            write(fd,&prev,sizeof(uint32_t));
+            if(flag){
+                lseek(fd,0,SEEK_SET);
+                write(fd,&cur,sizeof(uint32_t));
+            }
             write_db(fd, prev+BLOCK_LEN,zeros,sizeof(uint32_t));
         }
         prev=cur;
