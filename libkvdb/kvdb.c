@@ -210,6 +210,7 @@ void start_backup(int fd,uint32_t pos){
     write(fd,origin_info,size);
     write(fd,&origin_tab,sizeof(tab));
     write(fd,&pos,sizeof(pos));
+    lseek(fd,offsetof(header,backup_flag)-offsetof(header,backup_next),SEEK_CUR);
     write(fd,ones,1);//set backup's flag
 }
 
