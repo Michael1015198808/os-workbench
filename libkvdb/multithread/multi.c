@@ -20,7 +20,7 @@ void *test(void *arg) {
 #define THREADS 4
 #define ARGS 2
 #define panic(fmt,...) \
-    fprintf(stderr, __FINE__ "%d" fmt,__LINE__, ##__VA_ARGS__)
+    fprintf(stderr, __FILE__ "%d" fmt,__LINE__, ##__VA_ARGS__)
 int main(int argc, char *argv[]) {
     kvdb_t *db = malloc(sizeof(kvdb_t));
     uintptr_t *args[THREADS][ARGS];
