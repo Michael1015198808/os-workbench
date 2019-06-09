@@ -57,7 +57,6 @@ const static struct{
     uint8_t margin[0x10];
 }padding={};
 const void const*zeros=&padding;
-const uint8_t ones[1]={1};
 
 //[read|write]_db considers the offset caused by header
 //manually add HEADER_LEN only when you use lseek/write instead
@@ -154,7 +153,7 @@ uint32_t alloc_str(const char* src,int fd){
         if(flag){
             read(fd,&cur,sizeof(uint32_t));
             if(len<0){
-                lseek(fd,offsetof(header,backup_next),SEEK_SET);
+                lseek(fd,offsetof(header,backup_prev),SEEK_SET);
                 write(fd,&prev,sizeof(uint32_t));
             }
             if(cur==list[1]){
@@ -201,23 +200,27 @@ void recov_backup(int fd){
         lseek(fd,0,SEEK_SET);
         write(fd, &(h.backup_list),sizeof(h.backup_list));
         write_db(fd,h.pos,&(h.backup_tab),sizeof(h.backup_tab));
-        write_db(fd,h.free_list.head,&(h.backup_next),sizeof(h.backup_next));
+        write_db(fd,h.free_list.head,&(h.backup_prev),sizeof(h.backup_prev));
         neg_backup(fd);
     }
 }
 
 void start_backup(int fd,uint32_t pos){
-    static const uint32_t size=sizeof(((header*)NULL)->free_list);
-    uint8_t origin_info[size];
     tab origin_tab;
     read_db(fd,pos,&origin_tab,sizeof(tab));
+    header h={
+    //.free_list,
+    //.backup_list,
+    .backup_tab=origin_tab,
+    .pos=pos,
+    //.backup_prev;
+    .backup_flag=1
+    };
     lseek(fd,0,SEEK_SET);
-    read(fd,origin_info,size);
-    write(fd,origin_info,size);
-    write(fd,&origin_tab,sizeof(tab));
-    write(fd,&pos,sizeof(pos));
-    lseek(fd,offsetof(header,backup_flag)-offsetof(header,backup_next),SEEK_CUR);
-    write(fd,ones,1);//set backup's flag
+    read(fd,&h.free_list,sizeof(h.free_list));
+    h.backup_list=h.free_list;
+    lseek(fd,0,SEEK_SET);
+    write(fd,&h,sizeof(h));
 }
 
 int check_backup(int fd,uint32_t key_pos){
