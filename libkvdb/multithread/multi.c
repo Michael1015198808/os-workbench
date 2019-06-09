@@ -19,10 +19,11 @@ void *test(void *arg) {
 
 #define THREADS 4
 #define ARGS 2
-
+#define panic(fmt,...) \
+    fprintf(stderr, __FINE__ "%d" fmt,__LINE__, ##__VA_ARGS__)
 int main(int argc, char *argv[]) {
     kvdb_t *db = malloc(sizeof(kvdb_t));
-    void *args[THREADS][ARGS];
+    uintptr_t *args[THREADS][ARGS];
     if(db == NULL) { panic("malloc failed. \n"); return 1; }
  
     if(kvdb_open(db, argv[1])) { panic("cannot open. \n"); return 1; }
