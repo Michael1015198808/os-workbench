@@ -20,7 +20,10 @@
 
 #include "kvdb.h"
 
-char *s[]={"STUID","STUNAME"};
+char *s[]={
+    "STUID",
+    //"STUNAME",
+};
 #define LEN_S sizeof(s)/sizeof(s[0])
 int main(){
     int i=0;
