@@ -158,7 +158,7 @@ uint32_t alloc_str(const char* src,int fd){
         src+=BLOCK_LEN;
         len-=BLOCK_LEN;
         if(flag){
-            pread(fd,&cur,sizeof(uint32_t),prev+BLOCK_LEN);
+            pread(fd,&cur,sizeof(uint32_t),prev+BLOCK_LEN+HEADER_LEN);
             if(len<0){
                 pwrite(fd,&prev,sizeof(uint32_t),offsetof(header,backup_prev));
             }
