@@ -125,15 +125,13 @@ void add_free_list(int fd,uint32_t cur){
         prev=cur;
         read_db(fd,cur+BLOCK_LEN,&cur,sizeof(uint32_t));
     }
-    lseek(fd,sizeof(uint32_t),SEEK_SET);
-    write(fd,&prev,sizeof(uint32_t));
+    pwrite(fd,&prev,sizeof(uint32_t),sizeof(uint32_t));
 }
 static uint32_t get_end(int fd,uint32_t append){
     uint32_t ret,new_end;
     pread(fd,&ret,sizeof(uint32_t),offsetof(header,free_list.size));
     new_end=ret+append;
-    lseek(fd,offsetof(header,free_list.size),SEEK_SET);
-    write(fd,&new_end,sizeof(uint32_t));
+    pwrite(fd,&new_end,sizeof(uint32_t),offsetof(header,free_list.size));
     return ret;
 }
 uint32_t alloc_str(const char* src,int fd){
@@ -151,24 +149,21 @@ uint32_t alloc_str(const char* src,int fd){
     uint32_t prev=ret,cur=ret;
     int64_t len=strlen(src);
     while(len>0){
-        lseek(fd,cur+HEADER_LEN,SEEK_SET);
         if(len<BLOCK_LEN){
-            write(fd,src,len);
-            write(fd,zeros,BLOCK_LEN-len);
+            pwrite(fd,zeros,BLOCK_LEN,cur+HEADER_LEN);
+            pwrite(fd,src  ,len      ,cur+HEADER_LEN);
         }else{
-            write(fd,src,BLOCK_LEN);
+            pwrite(fd,src  ,BLOCK_LEN,cur+HEADER_LEN);
         }
         src+=BLOCK_LEN;
         len-=BLOCK_LEN;
         if(flag){
             pread(fd,&cur,sizeof(uint32_t),prev+BLOCK_LEN);
             if(len<0){
-                lseek(fd,offsetof(header,backup_prev),SEEK_SET);
-                write(fd,&prev,sizeof(uint32_t));
+                pwrite(fd,&prev,sizeof(uint32_t),offsetof(header,backup_prev));
             }
             if(cur==list[1]){
-                lseek(fd,0,SEEK_SET);
-                write(fd,&list[1],sizeof(uint32_t));
+                pwrite(fd,&list[1],sizeof(uint32_t),0);
                 cur=get_end(fd,sizeof(string))-HEADER_LEN;
                 flag=0;
             }
@@ -179,35 +174,27 @@ uint32_t alloc_str(const char* src,int fd){
             write_db(fd, prev+BLOCK_LEN,&cur,sizeof(uint32_t));
         }else{
             if(flag){
-                lseek(fd,0,SEEK_SET);
-                write(fd,&cur,sizeof(uint32_t));
+                pwrite(fd,&cur,sizeof(uint32_t),0);
             }
             write_db(fd, prev+BLOCK_LEN,zeros,sizeof(uint32_t));
         }
         prev=cur;
     }
-    lseek(fd,0,SEEK_SET);
-    if(flag){
-        write(fd,&cur,sizeof(uint32_t));
-    }else{
-        write(fd,&list[1],sizeof(uint32_t));
-    }
+    pwrite(fd, (flag?&cur:&list[1])
+            ,sizeof(uint32_t),0);
     return ret;
 }
 
 static inline void neg_backup(int fd){
-    lseek(fd,offsetof(header,backup_flag),SEEK_SET);
-    write(fd,zeros,1);
+    pwrite(fd,zeros,1,offsetof(header,backup_flag));
 }
 void recov_backup(int fd){
     uint8_t flag=0;
     pread(fd,&flag,sizeof(flag),offsetof(header,backup_flag));
     if(flag){
         header h;
-        lseek(fd,0,SEEK_SET);
         pread(fd,&h,sizeof(header),0);
-        lseek(fd,0,SEEK_SET);
-        write(fd, &(h.backup_list),sizeof(h.backup_list));
+        pwrite(fd, &(h.backup_list),sizeof(h.backup_list),0);
         write_db(fd,h.pos                  ,&(h.backup_tab)    ,sizeof(h.backup_tab));
         write_db(fd,h.backup_prev+BLOCK_LEN,&(h.free_list.head),sizeof(h.backup_prev));
         neg_backup(fd);
@@ -227,8 +214,7 @@ void start_backup(int fd,uint32_t pos){
     };
     pread(fd,&h.free_list,sizeof(h.free_list),0);
     h.backup_list=h.free_list;
-    lseek(fd,0,SEEK_SET);
-    write(fd,&h,sizeof(h));
+    pwrite(fd,&h,sizeof(h),0);
 }
 
 int check_backup(int fd,uint32_t key_pos){
@@ -282,8 +268,8 @@ static inline int _kvdb_put(kvdb_t *db, const char *key, const char *value){
     cur_tab.value_len=strlen(value);
     cur_tab.key=alloc_str(key,db->fd);
     cur_tab.key_len=strlen(key);
-    cur_tab.next=lseek(db->fd,get_end(db->fd,sizeof(tab)),SEEK_SET)-HEADER_LEN;
-    write(db->fd,zeros,sizeof(tab));
+    cur_tab.next=get_end(db->fd,sizeof(tab))-HEADER_LEN;
+    write_db(db->fd,cur_tab.next,zeros,sizeof(tab));
     write_db(db->fd,cur_off,&cur_tab,sizeof(tab));
     return 0;
 }
