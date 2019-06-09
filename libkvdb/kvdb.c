@@ -232,8 +232,11 @@ int check_backup(int fd,uint32_t key_pos){
 
 int kvdb_open(kvdb_t *db, const char *filename){
     db->fd=open(filename,O_RDWR|O_CREAT,0777);
+    db->reen=0;
     if(db->fd<0)return db->fd;
     flock(db->fd,LOCK_EX);
+    void *p=&db->reen;
+    asm volatile("lock incr (%0)"::"r"(p));
     if(lseek(db->fd,0,SEEK_END)<HEADER_LEN){
         init_db(db->fd);
     }

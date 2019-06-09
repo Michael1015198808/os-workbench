@@ -4,6 +4,7 @@
 
 struct kvdb{
     int fd;
+    uint32_t reen;
 };
 typedef struct kvdb kvdb_t;
 
