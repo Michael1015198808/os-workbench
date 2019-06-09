@@ -14,5 +14,5 @@ do
     fi;
     diff out1 out2;
     echo "pass " $i "-th test";
-    $(( i=$i+1 ));
+    (( i=i+1 ));
 done;

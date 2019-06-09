@@ -5,6 +5,7 @@
 struct kvdb{
     int fd;
     uint32_t reen;
+    pthread_mutex_t lk;
 };
 typedef struct kvdb kvdb_t;
 

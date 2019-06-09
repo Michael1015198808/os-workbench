@@ -2,6 +2,7 @@
 #include <dlfcn.h>
 #include <fcntl.h>
 #include <inttypes.h>
+#include <pthread.h>
 #include <readline/history.h>
 #include <readline/readline.h>
 #include <regex.h>
@@ -229,18 +230,31 @@ int check_backup(int fd,uint32_t key_pos){
     }
     return 0;
 }
+static void kvdb_lock(kvdb_t *db,int op){
+    uint32_t *p=&db->reen;
+    if(op==LOCK_UN){
+        asm volatile("lock sub $1,(%0)"::"r"(p));
+        if(*p==0){
+            flock(db->fd,op);
+        }
+    }else{
+        if(*p==0){
+            flock(db->fd,op);
+        }
+        asm volatile("lock add $1,(%0)"::"r"(p));
+    }
+}
 
 int kvdb_open(kvdb_t *db, const char *filename){
     db->fd=open(filename,O_RDWR|O_CREAT,0777);
     db->reen=0;
+    db->lk=PTHREAD_MUTEX_INITIALIZER;
     if(db->fd<0)return db->fd;
-    flock(db->fd,LOCK_EX);
-    void *p=&db->reen;
-    asm volatile("lock add $1,(%0)"::"r"(p));
+    kvdb_lock(db,LOCK_EX);
     if(lseek(db->fd,0,SEEK_END)<HEADER_LEN){
         init_db(db->fd);
     }
-    flock(db->fd,LOCK_UN);
+    kvdb_lock(db,LOCK_UN);
     return 0;
 }
 
@@ -277,11 +291,11 @@ static inline int _kvdb_put(kvdb_t *db, const char *key, const char *value){
     return 0;
 }
 int kvdb_put(kvdb_t *db, const char *key, const char *value){
-    flock(db->fd,LOCK_EX);
+    kvdb_lock(db,LOCK_EX);
     recov_backup(db->fd);
     int ret=_kvdb_put(db,key,value);
     neg_backup(db->fd);
-    flock(db->fd,LOCK_UN);
+    kvdb_lock(db,LOCK_UN);
     return ret;
 }
 
@@ -305,9 +319,9 @@ static inline char *_kvdb_get(kvdb_t *db, const char *key){
     return NULL;
 }
 char *kvdb_get(kvdb_t *db, const char *key){
-    flock(db->fd,LOCK_SH);
+    kvdb_lock(db,LOCK_SH);
     char *ret=_kvdb_get(db,key);
-    flock(db->fd,LOCK_UN);
+    kvdb_lock(db,LOCK_UN);
     return ret;
 }
 void kvdb_traverse(kvdb_t *db){
