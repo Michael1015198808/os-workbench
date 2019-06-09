@@ -8,6 +8,7 @@
             "offset of " #member " is wrong!") 
 
 #define off_len sizeof(uint32_t)
+#define header_off(member) offsetof(header,member)
 
 typedef struct{
     struct{

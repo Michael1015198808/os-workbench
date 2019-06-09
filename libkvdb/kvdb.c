@@ -74,11 +74,17 @@ static int write_db(int fd,uint32_t off,const void *src,uint32_t len){
 static inline void init_db(int fd){
         lseek(fd,0,SEEK_SET);
         uint32_t off=sizeof(tab);
-        write(fd,&off,sizeof(uint32_t));//BLOCK list's head
-        write(fd,&off,sizeof(uint32_t));//BLOCK list's tail
-        write(fd,zeros,HEADER_LEN-sizeof(uint32_t)*2);
-        write(fd,zeros,sizeof(tab));
-        write(fd,zeros,sizeof(string));//BLOCK list's first node(to simplify code)
+        uint32_t size=HEADER_LEN+sizeof(tab)+sizeof(string);
+        uint32_t cnt=0;
+        cnt+=write(fd,&off,sizeof(uint32_t));//free list's head
+        cnt+=write(fd,&off,sizeof(uint32_t));//free list's tail
+        cnt+=write(fd,&size,sizeof(uint32_t));//free list's tail
+        cnt+=write(fd,zeros,HEADER_LEN-sizeof(uint32_t)*3);
+        cnt+=write(fd,zeros,sizeof(tab));
+        cnt+=write(fd,zeros,sizeof(string));//free list's first node(to simplify code)
+        if(cnt!=size){
+            asm volatile("int $0x3");
+        }
 }
 //Read/Write reserverd area isn't supported by these API
 
@@ -125,6 +131,15 @@ void add_free_list(int fd,uint32_t cur){
     lseek(fd,sizeof(uint32_t),SEEK_SET);
     write(fd,&prev,sizeof(uint32_t));
 }
+static uint32_t get_end(int fd,uint32_t append){
+    uint32_t ret,new_end;
+    lseek(fd,offsetof(header,free_list.size),SEEK_SET);
+    read(fd,&ret,sizeof(uint32_t));
+    new_end=ret+append;
+    lseek(fd,offsetof(header,free_list.size),SEEK_SET);
+    write(fd,&new_end,sizeof(uint32_t));
+    return ret;
+}
 uint32_t alloc_str(const char* src,int fd){
     lseek(fd,0,SEEK_SET);
     uint32_t list[2],ret;
@@ -136,7 +151,7 @@ uint32_t alloc_str(const char* src,int fd){
         lseek(fd,ret+HEADER_LEN,SEEK_SET);
     }else{
         //Otherwise, starts from end
-        ret=lseek(fd,0,SEEK_END)-HEADER_LEN;
+        ret=get_end(fd,sizeof(string))-HEADER_LEN;
     }
     uint32_t prev=ret,cur=ret;
     int64_t len=strlen(src);
@@ -159,7 +174,7 @@ uint32_t alloc_str(const char* src,int fd){
             if(cur==list[1]){
                 lseek(fd,0,SEEK_SET);
                 write(fd,&list[1],sizeof(uint32_t));
-                cur=lseek(fd,0,SEEK_END)-HEADER_LEN;
+                cur=get_end(fd,sizeof(string))-HEADER_LEN;
                 flag=0;
             }
         }else{
@@ -276,7 +291,7 @@ static inline int _kvdb_put(kvdb_t *db, const char *key, const char *value){
     cur_tab.value_len=strlen(value);
     cur_tab.key=alloc_str(key,db->fd);
     cur_tab.key_len=strlen(key);
-    cur_tab.next=lseek(db->fd,0,SEEK_END)-HEADER_LEN;
+    cur_tab.next=get_end(db->fd,sizeof(tab))-HEADER_LEN;
     write(db->fd,zeros,sizeof(tab));
     write_db(db->fd,cur_off,&cur_tab,sizeof(tab));
     return 0;
