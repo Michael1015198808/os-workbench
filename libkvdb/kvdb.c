@@ -160,9 +160,15 @@ uint32_t alloc_str(const char* src,int fd){
         }else{
             cur+=sizeof(string);
         }
-        write_db(fd, prev+BLOCK_LEN,
-                len>0? &cur:zeros,
-                sizeof(uint32_t));
+        if(len>0){
+            write_db(fd, prev+BLOCK_LEN,&cur,sizeof(uint32_t));
+        }else{
+            lseek(fd,0,SEEK_SET);
+            write(fd,&cur,sizeof(uint32_t));
+            lseek(fd,offsetof(header,backup_next),SEEK_SET);
+            write(fd,&prev,sizeof(uint32_t));
+            write_db(fd, prev+BLOCK_LEN,&cur,sizeof(uint32_t));
+        }
         prev=cur;
     }
     lseek(fd,0,SEEK_SET);
@@ -189,6 +195,7 @@ void recov_backup(int fd){
         lseek(fd,0,SEEK_SET);
         write(fd, &(h.backup_list),sizeof(h.backup_list));
         write_db(fd,h.pos,&(h.backup_tab),sizeof(h.backup_tab));
+        write_db(fd,h.free_list.head,&(h.backup_next),sizeof(h.backup_next));
         neg_backup(fd);
     }
 }
