@@ -1,5 +1,7 @@
 #ifndef __KVDB_H__
 #define __KVDB_H__
+#include <stdint.h>
+#include <pthread.h>
 
 
 struct kvdb{
