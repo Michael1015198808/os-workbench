@@ -62,8 +62,7 @@ const void const*zeros=&padding;
 //manually add HEADER_LEN only when you use lseek/write instead
 //If possible, use [read|write]_db to decrease bug.
 static int read_db(int fd,uint32_t off,void *dst,uint32_t len){
-    lseek(fd,HEADER_LEN+off,SEEK_SET);
-    return read(fd,dst,len);
+    return pread(fd,dst,len,HEADER_LEN+off);
 }
 
 static int write_db(int fd,uint32_t off,const void *src,uint32_t len){
