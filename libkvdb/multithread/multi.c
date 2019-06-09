@@ -1,12 +1,13 @@
 #include "kvdb.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <pthread.h>
 
 void *test(void *arg) {
     void **args=arg;
     kvdb_t *db = args[0];
-    int mode = (int)args[1];
-    int cnt = (int)args[2];
+    uintptr_t mode = (uintptr_t)args[1];
+    uintptr_t cnt = (uintptr_t)args[2];
     while(1){
         char key[5],val[20];
         sprintf(key,"%d",cnt%100);
