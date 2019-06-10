@@ -25,7 +25,6 @@ void *test(void *arg) {
         if(val==NULL){
             asm volatile("int $3");
         }
-        printf("%d",key_val/12);
         free(val);
         usleep(1000);
     }
