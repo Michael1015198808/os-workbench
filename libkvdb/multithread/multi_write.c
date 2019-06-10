@@ -18,7 +18,7 @@ void *test(void *arg) {
     void **args=arg;
     kvdb_t *db = args[0];
     uintptr_t idx = (uintptr_t)args[1];
-    for(int i=1;i<11;++i){
+    for(int i=0;i<10;++i){
         char key[5],val[20];
         sprintf(key,"%d",idx+i);
         sprintf(val,"%d",idx/10);
