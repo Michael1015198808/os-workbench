@@ -251,7 +251,7 @@ int check_backup(int fd,uint32_t key_pos){
     }
     return 0;
 }
-static enum{KVDB_RD,KVDB_WR,KVDB_UN};
+enum{KVDB_RD,KVDB_WR,KVDB_UN};
 static void kvdb_lock(kvdb_t *db,int op){
     int file_op=-1;
     switch(op){
