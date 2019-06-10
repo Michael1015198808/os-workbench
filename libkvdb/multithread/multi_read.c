@@ -22,6 +22,9 @@ void *test(void *arg) {
     sprintf(key_str,"%d",key_val);
     while(1){
         val=kvdb_get(db,key_str);
+        if(val==NULL){
+            asm volatile("int $3");
+        }
         puts(val);
         free(val);
         usleep(1000);
