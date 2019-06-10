@@ -257,7 +257,7 @@ static void kvdb_lock(kvdb_t *db,int op){
     switch(op){
         case KVDB_RD:
             file_op=LOCK_SH;
-            pthread_rdlock_rdlock(&db->lk);
+            pthread_rwlock_rdlock(&db->lk);
             break;
         case KVDB_WR:
             file_op=LOCK_EX;
