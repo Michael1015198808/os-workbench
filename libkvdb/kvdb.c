@@ -50,7 +50,7 @@ void may_bug(void){
 #else
     #define safe_call(call,cond) \
         ( \
-            int ret=call; \
+            int ret=call, \
             if(!(ret cond)){ \
                 sprintf(stderr, \
                         "error in "__FILE__ ":%d(" __func__ ")" \
