@@ -6,6 +6,7 @@
 void *special_test(void *arg){
     void **args=arg;
     kvdb_t *db= args[0];
+    int cnt=0;
     while(1){
         char key[5],val[20];
         sprintf(key,"%d",cnt%100);
