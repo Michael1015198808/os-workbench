@@ -79,6 +79,7 @@ const static struct{
     uint8_t margin[0x10];
 }padding={};
 const void const*zeros=&padding;
+static uint8_t useless_buf[sizeof(padding)];
 
 //[read|write]_db considers the offset caused by header
 //manually add HEADER_LEN only when you use lseek/write instead
@@ -277,11 +278,11 @@ int kvdb_open(kvdb_t *db, const char *filename){
     db->fd=open(filename,O_RDWR|O_CREAT,0777);
     pthread_rwlock_init(&db->lk,NULL);
     if(db->fd<0)return db->fd;
-    kvdb_lock(db,KVDB_WR);
-    if(lseek(db->fd,0,SEEK_END)<HEADER_LEN){
+    if(pread(db->fd,useless_buf,HEADER_LEN,0)<HEADER_LEN){
+        kvdb_lock(db,KVDB_WR);
         init_db(db->fd);
+        kvdb_lock(db,KVDB_UN);
     }
-    kvdb_lock(db,KVDB_UN);
     return 0;
 }
 
