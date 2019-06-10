@@ -56,8 +56,8 @@ __thread int ret;
           ret cond?   \
           ret: \
             (sprintf(stderr, \
-                "error in "__FILE__ ":%d(" __func__ ")" \
-                #call " returns %d\n", __LINE__, ret), \
+                "error in "__FILE__ ":%d(%s)" \
+                #call " returns %d\n", __LINE__, __func__, ret), \
                 exit(1), \
                 0 \
             ) \
