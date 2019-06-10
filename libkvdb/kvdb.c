@@ -91,7 +91,7 @@ static uint8_t useless_buf[sizeof(padding)];
 //manually add HEADER_LEN only when you use lseek/write instead
 //If possible, use [read|write]_db to decrease bug.
 static int read_db(int fd,uint32_t off,void *dst,uint32_t len){
-    return pread(fd,dst,len,HEADER_LEN+off);
+    return safe_call(pread(fd,dst,len,HEADER_LEN+off),>0);
 }
 
 static int write_db(int fd,uint32_t off,const void *src,uint32_t len){
