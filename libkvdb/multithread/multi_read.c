@@ -26,7 +26,7 @@ void *test(void *arg) {
             asm volatile("int $3");
         }
         free(val);
-        usleep(1000);
+        //usleep(1000);
     }
     return NULL;
 }
