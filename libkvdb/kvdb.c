@@ -36,6 +36,27 @@
 //Reserved in case for further usage
 #define BLOCK_LEN (0x20-sizeof(uint32_t))
 
+#ifdef LOCAL
+    #define safe_call(...) \
+        (may_bug(), \
+        __VA_ARGS__)
+void may_bug(void){
+    if(rand()==0){
+        exit(1);
+    }
+}
+#else
+    #define safe_call(call,cond) \
+        do{ \
+            int ret=0; \
+            if(!(ret=call cond)){ \
+                sprintf(stderr, \
+                        "error in "__FILE__ ":%d(" __func__ ")" \
+                        #call " returns %d\n", __LINE__, ret); \
+                exit(1); \
+            } \
+        }while(0)
+#endif
 
 //All offset doesn't consider header
 typedef struct string{
@@ -231,27 +252,25 @@ int check_backup(int fd,uint32_t key_pos){
     return 0;
 }
 static void kvdb_lock(kvdb_t *db,int op){
-    pthread_mutex_lock(&db->lk);
-    int flag=0;
-    if(op==LOCK_UN){
-        flag=(db->reen==0);
-        if(db->reen==-1)db->reen=0;
-        else --db->reen;
-    }else{
-        flag=(db->reen==0);
-        if(op==LOCK_EX)db->reen=-1;
-        else ++db->reen;
+    pthread_mutex_lock(&db->r);
+    switch(op){
+        case LOCK_SH:
+            break;
+        case LOCK_EX:
+            break;
+        case LOCK_UN:
+            break;
+        default:
+            fprintf(stderr,__FILE__ "%d" __func__ "Unrecognized operation",(int)__LINE__);
     }
-    pthread_mutex_unlock(&db->lk);
-    if(flag){
-        flock(db->fd,op);
-    }
+    pthread_mutex_unlock(&db->r);
 }
 
 int kvdb_open(kvdb_t *db, const char *filename){
     db->fd=open(filename,O_RDWR|O_CREAT,0777);
-    db->reen=0;
-    pthread_mutex_init(&db->lk,NULL);
+    db->re_cnt=0;
+    pthread_mutex_init(&db->r,NULL);
+    pthread_mutex_init(&db->g,NULL);
     if(db->fd<0)return db->fd;
     kvdb_lock(db,LOCK_EX);
     if(lseek(db->fd,0,SEEK_END)<HEADER_LEN){

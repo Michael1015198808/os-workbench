@@ -6,8 +6,9 @@
 
 struct kvdb{
     int fd;
-    uint32_t reen;
-    pthread_mutex_t lk;
+    volatile uint32_t re_cnt;
+    pthread_mutex_t r,g;
+    //Reader_only & Global
 };
 typedef struct kvdb kvdb_t;
 
