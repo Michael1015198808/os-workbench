@@ -18,10 +18,10 @@ void *test(void *arg) {
     void **args=arg;
     kvdb_t *db = args[0];
     uintptr_t key_val = 1000000*(uintptr_t)args[1];
-    sprintf(key,"%d",key_val);
+    sprintf(key_str,"%d",key_val);
     char key_str[5],*val;
     while(1){
-        val=kvdb_get(db,key);
+        val=kvdb_get(db,key_str);
         puts(val);
         free(val);
         usleep(1000);
