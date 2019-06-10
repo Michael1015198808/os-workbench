@@ -46,7 +46,7 @@ int main(int argc, char *argv[]) {
     pthread_t pt[THREADS];
     for(int i = 0; i < THREADS; i ++) {
         args[i][0]=(uintptr_t)db;
-        args[i][1]=12*i+1;
+        args[i][1]=(100/32)*i+1;
         pthread_create(&pt[i], NULL, test, args[i]);
     }
 
