@@ -53,7 +53,14 @@ __thread int ret;
     #define safe_call(call,cond) \
         ( \
           ret=call, \
-          ret cond?ret:exit(1) \
+          ret cond?   \
+          ret: \
+            (sprintf(stderr, \
+                "error in "__FILE__ ":%d(" __func__ ")" \
+                #call " returns %d\n", __LINE__, ret), \
+                exit(1), \
+                0 \
+            ) \
         )
 #endif
 
@@ -84,7 +91,7 @@ static uint8_t useless_buf[sizeof(padding)];
 //manually add HEADER_LEN only when you use lseek/write instead
 //If possible, use [read|write]_db to decrease bug.
 static int read_db(int fd,uint32_t off,void *dst,uint32_t len){
-    return safe_call(pread(fd,dst,len,HEADER_LEN+off),>0);
+    return pread(fd,dst,len,HEADER_LEN+off);
 }
 
 static int write_db(int fd,uint32_t off,const void *src,uint32_t len){
