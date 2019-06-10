@@ -251,42 +251,37 @@ int check_backup(int fd,uint32_t key_pos){
     }
     return 0;
 }
+static enum{KVDB_RD,KVDB_WR,KVDB_UN};
 static void kvdb_lock(kvdb_t *db,int op){
-    pthread_mutex_lock(&db->r);
+    int file_op=-1;
     switch(op){
-        case LOCK_SH:
-            ++db->re_cnt;
-            if(db->re_cnt==1)pthread_mutex_lock(&db->g);
-            return;
-        case LOCK_EX:
-            pthread_mutex_unlock(&db->r);
-            pthread_mutex_lock(&db->g);
+        case KVDB_RD:
+            file_op=LOCK_SH;
+            pthread_rdlock_rdlock(&db->lk);
             break;
-        case LOCK_UN:
-            if(db->re_cnt>0){
-                --db->re_cnt;
-            }
-            if(db->re_cnt==0){
-                pthread_mutex_unlock(&db->g);
-            }
+        case KVDB_WR:
+            file_op=LOCK_EX;
+            pthread_rwlock_wrlock(&db->lk);
+            break;
+        case KVDB_UN:
+            file_op=LOCK_UN;
+            pthread_rwlock_unlock(&db->lk);
             break;
         default:
             fprintf(stderr,__FILE__ "%d%s Unrecognized operation",(int)__LINE__,__func__);
     }
-    pthread_mutex_unlock(&db->r);
+    flock(db->fd,file_op);
 }
 
 int kvdb_open(kvdb_t *db, const char *filename){
     db->fd=open(filename,O_RDWR|O_CREAT,0777);
-    db->re_cnt=0;
-    pthread_mutex_init(&db->r,NULL);
-    pthread_mutex_init(&db->g,NULL);
+    pthread_rwlock_init(&db->lk,NULL);
     if(db->fd<0)return db->fd;
-    kvdb_lock(db,LOCK_EX);
+    kvdb_lock(db,KVDB_WR);
     if(lseek(db->fd,0,SEEK_END)<HEADER_LEN){
         init_db(db->fd);
     }
-    kvdb_lock(db,LOCK_UN);
+    kvdb_lock(db,KVDB_UN);
     return 0;
 }
 
@@ -323,11 +318,11 @@ static inline int _kvdb_put(kvdb_t *db, const char *key, const char *value){
     return 0;
 }
 int kvdb_put(kvdb_t *db, const char *key, const char *value){
-    kvdb_lock(db,LOCK_EX);
+    kvdb_lock(db,KVDB_WR);
     recov_backup(db->fd);
     int ret=_kvdb_put(db,key,value);
     neg_backup(db->fd);
-    kvdb_lock(db,LOCK_UN);
+    kvdb_lock(db,KVDB_UN);
     return ret;
 }
 
@@ -351,9 +346,9 @@ static inline char *_kvdb_get(kvdb_t *db, const char *key){
     return NULL;
 }
 char *kvdb_get(kvdb_t *db, const char *key){
-    kvdb_lock(db,LOCK_SH);
+    kvdb_lock(db,KVDB_RD);
     char *ret=_kvdb_get(db,key);
-    kvdb_lock(db,LOCK_UN);
+    kvdb_lock(db,KVDB_UN);
     return ret;
 }
 void kvdb_traverse(kvdb_t *db){
