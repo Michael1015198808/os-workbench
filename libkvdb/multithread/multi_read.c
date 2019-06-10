@@ -20,7 +20,7 @@ void *test(void *arg) {
     uintptr_t key_val = (uintptr_t)args[1];
     char key_str[5],*val;
     sprintf(key_str,"%d",key_val);
-    while(1){
+    for(int i=1;i!=0;++i){
         val=kvdb_get(db,key_str);
         if(val==NULL){
             asm volatile("int $3");
@@ -31,7 +31,7 @@ void *test(void *arg) {
     return NULL;
 }
 
-#define THREADS 8
+#define THREADS 32
 #define ARGS 2
 #define panic(fmt,...) \
     fprintf(stderr, __FILE__ ":%d " fmt,__LINE__, ##__VA_ARGS__)
@@ -55,6 +55,7 @@ int main(int argc, char *argv[]) {
     }
 
     if(kvdb_close(db)) { panic("cannot close. \n"); return 1; }
+    system("systemctl hibernate");
 
     return 0;
 }
