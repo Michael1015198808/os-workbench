@@ -3,6 +3,16 @@
 #include <stdio.h>
 #include <pthread.h>
 
+void *special_test(void *arg){
+    void **args=arg;
+    kvdb_t *db= args[0];
+    while(1){
+        char key[5],val[20];
+        sprintf(key,"%d",cnt%100);
+        sprintf(val,"%d",cnt);
+        kvdb_put(db,key,val);
+    }
+}
 void *test(void *arg) {
     void **args=arg;
     kvdb_t *db = args[0];
@@ -13,6 +23,7 @@ void *test(void *arg) {
         sprintf(key,"%d",cnt%100);
         sprintf(val,"%d",cnt);
         kvdb_put(db,key,val);
+        ++cnt;
     }
     return NULL;
 }
