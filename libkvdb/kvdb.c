@@ -51,17 +51,21 @@ void may_bug(void){
 #else
 __thread int ret;
     #define safe_call(call,cond) \
-        ( \
-          ret=call, \
-          ret cond?   \
-          ret: \
-            (fprintf(stderr, \
-                "error in "__FILE__ ":%d(%s)" \
-                #call " returns %d\n", __LINE__, __func__, ret), \
-                exit(1), \
-                0 \
-            ) \
-        )
+            safe_call(call,cond,exit(1))
+
+    #define safe_call(call,cond,handler) \
+            ( \
+                ret=call, \
+                ret cond?   \
+                ret: \
+                ( \
+                    fprintf(stderr, \
+                    "error in "__FILE__ ":%d(%s)" \
+                    #call " returns %d\n", __LINE__, __func__, ret), \
+/*exit returns void*/handler \
+/*so an int needed.*/0 \
+                ) \
+            )
 #endif
 
 //All offset doesn't consider header
