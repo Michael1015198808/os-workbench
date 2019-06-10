@@ -25,6 +25,7 @@ void *test(void *arg) {
         sprintf(val,"%d",cnt);
         kvdb_put(db,key,val);
         ++cnt;
+        usleep(1000);
     }
     return NULL;
 }
