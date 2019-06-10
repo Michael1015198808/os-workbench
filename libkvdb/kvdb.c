@@ -261,7 +261,7 @@ static void kvdb_lock(kvdb_t *db,int op){
         case LOCK_UN:
             break;
         default:
-            fprintf(stderr,__FILE__ "%d" __func__ "Unrecognized operation",(int)__LINE__);
+            fprintf(stderr,__FILE__ "%d%s Unrecognized operation",(int)__LINE__,__func__);
     }
     pthread_mutex_unlock(&db->r);
 }
