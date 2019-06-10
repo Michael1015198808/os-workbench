@@ -31,7 +31,6 @@
 #define BLOCK_LEN (0x20-sizeof(uint32_t))
 
 
-#define DEBUG
 #define SAFE
 #if defined(DEBUG)&&defined(SAFE)
 _Static_assert(0,"DEBUG and SAFE can't be both defined!");
