@@ -255,10 +255,20 @@ static void kvdb_lock(kvdb_t *db,int op){
     pthread_mutex_lock(&db->r);
     switch(op){
         case LOCK_SH:
-            break;
+            ++db->re_cnt;
+            if(db->re_cnt==1)pthread_mutex_lock(&db->g);
+            return;
         case LOCK_EX:
+            pthread_mutex_unlock(&db->r);
+            pthread_mutex_lock(&db->g);
             break;
         case LOCK_UN:
+            if(db->re_cnt>0){
+                --db->re_cnt;
+            }
+            if(db->re_cnt==0){
+                pthread_mutex_unlock(&db->g);
+            }
             break;
         default:
             fprintf(stderr,__FILE__ "%d%s Unrecognized operation",(int)__LINE__,__func__);
