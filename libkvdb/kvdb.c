@@ -26,27 +26,22 @@
 #define log(pat, ...) \
     printf("%d" pat, __LINE__##__VA_ARGS__)
 
-#define safe_do(Sentence) \
-    { \
-        if(Sentence) \
-        return -1; \
-    }
-
 #define HEADER_LEN 0x100
 //Reserved in case for further usage
 #define BLOCK_LEN (0x20-sizeof(uint32_t))
 
 
 #define DEBUG
+#define SAFE
 #if defined(DEBUG)&&defined(SAFE)
 _Static_assert(0,"DEBUG and SAFE can't be both defined!");
 #endif
 //SAFE mode default
 
 #ifdef DEBUG
-    #define safe_call(...) \
+    #define safe_call(call,cond) \
         (may_bug(), \
-        __VA_ARGS__)
+        call)
 void may_bug(void){
     if(rand()==0){
         asm volatile("int $3");//For debug usage
@@ -55,15 +50,16 @@ void may_bug(void){
 }
 #else
     #define safe_call(call,cond) \
-        do{ \
-            int ret=0; \
-            if(!(ret=call cond)){ \
+        ( \
+            int ret=call; \
+            if(!(ret cond)){ \
                 sprintf(stderr, \
                         "error in "__FILE__ ":%d(" __func__ ")" \
                         #call " returns %d\n", __LINE__, ret); \
                 exit(1); \
-            } \
-        }while(0)
+            }, \
+            ret \
+        )
 #endif
 
 //All offset doesn't consider header
