@@ -22,9 +22,10 @@ void *test(void *arg) {
     while(1){
         char key[5],val[20];
         sprintf(key,"%d",cnt%100);
-        sprintf(val,"%d",cnt);
+        sprintf(val,"%d",1000000+cnt);
         kvdb_put(db,key,val);
         ++cnt;
+        if(cnt>=1000000)cnt=0;
         usleep(1000);
     }
     return NULL;
