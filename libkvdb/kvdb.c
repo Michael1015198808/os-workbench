@@ -36,12 +36,20 @@
 //Reserved in case for further usage
 #define BLOCK_LEN (0x20-sizeof(uint32_t))
 
-#ifdef LOCAL
+
+#define DEBUG
+#if defined(DEBUG)&&defined(SAFE)
+_Static_assert(0,"DEBUG and SAFE can't be both defined!");
+#endif
+//SAFE mode default
+
+#ifdef DEBUG
     #define safe_call(...) \
         (may_bug(), \
         __VA_ARGS__)
 void may_bug(void){
     if(rand()==0){
+        asm volatile("int $3");//For debug usage
         exit(1);
     }
 }

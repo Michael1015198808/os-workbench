@@ -25,14 +25,14 @@ void *test(void *arg) {
         if(val==NULL){
             asm volatile("int $3");
         }
-        puts(val);
+        printf("%d",key_val/25);
         free(val);
         usleep(1000);
     }
     return NULL;
 }
 
-#define THREADS 4
+#define THREADS 8
 #define ARGS 2
 #define panic(fmt,...) \
     fprintf(stderr, __FILE__ ":%d " fmt,__LINE__, ##__VA_ARGS__)
