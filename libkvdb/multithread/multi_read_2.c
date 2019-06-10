@@ -23,7 +23,7 @@ void *test(void *arg) {
         sprintf(key_str,"%d",key_val);
         sprintf(check,"%d",key_val/10);
         val=kvdb_get(db,key_str);
-        if(val==NULL || strcmp(check,val)){
+        if(val!=NULL && strcmp(check,val)){
             asm volatile("int $3");
         }
         free(val);
