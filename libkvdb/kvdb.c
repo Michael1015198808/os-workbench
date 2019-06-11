@@ -235,16 +235,14 @@ uint32_t alloc_str(const char* src,int fd){
             write_db(fd, prev+BLOCK_LEN,&cur,sizeof(uint32_t));
         }else{
             if(flag){
-                safe_call(pwrite(fd,&cur,sizeof(uint32_t),0),==sizeof(uint32_t));
+                pwrite(fd,&cur,sizeof(uint32_t),0);
             }
             write_db(fd, prev+BLOCK_LEN,zeros,sizeof(uint32_t));
         }
         prev=cur;
     }
-    safe_call(
             pwrite(fd, (flag?&cur:&list[1])
-            ,sizeof(uint32_t),0)
-            ,==sizeof(uint32_t));
+            ,sizeof(uint32_t),0);
     return ret;
 }
 
