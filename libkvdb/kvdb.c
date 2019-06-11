@@ -211,6 +211,9 @@ uint32_t alloc_str(const char* src,int fd){
     int64_t len=strlen(src);
     while(len>0){
         if(len<BLOCK_LEN){
+#undef safe_call
+#define safe_call(call,cond) \
+    call
             safe_call(pwrite(fd,zeros,BLOCK_LEN,cur+HEADER_LEN),==BLOCK_LEN);
             safe_call(pwrite(fd,src  ,len      ,cur+HEADER_LEN),==len);
         }else{
@@ -218,9 +221,6 @@ uint32_t alloc_str(const char* src,int fd){
         }
         src+=BLOCK_LEN;
         len-=BLOCK_LEN;
-#undef safe_call
-#define safe_call(call,cond) \
-    call
         if(flag){
             safe_call(pread(fd,&cur,sizeof(uint32_t),prev+BLOCK_LEN+HEADER_LEN),==sizeof(uint32_t));
             if(len<0){
