@@ -279,28 +279,36 @@ int check_backup(int fd,uint32_t key_pos){
     return 0;
 }
 enum{KVDB_RD,KVDB_WR,KVDB_UN};
-static inline void lock_add(volatile int *p,int add){
-    static pthread_mutex_t lk;
+static inline void lock_op(volatile int *p,int del){
+    pthread_mutex_t lk=PTHREAD_MUTEX_INITIALIZER;
     pthread_mutex_lock(&lk);
-    *p+=add;
+    *p+=del;
     pthread_mutex_unlock(&lk);
 }
 static void kvdb_lock(kvdb_t *db,int op){
     int file_op=-1;
     switch(op){
         case KVDB_RD:
-            lock_add(&db->wr_block,1);
-            while(db->rd_block);
             file_op=LOCK_SH;
+            if(db->rd_acq>0){
+                if(db->rd_cnt>077){
+                    db->rd_cnt=0;
+                    db->rd_block=1;
+                }else{
+                    ++db->rd_cnt;//Don't need to be atomic
+                }
+            }else{
+                db->rd_cnt=0;
+            }
+            while(db->rd_block);
             pthread_rwlock_rdlock(&db->lk);
-            lock_add(&db->wr_block,-1);
             break;
         case KVDB_WR:
-            lock_add(&db->rd_block,1);
-            while(db->wr_block);
             file_op=LOCK_EX;
+            lock_op(&db->rd_acq, 1);
             pthread_rwlock_wrlock(&db->lk);
-            lock_add(&db->rd_block,-1);
+            lock_op(&db->rd_acq,-1);
+            db->rd_block=0;
             break;
         case KVDB_UN:
             file_op=LOCK_UN;
@@ -315,7 +323,7 @@ static void kvdb_lock(kvdb_t *db,int op){
 int kvdb_open(kvdb_t *db, const char *filename){
     db->fd=open(filename,O_RDWR|O_CREAT,0777);
     db->rd_block=0;
-    db->wr_block=0;
+    db->rd_cnt=0;
     pthread_rwlock_init(&db->lk,NULL);
     if(db->fd<0)return db->fd;
     if(pread(db->fd,useless_buf,HEADER_LEN,0)<HEADER_LEN){
