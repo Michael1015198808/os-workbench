@@ -248,6 +248,9 @@ uint32_t alloc_str(const char* src,int fd){
     return ret;
 }
 
+#undef safe_call
+#define safe_call(call,cond) \
+    call
 static inline void neg_backup(int fd){
     safe_call(pwrite(fd,zeros,1,offsetof(header,backup_flag)),==1);
 }
