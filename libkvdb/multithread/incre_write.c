@@ -4,11 +4,12 @@
 #include <pthread.h>
 
 volatile int max[2];
+volatile int writable=0;
 void *test_write(void *arg){
     void **args=arg;
     kvdb_t *db= args[0];
-    usleep(0xffff);
     int base=args[1];
+    while(!writable);
     for(int i=0;i<50;++i){
         char key[5],val[20];
         sprintf(key,"%d",50*base+i);
@@ -66,6 +67,8 @@ int main(int argc, char *argv[]) {
         pthread_create(&pt[i], NULL,  test_read, args[i]);
     }
 
+    usleep(0xfff);
+    writable=1;
     for(int i = 0; i < THREADS; i ++) {
         pthread_join(pt[i], NULL);
     }
