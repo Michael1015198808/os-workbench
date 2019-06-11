@@ -32,12 +32,13 @@ void *test_read(void *arg) {
             }
             free(val);
         }
+        usleep(rand()&0xff);
         if(max[base]==49)break;
     }
     return NULL;
 }
 
-#define THREADS 32
+#define THREADS 16
 #define ARGS 2
 #define panic(fmt,...) \
     fprintf(stderr, __FILE__ ":%d " fmt,__LINE__, ##__VA_ARGS__)
