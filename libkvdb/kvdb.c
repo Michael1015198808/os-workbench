@@ -10,7 +10,7 @@
  * Fancy designs:
  *      declare a zeros array to write 00...00 faster.
  *      Use union padding to make sure zeros is long enough.
- *      macro safe_call
+ *      macro safe_call(This macro can indecates which line meets an unexcepted event)
  *      When a thread want to write, prevent new threads from reading, until this thread finishs writing, so even there are endless reading, write can still success.
  *      And since readers can read concurently, letting readers waiting won't lead to something bad.
  *        algorithm:
@@ -77,6 +77,9 @@ void may_bug(void){
 
 #else
 __thread int ret;
+__thread int errid;
+//Set HANDLER to empty to ignore unexcepted event, or set errid and return
+//kvdb_get and kvdb_put will capture non-zero errid and return it to user
 #define HANDLER \
     exit(1)
 
@@ -130,7 +133,6 @@ static int write_db(int fd,uint32_t off,const void *src,uint32_t len){
 }
 //To prevent write in kvdb_ s
 static inline void init_db(int fd){
-        lseek(fd,0,SEEK_SET);
         uint32_t off=sizeof(tab);
         uint32_t size=HEADER_LEN+sizeof(tab)+sizeof(string);
         uint32_t cnt=0;
@@ -178,30 +180,29 @@ static void string_puts(string str,int fd){
 
 void add_free_list(int fd,uint32_t cur){
     uint32_t tail_old;
-    pread(fd,&tail_old,sizeof(uint32_t),sizeof(uint32_t));
+    safe_call(pread(fd,&tail_old,sizeof(uint32_t),sizeof(uint32_t)),==sizeof(uint32_t));
     write_db(fd, tail_old+BLOCK_LEN, &cur, sizeof(uint32_t));
     uint32_t prev=cur;
     while(cur!=0){
         prev=cur;
         read_db(fd,cur+BLOCK_LEN,&cur,sizeof(uint32_t));
     }
-    pwrite(fd,&prev,sizeof(uint32_t),sizeof(uint32_t));
+    safe_call(pwrite(fd,&prev,sizeof(uint32_t),sizeof(uint32_t)),==sizeof(uint32_t));
 }
 static uint32_t get_end(int fd,uint32_t append){
     uint32_t ret,new_end;
-    pread(fd,&ret,sizeof(uint32_t),offsetof(header,free_list.size));
+    safe_call(pread(fd,&ret,sizeof(uint32_t),offsetof(header,free_list.size)),==sizeof(uint32_t));
     new_end=ret+append;
-    pwrite(fd,&new_end,sizeof(uint32_t),offsetof(header,free_list.size));
+    safe_call(pwrite(fd,&new_end,sizeof(uint32_t),offsetof(header,free_list.size)),==sizeof(uint32_t));
     return ret;
 }
 uint32_t alloc_str(const char* src,int fd){
     uint32_t list[2],ret;
-    pread(fd,list,sizeof(uint32_t)*2,0);
+    safe_call(pread(fd,list,sizeof(uint32_t)*2,0),==sizeof(uint32_t)*2);
     int flag=1;//flag of left blocks
     if( ( flag=(list[0]!=list[1]) )  ){
         //If there are blocks left, starts from there
         ret=list[0];
-        lseek(fd,ret+HEADER_LEN,SEEK_SET);
     }else{
         //Otherwise, starts from end
         ret=get_end(fd,sizeof(string))-HEADER_LEN;
@@ -210,20 +211,20 @@ uint32_t alloc_str(const char* src,int fd){
     int64_t len=strlen(src);
     while(len>0){
         if(len<BLOCK_LEN){
-            pwrite(fd,zeros,BLOCK_LEN,cur+HEADER_LEN);
-            pwrite(fd,src  ,len      ,cur+HEADER_LEN);
+            safe_call(pwrite(fd,zeros,BLOCK_LEN,cur+HEADER_LEN),==BLOCK_LEN);
+            safe_call(pwrite(fd,src  ,len      ,cur+HEADER_LEN),==len);
         }else{
-            pwrite(fd,src  ,BLOCK_LEN,cur+HEADER_LEN);
+            safe_call(pwrite(fd,src  ,BLOCK_LEN,cur+HEADER_LEN),==BLOCK_LEN);
         }
         src+=BLOCK_LEN;
         len-=BLOCK_LEN;
         if(flag){
-            pread(fd,&cur,sizeof(uint32_t),prev+BLOCK_LEN+HEADER_LEN);
+            safe_call(pread(fd,&cur,sizeof(uint32_t),prev+BLOCK_LEN+HEADER_LEN),==sizeof(uint32_t));
             if(len<0){
-                pwrite(fd,&prev,sizeof(uint32_t),offsetof(header,backup_prev));
+                safe_call(pwrite(fd,&prev,sizeof(uint32_t),offsetof(header,backup_prev)),==sizeof(uint32_t));
             }
             if(cur==list[1]){
-                pwrite(fd,&list[1],sizeof(uint32_t),0);
+                safe_call(pwrite(fd,&list[1],sizeof(uint32_t),0),==sizeof(uint32_t));
                 cur=get_end(fd,sizeof(string))-HEADER_LEN;
                 flag=0;
             }
@@ -234,27 +235,29 @@ uint32_t alloc_str(const char* src,int fd){
             write_db(fd, prev+BLOCK_LEN,&cur,sizeof(uint32_t));
         }else{
             if(flag){
-                pwrite(fd,&cur,sizeof(uint32_t),0);
+                safe_call(pwrite(fd,&cur,sizeof(uint32_t),0),==sizeof(uint32_t));
             }
             write_db(fd, prev+BLOCK_LEN,zeros,sizeof(uint32_t));
         }
         prev=cur;
     }
-    pwrite(fd, (flag?&cur:&list[1])
-            ,sizeof(uint32_t),0);
+    safe_call(
+            pwrite(fd, (flag?&cur:&list[1])
+            ,sizeof(uint32_t),0)
+            ,==sizeof(uint32_t));
     return ret;
 }
 
 static inline void neg_backup(int fd){
-    pwrite(fd,zeros,1,offsetof(header,backup_flag));
+    safe_call(pwrite(fd,zeros,1,offsetof(header,backup_flag)),==1);
 }
 void recov_backup(int fd){
     uint8_t flag=0;
-    pread(fd,&flag,sizeof(flag),offsetof(header,backup_flag));
+    safe_call(pread(fd,&flag,sizeof(flag),offsetof(header,backup_flag)),==sizeof(flag));
     if(flag){
         header h;
-        pread(fd,&h,sizeof(header),0);
-        pwrite(fd, &(h.backup_list),sizeof(h.backup_list),0);
+        safe_call(pread(fd,&h,sizeof(header),0),==sizeof(header));
+        safe_call(pwrite(fd, &(h.backup_list),sizeof(h.backup_list),0),==sizeof(h.backup_list));
         write_db(fd,h.pos                  ,&(h.backup_tab)    ,sizeof(h.backup_tab));
         write_db(fd,h.backup_prev+BLOCK_LEN,&(h.free_list.head),sizeof(h.backup_prev));
         neg_backup(fd);
@@ -272,17 +275,17 @@ void start_backup(int fd,uint32_t pos){
     //.backup_prev;
     .backup_flag=1
     };
-    pread(fd,&h.free_list,sizeof(h.free_list),0);
+    safe_call(pread(fd,&h.free_list,sizeof(h.free_list),0),==sizeof(h.free_list));
     h.backup_list=h.free_list;
-    pwrite(fd,&h,sizeof(h),0);
+    safe_call(pwrite(fd,&h,sizeof(h),0),==sizeof(h));
 }
 
 int check_backup(int fd,uint32_t key_pos){
     uint8_t flag=0;
     uint32_t backup_pos;
-    pread(fd,&flag,sizeof(flag),offsetof(header,backup_flag));
+    safe_call(pread(fd,&flag,sizeof(flag),offsetof(header,backup_flag)),==sizeof(flag));
     if(flag){
-        pread(fd,&backup_pos,sizeof(uint32_t),offsetof(header,backup_tab.key));
+        safe_call(pread(fd,&backup_pos,sizeof(uint32_t),offsetof(header,backup_tab.key)),==sizeof(uint32_t));
         if(backup_pos==key_pos){
             return 1;
         }
@@ -334,7 +337,7 @@ int kvdb_open(kvdb_t *db, const char *filename){
     db->wr_acq=0;
     pthread_rwlock_init(&db->lk,NULL);
     if(db->fd<0)return db->fd;
-    if(pread(db->fd,useless_buf,HEADER_LEN,0)<HEADER_LEN){
+    if(safe_call(pread(db->fd,useless_buf,HEADER_LEN,0),<0)<HEADER_LEN){
         kvdb_lock(db,KVDB_WR);
         init_db(db->fd);
         kvdb_lock(db,KVDB_UN);
@@ -375,12 +378,18 @@ static inline int _kvdb_put(int fd, const char *key, const char *value){
     return 0;
 }
 int kvdb_put(kvdb_t *db, const char *key, const char *value){
+#ifdef SAFE
+    errid=0;
+#endif
     kvdb_lock(db,KVDB_WR);
     int fd=db->fd;
     recov_backup(fd);
     int ret=_kvdb_put(fd,key,value);
     neg_backup(fd);
     kvdb_lock(db,KVDB_UN);
+#ifdef SAFE
+    if(errid)return errid;
+#endif
     return ret;
 }
 
@@ -393,20 +402,27 @@ static inline char *_kvdb_get(int fd, const char *key){
         if(!string_cmp(key,key_str,fd)){
             string val_str;
             if(check_backup(fd,cur_tab.key)){
-                pread(fd,&cur_tab,sizeof(tab),offsetof(header,backup_tab));
+                safe_call(pread(fd,&cur_tab,sizeof(tab),offsetof(header,backup_tab)),==sizeof(tab));
             }
             read_db(fd,cur_tab.value,&val_str,sizeof(string));
             char *ret=malloc(cur_tab.value_len+1);
-            string_cpy(ret,val_str,fd);
+            if(ret)
+                string_cpy(ret,val_str,fd);
             return ret;
         }
     }
     return NULL;
 }
 char *kvdb_get(kvdb_t *db, const char *key){
+#ifdef SAFE
+    errid=0;
+#endif
     kvdb_lock(db,KVDB_RD);
     char *ret=_kvdb_get(db->fd,key);
     kvdb_lock(db,KVDB_UN);
+#ifdef SAFE
+    if(errid)return NULL;
+#endif
     return ret;
 }
 void kvdb_traverse(kvdb_t *db){
