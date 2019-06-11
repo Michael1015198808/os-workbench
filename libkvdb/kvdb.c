@@ -196,6 +196,9 @@ static uint32_t get_end(int fd,uint32_t append){
     pwrite(fd,&new_end,sizeof(uint32_t),offsetof(header,free_list.size));
     return ret;
 }
+#undef safe_call
+#define safe_call(call,cond) \
+    call
 uint32_t alloc_str(const char* src,int fd){
     uint32_t list[2],ret;
     safe_call(pread(fd,list,sizeof(uint32_t)*2,0),==sizeof(uint32_t)*2);
@@ -247,10 +250,21 @@ uint32_t alloc_str(const char* src,int fd){
             ,==sizeof(uint32_t));
     return ret;
 }
-
 #undef safe_call
 #define safe_call(call,cond) \
-    call
+            ( \
+                ret=call, \
+                ret cond?   \
+                ret: \
+                ( \
+                    fprintf(stderr, \
+                    "error in "__FILE__ ":%d(%s)" \
+                    #call " returns %d\n", __LINE__, __func__, ret), \
+/*exit returns void*/HANDLER, \
+/*so an int needed.*/0 \
+                ) \
+            )
+
 static inline void neg_backup(int fd){
     safe_call(pwrite(fd,zeros,1,offsetof(header,backup_flag)),==1);
 }
