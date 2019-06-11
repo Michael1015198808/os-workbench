@@ -221,6 +221,20 @@ uint32_t alloc_str(const char* src,int fd){
         }
         src+=BLOCK_LEN;
         len-=BLOCK_LEN;
+#undef safe_call
+#define safe_call(call,cond) \
+            ( \
+                ret=call, \
+                ret cond?   \
+                ret: \
+                ( \
+                    fprintf(stderr, \
+                    "error in "__FILE__ ":%d(%s)" \
+                    #call " returns %d\n", __LINE__, __func__, ret), \
+/*exit returns void*/HANDLER, \
+/*so an int needed.*/0 \
+                ) \
+            )
         if(flag){
             safe_call(pread(fd,&cur,sizeof(uint32_t),prev+BLOCK_LEN+HEADER_LEN),==sizeof(uint32_t));
             if(len<0){
@@ -250,20 +264,6 @@ uint32_t alloc_str(const char* src,int fd){
             ,==sizeof(uint32_t));
     return ret;
 }
-#undef safe_call
-#define safe_call(call,cond) \
-            ( \
-                ret=call, \
-                ret cond?   \
-                ret: \
-                ( \
-                    fprintf(stderr, \
-                    "error in "__FILE__ ":%d(%s)" \
-                    #call " returns %d\n", __LINE__, __func__, ret), \
-/*exit returns void*/HANDLER, \
-/*so an int needed.*/0 \
-                ) \
-            )
 
 static inline void neg_backup(int fd){
     safe_call(pwrite(fd,zeros,1,offsetof(header,backup_flag)),==1);
