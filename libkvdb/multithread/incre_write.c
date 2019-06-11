@@ -4,7 +4,8 @@
 #include <pthread.h>
 
 volatile int max[2];
-volatile int writable=0;
+volatile int writable=0,tot_cnt=0;
+pthread_mutex_t cnt_lk=PTHREAD_MUTEX_INITILIZER;
 void *test_write(void *arg){
     void **args=arg;
     kvdb_t *db= args[0];
@@ -25,6 +26,7 @@ void *test_read(void *arg) {
     kvdb_t *db = args[0];
     uintptr_t base = (uintptr_t)args[1];
     char key_str[5],*val,check[5];
+    uintptr_t cnt=0;
     while(1){
         for(int i=0;i<max[base];++i){
             sprintf(key_str,"%d",50*base+i);
@@ -41,6 +43,9 @@ void *test_read(void *arg) {
         }
         if(max[base]==49)break;
     }
+    pthread_mutex_lock(&cnt_lk);
+    tot_cnt+=cnt;
+    pthread_mutex_unlock(&cnt_lk);
     return NULL;
 }
 
@@ -75,5 +80,6 @@ int main(int argc, char *argv[]) {
 
     if(kvdb_close(db)) { panic("cannot close. \n"); return 1; }
 
+    printf("%ld\n",tot_cnt);
     return 0;
 }
