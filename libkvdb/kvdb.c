@@ -298,9 +298,12 @@ static void kvdb_lock(kvdb_t *db,int op){
     switch(op){
         case KVDB_RD:
             file_op=LOCK_SH;
-            if(db->wr_acq>0){
-                volatile int* p=&db->wr_acq;
-                asm volatile("lock add $1,(%0)":"=r"(p));
+            int tmp;
+            if((tmp=db->wr_acq)>0){
+                ++db->rd_cnt;
+                if(tmp!=db->wr_acq){
+                    db->rd_cnt=0;
+                }
             }
             while(db->rd_cnt>0x77);
             pthread_rwlock_rdlock(&db->lk);
@@ -310,8 +313,7 @@ static void kvdb_lock(kvdb_t *db,int op){
             lock_op(&db->wr_acq, 1);
             pthread_rwlock_wrlock(&db->lk);
             lock_op(&db->wr_acq,-1);
-            volatile int* p=&db->wr_acq;
-            asm volatile("lock add $0,(%0)":"=r"(p));
+            db->rd_cnt=0;
             break;
         case KVDB_UN:
             file_op=LOCK_UN;
