@@ -131,9 +131,6 @@ static int read_db(int fd,uint32_t off,void *dst,uint32_t len){
 static int write_db(int fd,uint32_t off,const void *src,uint32_t len){
     return safe_call(pwrite(fd,src,len,HEADER_LEN+off),==len);
 }
-#undef safe_call
-#define safe_call(call,cond) \
-    call
 //To prevent write in kvdb_ s
 static inline void init_db(int fd){
         uint32_t off=sizeof(tab);
@@ -151,6 +148,9 @@ static inline void init_db(int fd){
 }
 //Read/Write reserverd area isn't supported by these API
 
+#undef safe_call
+#define safe_call(call,cond) \
+    call
 static int string_cmp(const char* key,string str,int fd){
     while(str.next!=0){
         int ret=strncmp(key,str.info,BLOCK_LEN);
