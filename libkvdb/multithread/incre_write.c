@@ -7,6 +7,7 @@ volatile int max[2];
 void *test_write(void *arg){
     void **args=arg;
     kvdb_t *db= args[0];
+    usleep(0xfff);
     int base=args[1];
     for(int i=0;i<50;++i){
         char key[5],val[20];
@@ -14,6 +15,7 @@ void *test_write(void *arg){
         sprintf(val,"%d",i);
         kvdb_put(db,key,val);
         max[base]=i;
+        printf("[%d]%d\n",base,i);
     }
     return NULL;
 }
