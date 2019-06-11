@@ -1,3 +1,19 @@
+/* 
+ * Author: Michael Yan
+ * STUID: 171240518
+ * Features:
+ *      Concurrent read/write
+ *      Proper RW control(Between processes and between threads)
+ *      recycle string of value being updated.
+ *      store strings in blocks like linked list
+ *      store key-value pairs like linked list
+ * Fancy designs:
+ *      declare a zeros array to write 00...00 faster.
+ *      Use union padding to make sure zeros is long enough.
+ *      macro safe_call
+ *      When a thread want to write, prevent new threads to read, until this thread finishs writing, so even there are endless reading, write can still success.
+ * 
+ */
 #include <assert.h>
 #include <dlfcn.h>
 #include <fcntl.h>
@@ -267,12 +283,15 @@ static void kvdb_lock(kvdb_t *db,int op){
     int file_op=-1;
     switch(op){
         case KVDB_RD:
+            while(db->rd_block);
             file_op=LOCK_SH;
             pthread_rwlock_rdlock(&db->lk);
             break;
         case KVDB_WR:
             file_op=LOCK_EX;
+            db->rd_block=1;
             pthread_rwlock_wrlock(&db->lk);
+            db->rd_block=0;
             break;
         case KVDB_UN:
             file_op=LOCK_UN;
@@ -286,6 +305,7 @@ static void kvdb_lock(kvdb_t *db,int op){
 
 int kvdb_open(kvdb_t *db, const char *filename){
     db->fd=open(filename,O_RDWR|O_CREAT,0777);
+    db->rd_block=0;
     pthread_rwlock_init(&db->lk,NULL);
     if(db->fd<0)return db->fd;
     if(pread(db->fd,useless_buf,HEADER_LEN,0)<HEADER_LEN){

@@ -6,8 +6,8 @@
 
 struct kvdb{
     int fd;
+    volatile int rd_block;
     pthread_rwlock_t lk;
-    //Reader_only & Global
 };
 typedef struct kvdb kvdb_t;
 

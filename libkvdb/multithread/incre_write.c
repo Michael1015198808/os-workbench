@@ -37,7 +37,7 @@ void *test_read(void *arg) {
         }
         usleep(rand()&0xff);
         if(!rand()&0xf){
-            usleep(0xfff);
+            usleep(0xffff);
         }
         if(max[base]==49)break;
     }
