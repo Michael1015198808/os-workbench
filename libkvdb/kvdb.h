@@ -6,7 +6,7 @@
 
 struct kvdb{
     int fd;
-    volatile int wr_acq,rd_cnt;
+    volatile int rd_block,wr_acq,rd_cnt;
     pthread_rwlock_t lk;
 };
 typedef struct kvdb kvdb_t;
