@@ -44,7 +44,7 @@ void *test_read(void *arg) {
     return NULL;
 }
 
-#define THREADS 32
+#define THREADS 64
 #define ARGS 2
 #define panic(fmt,...) \
     fprintf(stderr, __FILE__ ":%d " fmt,__LINE__, ##__VA_ARGS__)
