@@ -40,7 +40,7 @@ void *test_read(void *arg) {
     return NULL;
 }
 
-#define THREADS 16
+#define THREADS 32
 #define ARGS 2
 #define panic(fmt,...) \
     fprintf(stderr, __FILE__ ":%d " fmt,__LINE__, ##__VA_ARGS__)
@@ -48,8 +48,7 @@ int main(int argc, char *argv[]) {
     kvdb_t *db = malloc(sizeof(kvdb_t));
     uintptr_t args[THREADS][ARGS];
 
-    if(db == NULL) { panic("malloc failed. \n"); return 1; }
- 
+    if(db == NULL) { panic("malloc failed. \n"); return 1; } 
     if(kvdb_open(db, DB_FILE)) { panic("cannot open. \n"); return 1; }
  
     pthread_t pt[THREADS];
@@ -60,7 +59,7 @@ int main(int argc, char *argv[]) {
     }
     for(int i = 2; i < THREADS; i ++) {
         args[i][0]=(uintptr_t)db;
-        args[i][1]=i&1?50:0;
+        args[i][1]=i&1;
         pthread_create(&pt[i], NULL,  test_read, args[i]);
     }
 
