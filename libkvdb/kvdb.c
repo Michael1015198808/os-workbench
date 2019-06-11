@@ -196,9 +196,6 @@ static uint32_t get_end(int fd,uint32_t append){
     pwrite(fd,&new_end,sizeof(uint32_t),offsetof(header,free_list.size));
     return ret;
 }
-#undef safe_call
-#define safe_call(call,cond) \
-    call
 uint32_t alloc_str(const char* src,int fd){
     uint32_t list[2],ret;
     safe_call(pread(fd,list,sizeof(uint32_t)*2,0),==sizeof(uint32_t)*2);
