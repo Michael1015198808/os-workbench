@@ -50,10 +50,7 @@ void may_bug(void){
 
 #else
 __thread int ret;
-    #define safe_call(call,cond) \
-            safe_call(call,cond,exit(1))
-
-    #define safe_call(call,cond,handler) \
+#define safe_call(call,cond) \
             ( \
                 ret=call, \
                 ret cond?   \
@@ -62,7 +59,7 @@ __thread int ret;
                     fprintf(stderr, \
                     "error in "__FILE__ ":%d(%s)" \
                     #call " returns %d\n", __LINE__, __func__, ret), \
-/*exit returns void*/handler \
+/*exit returns void*/exit(1), \
 /*so an int needed.*/0 \
                 ) \
             )
@@ -300,57 +297,58 @@ int kvdb_close(kvdb_t *db){
     return close(db->fd);
 }
 
-static inline int _kvdb_put(kvdb_t *db, const char *key, const char *value){
+static inline int _kvdb_put(int fd, const char *key, const char *value){
     tab cur_tab={.next=0};
     uint32_t cur_off=0;(void)cur_off;
     while(  cur_off=cur_tab.next,
-            read_db(db->fd,cur_tab.next,&cur_tab,sizeof(tab)),
+            read_db(fd,cur_tab.next,&cur_tab,sizeof(tab)),
             cur_tab.next!=0){
         string key_str;
-        read_db(db->fd,cur_tab.key,&key_str,sizeof(string));
-        if(!string_cmp(key,key_str,db->fd)){
+        read_db(fd,cur_tab.key,&key_str,sizeof(string));
+        if(!string_cmp(key,key_str,fd)){
             uint32_t backup_val=cur_tab.value;
-            start_backup(db->fd,cur_off);
-            cur_tab.value=alloc_str(value,db->fd);
+            start_backup(fd,cur_off);
+            cur_tab.value=alloc_str(value,fd);
             cur_tab.value_len=strlen(value);
-            write_db(db->fd,cur_off,&cur_tab,sizeof(tab));
-            add_free_list(db->fd,backup_val);
+            write_db(fd,cur_off,&cur_tab,sizeof(tab));
+            add_free_list(fd,backup_val);
             return 0;
         }
     }
-    start_backup(db->fd,cur_off);
-    cur_tab.value=alloc_str(value,db->fd);
+    start_backup(fd,cur_off);
+    cur_tab.value=alloc_str(value,fd);
     cur_tab.value_len=strlen(value);
-    cur_tab.key=alloc_str(key,db->fd);
+    cur_tab.key=alloc_str(key,fd);
     cur_tab.key_len=strlen(key);
-    cur_tab.next=get_end(db->fd,sizeof(tab))-HEADER_LEN;
-    write_db(db->fd,cur_tab.next,zeros,sizeof(tab));
-    write_db(db->fd,cur_off,&cur_tab,sizeof(tab));
+    cur_tab.next=get_end(fd,sizeof(tab))-HEADER_LEN;
+    write_db(fd,cur_tab.next,zeros,sizeof(tab));
+    write_db(fd,cur_off,&cur_tab,sizeof(tab));
     return 0;
 }
 int kvdb_put(kvdb_t *db, const char *key, const char *value){
     kvdb_lock(db,KVDB_WR);
-    recov_backup(db->fd);
-    int ret=_kvdb_put(db,key,value);
-    neg_backup(db->fd);
+    int fd=db->fd;
+    recov_backup(fd);
+    int ret=_kvdb_put(fd,key,value);
+    neg_backup(fd);
     kvdb_lock(db,KVDB_UN);
     return ret;
 }
 
-static inline char *_kvdb_get(kvdb_t *db, const char *key){
+static inline char *_kvdb_get(int fd, const char *key){
     tab cur_tab={.next=0};
-    while(read_db(db->fd,cur_tab.next,&cur_tab,sizeof(tab)),
+    while(read_db(fd,cur_tab.next,&cur_tab,sizeof(tab)),
             cur_tab.next!=0){
         string key_str;
-        read_db(db->fd,cur_tab.key,&key_str,sizeof(string));
-        if(!string_cmp(key,key_str,db->fd)){
+        read_db(fd,cur_tab.key,&key_str,sizeof(string));
+        if(!string_cmp(key,key_str,fd)){
             string val_str;
-            if(check_backup(db->fd,cur_tab.key)){
-                pread(db->fd,&cur_tab,sizeof(tab),offsetof(header,backup_tab));
+            if(check_backup(fd,cur_tab.key)){
+                pread(fd,&cur_tab,sizeof(tab),offsetof(header,backup_tab));
             }
-            read_db(db->fd,cur_tab.value,&val_str,sizeof(string));
+            read_db(fd,cur_tab.value,&val_str,sizeof(string));
             char *ret=malloc(cur_tab.value_len+1);
-            string_cpy(ret,val_str,db->fd);
+            string_cpy(ret,val_str,fd);
             return ret;
         }
     }
@@ -358,20 +356,21 @@ static inline char *_kvdb_get(kvdb_t *db, const char *key){
 }
 char *kvdb_get(kvdb_t *db, const char *key){
     kvdb_lock(db,KVDB_RD);
-    char *ret=_kvdb_get(db,key);
+    char *ret=_kvdb_get(db->fd,key);
     kvdb_lock(db,KVDB_UN);
     return ret;
 }
 void kvdb_traverse(kvdb_t *db){
     tab cur_tab={.next=0};
-    while(read_db(db->fd,cur_tab.next,&cur_tab,sizeof(tab)),
+    int fd=db->fd;
+    while(read_db(fd,cur_tab.next,&cur_tab,sizeof(tab)),
             cur_tab.next!=0){
         string key_str,val_str;
-        read_db(db->fd,cur_tab.key,&key_str,sizeof(string));
+        read_db(fd,cur_tab.key,&key_str,sizeof(string));
         printf("Key:  ");
-        string_puts(key_str,db->fd);
-        read_db(db->fd,cur_tab.value,&val_str,sizeof(string));
+        string_puts(key_str,fd);
+        read_db(fd,cur_tab.value,&val_str,sizeof(string));
         printf("Val:  ");
-        string_puts(val_str,db->fd);
+        string_puts(val_str,fd);
     }
 }
