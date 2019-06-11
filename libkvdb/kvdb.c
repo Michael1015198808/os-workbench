@@ -191,9 +191,9 @@ void add_free_list(int fd,uint32_t cur){
 }
 static uint32_t get_end(int fd,uint32_t append){
     uint32_t ret,new_end;
-    safe_call(pread(fd,&ret,sizeof(uint32_t),offsetof(header,free_list.size)),==sizeof(uint32_t));
+    pread(fd,&ret,sizeof(uint32_t),offsetof(header,free_list.size));
     new_end=ret+append;
-    safe_call(pwrite(fd,&new_end,sizeof(uint32_t),offsetof(header,free_list.size)),==sizeof(uint32_t));
+    pwrite(fd,&new_end,sizeof(uint32_t),offsetof(header,free_list.size));
     return ret;
 }
 uint32_t alloc_str(const char* src,int fd){
