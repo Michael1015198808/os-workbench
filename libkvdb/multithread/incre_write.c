@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <pthread.h>
 
-volatile int max[2];
+volatile int max[4];
 volatile int writable=0,tot_cnt=0;
 pthread_mutex_t cnt_lk=PTHREAD_MUTEX_INITIALIZER;
 void *test_write(void *arg){
@@ -13,7 +13,7 @@ void *test_write(void *arg){
     while(!writable);
     for(int i=0;i<50;++i){
         char key[5],val[20];
-        sprintf(key,"%d",50*base+i);
+        sprintf(key,"%d",200*base+i);
         sprintf(val,"%d",i);
         kvdb_put(db,key,val);
         max[base]=i;
@@ -29,7 +29,7 @@ void *test_read(void *arg) {
     uintptr_t cnt=0;
     while(1){
         for(int i=0;i<max[base];++i,++cnt){
-            sprintf(key_str,"%d",50*base+i);
+            sprintf(key_str,"%d",200*base+i);
             sprintf(check,"%d",i);
             val=kvdb_get(db,key_str);
             if(val==NULL || strcmp(check,val)){
@@ -61,12 +61,12 @@ int main(int argc, char *argv[]) {
     if(kvdb_open(db, DB_FILE)) { panic("cannot open. \n"); return 1; }
  
     pthread_t pt[THREADS];
-    for(int i = 0; i < 2; ++i ){
+    for(int i = 0; i < 4; ++i ){
         args[i][0]=(uintptr_t)db;
         args[i][1]=i&1;
         pthread_create(&pt[i], NULL, test_write, args[i]);
     }
-    for(int i = 2; i < THREADS; i ++) {
+    for(int i = 4; i < THREADS; i ++) {
         args[i][0]=(uintptr_t)db;
         args[i][1]=i&1;
         pthread_create(&pt[i], NULL,  test_read, args[i]);
