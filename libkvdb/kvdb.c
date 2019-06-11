@@ -139,7 +139,7 @@ static inline void init_db(int fd){
         cnt+=safe_call(pwrite(fd,&off,sizeof(uint32_t),0),==sizeof(uint32_t));//free list's head
         cnt+=safe_call(pwrite(fd,&off,sizeof(uint32_t),cnt),==sizeof(uint32_t));//free list's tail
         cnt+=safe_call(pwrite(fd,&size,sizeof(uint32_t),cnt),==sizeof(uint32_t));//free list's tail
-        cnt+=safe_call(pwrite(fd,zeros,HEADER_LEN-sizeof(uint32_t)*3,cnt),==sizeof(uint32_t));
+        cnt+=safe_call(pwrite(fd,zeros,HEADER_LEN-sizeof(uint32_t)*3,cnt),==HEADER_LEN-sizeof(uint32_t)*3);
         cnt+=safe_call(pwrite(fd,zeros,sizeof(tab),cnt),==sizeof(uint32_t));
         cnt+=safe_call(pwrite(fd,zeros,sizeof(string),cnt),==sizeof(uint32_t));//free list's first node(to simplify code)
         if(cnt!=size){
