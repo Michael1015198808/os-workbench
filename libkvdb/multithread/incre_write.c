@@ -11,9 +11,9 @@ void *test_write(void *arg){
     kvdb_t *db= args[0];
     int base=args[1];
     while(!writable);
-    for(int i=0;i<50;++i){
+    for(int i=0;i<100;++i){
         char key[5],val[20];
-        sprintf(key,"%d",200*base+i);
+        sprintf(key,"%d",400*base+i);
         sprintf(val,"%d",i);
         kvdb_put(db,key,val);
         max[base]=i;
@@ -29,7 +29,7 @@ void *test_read(void *arg) {
     uintptr_t cnt=0;
     while(1){
         for(int i=0;i<max[base];++i,++cnt){
-            sprintf(key_str,"%d",200*base+i);
+            sprintf(key_str,"%d",400*base+i);
             sprintf(check,"%d",i);
             val=kvdb_get(db,key_str);
             if(val==NULL || strcmp(check,val)){
@@ -41,7 +41,7 @@ void *test_read(void *arg) {
         if(!rand()&0xf){
             usleep(0xffff);
         }
-        if(max[base]==49)break;
+        if(max[base]==99)break;
     }
     pthread_mutex_lock(&cnt_lk);
     tot_cnt+=cnt;
