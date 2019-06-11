@@ -122,11 +122,11 @@ static uint8_t useless_buf[sizeof(padding)];
 //manually add HEADER_LEN only when you use lseek/write instead
 //If possible, use [read|write]_db to decrease bug.
 static int read_db(int fd,uint32_t off,void *dst,uint32_t len){
-    return pread(fd,dst,len,HEADER_LEN+off);
+    return safe_call(pread(fd,dst,len,HEADER_LEN+off),==len);
 }
 
 static int write_db(int fd,uint32_t off,const void *src,uint32_t len){
-    return pwrite(fd,src,len,HEADER_LEN+off);
+    return safe_call(pwrite(fd,src,len,HEADER_LEN+off),==len);
 }
 //To prevent write in kvdb_ s
 static inline void init_db(int fd){
@@ -134,12 +134,12 @@ static inline void init_db(int fd){
         uint32_t off=sizeof(tab);
         uint32_t size=HEADER_LEN+sizeof(tab)+sizeof(string);
         uint32_t cnt=0;
-        cnt+=pwrite(fd,&off,sizeof(uint32_t),0);//free list's head
-        cnt+=pwrite(fd,&off,sizeof(uint32_t),cnt);//free list's tail
-        cnt+=pwrite(fd,&size,sizeof(uint32_t),cnt);//free list's tail
-        cnt+=pwrite(fd,zeros,HEADER_LEN-sizeof(uint32_t)*3,cnt);
-        cnt+=pwrite(fd,zeros,sizeof(tab),cnt);
-        cnt+=pwrite(fd,zeros,sizeof(string),cnt);//free list's first node(to simplify code)
+        cnt+=safe_call(pwrite(fd,&off,sizeof(uint32_t),0),==sizeof(uint32_t));//free list's head
+        cnt+=safe_call(pwrite(fd,&off,sizeof(uint32_t),cnt),==sizeof(uint32_t));//free list's tail
+        cnt+=safe_call(pwrite(fd,&size,sizeof(uint32_t),cnt),==sizeof(uint32_t));//free list's tail
+        cnt+=safe_call(pwrite(fd,zeros,HEADER_LEN-sizeof(uint32_t)*3,cnt),==sizeof(uint32_t));
+        cnt+=safe_call(pwrite(fd,zeros,sizeof(tab),cnt),==sizeof(uint32_t));
+        cnt+=safe_call(pwrite(fd,zeros,sizeof(string),cnt),==sizeof(uint32_t));//free list's first node(to simplify code)
         if(cnt!=size){
             asm volatile("int $0x3");
         }
