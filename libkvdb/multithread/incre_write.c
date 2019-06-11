@@ -4,7 +4,7 @@
 #include <pthread.h>
 
 volatile int max[2];
-void *write(void *arg){
+void *test_write(void *arg){
     void **args=arg;
     kvdb_t *db= args[0];
     int base=args[1];
@@ -17,7 +17,7 @@ void *write(void *arg){
     }
     return NULL;
 }
-void *test(void *arg) {
+void *test_read(void *arg) {
     void **args=arg;
     kvdb_t *db = args[0];
     uintptr_t base = (uintptr_t)args[1];
@@ -53,12 +53,12 @@ int main(int argc, char *argv[]) {
     for(int i = 0; i < 2; ++i ){
         args[i][0]=(uintptr_t)db;
         args[i][1]=i&1;
-        pthread_create(&pt[i], NULL, write, args[i]);
+        pthread_create(&pt[i], NULL, test_write, args[i]);
     }
     for(int i = 2; i < THREADS; i ++) {
         args[i][0]=(uintptr_t)db;
         args[i][1]=i&1?50:0;
-        pthread_create(&pt[i], NULL,  read, args[i]);
+        pthread_create(&pt[i], NULL,  test_read, args[i]);
     }
 
     for(int i = 0; i < THREADS; i ++) {
