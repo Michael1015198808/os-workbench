@@ -5,7 +5,7 @@
 
 volatile int max[2];
 volatile int writable=0,tot_cnt=0;
-pthread_mutex_t cnt_lk=PTHREAD_MUTEX_INITILIZER;
+pthread_mutex_t cnt_lk=PTHREAD_MUTEX_INITIALIZER;
 void *test_write(void *arg){
     void **args=arg;
     kvdb_t *db= args[0];
