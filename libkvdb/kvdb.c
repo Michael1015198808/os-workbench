@@ -96,6 +96,9 @@ __thread int errid;
 /*so an int needed.*/0 \
                 ) \
             )
+#undef safe_call
+#define safe_call(call,cond) \
+    call
 #endif
 
 //All offset doesn't consider header
