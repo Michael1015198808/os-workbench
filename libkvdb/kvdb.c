@@ -298,16 +298,9 @@ static void kvdb_lock(kvdb_t *db,int op){
     switch(op){
         case KVDB_RD:
             file_op=LOCK_SH;
-            if(db->wr_acq>0){
-                if(db->rd_cnt>077){
-                    db->rd_block=1;
-                }else{
-                    ++db->rd_cnt;//Don't need to be atomic
-                }
-            }else{
-                db->rd_cnt=0;
-            }
-            while(db->rd_block);
+            if(db->wr_acq>0)
+                ++db->rd_cnt;//Don't need to be atomic
+            while(db->rd_cnt>0x77);
             pthread_rwlock_rdlock(&db->lk);
             break;
         case KVDB_WR:
@@ -316,7 +309,6 @@ static void kvdb_lock(kvdb_t *db,int op){
             pthread_rwlock_wrlock(&db->lk);
             lock_op(&db->wr_acq,-1);
             db->rd_cnt=0;
-            db->rd_block=0;
             break;
         case KVDB_UN:
             file_op=LOCK_UN;
@@ -330,7 +322,6 @@ static void kvdb_lock(kvdb_t *db,int op){
 
 int kvdb_open(kvdb_t *db, const char *filename){
     db->fd=open(filename,O_RDWR|O_CREAT,0777);
-    db->rd_block=0;
     db->rd_cnt=0;
     db->wr_acq=0;
     pthread_rwlock_init(&db->lk,NULL);
