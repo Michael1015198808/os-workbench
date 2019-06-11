@@ -211,8 +211,8 @@ uint32_t alloc_str(const char* src,int fd){
     int64_t len=strlen(src);
     while(len>0){
         if(len<BLOCK_LEN){
-            safe_call(pwrite(fd,zeros,BLOCK_LEN,cur+HEADER_LEN),==BLOCK_LEN);
-            safe_call(pwrite(fd,src  ,len      ,cur+HEADER_LEN),==len);
+            pwrite(fd,zeros,BLOCK_LEN,cur+HEADER_LEN);
+            pwrite(fd,src  ,len      ,cur+HEADER_LEN);
         }else{
 #undef safe_call
 #define safe_call(call,cond) \
