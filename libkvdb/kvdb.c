@@ -12,6 +12,14 @@
  *      Use union padding to make sure zeros is long enough.
  *      macro safe_call
  *      When a thread want to write, prevent new threads to read, until this thread finishs writing, so even there are endless reading, write can still success.
+ *        algorithm:
+ *          Before a writer gain the writer-lock, it add wr_cnt atomically. So that wr_cnt is always equals to the number of writers waiting for lock.
+ *          Before a reader gain the reader-lock, it check whether wr_cnt>0(If there are writers need lock). If so, it add rd_cnt(not atommatically for speeding up). If rd_cnt is large enough
+ *          (writer has waited a long time), readers park by set rd_block until a writer finishs writing and reset rd_block.
+ *        proof of rd_cnt without lock:(Prove by the value of wr_acq when a writer set rd_cnt to 0)
+ *          I)   If wr_acq>0, no reader modify rd_cnt. The writer can modify the value atommically.
+ *              (All readers set rd_block to 1 in this case. That's why writer should set rd_cnt to 0 before reset rd_block)
+ *          II)  If wr_acq=0, all possible operation are setting rd_cnt=0. Though no atomic, it's still okay.
  * 
  */
 #include <assert.h>
@@ -290,9 +298,8 @@ static void kvdb_lock(kvdb_t *db,int op){
     switch(op){
         case KVDB_RD:
             file_op=LOCK_SH;
-            if(db->rd_acq>0){
+            if(db->wr_acq>0){
                 if(db->rd_cnt>077){
-                    db->rd_cnt=0;
                     db->rd_block=1;
                 }else{
                     ++db->rd_cnt;//Don't need to be atomic
@@ -305,9 +312,10 @@ static void kvdb_lock(kvdb_t *db,int op){
             break;
         case KVDB_WR:
             file_op=LOCK_EX;
-            lock_op(&db->rd_acq, 1);
+            lock_op(&db->wr_acq, 1);
             pthread_rwlock_wrlock(&db->lk);
-            lock_op(&db->rd_acq,-1);
+            lock_op(&db->wr_acq,-1);
+            db->rd_cnt=0;
             db->rd_block=0;
             break;
         case KVDB_UN:
