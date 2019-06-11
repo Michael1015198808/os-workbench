@@ -307,6 +307,7 @@ static void kvdb_lock(kvdb_t *db,int op){
         case KVDB_WR:
             file_op=LOCK_EX;
             volatile int* p=&db->wr_acq;
+            printf("%p\n",p);
             asm volatile("lock add $1,(%0)":"=g"(p));
             pthread_rwlock_wrlock(&db->lk);
             asm volatile("lock sub $1,(%0)":"=g"(p));
