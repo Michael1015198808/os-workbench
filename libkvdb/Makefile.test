@@ -1,6 +1,7 @@
 .PHONY: test-all test-64 test-32 gdb run lib
 
 BITS := 64
+CFLAGS := -g -DDB_FILE=\"$(DB_FILE)\" -I.. -L.. -lpthread
 
 test-all: test-64 test-32 lib
 	@echo "==== TEST 64 bit ===="
@@ -12,10 +13,10 @@ lib:
 	@cd .. && make -s all git
 
 test-64: $(TEST_FILE).c lib
-	@gcc -g -DDB_FILE=\"$(DB_FILE)\" -I.. -L.. -m64 $(TEST_FILE).c -o 64/$(TEST_FILE)-64 -lkvdb-64
+	@gcc  $(CFLAGS) -m64 $(TEST_FILE).c -o 64/$(TEST_FILE)-64 -lkvdb-64
 
 test-32: $(TEST_FILE).c lib
-	@gcc -g -DDB_FILE=\"$(DB_FILE)\" -I.. -L.. -m32 $(TEST_FILE).c -o 32/$(TEST_FILE)-32 -lkvdb-32
+	@gcc  $(CFLAGS) -m32 $(TEST_FILE).c -o 32/$(TEST_FILE)-32 -lkvdb-32
 
 gdb: test-$(BITS) lib
 	@LD_LIBRARY_PATH=.. gdb $(BITS)/$(TEST_FILE)-$(BITS)
@@ -36,5 +37,6 @@ watch:
 
 clean:
 	@rm $(DB_FILE)
+
 test: test-$(BITS)
 	@LD_LIBRARY_PATH=.. $(BITS)/test-$(BITS)

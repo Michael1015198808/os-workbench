@@ -1,0 +1,24 @@
+First Of All, thanks to Lanceloia's framework!
+Recommand Usage:
+I.
+multi.c
+A simple multi-thread write program. Check whether the number in your database is continuous partly.
+You don't need to init your database.
+
+II.
+multi_read.c
+A simple multi-thread read program. Check whether your program returns NULL.
+You need to prepare some key-value pairs in your database.
+
+III.
+multi_write_2.c
++
+multi_read.c
+Open two programs at the same time, and check the returned string 
+You SHOULD init your database, or keys in range [0...99] shouldn't be with values other than key/10
+(Why two programs? Since some locks are of process unit, while others are of thread)
+
+IV.
+incre_write.c
+concurrent read/write
+If your process seems dead, it's probably your write is blocked by reads.
