@@ -63,12 +63,12 @@ int main(int argc, char *argv[]) {
     pthread_t pt[THREADS];
     for(int i = 0; i < 4; ++i ){
         args[i][0]=(uintptr_t)db;
-        args[i][1]=i&1;
+        args[i][1]=i&3;
         pthread_create(&pt[i], NULL, test_write, args[i]);
     }
     for(int i = 4; i < THREADS; i ++) {
         args[i][0]=(uintptr_t)db;
-        args[i][1]=i&1;
+        args[i][1]=i&3;
         pthread_create(&pt[i], NULL,  test_read, args[i]);
     }
 
