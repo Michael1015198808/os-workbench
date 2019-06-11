@@ -7,7 +7,7 @@ volatile int max[2];
 void *test_write(void *arg){
     void **args=arg;
     kvdb_t *db= args[0];
-    usleep(0xfff);
+    usleep(0xffff);
     int base=args[1];
     for(int i=0;i<50;++i){
         char key[5],val[20];
@@ -35,6 +35,9 @@ void *test_read(void *arg) {
             free(val);
         }
         usleep(rand()&0xff);
+        if(!rand()&0xf){
+            usleep(0xfff);
+        }
         if(max[base]==49)break;
     }
     return NULL;
