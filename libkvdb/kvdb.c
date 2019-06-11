@@ -288,7 +288,7 @@ int check_backup(int fd,uint32_t key_pos){
 }
 enum{KVDB_RD,KVDB_WR,KVDB_UN};
 static void lock_op(volatile int *p,int del){
-    pthread_mutex_t lk=PTHREAD_MUTEX_INITIALIZER;
+    static pthread_mutex_t lk=PTHREAD_MUTEX_INITIALIZER;
     pthread_mutex_lock(&lk);
     *p+=del;
     pthread_mutex_unlock(&lk);
