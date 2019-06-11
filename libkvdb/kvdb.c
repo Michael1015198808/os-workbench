@@ -287,9 +287,6 @@ int check_backup(int fd,uint32_t key_pos){
     return 0;
 }
 enum{KVDB_RD,KVDB_WR,KVDB_UN};
-static void lock_op(volatile int *p,int del){
-    asm volatile("lock add %1,(%0)": "=g"(p): "g"(del));
-}
 static void kvdb_lock(kvdb_t *db,int op){
     int file_op=-1;
     switch(op){
@@ -309,9 +306,10 @@ static void kvdb_lock(kvdb_t *db,int op){
             break;
         case KVDB_WR:
             file_op=LOCK_EX;
-            lock_op(&db->wr_acq, 1);
+            volatile int* p=&db->wr_acq;
+            asm volatile("lock add $1,(%0)":"=g"(p));
             pthread_rwlock_wrlock(&db->lk);
-            lock_op(&db->wr_acq,-1);
+            asm volatile("lock sub $1,(%0)":"=g"(p));
             db->rd_cnt=0;
             db->rd_block=0;
             break;
