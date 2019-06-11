@@ -11,15 +11,18 @@
  *      declare a zeros array to write 00...00 faster.
  *      Use union padding to make sure zeros is long enough.
  *      macro safe_call
- *      When a thread want to write, prevent new threads to read, until this thread finishs writing, so even there are endless reading, write can still success.
+ *      When a thread want to write, prevent new threads from reading, until this thread finishs writing, so even there are endless reading, write can still success.
+ *      And since readers can read concurently, letting readers waiting won't lead to something bad.
  *        algorithm:
- *          Before a writer gain the writer-lock, it add wr_cnt atomically. So that wr_cnt is always equals to the number of writers waiting for lock.
- *          Before a reader gain the reader-lock, it check whether wr_cnt>0(If there are writers need lock). If so, it add rd_cnt(not atommatically for speeding up). If rd_cnt is large enough
- *          (writer has waited a long time), readers park by set rd_block until a writer finishs writing and reset rd_block.
- *        proof of rd_cnt without lock:(Prove by the value of wr_acq when a writer set rd_cnt to 0)
- *          I)   If wr_acq>0, no reader modify rd_cnt. The writer can modify the value atommically.
- *              (All readers set rd_block to 1 in this case. That's why writer should set rd_cnt to 0 before reset rd_block)
- *          II)  If wr_acq=0, all possible operation are setting rd_cnt=0. Though no atomic, it's still okay.
+ *          Before a writer gain the writer-lock, it add wr_acq atomically. So that wr_acq always equals to the number of writers waiting for lock.
+ *          Before a reader gain the reader-lock, it check whether wr_acq>0(If there are writers need lock). If so, it add rd_cnt(not atommatically for speeding up). If rd_cnt is large enough
+ *          (writer has waited a long time), readers will be parked until a write finished its writing and set rd_cnt to 0.
+ *        proof of correctness.
+ *          I)  If writer set rd_cnt to 0 and no other threads have buffer, correctness is obvious.
+ *          II) If writer set rd_cnt to 0 and a reader thread change it.
+ *              1. if tmp!=db->wr_acq at that time, then it set rd_cnt to 0, correctness is obvious
+ *              2. if tmp==db->wr_acq. tmp >0, so there will be other writer threads write and set rd_cnt to 0 until no threads want to write.
+ *              (Though this may make readers being blocked by writing, in my practice, this happens rarely)
  * 
  */
 #include <assert.h>
@@ -327,7 +330,6 @@ static void kvdb_lock(kvdb_t *db,int op){
 
 int kvdb_open(kvdb_t *db, const char *filename){
     db->fd=open(filename,O_RDWR|O_CREAT,0777);
-    db->rd_block=0;
     db->rd_cnt=0;
     db->wr_acq=0;
     pthread_rwlock_init(&db->lk,NULL);
