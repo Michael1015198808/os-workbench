@@ -28,7 +28,7 @@ void *test_read(void *arg) {
     char key_str[5],*val,check[5];
     uintptr_t cnt=0;
     while(1){
-        for(int i=0;i<max[base];++i){
+        for(int i=0;i<max[base];++i,++cnt){
             sprintf(key_str,"%d",50*base+i);
             sprintf(check,"%d",i);
             val=kvdb_get(db,key_str);
