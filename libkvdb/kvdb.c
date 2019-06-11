@@ -337,7 +337,7 @@ int kvdb_open(kvdb_t *db, const char *filename){
     db->wr_acq=0;
     pthread_rwlock_init(&db->lk,NULL);
     if(db->fd<0)return db->fd;
-    if(safe_call(pread(db->fd,useless_buf,HEADER_LEN,0),<0)<HEADER_LEN){
+    if(safe_call(pread(db->fd,useless_buf,HEADER_LEN,0),>0)<HEADER_LEN){
         kvdb_lock(db,KVDB_WR);
         init_db(db->fd);
         kvdb_lock(db,KVDB_UN);
