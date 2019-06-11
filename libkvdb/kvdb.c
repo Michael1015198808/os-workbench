@@ -198,7 +198,7 @@ static uint32_t get_end(int fd,uint32_t append){
 }
 uint32_t alloc_str(const char* src,int fd){
     uint32_t list[2],ret;
-    safe_call(pread(fd,list,sizeof(uint32_t)*2,0),==sizeof(uint32_t)*2);
+    pread(fd,list,sizeof(uint32_t)*2,0);
     int flag=1;//flag of left blocks
     if( ( flag=(list[0]!=list[1]) )  ){
         //If there are blocks left, starts from there
@@ -212,19 +212,19 @@ uint32_t alloc_str(const char* src,int fd){
     while(len>0){
         if(len<BLOCK_LEN){
             pwrite(fd,zeros,BLOCK_LEN,cur+HEADER_LEN);
-            safe_call(pwrite(fd,src  ,len      ,cur+HEADER_LEN),==len);
+            pwrite(fd,src  ,len      ,cur+HEADER_LEN);
         }else{
-            safe_call(pwrite(fd,src  ,BLOCK_LEN,cur+HEADER_LEN),==BLOCK_LEN);
+            pwrite(fd,src  ,BLOCK_LEN,cur+HEADER_LEN);
         }
         src+=BLOCK_LEN;
         len-=BLOCK_LEN;
         if(flag){
-            safe_call(pread(fd,&cur,sizeof(uint32_t),prev+BLOCK_LEN+HEADER_LEN),==sizeof(uint32_t));
+            pread(fd,&cur,sizeof(uint32_t),prev+BLOCK_LEN+HEADER_LEN);
             if(len<0){
-                safe_call(pwrite(fd,&prev,sizeof(uint32_t),offsetof(header,backup_prev)),==sizeof(uint32_t));
+                pwrite(fd,&prev,sizeof(uint32_t),offsetof(header,backup_prev));
             }
             if(cur==list[1]){
-                safe_call(pwrite(fd,&list[1],sizeof(uint32_t),0),==sizeof(uint32_t));
+                pwrite(fd,&list[1],sizeof(uint32_t),0);
                 cur=get_end(fd,sizeof(string))-HEADER_LEN;
                 flag=0;
             }
