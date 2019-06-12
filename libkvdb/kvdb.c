@@ -347,6 +347,7 @@ int kvdb_open(kvdb_t *db, const char *filename){
 }
 
 int kvdb_close(kvdb_t *db){
+    db->hash=((MAGIC_NUM*db->fd)%0xffff);
     return close(db->fd);
 }
 
@@ -380,7 +381,7 @@ static inline int _kvdb_put(int fd, const char *key, const char *value){
 }
 static inline int valid_test(kvdb_t* db){
     if((MAGIC_NUM*db->fd)%0xffff!=(db->hash^MAGIC_NUM)){
-        fprintf(stderr,"validity test fails!\nIs this db's member edited?");
+        fprintf(stderr,"validity test fails!\nIs this db's member edited?\n");
         return -1;
     }
     return 0;

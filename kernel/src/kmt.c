@@ -171,7 +171,6 @@ void kmt_spin_lock(spinlock_t *lk){
                 break;
             }else{
                 while(lk->locked);
-                /*
                 for(volatile int i=0;lk->locked;++i){
                     if(i==10000){
                         i=0;
@@ -180,7 +179,6 @@ void kmt_spin_lock(spinlock_t *lk){
                         intr_close();
                     }
                 }
-                */
             }
         }
         pthread_mutex_lock(&lk->locked);

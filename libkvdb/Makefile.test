@@ -10,7 +10,7 @@ test-all: test-64 test-32 lib
 	@LD_LIBRARY_PATH=.. 32/$(TEST_FILE)-32
 
 lib:
-	@cd .. && make -s all git
+	@cd .. && make -s all 
 
 test-64: $(TEST_FILE).c lib
 	@gcc  $(CFLAGS) -m64 $(TEST_FILE).c -o 64/$(TEST_FILE)-64 -lkvdb-64

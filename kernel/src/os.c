@@ -89,7 +89,7 @@ void memory_test(){
     long long len[50];
     void *p[50];
     for(int i=0;i<50;++i){
-        len[i]=rand()&((1<<11)-1);
+        len[i]=(1<<((i&15)+5));
         a[i]=rand();
         b[i]=rand();
         p[i]=pmm->alloc(len[i]);
@@ -125,7 +125,7 @@ void spin_test(){
 }
 static void os_run() {
     hello();
-    spin_test();
+    memory_test();
     _intr_write(1);
     while (1) {
         _yield();
