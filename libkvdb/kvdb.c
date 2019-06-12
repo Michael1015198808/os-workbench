@@ -335,7 +335,7 @@ int kvdb_open(kvdb_t *db, const char *filename){
     db->fd=open(filename,O_RDWR|O_CREAT,0777);
     db->rd_cnt=0;
     db->wr_acq=0;
-    db->hash=((MAGIC_NUM*fd)%0xffff)^MAGIC_NUM;
+    db->hash=((MAGIC_NUM*db->fd)%0xffff)^MAGIC_NUM;
     pthread_rwlock_init(&db->lk,NULL);
     if(db->fd<0)return db->fd;
     if(safe_call(pread(db->fd,useless_buf,HEADER_LEN,0),>=0)<HEADER_LEN){
