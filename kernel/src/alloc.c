@@ -77,7 +77,7 @@ static void* big_page_alloc(uintptr_t shift){
 }
 static void big_page_free(header *s){
     pthread_mutex_lock(&alloc_lock);
-    int idx=2047+
+    int idx=(1<<(DEPTH-1))+
     (((uintptr_t)s)-((uintptr_t)bias))
     /PG_SIZE;
     while(s->size>PG_SIZE){
