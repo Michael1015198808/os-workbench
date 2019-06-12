@@ -22,6 +22,7 @@
 
 char s1[100],s2[100000];
 int main(){
+    srand(time(NULL));
     kvdb_t *first=malloc(sizeof(kvdb_t));
     kvdb_open(first, DB_FILE);
     while(1){

@@ -5,7 +5,7 @@
 
 
 struct kvdb{
-    int fd;
+    int fd,hash;
     volatile int wr_acq,rd_cnt;
     pthread_rwlock_t lk;
 };

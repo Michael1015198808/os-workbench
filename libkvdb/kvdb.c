@@ -58,7 +58,6 @@
 #define BLOCK_LEN (0x20-sizeof(uint32_t))
 
 
-#define SAFE
 #if defined(DEBUG)&&defined(SAFE)
 _Static_assert(0,"DEBUG and SAFE can't be both defined!");
 #endif
@@ -69,15 +68,15 @@ _Static_assert(0,"DEBUG and SAFE can't be both defined!");
         (may_bug(), \
         call)
 void may_bug(void){
-    if(rand()==0){
+    if((rand()&0xffff)==0){
         asm volatile("int $3");//For debug usage
         exit(1);
     }
 }
 
 #else
-__thread int ret;
-__thread int errid;
+__thread int _safe_ret;
+__thread int _safe_errid;
 //Set HANDLER to empty to ignore unexcepted event, or set errid and return
 //kvdb_get and kvdb_put will capture non-zero errid and return it to user
 #define HANDLER \
@@ -85,13 +84,13 @@ __thread int errid;
 
 #define safe_call(call,cond) \
             ( \
-                (ret=call), \
-                ret cond?   \
-                ret: \
+                (_safe_ret=call), \
+                _safe_ret cond?   \
+                _safe_ret: \
                 ( \
                     fprintf(stderr, \
                     "error in "__FILE__ ":%d(%s)" \
-                    #call " returns %d\n", __LINE__, __func__, ret), \
+                    #call " returns %d\n", __LINE__, __func__, _safe_ret), \
 /*exit returns void*/HANDLER, \
 /*so an int needed.*/0 \
                 ) \
@@ -211,20 +210,20 @@ uint32_t alloc_str(const char* src,int fd){
     int64_t len=strlen(src);
     while(len>0){
         if(len<BLOCK_LEN){
-            pwrite(fd,zeros,BLOCK_LEN,cur+HEADER_LEN);
-            pwrite(fd,src  ,len      ,cur+HEADER_LEN);
+            safe_call(pwrite(fd,zeros,BLOCK_LEN,cur+HEADER_LEN),==BLOCK_LEN);
+            safe_call(pwrite(fd,src  ,len      ,cur+HEADER_LEN),==len);
         }else{
-            pwrite(fd,src  ,BLOCK_LEN,cur+HEADER_LEN);
+            safe_call(pwrite(fd,src  ,BLOCK_LEN,cur+HEADER_LEN),==BLOCK_LEN);
         }
         src+=BLOCK_LEN;
         len-=BLOCK_LEN;
         if(flag){
-            pread(fd,&cur,sizeof(uint32_t),prev+BLOCK_LEN+HEADER_LEN);
+            safe_call(pread(fd,&cur,sizeof(uint32_t),prev+BLOCK_LEN+HEADER_LEN),==sizeof(uint32_t));
             if(len<0){
-                pwrite(fd,&prev,sizeof(uint32_t),offsetof(header,backup_prev));
+                safe_call(pwrite(fd,&prev,sizeof(uint32_t),offsetof(header,backup_prev)),==sizeof(uint32_t));
             }
             if(cur==list[1]){
-                pwrite(fd,&list[1],sizeof(uint32_t),0);
+                safe_call(pwrite(fd,&list[1],sizeof(uint32_t),0),==sizeof(uint32_t));
                 cur=get_end(fd,sizeof(string))-HEADER_LEN;
                 flag=0;
             }
@@ -235,14 +234,16 @@ uint32_t alloc_str(const char* src,int fd){
             write_db(fd, prev+BLOCK_LEN,&cur,sizeof(uint32_t));
         }else{
             if(flag){
-                pwrite(fd,&cur,sizeof(uint32_t),0);
+                safe_call(pwrite(fd,&cur,sizeof(uint32_t),0),==sizeof(uint32_t));
             }
             write_db(fd, prev+BLOCK_LEN,zeros,sizeof(uint32_t));
         }
         prev=cur;
     }
+    safe_call(
             pwrite(fd, (flag?&cur:&list[1])
-            ,sizeof(uint32_t),0);
+            ,sizeof(uint32_t),0)
+            ,==sizeof(uint32_t));
     return ret;
 }
 
@@ -329,10 +330,12 @@ static void kvdb_lock(kvdb_t *db,int op){
     flock(db->fd,file_op);
 }
 
+#define MAGIC_NUM 0x3737
 int kvdb_open(kvdb_t *db, const char *filename){
     db->fd=open(filename,O_RDWR|O_CREAT,0777);
     db->rd_cnt=0;
     db->wr_acq=0;
+    db->hash=((MAGIC_NUM*fd)%0xffff)^MAGIC_NUM;
     pthread_rwlock_init(&db->lk,NULL);
     if(db->fd<0)return db->fd;
     if(safe_call(pread(db->fd,useless_buf,HEADER_LEN,0),>=0)<HEADER_LEN){
@@ -375,10 +378,20 @@ static inline int _kvdb_put(int fd, const char *key, const char *value){
     write_db(fd,cur_off,&cur_tab,sizeof(tab));
     return 0;
 }
+static inline int valid_test(kvdb_t* db){
+    if((MAGIC_NUM*db->fd)%0xffff!=(db->hash^MAGIC_NUM)){
+        fprintf(stderr,"validity test fails!\nIs this db's member edited?");
+        return -1;
+    }
+    return 0;
+}
 int kvdb_put(kvdb_t *db, const char *key, const char *value){
 #ifdef SAFE
-    errid=0;
+    _safe_errid=0;
 #endif
+    if(valid_test(db)){
+        return -1;
+    }
     kvdb_lock(db,KVDB_WR);
     int fd=db->fd;
     recov_backup(fd);
@@ -386,7 +399,7 @@ int kvdb_put(kvdb_t *db, const char *key, const char *value){
     neg_backup(fd);
     kvdb_lock(db,KVDB_UN);
 #ifdef SAFE
-    if(errid)return errid;
+    if(_safe_errid)return _safe_errid;
 #endif
     return ret;
 }
@@ -413,13 +426,16 @@ static inline char *_kvdb_get(int fd, const char *key){
 }
 char *kvdb_get(kvdb_t *db, const char *key){
 #ifdef SAFE
-    errid=0;
+    _safe_errid=0;
 #endif
+    if(valid_test(db)){
+        return NULL;
+    }
     kvdb_lock(db,KVDB_RD);
     char *ret=_kvdb_get(db->fd,key);
     kvdb_lock(db,KVDB_UN);
 #ifdef SAFE
-    if(errid)return NULL;
+    if(_safe_errid)return NULL;
 #endif
     return ret;
 }
