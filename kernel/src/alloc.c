@@ -112,7 +112,7 @@ static void *kalloc(size_t size) {
     if(size> PG_SIZE/2){
         size+=sizeof(header);
         int shift=0;
-        int temp=size/PG_SIZE;
+        int temp=(size-1)/PG_SIZE+1;
         while(temp>0){
             temp>>=1;
             ++shift;
