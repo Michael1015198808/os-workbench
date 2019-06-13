@@ -15,7 +15,7 @@ typedef struct header header;
 #define align(_A,_B) (_A=( (_A+_B-1)/_B)*_B)
 #define PG_SIZE (8 KB)
 
-#define DEPTH 14
+#define DEPTH 15
 uint16_t pages[(1<<DEPTH)+1]={};
 void *bias;
 void show_free_pages(void){
