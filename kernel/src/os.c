@@ -47,9 +47,10 @@ void idle(void *arg){
 }
 
 static void os_init() {
+    pmm->init();
     void big_page_test();
     big_page_test();
-    pmm->init();
+    while(1);
     kmt->init();
     dev->init();
     /*
