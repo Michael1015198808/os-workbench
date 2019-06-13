@@ -74,7 +74,7 @@ static void* big_page_alloc(uintptr_t shift){
     disable(idx,shift);
     pthread_mutex_unlock(&alloc_lock);
     return bias+
-        ((idx<<shift)&((1<<(DEPTH-1))-1)*PG_SIZE;
+        ((idx<<shift)&((1<<(DEPTH-1))-1))*PG_SIZE;
 }
 static void big_page_free(header *s){
     pthread_mutex_lock(&alloc_lock);
