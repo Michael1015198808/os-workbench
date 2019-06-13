@@ -34,7 +34,6 @@ void memory_test(){
         a[i]=rand()+cpu_id;
         b[i]=rand()+cpu_id;
       printf("%d\n",_cpu());
-      report_if(1);
         p[i]=pmm->alloc(len[i]);
       printf("%d\n",_cpu());
         fill(p[i],a[i],b[i],len[i]);
