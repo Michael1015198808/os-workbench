@@ -77,6 +77,8 @@ static void os_run() {
     hello();
     void memory_test(void);
     memory_test();
+    printf("[cpu%d] finish memory test.\n",_cpu());
+    while(1);
     _intr_write(1);
     while (1) {
         _yield();

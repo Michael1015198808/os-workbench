@@ -37,5 +37,4 @@ void memory_test(){
         fill(p[i],a[i],b[i],len[i]);
     }
     printf("[cpu%d] finish memory test.\n",_cpu());
-    while(1);
 }
