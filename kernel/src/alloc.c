@@ -10,116 +10,45 @@ struct header{
     uint32_t fence;
     __attribute__((aligned(0x10)))struct{}space;//space doesn't take any storage
     //directly return &space
-}static free_list[4]={};//Sentinels
+}static free_list[4]={},*global;//Sentinels
 typedef struct header header;
 #define align(_A,_B) (_A=( (_A+_B-1)/_B)*_B)
 #define PG_SIZE (8 KB)
 
-#define DEPTH 15
-uint16_t pages[(1<<DEPTH)+1]={};
-void *bias;
-void show_free_pages(void){
-  int i;
-  for(i=1;i<(1<<DEPTH);++i){
-      printf("%4d:%2x\n",i,pages[i]);
-  }
-}
-#define father (idx>>1)
-#define sibling (idx^1)
-#define max(A,B) (A>B?A:B)
-static void enable(int idx,uintptr_t shift){
-    pages[idx]=shift;
-    while(idx&&(pages[sibling]==pages[idx])){
-        pages[father]=++shift;
-        idx>>=1;
-    }
-    while(idx){
-        if(pages[idx]>pages[father])pages[father]=pages[idx];
-        idx>>=1;
-    }
-}
-static void disable(int idx,uintptr_t shift){
-    pages[idx]=0;
-    while(idx){
-        pages[father]=max(pages[idx],pages[sibling]);
-        idx>>=1;
-    }
-}
-static pthread_mutex_t alloc_lock=PTHREAD_MUTEX_INITIALIZER;
-static void* big_page_alloc(uintptr_t shift){
-    pthread_mutex_lock(&alloc_lock);
-    int idx=1,level=DEPTH+1;
-    while(--level!=shift){
-        int left=idx<<1,right=left+1;
-        if(pages[left]>=shift){
-            idx=left;
-        }else if(pages[right]>=shift){
-            idx=right;
-        }else{
-//#define RETURN_NULL
-#ifdef RETURN_NULL
-            pthread_mutex_unlock(&alloc_lock);
-            return NULL;
-#else
-            printf("No space left!\n");
-            printf("See %s: %d for more info!\n",__FILE__,__LINE__);
-            pthread_mutex_unlock(&alloc_lock);
-            report_if(1);
-            while(1);
-#endif
-        }
-    }
-    report_if(pages[idx]!=shift);
-    report_if(((idx>>(DEPTH-shift)))!=1);
-    disable(idx,shift);
-    pthread_mutex_unlock(&alloc_lock);
-    return bias+
-        ((idx<<shift)&((1<<(DEPTH-1))-1))*PG_SIZE;
-}
-void big_page_test(void){
-    printf("%x\n",big_page_alloc(1));
-    printf("%x\n",big_page_alloc(1));
-    printf("%x\n",big_page_alloc(2));
-    printf("%x\n",big_page_alloc(1));
-    printf("%x\n",big_page_alloc(2));
-    printf("%x\n",big_page_alloc(1));
-    printf("%x\n",big_page_alloc(1));
-    printf("%x\n",big_page_alloc(1));
-}
-static void big_page_free(header *s){
-    pthread_mutex_lock(&alloc_lock);
-    int idx=(1<<(DEPTH-1))+
-    (((uintptr_t)s)-((uintptr_t)bias))
-    /PG_SIZE;
-    while(s->size>PG_SIZE){
-        enable(++idx,1);
-        s->size-=PG_SIZE;
-    }
-    enable(++idx,1);
-    pthread_mutex_unlock(&alloc_lock);
-}
 static void pmm_init() {
   int i,cpu_cnt=_ncpu();
   pm_start = (uintptr_t)_heap.start;
   align(pm_start,PG_SIZE);
   pm_end   = (uintptr_t)_heap.end;
-  bias=(void*)pm_start;
 
   for(i=0;i<cpu_cnt;++i){
       free_list[i].next=&free_list[i];
       free_list[i].size=0;
   }
+  global=pm_start;
+  global.next=global;
+  global.size=pm_end-pm_start;
 
-  for(i=0;i<(pm_end-pm_start)/(PG_SIZE)&&i<(1<<(DEPTH-1));++i){
-    pages[(1<<(DEPTH-1))+i]=1;
-  }
-  for(int i=(1<<(DEPTH-1))-1;i>0;--i){
-      if(pages[i<<1]==pages[(i<<1)+1]){
-          pages[i]=pages[i<<1]+1;
-      }else{
-          pages[i]=pages[i<<1];
-      }
-  }
+}
+header *global_alloc_real(size_t size){
+    if(global->size>size+sizeof(header)){
+        tail=(uint8_t*)p;
+        tail+=global->size;
+        tail-=size;
+        ret=(header*)tail;
+        global->size-=size+sizeof(header);
+        return ret;
+    }else{
+        printf("No free space!\n");
+        report_if(1);
+    }
+}
+header* global_alloc(size_t size){
+    pthread_mutex_t global_lk=PTHREAD_MUTEX_INITIALIZER;
+    pthread_mutex_lock(&global_lk);
+    header* ret=global_alloc_real(size);
+    pthread_mutex_unlock(&global_lk);
+    return ret;
 }
 
 static void *kalloc(size_t size) {
@@ -127,19 +56,6 @@ static void *kalloc(size_t size) {
     int cpu_id=_cpu();//Call once
     uint8_t *tail=NULL;
     header *p=free_list[cpu_id].next,*prevp=&free_list[cpu_id],*ret;
-    if(size> PG_SIZE/2){
-        size+=sizeof(header);
-        int shift=0;
-        int temp=(size-1)/PG_SIZE+1;
-        while(temp>(1<<shift)){
-            ++shift;
-        }
-        ++shift;
-        header *ret=big_page_alloc(shift);
-        ret->size=size;
-        ret->fence=0x13579ace;
-        return &(ret->space);
-    }
     do{
         do{
             if(p->size>=size){
@@ -162,7 +78,7 @@ static void *kalloc(size_t size) {
             p=p->next;
         }while(p!=&free_list[cpu_id]);
 
-        prevp->next=big_page_alloc(1);//ask for a new page
+        prevp->next=global_alloc(size>PG_SIZE?size:PG_SIZE);//ask for a new page
         Assert(prevp->next!=NULL);
         prevp->next->next=p;
         prevp->next->size=PG_SIZE-sizeof(header);
@@ -190,10 +106,6 @@ static inline void kfree(void *ptr) {
     printf("Fence at %x changed to %x!\n",&to_free->fence,to_free->fence);
     report_if(1);
     //while(1);
-  }
-  if(to_free->size> PG_SIZE/2){
-    big_page_free(to_free);
-    return;
   }
   while((uintptr_t)ptr>(uintptr_t)&(p->space)&&p!=&free_list[cpu_id]){
     prevp=p;
