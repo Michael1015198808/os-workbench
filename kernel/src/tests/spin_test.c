@@ -4,7 +4,7 @@
 void spin_test(){
     static spinlock_t test_spin;
     static int i=0;
-    if(i=0){
+    if(i==0){
         kmt->spin_init(&test_spin,"test spin");
         i=1;
     }
