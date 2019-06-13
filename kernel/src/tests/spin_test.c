@@ -1,8 +1,13 @@
-#include <stdio.h>
 #include <devices.h>
 #include <common.h>
 #include <klib.h>
 void spin_test(){
+    static spinlock_t test_spin;
+    static int i=0;
+    if(i=0){
+        kmt->spin_init(&test_spin,"test spin");
+        i=1;
+    }
     _intr_write(0);
     kmt->spin_lock(&test_spin);
     kmt->spin_lock(&test_spin);
