@@ -39,5 +39,7 @@ void memory_test(){
         p[i]=pmm->alloc(len[i]);
         fill(p[i],a[i],b[i],len[i]);
     }
+    for(int i=0;i<MAXN;++i)
+        pmm->free(p[i]);
     printf("[cpu%d] finish memory test.\n",_cpu());
 }
