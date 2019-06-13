@@ -26,6 +26,7 @@ void show_free_pages(void){
 }
 #define father (idx>>1)
 #define sibling (idx^1)
+#define max(A,B) (A>B?A:B)
 static void enable(int idx,uintptr_t shift){
     pages[idx]=shift;
     if(idx&&(pages[sibling]==pages[idx])){
@@ -37,14 +38,12 @@ static void enable(int idx,uintptr_t shift){
         idx>>=1;
     }
 }
-static void recur_disable(int idx,uintptr_t shift){
-    if(idx==0)return;
-    pages[idx]=pages[idx<<1]|pages[(idx<<1)|1];
-    recur_disable(idx>>1,shift+1);
-}
 static void disable(int idx,uintptr_t shift){
     pages[idx]=0;
-    recur_disable(idx>>1,shift+1);
+    while(idx){
+        pages[father]=max(pages[idx],pages[sibling]);
+        idx>>=1;
+    }
 }
 static pthread_mutex_t alloc_lock=PTHREAD_MUTEX_INITIALIZER;
 static void* big_page_alloc(uintptr_t shift){
@@ -52,9 +51,9 @@ static void* big_page_alloc(uintptr_t shift){
     int idx=1,level=DEPTH;
     while(--level!=shift){
         int left=idx<<1,right=left+1;
-        if(pages[left]&(1<<shift)){
+        if(pages[left]==shift){
             idx=left;
-        }else if(pages[right]&(1<<shift)){
+        }else if(pages[right]==shift){
             idx=right;
         }else{
 //#define RETURN_NULL
@@ -75,7 +74,7 @@ static void* big_page_alloc(uintptr_t shift){
     disable(idx,shift);
     pthread_mutex_unlock(&alloc_lock);
     return bias+
-        ((idx<<shift)&((1<<(DEPTH-1))-1))*PG_SIZE;
+        (idx<<shift)*PG_SIZE;
 }
 static void big_page_free(header *s){
     pthread_mutex_lock(&alloc_lock);
@@ -83,10 +82,10 @@ static void big_page_free(header *s){
     (((uintptr_t)s)-((uintptr_t)bias))
     /PG_SIZE;
     while(s->size>PG_SIZE){
-        enable(++idx,0);
+        enable(++idx,1);
         s->size-=PG_SIZE;
     }
-    enable(++idx,0);
+    enable(++idx,1);
     pthread_mutex_unlock(&alloc_lock);
 }
 static void pmm_init() {
@@ -102,7 +101,7 @@ static void pmm_init() {
   }
 
   for(i=0;i<(pm_end-pm_start)/(PG_SIZE)&&i<(1<<(DEPTH-1));++i){
-    enable((1<<(DEPTH-1))+i,0);
+    enable((1<<(DEPTH-1))+i,1);
   }
 }
 
