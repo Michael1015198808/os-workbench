@@ -12,7 +12,9 @@ static inline void check(uint8_t *p,int a,int b,long long len){
     }
 }
 void memory_test(){
-    int a[MAXN],b[MAXN],cpu_id=_cpu();
+    int *a=pmm->alloc(MAXN*sizeof(int)),
+        *b=pmm->alloc(MAXN*sizeof(int));
+    int cpu_id=_cpu();
     long long len[MAXN];
     void *p[MAXN];
     for(int i=0;i<MAXN;++i){
