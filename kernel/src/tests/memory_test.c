@@ -8,7 +8,7 @@ static inline void fill(uint8_t *p,int a,int b,int len){
 }
 static inline void check(uint8_t *p,int a,int b,long long len){
     for(int i=0;i<len;++i){
-        Assert(p[i]==(uint8_t)(a+=b));
+        report_if(p[i]==(uint8_t)(a+=b));
     }
 }
 void memory_test(){
