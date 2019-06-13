@@ -1,5 +1,6 @@
 #include <common.h>
 #include <klib.h>
+#define MAXN 50
 static inline void fill(uint8_t *p,int a,int b,int len){
     for(int i=0;i<len;++i){
         p[i]=(a+=b);
@@ -11,10 +12,10 @@ static inline void check(uint8_t *p,int a,int b,long long len){
     }
 }
 void memory_test(){
-    int a[50],b[50],cpu_id=_cpu();
-    long long len[50];
-    void *p[50];
-    for(int i=0;i<50;++i){
+    int a[MAXN],b[MAXN],cpu_id=_cpu();
+    long long len[MAXN];
+    void *p[MAXN];
+    for(int i=0;i<MAXN;++i){
         len[i]=(1<<((i&15)+5))+rand();
         a[i]=rand()+cpu_id;
         b[i]=rand()+cpu_id;
@@ -22,7 +23,7 @@ void memory_test(){
         fill(p[i],a[i],b[i],len[i]);
     }
     for(int j=0;j<1000;++j){
-        int i=rand()%50;
+        int i=rand()%MAXN;
         check(p[i],a[i],b[i],len[i]);
         pmm->free(p[i]);
         int shift=13+(rand()&7);
