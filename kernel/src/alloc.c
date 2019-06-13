@@ -181,6 +181,7 @@ static inline void kfree(void *ptr) {
   free_cnt+=to_free->size;
   if(to_free->fence!=0x13579ace){
     printf("Fence at %x changed to %x!\n",&to_free->fence,to_free->fence);
+    report_if(1);
     //while(1);
   }
   if(to_free->size> PG_SIZE/2){
