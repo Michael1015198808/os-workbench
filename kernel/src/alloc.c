@@ -82,6 +82,7 @@ void big_page_test(void){
     printf("%x\n",big_page_alloc(2));
     printf("%x\n",big_page_alloc(1));
     printf("%x\n",big_page_alloc(2));
+    printf("%x\n",big_page_alloc(1));
 }
 static void big_page_free(header *s){
     pthread_mutex_lock(&alloc_lock);
