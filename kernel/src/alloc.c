@@ -69,8 +69,8 @@ static void* big_page_alloc(uintptr_t shift){
 #endif
         }
     }
-    report_if(pages[idx]==shift);
-    report_if((idx>>(DEPTH-shift))==1);
+    report_if(pages[idx]!=shift);
+    report_if(((idx>>(DEPTH-shift)))!=1);
     disable(idx,shift);
     pthread_mutex_unlock(&alloc_lock);
     return bias+
