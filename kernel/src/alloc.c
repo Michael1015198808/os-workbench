@@ -48,7 +48,7 @@ static void disable(int idx,uintptr_t shift){
 static pthread_mutex_t alloc_lock=PTHREAD_MUTEX_INITIALIZER;
 static void* big_page_alloc(uintptr_t shift){
     pthread_mutex_lock(&alloc_lock);
-    int idx=1,level=DEPTH;
+    int idx=1,level=DEPTH+1;
     while(--level!=shift){
         int left=idx<<1,right=left+1;
         if(pages[left]>=shift){
