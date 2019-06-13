@@ -124,10 +124,10 @@ static void *kalloc(size_t size) {
         size+=sizeof(header);
         int shift=0;
         int temp=(size-1)/PG_SIZE+1;
-        while(temp>0){
-            temp>>=1;
+        while(temp>(1<<shift)){
             ++shift;
         }
+        ++shift;
         header *ret=big_page_alloc(shift);
         ret->size=size;
         ret->fence=0x13579ace;
