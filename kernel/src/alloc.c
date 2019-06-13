@@ -35,7 +35,7 @@ header *global_alloc_real(size_t size){
         uint8_t* tail=(uint8_t*)p;
         tail+=global->size;
         tail-=size;
-        ret=(header*)tail;
+        header* ret=(header*)tail;
         global->size-=size+sizeof(header);
         return ret;
     }else{
