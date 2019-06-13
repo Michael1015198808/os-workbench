@@ -79,10 +79,11 @@ static void *kalloc(size_t size) {
             p=p->next;
         }while(p!=&free_list[cpu_id]);
 
-        prevp->next=global_alloc(size>PG_SIZE?size:PG_SIZE);//ask for a new page
+        size_t needed=size>PG_SIZE?size:PG_SIZE;
+        prevp->next=global_alloc(needed);//ask for a new page
         Assert(prevp->next!=NULL);
         prevp->next->next=p;
-        prevp->next->size=PG_SIZE-sizeof(header);
+        prevp->next->size=needed;
     }while(1);
     Assert(0,"Should not reach here");
 }
