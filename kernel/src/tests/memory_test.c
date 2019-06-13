@@ -21,13 +21,15 @@ void memory_test(){
         b[i]=rand()+cpu_id;
         p[i]=pmm->alloc(len[i]);
         fill(p[i],a[i],b[i],len[i]);
-        printf("%d\n",_cpu());
     }
     printf("%d\n",_cpu());
-    while(1);
     for(int j=0;j<1000;++j){
+      printf("%d\n",_cpu());
         int i=rand()%MAXN;
+      printf("%d\n",_cpu());
         check(p[i],a[i],b[i],len[i]);
+      printf("%d\n",_cpu());
+      while(1);
         pmm->free(p[i]);
         int shift=13+(rand()&7);
         len[i]=rand()+((1<<shift)-1);
