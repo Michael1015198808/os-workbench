@@ -32,7 +32,7 @@ static void pmm_init() {
 }
 header *global_alloc_real(size_t size){
     if(global->size>size+sizeof(header)){
-        tail=(uint8_t*)p;
+        uint8_t* tail=(uint8_t*)p;
         tail+=global->size;
         tail-=size;
         ret=(header*)tail;
