@@ -1,6 +1,15 @@
-#include <stdio.h>
 #include <common.h>
 #include <klib.h>
+static inline void fill(uint8_t *p,int a,int b,int len){
+    for(int i=0;i<len;++i){
+        p[i]=(a+=b);
+    }
+}
+static inline void check(uint8_t *p,int a,int b,long long len){
+    for(int i=0;i<len;++i){
+        Assert(p[i]==(uint8_t)(a+=b));
+    }
+}
 void memory_test(){
     int a[50],b[50],cpu_id=_cpu();
     long long len[50];
