@@ -84,6 +84,7 @@ static void *kalloc(size_t size) {
         Assert(prevp->next!=NULL);
         prevp->next->next=p;
         prevp->next->size=needed;
+        p=prevp;
     }while(1);
     Assert(0,"Should not reach here");
 }
