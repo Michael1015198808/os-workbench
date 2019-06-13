@@ -85,13 +85,13 @@ inline void check(uint8_t *p,int a,int b,long long len){
     }
 }
 void memory_test(){
-    int a[50],b[50];
+    int a[50],b[50],cpu_id=_cpu();
     long long len[50];
     void *p[50];
     for(int i=0;i<50;++i){
         len[i]=(1<<((i&15)+5));
-        a[i]=rand();
-        b[i]=rand();
+        a[i]=rand()+cpu_id;
+        b[i]=rand()+cpu_id;
         p[i]=pmm->alloc(len[i]);
         fill(p[i],a[i],b[i],len[i]);
     }
@@ -103,8 +103,8 @@ void memory_test(){
         if(i&1){
             len[i]+=1<<12;
         }
-        a[i]=rand();
-        b[i]=rand();
+        a[i]=rand()+cpu_id;
+        b[i]=rand()+cpu_id;
         p[i]=pmm->alloc(len[i]);
         fill(p[i],a[i],b[i],len[i]);
     }
