@@ -46,13 +46,6 @@ static void disable(int idx,uintptr_t shift){
     }
 }
 static pthread_mutex_t alloc_lock=PTHREAD_MUTEX_INITIALIZER;
-void big_page_test(void){
-    printf("%x\n",big_page_alloc(1));
-    printf("%x\n",big_page_alloc(1));
-    printf("%x\n",big_page_alloc(2));
-    printf("%x\n",big_page_alloc(1));
-    printf("%x\n",big_page_alloc(2));
-}
 static void* big_page_alloc(uintptr_t shift){
     pthread_mutex_lock(&alloc_lock);
     int idx=1,level=DEPTH+1;
@@ -82,6 +75,13 @@ static void* big_page_alloc(uintptr_t shift){
     pthread_mutex_unlock(&alloc_lock);
     return bias+
         ((idx<<shift)&((1<<(DEPTH-1))-1))*PG_SIZE;
+}
+void big_page_test(void){
+    printf("%x\n",big_page_alloc(1));
+    printf("%x\n",big_page_alloc(1));
+    printf("%x\n",big_page_alloc(2));
+    printf("%x\n",big_page_alloc(1));
+    printf("%x\n",big_page_alloc(2));
 }
 static void big_page_free(header *s){
     pthread_mutex_lock(&alloc_lock);
