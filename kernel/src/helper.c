@@ -27,9 +27,11 @@ void show_tasks(){
 void infinite_loop(void){
     while(1);
 }
+void report(){
+    asm volatile("nop;");
+}
 void report_if(int i){
     if(i){
-        asm volatile("nop;nop;");
-        //Set breakpoints here
+        report();
     }
 }
