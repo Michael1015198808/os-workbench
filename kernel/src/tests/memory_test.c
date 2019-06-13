@@ -24,6 +24,7 @@ void memory_test(){
     }
     for(int j=0;j<1000;++j){
         int i=rand()%MAXN;
+        printf("%d,%d\n",j,_cpu());
         check(p[i],a[i],b[i],len[i]);
         printf("%d,%d\n",j,_cpu());
         pmm->free(p[i]);
