@@ -1,6 +1,6 @@
 #include <common.h>
 #include <klib.h>
-#define MAXN 50
+#define MAXN 100
 static inline void fill(uint8_t *p,int a,int b,int len){
     for(int i=0;i<len;++i){
         p[i]=(a+=b);
