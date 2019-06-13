@@ -1,3 +1,7 @@
+#include <stdio.h>
+#include <devices.h>
+#include <common.h>
+#include <klib.h>
 void spin_test(){
     _intr_write(0);
     kmt->spin_lock(&test_spin);
