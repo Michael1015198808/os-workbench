@@ -41,6 +41,7 @@ header *global_alloc_real(size_t size){
     }else{
         printf("No free space!\n");
         report_if(1);
+        return NULL;
     }
 }
 header* global_alloc(size_t size){
