@@ -46,9 +46,9 @@ void idle(void *arg){
     };
 }
 
-spinlock_t test_spin;
 static void os_init() {
-    kmt->spin_init(&test_spin,"test spin");
+    void big_page_test();
+    big_page_test();
     pmm->init();
     kmt->init();
     dev->init();
@@ -74,18 +74,7 @@ static void hello() {
     //My printf is thread-safe
     printf("nmsl from CPU #%d\n",_cpu());
 }
-inline void fill(uint8_t *p,int a,int b,int len){
-    for(int i=0;i<len;++i){
-        p[i]=(a+=b);
-    }
-}
-inline void check(uint8_t *p,int a,int b,long long len){
-    for(int i=0;i<len;++i){
-        Assert(p[i]==(uint8_t)(a+=b));
-    }
-}
 
-spinlock_t test_spin;
 static void os_run() {
     hello();
     void memory_test(void);
