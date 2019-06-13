@@ -1,6 +1,7 @@
 #include <common.h>
 #include <klib.h>
 #define MAXN 50
+#define MAXM 500
 //MAXN * _ncpu() should not exceed 400
 static inline void fill(uint8_t *p,int a,int b,int len){
     for(int i=0;i<len;++i){
@@ -25,7 +26,7 @@ void memory_test(){
         p[i]=pmm->alloc(len[i]);
         fill(p[i],a[i],b[i],len[i]);
     }
-    for(int j=0;j<1000;++j){
+    for(int j=0;j<MAXM;++j){
         int i=rand()%MAXN;
         check(p[i],a[i],b[i],len[i]);
         pmm->free(p[i]);
