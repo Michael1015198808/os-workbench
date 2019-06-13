@@ -29,7 +29,7 @@ void memory_test(){
       printf("%d\n",_cpu());
         check(p[i],a[i],b[i],len[i]);
       printf("%d\n",_cpu());
-      while(1);
+        while(1);
         pmm->free(p[i]);
         int shift=13+(rand()&7);
         len[i]=rand()+((1<<shift)-1);
