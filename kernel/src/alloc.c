@@ -25,16 +25,17 @@ void show_free_pages(void){
   }
 }
 #define father (idx>>1)
-static void recur_enable(int idx,uintptr_t shift){
-    if(idx==0)return;
-    pages[father]|=pages[idx];
-    if(pages[idx]&pages[idx^1]&(1<<shift))
-        pages[father]|=1<<(shift+1);
-    recur_enable(father,shift+1);
-}
+#define sibling (idx^1)
 static void enable(int idx,uintptr_t shift){
-    pages[idx]|=(1<<shift);
-    recur_enable(idx,shift);
+    pages[idx]=shift;
+    if(idx&&(pages[sibling]==pages[idx])){
+        pages[father]=++shift;
+        idx>>=1;
+    }
+    while(idx){
+        pages[father]=max(pages[father],pages[idx]);
+        idx>>=1;
+    }
 }
 static void recur_disable(int idx,uintptr_t shift){
     if(idx==0)return;
