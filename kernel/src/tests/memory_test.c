@@ -22,6 +22,7 @@ void memory_test(){
         p[i]=pmm->alloc(len[i]);
         fill(p[i],a[i],b[i],len[i]);
     }
+    printf("%d\n",_cpu());
     for(int j=0;j<1000;++j){
         int i=rand()%MAXN;
         printf("%d,%d\n",j,_cpu());
