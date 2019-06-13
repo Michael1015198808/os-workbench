@@ -33,7 +33,7 @@ static void enable(int idx,uintptr_t shift){
         idx>>=1;
     }
     while(idx){
-        pages[father]=max(pages[father],pages[idx]);
+        if(pages[idx]>pages[father])pages[father]=pages[idx];
         idx>>=1;
     }
 }
