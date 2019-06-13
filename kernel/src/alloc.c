@@ -25,9 +25,9 @@ static void pmm_init() {
       free_list[i].next=&free_list[i];
       free_list[i].size=0;
   }
-  global=pm_start;
-  global.next=global;
-  global.size=pm_end-pm_start;
+  global=(void*)pm_start;
+  global->next=global;
+  global->size=pm_end-pm_start;
 
 }
 header *global_alloc_real(size_t size){
