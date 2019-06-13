@@ -51,9 +51,9 @@ static void* big_page_alloc(uintptr_t shift){
     int idx=1,level=DEPTH;
     while(--level!=shift){
         int left=idx<<1,right=left+1;
-        if(pages[left]==shift){
+        if(pages[left]>=shift){
             idx=left;
-        }else if(pages[right]==shift){
+        }else if(pages[right]>=shift){
             idx=right;
         }else{
 //#define RETURN_NULL
