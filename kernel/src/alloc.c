@@ -64,6 +64,7 @@ static void* big_page_alloc(uintptr_t shift){
             printf("No space left!\n");
             printf("See %s: %d for more info!\n",__FILE__,__LINE__);
             pthread_mutex_unlock(&alloc_lock);
+            report_if(1);
             while(1);
 #endif
         }
