@@ -111,7 +111,10 @@ static void pmm_init() {
   }
 
   for(i=0;i<(pm_end-pm_start)/(PG_SIZE)&&i<(1<<(DEPTH-1));++i){
-    enable((1<<(DEPTH-1))+i,1);
+    pages[(1<<(DEPTH-1))+i]=1;
+  }
+  for(int i=(1<<(DEPTH-1))-1;i>0;--i){
+      pages[i]=max(pages[i<<1],pages[(i<<1)+1]);
   }
 }
 
