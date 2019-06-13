@@ -66,3 +66,4 @@ typedef struct semaphore {
     volatile int head,tail;
 }semaphore_t;
 #endif
+void report_if(int);
