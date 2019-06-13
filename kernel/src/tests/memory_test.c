@@ -1,6 +1,6 @@
 #include <common.h>
 #include <klib.h>
-#define MAXN 100
+#define MAXN 50
 //MAXN * _ncpu() should not exceed 400
 static inline void fill(uint8_t *p,int a,int b,int len){
     for(int i=0;i<len;++i){
