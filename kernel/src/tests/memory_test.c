@@ -1,6 +1,6 @@
 #include <common.h>
 #include <klib.h>
-#define MAXN 200
+#define MAXN 50
 static inline void fill(uint8_t *p,int a,int b,int len){
     for(int i=0;i<len;++i){
         p[i]=(a+=b);
@@ -37,4 +37,5 @@ void memory_test(){
         fill(p[i],a[i],b[i],len[i]);
     }
     printf("[cpu%d] finish memory test.\n",_cpu());
+    while(1);
 }
