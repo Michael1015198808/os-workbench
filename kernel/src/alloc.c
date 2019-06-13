@@ -145,7 +145,7 @@ static void *kalloc(size_t size) {
             p=p->next;
         }while(p!=&free_list[cpu_id]);
 
-        prevp->next=big_page_alloc(0);//ask for a new page
+        prevp->next=big_page_alloc(1);//ask for a new page
         Assert(prevp->next!=NULL);
         prevp->next->next=p;
         prevp->next->size=PG_SIZE-sizeof(header);
