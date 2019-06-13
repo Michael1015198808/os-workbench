@@ -69,7 +69,7 @@ static void* big_page_alloc(uintptr_t shift){
 #endif
         }
     }
-    assert(pages[idx]==shift);
+    report_if(pages[idx]==shift);
     Assert((idx>>(DEPTH-1-shift))==1);
     disable(idx,shift);
     pthread_mutex_unlock(&alloc_lock);
