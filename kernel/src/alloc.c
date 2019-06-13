@@ -29,7 +29,7 @@ void show_free_pages(void){
 #define max(A,B) (A>B?A:B)
 static void enable(int idx,uintptr_t shift){
     pages[idx]=shift;
-    if(idx&&(pages[sibling]==pages[idx])){
+    while(idx&&(pages[sibling]==pages[idx])){
         pages[father]=++shift;
         idx>>=1;
     }
