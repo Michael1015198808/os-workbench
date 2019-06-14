@@ -98,8 +98,7 @@ static _Context *os_trap(_Event ev, _Context *context) {
     intr_open();
     //Assert(ncli[_cpu()]==0,"%d",ncli[_cpu()]);
     Assert(ret!=NULL,"\nkmt_context_switch returns NULL\n");
-    printf("%d",currents[_cpu()]);
-    printf("%d",++cnt);
+    printf("%d ",currents[_cpu()],++cnt);
     return ret;
 }
 
