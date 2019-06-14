@@ -30,7 +30,6 @@ void echo_test(void *arg){
     }
 }
 void sem_test(void *arg){
-    _intr_write(0);
     while(1){
         for(volatile int i=0;i<100;++i);
         printf("~");
