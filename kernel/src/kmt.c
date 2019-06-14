@@ -90,11 +90,13 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
         ++cnt;
         new%=tasks_cnt;
         if(cnt==0){
+            /*
             report_if(1);
             kmt->spin_unlock(&tasks_lk);
             if((tasks[current]->attr&TASK_SLEEP)==0)return &tasks[current]->context;
             for(volatile uint32_t sleep=1;sleep<10000000;++sleep);//Sleep if can't get any process to run
             kmt->spin_lock(&tasks_lk);
+            */
         }
     }while(tasks[new]->attr);
 
