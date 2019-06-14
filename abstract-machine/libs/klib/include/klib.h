@@ -122,14 +122,12 @@ void intr_log(char *);
 
 volatile int intr_idx;
 pthread_mutex_t intr_lk;
-char intr_log_string[66000];
 volatile int ncli[4];
-#define LOG(...) intr_idx+=sprintf(intr_log_string+intr_idx,__VA_ARGS__)
-#define intr_log(...) \
+#define intr_log(...) /*\
     pthread_mutex_lock(&intr_lk); \
     LOG("[%d,%d]\n",ncli[0],ncli[1]); \
     LOG(__VA_ARGS__); \
-    pthread_mutex_unlock(&intr_lk);
+    pthread_mutex_unlock(&intr_lk);*/
 
 #endif
 //__KLIB_H__
