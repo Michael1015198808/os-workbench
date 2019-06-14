@@ -72,6 +72,7 @@ static int add_task(task_t *task){
     }
 
 static _Context* kmt_context_save(_Event ev, _Context *c){
+    int cpu_id=_cpu();
     if(current==-1){
         kmt->spin_lock(&tasks_lk);
         current=kmt->create(pmm->alloc(sizeof(task_t)),"os_run",os->run,NULL);
