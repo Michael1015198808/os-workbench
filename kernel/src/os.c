@@ -25,7 +25,7 @@ void echo_test(void *arg){
     _intr_write(0);
     while(1){
         printf("%c",((char*)arg)[0]);
-        kmt->sem_wait(&echo_sem);
+        //kmt->sem_wait(&echo_sem);
         _yield();
     }
 }
