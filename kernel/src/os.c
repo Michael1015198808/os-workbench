@@ -27,7 +27,7 @@ void echo_test(void *arg){
     while(1){
         printf("%c",((char*)arg)[0]);
         //kmt->sem_wait(&echo_sem);
-        printf("%d",++i);
+        ++i;
         _yield();
     }
 }
@@ -37,6 +37,7 @@ void sem_test(void *arg){
         for(volatile int i=0;i<100;++i);
         printf("~");
         kmt->sem_signal(&echo_sem);
+        report_if(i==112);
         //printf("~");
         //kmt->sem_signal(&echo_sem);
         _yield();

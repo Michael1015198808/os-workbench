@@ -29,7 +29,6 @@ void infinite_loop(void){
 }
 void report(){
     asm volatile("nop;");
-    _halt(1);
 }
 void report_if(int i){
     if(i){
