@@ -21,13 +21,11 @@ static irq_handler irq_guard={
 };
 
 sem_t echo_sem;
-int i=0;
 void echo_test(void *arg){
     _intr_write(0);
     while(1){
         printf("%c",((char*)arg)[0]);
         //kmt->sem_wait(&echo_sem);
-        ++i;
         _yield();
     }
 }
@@ -37,7 +35,6 @@ void sem_test(void *arg){
         for(volatile int i=0;i<100;++i);
         printf("~");
         kmt->sem_signal(&echo_sem);
-        report_if(i==112);
         //printf("~");
         //kmt->sem_signal(&echo_sem);
         _yield();
@@ -84,6 +81,7 @@ static void os_run() {
     }
 }
 
+int cnt=0;
 static _Context *os_trap(_Event ev, _Context *context) {
     intr_close();
     report_if(ncli[_cpu()]!=1);
@@ -100,6 +98,8 @@ static _Context *os_trap(_Event ev, _Context *context) {
     intr_open();
     //Assert(ncli[_cpu()]==0,"%d",ncli[_cpu()]);
     Assert(ret!=NULL,"\nkmt_context_switch returns NULL\n");
+    printf("%d",current);
+    printf("%d",++cnt);
     return ret;
 }
 
