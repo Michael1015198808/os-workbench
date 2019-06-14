@@ -27,7 +27,7 @@ static void pmm_init() {
   }
   global=(void*)pm_start;
   global->next=global;
-  global->size=pm_end-pm_start;
+  global->size=pm_end-pm_start-sizeof(header);
 
 }
 header *global_alloc_real(size_t size){
