@@ -75,8 +75,8 @@ static void hello() {
 
 static void os_run() {
     hello();
-    while(1)
     void memory_test();
+    while(1)
         memory_test();
     //_intr_write(1);
     while (1) {
