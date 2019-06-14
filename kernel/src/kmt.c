@@ -158,7 +158,7 @@ void kmt_spin_init(spinlock_t *lk, const char *name){
     copy_name(lk->name,name);
 }
 
-pthread_mutex_t exclu_lk=PTHREAD_MUTEX_INITILIZER;
+pthread_mutex_t exclu_lk=PTHREAD_MUTEX_INITIALIZER;
 void kmt_spin_lock(spinlock_t *lk){
     intr_close();
     pthread_mutex_lock(&exclu_lk);
