@@ -139,7 +139,7 @@ int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), void *a
         return 0;
     }
     //task->id=tasks_cnt;
-    log("create (%d)%s\n",tasks_cnt,name);
+    local_log("create (%d)%s\n",tasks_cnt,name);
     int task_idx=add_task(task);
     Assert(tasks_cnt<LEN(tasks),"%d\n",tasks_cnt);
     task->cpu=-1;
