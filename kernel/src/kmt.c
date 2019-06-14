@@ -77,7 +77,7 @@ static _Context* kmt_context_save(_Event ev, _Context *c){
         kmt->spin_lock(&tasks_lk);
         current=kmt->create(pmm->alloc(sizeof(task_t)),"os_run",os->run,NULL);
         tasks[current]->attr|=TASK_RUNNING;
-        kmt->spin_lock(&tasks_lk);
+        kmt->spin_unlock(&tasks_lk);
     }
     Assert(current>=0);
     tasks[current]->context=*c;
@@ -100,7 +100,7 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
             kmt->spin_unlock(&tasks_lk);
             if((tasks[current]->attr&TASK_SLEEP)==0)return &tasks[current]->context;
             for(volatile uint32_t sleep=1;sleep<10000000;++sleep);//Sleep if can't get any process to run
-            kmt->spin_unlock(&tasks_lk);
+            kmt->spin_lock(&tasks_lk);
         }
     }while(tasks[new]->attr);
 
