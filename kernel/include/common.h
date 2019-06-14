@@ -9,6 +9,7 @@
 
 #include <my_trace.h>
 
+#define local_log(...) log(__VA_ARGS__)
 
 #define LEN(arr) ((sizeof(arr) / sizeof(arr[0])))
 
