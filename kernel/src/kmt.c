@@ -120,7 +120,6 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
             while(1);
         }
     }
-    printf("%d",current);
     return &tasks[current]->context;
 }
 void kmt_init(void){
