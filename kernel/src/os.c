@@ -44,6 +44,16 @@ void idle(void *arg){
         for(volatile int i=0;i<10000;++i)_yield();
     };
 }
+void echo_task(void *name) {
+  device_t *tty = dev_lookup(name);
+  while (1) {
+    char line[128], text[128];
+    sprintf(text, "(%s) $ ", name); tty_write(tty, text);
+    int nread = tty->ops->read(tty, 0, line, sizeof(line));
+    line[nread - 1] = '\0';
+    sprintf(text, "Echo: %s.\n", line); tty_write(tty, text);
+  }
+}
 
 static void os_init() {
     pmm->init();
@@ -51,6 +61,7 @@ static void os_init() {
     dev->init();
     kmt->create(pmm->alloc(sizeof(task_t)),"idle1",idle,NULL);
     kmt->create(pmm->alloc(sizeof(task_t)),"idle2",idle,NULL);
+    kmt->create(pmm->alloc(sizeof(task_t)),"echo_task",echo_task,NULL);
     /*
     kmt->create(pmm->alloc(sizeof(task_t)),"sem-test1",sem_test,"!");
     kmt->create(pmm->alloc(sizeof(task_t)),"sem-test2",sem_test,"!");
