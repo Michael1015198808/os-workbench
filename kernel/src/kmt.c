@@ -161,7 +161,6 @@ void kmt_spin_init(spinlock_t *lk, const char *name){
 pthread_mutex_t exclu_lk=PTHREAD_MUTEX_INITIALIZER;
 void kmt_spin_lock(spinlock_t *lk){
     intr_close();
-    pthread_mutex_lock(&exclu_lk);
     int cpu_id=_cpu();
     while(1){
         if(lk->locked){
@@ -170,6 +169,7 @@ void kmt_spin_lock(spinlock_t *lk){
                 break;
             }else{
                 while(lk->locked);
+                /*
                 for(volatile int i=0;lk->locked;++i){
                     if(i==10000){
                         i=0;
@@ -178,6 +178,7 @@ void kmt_spin_lock(spinlock_t *lk){
                         intr_close();
                     }
                 }
+                */
             }
         }
         pthread_mutex_lock(&lk->locked);
@@ -186,10 +187,8 @@ void kmt_spin_lock(spinlock_t *lk){
         ++lk_cnt[cpu_id];
         break;
     }//Use break to release lock and restore intr
-    pthread_mutex_unlock(&exclu_lk);
 }
 void kmt_spin_unlock(spinlock_t *lk){
-    pthread_mutex_lock(&exclu_lk);
     if(lk->locked){
         if(lk->owner!=_cpu()){
             log("Lock[%s] isn't holded by this CPU!\n",lk->name);
@@ -205,7 +204,6 @@ void kmt_spin_unlock(spinlock_t *lk){
     }else{
         Assert(0,"Lock[%s] isn't locked!\n",lk->name);
     }
-    pthread_mutex_unlock(&exclu_lk);
     intr_open();
 }
 void kmt_sem_init(sem_t *sem, const char *name, int value){
