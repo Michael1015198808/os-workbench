@@ -45,7 +45,7 @@ header *global_alloc_real(size_t size){
     }
 }
 header* global_alloc(size_t size){
-    pthread_mutex_t global_lk=PTHREAD_MUTEX_INITIALIZER;
+    static pthread_mutex_t global_lk=PTHREAD_MUTEX_INITIALIZER;
     pthread_mutex_lock(&global_lk);
     header* ret=global_alloc_real(size);
     pthread_mutex_unlock(&global_lk);
