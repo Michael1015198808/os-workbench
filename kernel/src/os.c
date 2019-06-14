@@ -52,7 +52,7 @@ void echo_task(void *name) {
     sprintf(text, "(%s) $ ", name); tty->ops->write(tty, off, text, strlen(text)+1);
     int nread = tty->ops->read(tty, 0, line, sizeof(line));
     line[nread - 1] = '\0';
-    sprintf(text, "Echo: %s.\n", line); tty_write(tty, text);
+    sprintf(text, "Echo: %s.\n", line); tty->ops->write(tty, off, text, strlen(text)+1);
   }
 }
 
