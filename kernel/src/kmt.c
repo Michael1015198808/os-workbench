@@ -98,6 +98,7 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
         new%=tasks_cnt;
         if(cnt==0){
             kmt->spin_unlock(&tasks_lk);
+            intr_open();
             _yield();
             Assert(0,"Should not reach here!\n");
             /*
