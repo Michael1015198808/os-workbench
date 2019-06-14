@@ -88,6 +88,7 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
     if(current>=0){
         tasks[current]->cpu=-1;
         neg_flag(tasks[current],TASK_RUNNING);
+        current=-1;
     }
 
     do{
