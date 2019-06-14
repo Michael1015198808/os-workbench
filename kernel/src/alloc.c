@@ -93,7 +93,7 @@ static void *wrap_kalloc(size_t size){
     alloc_cnt+=size;
     void* p=kalloc(size);
     memset(p,0,size);
-    printf("Return %x,%p\n",size,p);
+    //printf("Return %x,%p\n",size,p);
     return p;
 }
 
