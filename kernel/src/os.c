@@ -85,7 +85,7 @@ static void os_run() {
 
 static _Context *os_trap(_Event ev, _Context *context) {
     intr_close();
-    repoft_if(ncli[_cpu()]!=1);
+    report_if(ncli[_cpu()]!=1);
     _Context *ret = context;
 
     for(struct irq *handler=irq_guard.next;
