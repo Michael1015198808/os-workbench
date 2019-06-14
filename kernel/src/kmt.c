@@ -53,22 +53,22 @@ static int add_task(task_t *task){
 
 #define set_flag(A,B) \
     { \
-        Assert(!(A->attr&B),"%d",A->attr); \
+        report_if(!(A->attr&B),"%d",A->attr); \
         pthread_mutex_lock(&A->attr_lock); \
         uintptr_t p=(uintptr_t)&A->attr; \
         asm volatile("lock or %1,(%0)"::"r"(p),"g"((B))); \
         pthread_mutex_unlock(&A->attr_lock); \
-        Assert(A->attr&B,"%d",A->attr); \
+        report_if(A->attr&B,"%d",A->attr); \
     }
 
 #define neg_flag(A,B) \
     { \
-        Assert(A->attr&B,"%d",A->attr); \
+        report_if(A->attr&B,"%d",A->attr); \
         pthread_mutex_lock(&A->attr_lock); \
         uintptr_t p=(uintptr_t)&A->attr; \
         asm volatile("lock and %1,(%0)"::"r"(p),"g"(~(B))); \
         pthread_mutex_unlock(&A->attr_lock); \
-        Assert(!(A->attr&B),"%d",A->attr); \
+        report_if(!(A->attr&B),"%d",A->attr); \
     }
 
 static _Context* kmt_context_save(_Event ev, _Context *c){
