@@ -85,11 +85,6 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
     int cpu_id=_cpu(),new=current;
     uint16_t cnt=0;
 
-    if(current>=0){
-        tasks[current]->cpu=-1;
-        neg_flag(tasks[current],TASK_RUNNING);
-        current=-1;
-    }
 
     do{
         //current=rand()%tasks_cnt;
@@ -98,9 +93,7 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
         new%=tasks_cnt;
         if(cnt==0){
             kmt->spin_unlock(&tasks_lk);
-            intr_open();
-            _yield();
-            Assert(0,"Should not reach here!\n");
+            return NULL;
             /*
             if((tasks[current]->attr&TASK_SLEEP)==0)return &tasks[current]->context;
             for(volatile uint32_t sleep=1;sleep<10000000;++sleep);//Sleep if can't get any process to run
@@ -109,6 +102,10 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
         }
     }while(tasks[new]->attr);
 
+    if(current>=0){
+        tasks[current]->cpu=-1;
+        neg_flag(tasks[current],TASK_RUNNING);
+    }
 
     tasks[new]->cpu=cpu_id;
     set_flag(tasks[new],TASK_RUNNING);
