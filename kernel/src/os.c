@@ -84,7 +84,6 @@ static void os_run() {
 int cnt=0,currents[4];
 static _Context *os_trap(_Event ev, _Context *context) {
     intr_close();
-    printf("(");
     report_if(ncli[_cpu()]!=1);
     _Context *ret = context;
 
@@ -99,7 +98,6 @@ static _Context *os_trap(_Event ev, _Context *context) {
     intr_open();
     //Assert(ncli[_cpu()]==0,"%d",ncli[_cpu()]);
     Assert(ret!=NULL,"\nkmt_context_switch returns NULL\n");
-    printf(")%d %d",currents[_cpu()],++cnt);
     return ret;
 }
 
