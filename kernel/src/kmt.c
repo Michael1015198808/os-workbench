@@ -74,6 +74,7 @@ static int add_task(task_t *task){
 static _Context* kmt_context_save(_Event ev, _Context *c){
     int cpu_id=_cpu();
     if(current==-1){
+        return NULL;
         kmt->spin_lock(&tasks_lk);
         current=kmt->create(pmm->alloc(sizeof(task_t)),"os_run",os->run,NULL);
         tasks[current]->attr|=TASK_RUNNING;
@@ -122,6 +123,7 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
             while(1);
         }
     }
+    printf("%d",current);
     return &tasks[current]->context;
 }
 void kmt_init(void){
