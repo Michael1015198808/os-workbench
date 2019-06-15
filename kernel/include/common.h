@@ -25,7 +25,7 @@ volatile int ncli[4];
 #define TASK_RUNNING 2
 typedef struct task{
     //int32_t id;
-    int32_t cpu;
+    int32_t cpu,ncli;
     volatile uint32_t attr;
     pthread_mutex_t attr_lock;
     char* name;

@@ -81,6 +81,7 @@ static _Context* kmt_context_save(_Event ev, _Context *c){
     }
     Assert(current>=0);
     tasks[current]->context=*c;
+    tasks[current]->ncli=ncli[cpu_id];
     return NULL;
 }
 int log_idx=0;
@@ -118,6 +119,7 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
     set_flag(tasks[new],TASK_RUNNING);
 
     current=new;
+    ncli[cpu_id]=task[new]->ncli;
     
     kmt->spin_unlock(&tasks_lk);
     for(int i=0;i<4;++i){
@@ -145,6 +147,7 @@ int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), void *a
     task->cpu=-1;
     task->attr=TASK_RUNABLE;
     task->attr_lock=0;
+    task->ncli=0;
     copy_name(task->name,name);
 
     task->context = *_kcontext(
@@ -169,12 +172,8 @@ void kmt_spin_init(spinlock_t *lk, const char *name){
 
 pthread_mutex_t exclu_lk=PTHREAD_MUTEX_INITIALIZER;
 void kmt_spin_lock(spinlock_t *lk){
-    int cpu_id,intr;
-    do{
-        cpu_id=_cpu();
-        intr=_intr_read();
-        _intr_write(0);
-    }while(cpu_id!=_cpu());
+    cli();
+    int cpu_id=_cpu();
     while(1){
         if(lk->locked){
             if(lk->owner==cpu_id){
@@ -196,7 +195,7 @@ void kmt_spin_lock(spinlock_t *lk){
         }
         pthread_mutex_lock(&lk->locked);
         lk->reen=1;
-        lk->int_on=intr;
+        lk->int_on=get_efl()&EF_IF;
         lk->owner=cpu_id;
         ++lk_cnt[cpu_id];
         break;
