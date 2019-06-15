@@ -84,6 +84,7 @@ void cli_test(void){
     while(1);
 }
 static void os_run() {
+    _intr_write(1);
     cli_test();
     hello();
     _intr_write(1);
@@ -94,6 +95,7 @@ static void os_run() {
 
 static _Context *os_trap(_Event ev, _Context *context) {
     cli();
+    while(1);
     report_if(ncli[_cpu()]!=1);
     _Context *ret = context;
 
