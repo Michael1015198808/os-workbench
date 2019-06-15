@@ -74,13 +74,13 @@ static void hello() {
 
 #include <../src/x86/x86-qemu.h>
 void cli_test(void){
-    printf("%x\n",get_efl()&EF_IF);
+    printf("%x\n",get_efl()&FL_IF);
     cli();
-    printf("%x\n",get_efl()&EF_IF);
+    printf("%x\n",get_efl()&FL_IF);
     cli();
-    printf("%x\n",get_efl()&EF_IF);
+    printf("%x\n",get_efl()&FL_IF);
     sti();
-    printf("%x\n",get_efl()&EF_IF);
+    printf("%x\n",get_efl()&FL_IF);
     while(1);
 }
 static void os_run() {
