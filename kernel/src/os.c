@@ -94,8 +94,8 @@ static void os_run() {
 }
 
 static _Context *os_trap(_Event ev, _Context *context) {
+    return context;
     cli();
-    while(1);
     report_if(ncli[_cpu()]!=1);
     _Context *ret = context;
 
