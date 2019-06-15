@@ -43,10 +43,9 @@ typedef struct task{
 
 typedef struct spinlock{
     uint32_t reen;
-    int owner;
+    int owner,int_on;
     pthread_mutex_t locked;
     char *name;
-    uint8_t int_on;
 #ifdef spinlock_log
     int idx;
     char log[66000];

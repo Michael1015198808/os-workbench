@@ -169,8 +169,12 @@ void kmt_spin_init(spinlock_t *lk, const char *name){
 
 pthread_mutex_t exclu_lk=PTHREAD_MUTEX_INITIALIZER;
 void kmt_spin_lock(spinlock_t *lk){
-    intr_close();
-    int cpu_id=_cpu();
+    int cpu_id,intr;
+    do{
+        cpu_id=_cpu();
+        intr=_intr_read();
+        _intr_write(0);
+    }while(cpu_id!=_cpu());
     while(1){
         if(lk->locked){
             if(lk->owner==cpu_id){
@@ -192,6 +196,7 @@ void kmt_spin_lock(spinlock_t *lk){
         }
         pthread_mutex_lock(&lk->locked);
         lk->reen=1;
+        lk->int_on=intr;
         lk->owner=cpu_id;
         ++lk_cnt[cpu_id];
         break;
@@ -200,11 +205,11 @@ void kmt_spin_lock(spinlock_t *lk){
 void kmt_spin_unlock(spinlock_t *lk){
     if(lk->locked){
         if(lk->owner!=_cpu()){
-            log("Lock[%s] isn't holded by this CPU!\n",lk->name);
+            log("Lock[%s] isn't held by this CPU!\n",lk->name);
         }else{
             if(lk->reen==1){
                 lk->owner=-1;
-                //True but sometimes slow
+                intr_write(lk->int_on);
                 pthread_mutex_unlock(&(lk->locked));
             }else{
                 --lk->reen;
@@ -213,7 +218,6 @@ void kmt_spin_unlock(spinlock_t *lk){
     }else{
         Assert(0,"Lock[%s] isn't locked!\n",lk->name);
     }
-    intr_open();
 }
 void kmt_sem_init(sem_t *sem, const char *name, int value){
     copy_name(sem->name,name);
@@ -226,15 +230,7 @@ void kmt_sem_init(sem_t *sem, const char *name, int value){
 
 
 
-volatile int add_rm_cnt=0,assert_lock=0;
 static void sem_add_task(sem_t *sem){
-    if(assert_lock==1){
-        printf("Locked!");
-        while(1);
-    }
-    assert_lock=1;
-    ++add_rm_cnt;
-    assert_lock=0;
     int cpu_id=_cpu();
     
     sem->pool[sem->tail++]=tasks[current];
@@ -245,13 +241,6 @@ static void sem_add_task(sem_t *sem){
     _yield();
 }
 static void sem_remove_task(sem_t *sem){
-    if(assert_lock==1){
-        printf("Locked!");
-        while(1);
-    }
-    assert_lock=1;
-    --add_rm_cnt;
-    assert_lock=0;
 
     while(sem->pool[sem->head]->attr&TASK_RUNNING);
     neg_flag(sem->pool[sem->head],TASK_SLEEP);
