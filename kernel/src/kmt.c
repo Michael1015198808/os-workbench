@@ -209,7 +209,7 @@ void kmt_spin_unlock(spinlock_t *lk){
         }else{
             if(lk->reen==1){
                 lk->owner=-1;
-                intr_write(lk->int_on);
+                _intr_write(lk->int_on);
                 pthread_mutex_unlock(&(lk->locked));
             }else{
                 --lk->reen;
