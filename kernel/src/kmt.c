@@ -119,7 +119,7 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
     set_flag(tasks[new],TASK_RUNNING);
 
     current=new;
-    ncli[cpu_id]=task[new]->ncli;
+    ncli[cpu_id]=tasks[new]->ncli;
     
     kmt->spin_unlock(&tasks_lk);
     for(int i=0;i<4;++i){
@@ -172,7 +172,7 @@ void kmt_spin_init(spinlock_t *lk, const char *name){
 
 pthread_mutex_t exclu_lk=PTHREAD_MUTEX_INITIALIZER;
 void kmt_spin_lock(spinlock_t *lk){
-    cli();
+    //cli();
     int cpu_id=_cpu();
     while(1){
         if(lk->locked){
@@ -195,7 +195,7 @@ void kmt_spin_lock(spinlock_t *lk){
         }
         pthread_mutex_lock(&lk->locked);
         lk->reen=1;
-        lk->int_on=get_efl()&EF_IF;
+        //lk->int_on=get_efl()&EF_IF;
         lk->owner=cpu_id;
         ++lk_cnt[cpu_id];
         break;
