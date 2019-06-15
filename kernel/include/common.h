@@ -6,6 +6,7 @@
 #include <nanos.h>
 #include <limits.h>
 #include <stdint.h>
+#include <../src/x86/x86-qemu.h>
 
 #include <my_trace.h>
 
