@@ -72,6 +72,7 @@ static void hello() {
     printf("nmsl from CPU #%d\n",_cpu());
 }
 
+#include <../src/x86/x86-qemu.h>
 void cli_test(void){
     printf("%x\n",get_efl()&EF_IF);
     cli();
