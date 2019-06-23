@@ -72,20 +72,7 @@ static void hello() {
     printf("nmsl from CPU #%d\n",_cpu());
 }
 
-#include <../src/x86/x86-qemu.h>
-void cli_test(void){
-    printf("%x\n",get_efl()&FL_IF);
-    cli();
-    printf("%x\n",get_efl()&FL_IF);
-    cli();
-    printf("%x\n",get_efl()&FL_IF);
-    sti();
-    printf("%x\n",get_efl()&FL_IF);
-    while(1);
-}
 static void os_run() {
-    _intr_write(1);
-    cli_test();
     hello();
     _intr_write(1);
     while (1) {
@@ -94,8 +81,7 @@ static void os_run() {
 }
 
 static _Context *os_trap(_Event ev, _Context *context) {
-    return context;
-    cli();
+    intr_clode();
     report_if(ncli[_cpu()]!=1);
     _Context *ret = context;
 
@@ -107,7 +93,7 @@ static _Context *os_trap(_Event ev, _Context *context) {
             if (next) ret = next;
         }
     }
-    sti();
+    intr_open();
     //Assert(ncli[_cpu()]==0,"%d",ncli[_cpu()]);
     Assert(ret!=NULL,"\nkmt_context_switch returns NULL\n");
     return ret;
