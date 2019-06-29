@@ -22,7 +22,6 @@ static irq_handler irq_guard={
 
 sem_t echo_sem;
 void echo_test(void *arg){
-    _intr_write(0);
     while(1){
         printf("%c",((char*)arg)[0]);
         kmt->sem_wait(&echo_sem);
@@ -31,11 +30,8 @@ void echo_test(void *arg){
 }
 void sem_test(void *arg){
     while(1){
-        for(volatile int i=0;i<100;++i);
         printf("~");
         kmt->sem_signal(&echo_sem);
-        //printf("~");
-        //kmt->sem_signal(&echo_sem);
         _yield();
     }
 }
@@ -45,17 +41,23 @@ void idle(void *arg){
     };
 }
 
+void intr_reading(void *idle){
+    while(1){
+        printf("%d\n",intr_read());
+    }
+}
 static void os_init() {
     pmm->init();
     kmt->init();
     dev->init();
+    kmt->create(pmm->alloc(sizeof(task_t)),"reading",intr_reading,NULL);
+    /*
     kmt->create(pmm->alloc(sizeof(task_t)),"idle1",idle,NULL);
     kmt->create(pmm->alloc(sizeof(task_t)),"idle2",idle,NULL);
     kmt->create(pmm->alloc(sizeof(task_t)),"shell1",mysh,"tty1");
     kmt->create(pmm->alloc(sizeof(task_t)),"shell2",mysh,"tty2");
     kmt->create(pmm->alloc(sizeof(task_t)),"shell3",mysh,"tty3");
     kmt->create(pmm->alloc(sizeof(task_t)),"shell4",mysh,"tty4");
-    /*
     kmt->create(pmm->alloc(sizeof(task_t)),"sem-test1",sem_test,"!");
     kmt->create(pmm->alloc(sizeof(task_t)),"sem-test2",sem_test,"!");
     kmt->create(pmm->alloc(sizeof(task_t)),"echo-test:n",echo_test,"n");
@@ -81,8 +83,7 @@ static void os_run() {
 }
 
 static _Context *os_trap(_Event ev, _Context *context) {
-    intr_close();
-    report_if(ncli[_cpu()]!=1);
+    intr_write(0);
     _Context *ret = context;
 
     for(struct irq *handler=irq_guard.next;
@@ -93,8 +94,6 @@ static _Context *os_trap(_Event ev, _Context *context) {
             if (next) ret = next;
         }
     }
-    intr_open();
-    //Assert(ncli[_cpu()]==0,"%d",ncli[_cpu()]);
     Assert(ret!=NULL,"\nkmt_context_switch returns NULL\n");
     return ret;
 }
@@ -109,11 +108,12 @@ static void os_on_irq(int seq, int event, handler_t handler) {
         p=p->next;
     }
     prev->next=new(irq_handler);
-    prev->next->next=p;
+    prev=prev->next;
 
-    prev->next->seq=seq;
-    prev->next->event=event;
-    prev->next->handler=handler;
+    prev->seq=seq;
+    prev->event=event;
+    prev->handler=handler;
+    prev->next=p;
 }
 
 MODULE_DEF(os) {

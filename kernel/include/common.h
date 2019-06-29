@@ -25,7 +25,7 @@ volatile int ncli[4];
 #define TASK_RUNNING 2
 typedef struct task{
     //int32_t id;
-    int32_t cpu,ncli;
+    int32_t cpu;
     volatile uint32_t attr;
     pthread_mutex_t attr_lock;
     char* name;
@@ -34,8 +34,7 @@ typedef struct task{
     uint32_t fence1[4];
 #endif
     uint8_t stack[STK_SZ];
-    struct{
-    }stack_end;
+    struct{}stack_end;
 #ifdef TASK_FENCE
     uint32_t fence2[4];
 #endif
@@ -66,5 +65,6 @@ typedef struct semaphore {
     volatile int head,tail;
 }semaphore_t;
 #endif
+
 void report_if(int);
 void mysh(void*);

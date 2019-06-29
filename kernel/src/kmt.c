@@ -32,17 +32,17 @@ void show_sem_list(sem_t *sem){
         printf("%s->",sem->pool[p]->name);
     }
     printf("%s->",sem->pool[p]->name);
+    printf("\n");
 }
 
 void show(){
-    extern sem_t echo_sem;
-    show_sem_list(&echo_sem);
     printf("%s",tasks[0]->name);
     for(int i=1;i<tasks_cnt;++i){
         printf("->%s",tasks[i]->name);
     }
     printf("\n");
 }
+
 static int add_task(task_t *task){
     kmt->spin_lock(&tasks_lk);
     int ret=tasks_cnt;
@@ -108,14 +108,14 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
             kmt->spin_lock(&tasks_lk);
             */
         }
-    }while(tasks[new]->attr);
+    }while(tasks[new]->attr||
+            (tasks[new]->cpu!=-1&&tasks[new]->cpu!=cpu_id)
+          );
 
     if(current>=0){
-        tasks[current]->cpu=-1;
         neg_flag(tasks[current],TASK_RUNNING);
     }
 
-    tasks[new]->cpu=cpu_id;
     set_flag(tasks[new],TASK_RUNNING);
 
     current=new;

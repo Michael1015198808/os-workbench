@@ -94,7 +94,6 @@ void pthread_mutex_unlock(pthread_mutex_t* locked);
 //intr.c
 void _intr_close();
 void _intr_open();
-void intr_log(char *);
 
 #define log(fmt,...) printf("[cpu%d]%s %3d:\n    " fmt,_cpu(),__FILE__,__LINE__,##__VA_ARGS__)
 #define Assert(cond,...) \
@@ -116,7 +115,7 @@ void intr_log(char *);
     }while(0)
 #define intr_open() \
     do{ \
-        intr_log("[cpu%d]%s:%d(%s)open\n",_cpu(),__FILE__,__LINE__,__func__); \
+        intr_log("[cpu%d]%s:%d(%s)open\n" ,_cpu(),__FILE__,__LINE__,__func__); \
         _intr_open(); \
     }while(0)
 
