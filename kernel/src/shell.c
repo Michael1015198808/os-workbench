@@ -3,10 +3,11 @@
 #include <klib.h>
 #include <devices.h>
 
-typedef static struct Command{
+static struct Command{
     const char *name,
     const (int)(*(void*)) binary;
-}commands={};
+}commands[]={
+};
 void mysh(void *name) {
   device_t *tty = dev_lookup(name);
   while (1) {
