@@ -5,10 +5,11 @@
 
 static struct Command{
     const char *name,
-    (int)(*const binary(void*));
+    (int)(*const binary)(void*);
 }commands[]={
 };
 void mysh(void *name) {
+    (void)commands;
   device_t *tty = dev_lookup(name);
   while (1) {
     char line[128], text[128];
