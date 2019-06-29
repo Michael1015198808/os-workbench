@@ -92,7 +92,7 @@ static void *kalloc_real(size_t size) {
 static void *kalloc(size_t size){
     header* p=kalloc_real(size);
     p->fence=0x13579ace;
-    memset(p->space,0,size);
+    memset(&p->space,0,size);
     //printf("Return %x,%p\n",size,p);
     return &p->space;
 }
@@ -102,6 +102,10 @@ static inline void kfree_real(void *ptr) {
     header *p=free_list[cpu_id].next,
             *prevp=&free_list[cpu_id],
             *to_free=(header*)(ptr-sizeof(header));
+    if(to_free->fence!=0x13579ace){
+        printf("Fence at %x changed to %x!\n",&to_free->fence,to_free->fence);
+        report_if(1);
+    }
     for(  ;
             p!=&free_list[cpu_id];
             prevp=p,
@@ -130,10 +134,6 @@ static inline void kfree_real(void *ptr) {
 }
 static void kfree(void *ptr){
     if(ptr==NULL)return;
-    if(to_free->fence!=0x13579ace){
-        printf("Fence at %x changed to %x!\n",&to_free->fence,to_free->fence);
-        report_if(1);
-    }
     kfree_real(ptr);
 }
 
