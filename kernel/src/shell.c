@@ -4,7 +4,7 @@
 #include <devices.h>
 
 static struct Command{
-    const char *name,
+    const char *name;
     int(*const binary)(void*);
 }commands[]={
 };
