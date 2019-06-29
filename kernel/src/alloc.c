@@ -60,7 +60,7 @@ static void *kalloc_real(size_t size) {
     uint8_t *tail=NULL;
     header *p=free_list[cpu_id].next,*prevp=&free_list[cpu_id],*ret;
     while(1){
-        for(    p=free_list[cpu_id];
+        for(    p=free_list[cpu_id].next;
                 p!=&free_list[cpu_id];
                 prevp=p,
                 p=p->next){
@@ -72,10 +72,10 @@ static void *kalloc_real(size_t size) {
                 p->size-=size+sizeof(header);//Shrink current block
                 ret=(header*)tail;
                 ret->size=size;//record size for free
-                return &(ret->space);
+                return ret;
             }else if(p->size>=size){
                 prevp->next=p->next;//"Remove" p
-                return &(p->space);//from free list
+                return p;//from free list
             }
         }
 
@@ -90,11 +90,11 @@ static void *kalloc_real(size_t size) {
 }
 
 static void *kalloc(size_t size){
-    void* p=kalloc_real(size);
+    header* p=kalloc_real(size);
     p->fence=0x13579ace;
-    memset(p,0,size);
+    memset(p->space,0,size);
     //printf("Return %x,%p\n",size,p);
-    return p;
+    return &p->space;
 }
 
 static inline void kfree_real(void *ptr) {
