@@ -43,7 +43,7 @@ void idle(void *arg){
 
 void intr_reading(void *idle){
     while(1){
-        printf("%d\n",intr_read());
+        printf("%d\n",_intr_read());
     }
 }
 static void os_init() {
@@ -83,7 +83,7 @@ static void os_run() {
 }
 
 static _Context *os_trap(_Event ev, _Context *context) {
-    intr_write(0);
+    _intr_write(0);
     _Context *ret = context;
 
     for(struct irq *handler=irq_guard.next;
