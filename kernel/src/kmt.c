@@ -81,7 +81,6 @@ static _Context* kmt_context_save(_Event ev, _Context *c){
     }
     Assert(current>=0);
     tasks[current]->context=*c;
-    tasks[current]->ncli=ncli[cpu_id];
     return NULL;
 }
 int log_idx=0;
@@ -119,7 +118,6 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
     set_flag(tasks[new],TASK_RUNNING);
 
     current=new;
-    ncli[cpu_id]=tasks[new]->ncli;
     
     kmt->spin_unlock(&tasks_lk);
     for(int i=0;i<4;++i){
@@ -147,7 +145,6 @@ int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), void *a
     task->cpu=-1;
     task->attr=TASK_RUNABLE;
     task->attr_lock=0;
-    task->ncli=0;
     copy_name(task->name,name);
 
     task->context = *_kcontext(
