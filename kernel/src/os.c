@@ -43,7 +43,9 @@ void idle(void *arg){
 
 void intr_reading(void *idle){
     while(1){
-        printf("%d\n",_intr_read());
+        int i=_intr_read();
+        _putc('0'+i);
+        _putc('\n');
     }
 }
 static void os_init() {
