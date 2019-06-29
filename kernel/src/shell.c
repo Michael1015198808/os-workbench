@@ -5,7 +5,7 @@
 
 static struct Command{
     const char *name,
-    (int)(*const binary)(void*);
+    int(*const binary)(void*);
 }commands[]={
 };
 void mysh(void *name) {
