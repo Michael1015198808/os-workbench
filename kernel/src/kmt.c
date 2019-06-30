@@ -231,6 +231,7 @@ static void sem_add_task(sem_t *sem){
     if(sem->tail>=POOL_LEN)sem->tail-=POOL_LEN;
 
     pthread_mutex_unlock(&(sem->lock));
+    intr_open();
     _yield();
 }
 
@@ -242,31 +243,31 @@ static void sem_remove_task(sem_t *sem){
 }
 
 void kmt_sem_wait_real(sem_t *sem){
+    intr_close();
     pthread_mutex_lock(&(sem->lock));
 
     if(--sem->value<0){
         return sem_add_task(sem);
     }
     pthread_mutex_unlock(&(sem->lock));
+    intr_open();
 }
 void kmt_sem_wait(sem_t *sem){
-    intr_close();
     kmt_sem_wait_real(sem);
-    intr_open();
 }
 
 void kmt_sem_signal_real(sem_t *sem){
+    intr_close();
     pthread_mutex_lock(&(sem->lock));
 
     if(++sem->value<=0){
         sem_remove_task(sem);
     }
     pthread_mutex_unlock(&(sem->lock));
+    intr_open();
 }
 void kmt_sem_signal(sem_t *sem){
-    intr_close();
     kmt_sem_signal_real(sem);
-    intr_open();
 }
 
 MODULE_DEF(kmt) {
