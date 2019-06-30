@@ -11,12 +11,11 @@ pthread_mutex_t intr_lk=PTHREAD_MUTEX_INITIALIZER;
 char intr_log_string[66000];
 pthread_mutex_t log_lk=PTHREAD_MUTEX_INITIALIZER;
 void _intr_close(){
+    int int_on=_intr_read();
+    cli();
     int cpu_id=_cpu();
     Assert(ncli[cpu_id]>=0);
-    if(ncli[cpu_id]==0){
-        ori[cpu_id]=_intr_read();
-        cli();
-    }
+    ori[cpu_id]|=int_on;
     ++ncli[cpu_id];
 }
 void _intr_open(){
@@ -24,8 +23,8 @@ void _intr_open(){
     --ncli[cpu_id];
     if(ncli[cpu_id]==0){
         if(ori[cpu_id]){
-            sti();
             ori[cpu_id]=0;
+            sti();
         }
     }
     Assert(ncli[cpu_id]>=0);
