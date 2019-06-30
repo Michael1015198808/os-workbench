@@ -53,7 +53,7 @@ static void os_init() {
     pmm->init();
     kmt->init();
     dev->init();
-#define CURRENT_TEST spin_test
+#define CURRENT_TEST semaphore_test
 #define TEST_NAME(idx) TO_STRING(CURRENT_TEST) TO_STRING(idx)
 #define TEST_REQUIREMENT() \
     void MACRO_CONCAT(MACRO_SELF(CURRENT_TEST),_init)(void); \
