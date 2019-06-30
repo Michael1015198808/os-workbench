@@ -9,13 +9,13 @@ void semaphore_test_init(void){
 }
 void semaphore_test(void *arg){
     char c=((char*)arg)[0];
-    semaphore_t *test_sem=&test_sem[c-'0'];
+    semaphore_t *sem_p=&test_sem[c-'0'];
     while(1){
-        kmt->sem_wait(test_sem);
+        kmt->sem_wait(sem_p);
         _putc(c);
         for(int i=0;i<7;++i){
             _putc("Hello!\n"[i]);
         }
-        kmt->sem_signal(test_sem);
+        kmt->sem_signal(sem_p);
     }
 }
