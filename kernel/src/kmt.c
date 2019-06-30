@@ -85,7 +85,7 @@ static _Context* kmt_context_save(_Event ev, _Context *c){
 //int log_idx=0;
 //char log[120000]={};
 static _Context* kmt_context_switch(_Event ev, _Context *c){
-    kmt->spin_lock(&tasks_lk);
+    //kmt->spin_lock(&tasks_lk);
     int cpu_id=_cpu(),new=current;
     Assert(_intr_read()==0,"%d",cpu_id);
     uint16_t cnt=0;
@@ -112,7 +112,7 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
 
     current=new;
     
-    kmt->spin_unlock(&tasks_lk);
+    //kmt->spin_unlock(&tasks_lk);
     for(int i=0;i<4;++i){
         if(tasks[current]->fence1[i]!=0x13579ace||tasks[current]->fence2[i]!=0xeca97531){
             asm volatile("");
