@@ -10,8 +10,9 @@
 
 #include <my_trace.h>
 
-#define STR_VALUE(_arg)     _arg
-#define TO_STRING(_arg)     #STR_VALUE(_arg)
+#define STR_VALUE(_arg)     #_arg
+#define STR_SELF(_arg)      _arg
+#define TO_STRING(_arg)     STR_VALUE(_arg)
 
 #define local_log(...) log(__VA_ARGS__)
 
