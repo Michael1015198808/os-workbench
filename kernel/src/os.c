@@ -59,7 +59,6 @@ static void os_init() {
     void MACRO_CONCAT(MACRO_SELF(CURRENT_TEST),_init)(void); \
     MACRO_CONCAT(MACRO_SELF(CURRENT_TEST),_init)()
     TEST_REQUIREMENT();
-    while(1);
     kmt->create(pmm->alloc(sizeof(task_t)),TEST_NAME(1),CURRENT_TEST,"a");
     kmt->create(pmm->alloc(sizeof(task_t)),TEST_NAME(2),CURRENT_TEST,"b");
     kmt->create(pmm->alloc(sizeof(task_t)),TEST_NAME(3),CURRENT_TEST,"c");
