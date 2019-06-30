@@ -254,7 +254,7 @@ void kmt_sem_wait(sem_t *sem){
     pthread_mutex_unlock(&sem_lk);
 }
 
-void inline kmt_sem_signal_real(sem_t *sem){
+void kmt_sem_signal_real(sem_t *sem){
     kmt->spin_lock(&(sem->lock));
 
     if(++sem->value<=0){
