@@ -11,11 +11,11 @@ void semaphore_test(void *arg){
     char c=((char*)arg)[0];
     semaphore_t *test_sem=&test_sem[c-'0'];
     while(1){
-        sem_wait(test_sem);
+        kmt->sem_wait(test_sem);
         _putc(c);
         for(int i=0;i<7;++i){
             _putc("Hello!\n"[i]);
         }
-        sem_signal(test_sem);
+        kmt->sem_signal(test_sem);
     }
 }
