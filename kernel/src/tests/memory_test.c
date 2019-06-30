@@ -1,9 +1,11 @@
 #include <common.h>
 #include <klib.h>
 
-#define memory_test_init
 #define MAXN 50
 #define MAXM 200
+void memory_test_init(void){
+    return;
+}
 static inline void fill(uint8_t *p,int a,int b,int len){
     for(int i=0;i<len;++i){
         p[i]=(a+=b);
