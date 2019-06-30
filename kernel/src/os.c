@@ -55,7 +55,7 @@ static void os_init() {
     dev->init();
 #define CURRENT_TEST spin_test
 #define TEST_NAME(idx) TO_STRING(CURRENT_TEST) TO_STRING(idx)
-#define TEST_REQUIREMENT() STR_SELF(CURRENT_TEST) ## _init
+#define TEST_REQUIREMENT() STR_SELF(CURRENT_TEST)##_init
 #define spin_test_init 1
     printf("%d",TEST_REQUIREMENT());
     while(1);
