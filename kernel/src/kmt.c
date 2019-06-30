@@ -2,10 +2,9 @@
 #include <klib.h>
 
 #define copy_name(dest,src) \
-    dest=pmm->alloc(strlen(src)+1); \
-    memcpy(dest,src,strlen(src)+1);
+    (dest=pmm->alloc(strlen(src)+1), \
+    strcpy(dest,src) )
 
-int lk_cnt[4]={};
 task_t *tasks[20]={};
 static spinlock_t tasks_lk;
 #define trace_pthread_mutex_lock(_lk) \
@@ -86,11 +85,10 @@ static _Context* kmt_context_save(_Event ev, _Context *c){
 int log_idx=0;
 char log[120000]={};
 static _Context* kmt_context_switch(_Event ev, _Context *c){
-    Assert(_intr_read()==0,"%d",_cpu());
     kmt->spin_lock(&tasks_lk);
     int cpu_id=_cpu(),new=current;
+    Assert(_intr_read()==0,"%d",cpu_id);
     uint16_t cnt=0;
-
 
     do{
         //current=rand()%tasks_cnt;
@@ -101,15 +99,10 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
             kmt->spin_unlock(&tasks_lk);
             if((tasks[current]->attr&TASK_SLEEP)==0)
                 return NULL;
-            
-            /*
             for(volatile uint32_t sleep=1;sleep<10000000;++sleep);//Sleep if can't get any process to run
             kmt->spin_lock(&tasks_lk);
-            */
         }
-    }while(tasks[new]->attr||
-            (tasks[new]->cpu!=-1&&tasks[new]->cpu!=cpu_id)
-          );
+    }while(tasks[new]->attr);
 
     if(current>=0){
         neg_flag(tasks[current],TASK_RUNNING);
@@ -128,11 +121,12 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
     }
     return &tasks[current]->context;
 }
+
 void kmt_init(void){
     os->on_irq(INT_MIN, _EVENT_NULL, kmt_context_save);
     os->on_irq(INT_MAX, _EVENT_NULL, kmt_context_switch);
 }
-int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), void *arg){
+int kmt_create(task_t *task, const char *name, void (*entry)(void*), void *arg){
     static int ignore_num=0;
     if(ignore_num>0){
         --ignore_num;
@@ -142,13 +136,15 @@ int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), void *a
     local_log("create (%d)%s\n",tasks_cnt,name);
     int task_idx=add_task(task);
     Assert(tasks_cnt<LEN(tasks),"%d\n",tasks_cnt);
-    task->cpu=-1;
     task->attr=TASK_RUNABLE;
     task->attr_lock=0;
     copy_name(task->name,name);
 
     task->context = *_kcontext(
-            (_Area){(void*)task->stack,&(task->stack_end)}, entry, arg);
+            (_Area){
+            (void*)task->stack,
+            &(task->stack_end)
+            }, entry, arg);
 #ifdef TASK_FENCE
     for(int i=0;i<4;++i){
         task->fence1[i]=0x13579ace;
@@ -169,7 +165,7 @@ void kmt_spin_init(spinlock_t *lk, const char *name){
 
 pthread_mutex_t exclu_lk=PTHREAD_MUTEX_INITIALIZER;
 void kmt_spin_lock(spinlock_t *lk){
-    //cli();
+    intr_close();
     int cpu_id=_cpu();
     while(1){
         if(lk->locked){
@@ -191,30 +187,31 @@ void kmt_spin_lock(spinlock_t *lk){
             }
         }
         pthread_mutex_lock(&lk->locked);
+        intr_close();
         lk->reen=1;
-        //lk->int_on=get_efl()&EF_IF;
         lk->owner=cpu_id;
-        ++lk_cnt[cpu_id];
         break;
     }//Use break to release lock and restore intr
+    intr_open();
 }
+
 void kmt_spin_unlock(spinlock_t *lk){
     if(lk->locked){
         if(lk->owner!=_cpu()){
-            log("Lock[%s] isn't held by this CPU!\n",lk->name);
+            local_log("Lock[%s] isn't held by this CPU!\n",lk->name);
+            report_if(1);
         }else{
-            if(lk->reen==1){
+            if(--lk->reen==0){
                 lk->owner=-1;
-                _intr_write(lk->int_on);
                 pthread_mutex_unlock(&(lk->locked));
-            }else{
-                --lk->reen;
+                intr_open();
             }
         }
     }else{
         Assert(0,"Lock[%s] isn't locked!\n",lk->name);
     }
 }
+
 void kmt_sem_init(sem_t *sem, const char *name, int value){
     copy_name(sem->name,name);
     sem->value=value;
@@ -224,11 +221,9 @@ void kmt_sem_init(sem_t *sem, const char *name, int value){
     //log("%s: %d",sem->name,sem->value);
 }
 
-
-
 static void sem_add_task(sem_t *sem){
     int cpu_id=_cpu();
-    
+
     sem->pool[sem->tail++]=tasks[current];
     set_flag(tasks[current],TASK_SLEEP);
     if(sem->tail>=POOL_LEN)sem->tail-=POOL_LEN;
@@ -236,6 +231,7 @@ static void sem_add_task(sem_t *sem){
     kmt->spin_unlock(&(sem->lock));
     _yield();
 }
+
 static void sem_remove_task(sem_t *sem){
 
     while(sem->pool[sem->head]->attr&TASK_RUNNING);
@@ -243,21 +239,18 @@ static void sem_remove_task(sem_t *sem){
     if(++sem->head>=POOL_LEN)sem->head-=POOL_LEN;
 }
 
-pthread_mutex_t semlock=0;
 void kmt_sem_wait(sem_t *sem){
     kmt->spin_lock(&(sem->lock));
-    --(sem->value);
 
-    if(sem->value<0){
+    if(--sem->value<0){
         return sem_add_task(sem);
     }
     kmt->spin_unlock(&(sem->lock));
 }
 void kmt_sem_signal(sem_t *sem){
     kmt->spin_lock(&(sem->lock));
-    ++(sem->value);
 
-    if(sem->value<=0){
+    if(++sem->value<=0){
         sem_remove_task(sem);
     }
     kmt->spin_unlock(&(sem->lock));

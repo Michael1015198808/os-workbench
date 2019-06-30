@@ -25,7 +25,6 @@ volatile int ncli[4];
 #define TASK_RUNNING 2
 typedef struct task{
     //int32_t id;
-    int32_t cpu;
     volatile uint32_t attr;
     pthread_mutex_t attr_lock;
     char* name;
@@ -41,8 +40,7 @@ typedef struct task{
 }task_t;
 
 typedef struct spinlock{
-    uint32_t reen;
-    int owner,int_on;
+    uint32_t reen,owner;
     pthread_mutex_t locked;
     char *name;
 #ifdef spinlock_log
