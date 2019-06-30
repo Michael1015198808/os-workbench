@@ -1,7 +1,7 @@
 #include <devices.h>
 #include <common.h>
 #include <klib.h>
-void inline spin_test_init(void){
+void spin_test_init(void){
     return;
 }
 void spin_test(void *arg){
