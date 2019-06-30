@@ -53,7 +53,7 @@ static void os_init() {
     pmm->init();
     kmt->init();
     dev->init();
-#define CURRENT_TEST printf_test
+#define CURRENT_TEST spin_test
 #define TEST_NAME(idx) "CURRENT_TEST" #idx
     kmt->create(pmm->alloc(sizeof(task_t)),TEST_NAME(1),CURRENT_TEST,"a");
     kmt->create(pmm->alloc(sizeof(task_t)),TEST_NAME(2),CURRENT_TEST,"b");
