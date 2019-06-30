@@ -16,6 +16,7 @@ void spin_test(void *arg){
         printf("%c0%d\n",c,_intr_read());
         for(int i=0;i<5;++i)
             kmt->spin_unlock(&local_lk);
+        printf("%c0%d\n",c,_intr_read());
         kmt->spin_unlock(&global_lk);
     }
 }
