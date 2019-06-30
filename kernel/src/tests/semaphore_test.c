@@ -8,14 +8,13 @@ void semaphore_test_init(void){
     kmt->sem_init(&test_sem[1],"test sem:1",1);
 }
 void semaphore_test(void *arg){
-    char c=((char*)arg)[0];
-    semaphore_t *sem_p=&test_sem[c-'a'];
+    int idx=((char*)arg)[0]-'a';
     while(1){
-        kmt->sem_wait(sem_p);
+        kmt->sem_wait(  &test_sem[idx]);
         _putc(c);
         for(int i=0;i<7;++i){
             _putc("Hello!\n"[i]);
         }
-        kmt->sem_signal(sem_p);
+        kmt->sem_signal(&test_sem[1-idx]);
     }
 }
