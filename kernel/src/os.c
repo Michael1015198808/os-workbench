@@ -61,7 +61,6 @@ static void os_init() {
     TEST_REQUIREMENT();
     kmt->create(pmm->alloc(sizeof(task_t)),TEST_NAME(1),CURRENT_TEST,"a");
     kmt->create(pmm->alloc(sizeof(task_t)),TEST_NAME(2),CURRENT_TEST,"b");
-    kmt->create(pmm->alloc(sizeof(task_t)),TEST_NAME(3),CURRENT_TEST,"c");
     /*
     kmt->create(pmm->alloc(sizeof(task_t)),"reading",intr_reading,NULL);
     kmt->create(pmm->alloc(sizeof(task_t)),"idle1",idle,NULL);
