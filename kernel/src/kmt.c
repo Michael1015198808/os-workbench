@@ -250,6 +250,7 @@ void kmt_sem_wait(sem_t *sem){
 }
 void kmt_sem_signal(sem_t *sem){
     kmt->spin_lock(&(sem->lock));
+    log();
 
     if(++sem->value<=0){
         sem_remove_task(sem);

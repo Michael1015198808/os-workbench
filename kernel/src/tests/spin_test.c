@@ -1,6 +1,7 @@
 #include <devices.h>
 #include <common.h>
 #include <klib.h>
+#define spin_test_init 
 void spin_test(void *arg){
     char c=((char*)arg)[0];
     static spinlock_t global_lk;

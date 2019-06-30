@@ -10,9 +10,11 @@
 
 #include <my_trace.h>
 
-#define STR_VALUE(_arg)     #_arg
-#define STR_SELF(_arg)      _arg
-#define TO_STRING(_arg)     STR_VALUE(_arg)
+#define MACRO_VALUE(_arg)     #_arg
+#define MACRO_SELF(_arg)      _arg
+#define MACRO_CONCAT_REAL(_arg1,_arg2) _arg1 ## _arg2
+#define MACRO_CONCAT(_arg1,_arg2) MACRO_CONCAT_REAL(_arg1,_arg2)
+#define TO_STRING(_arg)     MACRO_VALUE(_arg)
 
 #define local_log(...) log(__VA_ARGS__)
 

@@ -1,5 +1,7 @@
 #include <common.h>
 #include <klib.h>
+
+#define memory_test_init
 #define MAXN 50
 #define MAXM 200
 static inline void fill(uint8_t *p,int a,int b,int len){
