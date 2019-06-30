@@ -51,8 +51,8 @@ void intr_reading(void *idle){
 
 void printf_test(void *dummy){
     while(1){
-        /*printf("Hello!\n");
-        printf("%c",((char*)dummy)[0]);*/
+        printf("Hello!\n");
+        printf("%c",((char*)dummy)[0]);
     }
 }
 static void os_init() {
