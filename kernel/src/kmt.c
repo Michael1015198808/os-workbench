@@ -241,27 +241,31 @@ static void sem_remove_task(sem_t *sem){
 }
 
 void kmt_sem_wait_real(sem_t *sem){
-    kmt->spin_lock(&(sem->lock));
+    pthread_mutex_lock(&(sem->lock));
 
     if(--sem->value<0){
         return sem_add_task(sem);
     }
-    kmt->spin_unlock(&(sem->lock));
+    pthread_mutex_unlock(&(sem->lock));
 }
 void kmt_sem_wait(sem_t *sem){
+    intr_close();
     kmt_sem_wait_real(sem);
+    intr_open();
 }
 
 void kmt_sem_signal_real(sem_t *sem){
-    kmt->spin_lock(&(sem->lock));
+    pthread_mutex_lock(&(sem->lock));
 
     if(++sem->value<=0){
         sem_remove_task(sem);
     }
-    kmt->spin_unlock(&(sem->lock));
+    pthread_mutex_unlock(&(sem->lock));
 }
 void kmt_sem_signal(sem_t *sem){
+    intr_close();
     kmt_sem_signal_real(sem);
+    intr_open();
 }
 
 MODULE_DEF(kmt) {

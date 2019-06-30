@@ -65,7 +65,7 @@ typedef struct List{
 typedef struct semaphore {
     char *name;
     volatile int value;
-    spinlock_t lock;
+    pthread_mutex_t lock;
     task_t *pool[POOL_LEN];
     volatile int head,tail;
 }semaphore_t;
