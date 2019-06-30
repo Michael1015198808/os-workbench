@@ -48,12 +48,20 @@ void intr_reading(void *idle){
         _putc('\n');
     }
 }
+
+void printf_test(void *dummy){
+    while(1){
+        printf("Hello!\n");
+    }
+}
 static void os_init() {
     pmm->init();
     kmt->init();
     dev->init();
-    kmt->create(pmm->alloc(sizeof(task_t)),"reading",intr_reading,NULL);
+    kmt->create(pmm->alloc(sizeof(task_t)),"printf_test1",printf_test,NULL);
+    kmt->create(pmm->alloc(sizeof(task_t)),"printf_test2",printf_test,NULL);
     /*
+    kmt->create(pmm->alloc(sizeof(task_t)),"reading",intr_reading,NULL);
     kmt->create(pmm->alloc(sizeof(task_t)),"idle1",idle,NULL);
     kmt->create(pmm->alloc(sizeof(task_t)),"idle2",idle,NULL);
     kmt->create(pmm->alloc(sizeof(task_t)),"shell1",mysh,"tty1");
