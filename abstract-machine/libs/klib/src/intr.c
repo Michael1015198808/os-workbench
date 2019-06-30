@@ -13,16 +13,20 @@ pthread_mutex_t log_lk=PTHREAD_MUTEX_INITIALIZER;
 void _intr_close(){
     int cpu_id=_cpu();
     Assert(ncli[cpu_id]>=0);
-    ori[cpu_id]|=_intr_read();
-    _intr_write(0);
+    if(ncli[cpu_id]==0){
+        ori[cpu_id]=_intr_read();
+        cli();
+    }
     ++ncli[cpu_id];
 }
 void _intr_open(){
     int cpu_id=_cpu();
     --ncli[cpu_id];
     if(ncli[cpu_id]==0){
-        _intr_write(ori[cpu_id]);
-        ori[cpu_id]=0;
+        if(ori[cpu_id]){
+            sti();
+            ori[cpu_id]=0;
+        }
     }
     Assert(ncli[cpu_id]>=0);
 }
