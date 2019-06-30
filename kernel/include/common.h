@@ -6,6 +6,7 @@
 #include <nanos.h>
 #include <limits.h>
 #include <stdint.h>
+#include <test.h>
 
 #include <my_trace.h>
 

@@ -1,20 +1,18 @@
 #include <devices.h>
 #include <common.h>
 #include <klib.h>
-void spin_test(){
-    static spinlock_t test_spin;
-    static int i=0;
-    if(i==0){
-        kmt->spin_init(&test_spin,"test spin");
-        i=1;
+void spin_test(void *dummy){
+    char c=((char*)dummy)[0];
+    static spinlock_t global_lk;
+    spinlock_t local_lk;
+    while(1){
+        printf("%c1%d\n",c,_intr_read());
+        kmt->spin_lock(&global_lk);
+        for(int i=0;i<5;++i)
+            kmt->spin_lock(&local_lk);
+        printf("%c0%d\n",c,_intr_read());
+        for(int i=0;i<5;++i)
+            kmt->spin_unlock(&local_lk);
+        kmt->spin_unlock(&global_lk);
     }
-    _intr_write(0);
-    kmt->spin_lock(&test_spin);
-    kmt->spin_lock(&test_spin);
-    kmt->spin_unlock(&test_spin);
-    kmt->spin_unlock(&test_spin);
-    for(volatile int i=0;i<1000;++i);
-    kmt->spin_lock(&test_spin);
-    printf("cpu %d gets the final lock\n",_cpu());
-    while(1);
 }
