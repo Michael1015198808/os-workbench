@@ -82,8 +82,8 @@ static _Context* kmt_context_save(_Event ev, _Context *c){
     tasks[current]->context=*c;
     return NULL;
 }
-int log_idx=0;
-char log[120000]={};
+//int log_idx=0;
+//char log[120000]={};
 static _Context* kmt_context_switch(_Event ev, _Context *c){
     kmt->spin_lock(&tasks_lk);
     int cpu_id=_cpu(),new=current;
@@ -116,6 +116,9 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
     for(int i=0;i<4;++i){
         if(tasks[current]->fence1[i]!=0x13579ace||tasks[current]->fence2[i]!=0xeca97531){
             log("Stack over/under flow!\n");
+            uintptr_t eip;
+            asm volatile("mov $eip, %0",::"=g"(eip));
+            log("%x[%x,%x)",eip,&tasks[current]->stack,&tasks[current]->stack_end);
             while(1);
         }
     }
