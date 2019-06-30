@@ -52,14 +52,15 @@ void intr_reading(void *idle){
 void printf_test(void *dummy){
     while(1){
         printf("Hello!\n");
+        printf("%c",((char*)dummy)[0]);
     }
 }
 static void os_init() {
     pmm->init();
     kmt->init();
     dev->init();
-    kmt->create(pmm->alloc(sizeof(task_t)),"printf_test1",printf_test,NULL);
-    kmt->create(pmm->alloc(sizeof(task_t)),"printf_test2",printf_test,NULL);
+    kmt->create(pmm->alloc(sizeof(task_t)),"printf_test1",printf_test,"a");
+    kmt->create(pmm->alloc(sizeof(task_t)),"printf_test2",printf_test,"b");
     /*
     kmt->create(pmm->alloc(sizeof(task_t)),"reading",intr_reading,NULL);
     kmt->create(pmm->alloc(sizeof(task_t)),"idle1",idle,NULL);
