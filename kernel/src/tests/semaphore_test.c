@@ -9,7 +9,7 @@ void semaphore_test_init(void){
 }
 void semaphore_test(void *arg){
     char c=((char*)arg)[0];
-    semaphore_t *sem_p=&test_sem[c-'0'];
+    semaphore_t *sem_p=&test_sem[c-'a'];
     while(1){
         kmt->sem_wait(sem_p);
         _putc(c);
