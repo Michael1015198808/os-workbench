@@ -216,7 +216,8 @@ void kmt_spin_unlock(spinlock_t *lk){
 void kmt_sem_init(sem_t *sem, const char *name, int value){
     copy_name(sem->name,name);
     sem->value=value;
-    kmt->spin_init(&(sem->lock),name);
+    //kmt->spin_init(&(sem->lock),name);
+    sem->lock=PTHREAD_MUTEX_INITIALIZER;
     sem->head=0;
     sem->tail=0;
     //log("%s: %d",sem->name,sem->value);
@@ -229,7 +230,7 @@ static void sem_add_task(sem_t *sem){
     set_flag(tasks[current],TASK_SLEEP);
     if(sem->tail>=POOL_LEN)sem->tail-=POOL_LEN;
 
-    kmt->spin_unlock(&(sem->lock));
+    pthread_mutex_unlock(&(sem->lock));
     _yield();
 }
 
