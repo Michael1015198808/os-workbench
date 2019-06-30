@@ -117,7 +117,7 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
         if(tasks[current]->fence1[i]!=0x13579ace||tasks[current]->fence2[i]!=0xeca97531){
             log("Stack over/under flow!\n");
             uintptr_t eip;
-            asm volatile("mov %%rip, %0":"=g"(eip):);
+            asm volatile("mov %%eip, %0":"=g"(eip):);
             log("%x[%x,%x)",eip,&tasks[current]->stack,&tasks[current]->stack_end);
             while(1);
         }
