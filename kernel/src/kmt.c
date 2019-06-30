@@ -9,11 +9,11 @@ task_t *tasks[20]={};
 static spinlock_t tasks_lk;
 #define trace_pthread_mutex_lock(_lk) \
     pthread_mutex_lock(_lk); \
-    //detail_log(tasks_log,tasks_idx,"lock"); \
+    detail_log(tasks_log,tasks_idx,"lock"); \
 
 #define trace_pthread_mutex_unlock(_lk) \
     detail_log(tasks_log,tasks_idx,"unlock"); \
-    //pthread_mutex_unlock(_lk);
+    pthread_mutex_unlock(_lk);
 
 /* tasks, tasks_cnt
  * shared by
