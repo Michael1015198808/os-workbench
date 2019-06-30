@@ -240,7 +240,7 @@ static void sem_remove_task(sem_t *sem){
     if(++sem->head>=POOL_LEN)sem->head-=POOL_LEN;
 }
 
-pthread_mutex_t sem_lk;
+pthread_mutex_t sem_lk=0;
 void kmt_sem_wait_real(sem_t *sem){
     kmt->spin_lock(&(sem->lock));
 
