@@ -12,13 +12,13 @@ void semaphore_test(void *arg){
     char c=((char*)arg)[0];
     int idx=c-'a';
     while(1){
-        kmt->sem_wait(  &test_sem[idx]);
         while(to_run!=idx);
+        kmt->sem_wait(  &test_sem[idx]);
         _putc(c);
         for(int i=0;i<7;++i){
             _putc("Hello!\n"[i]);
         }
-        kmt->sem_signal(&test_sem[1-idx]);
         to_run^=1;
+        kmt->sem_signal(&test_sem[1-idx]);
     }
 }
