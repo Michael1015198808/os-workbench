@@ -1,8 +1,8 @@
 #include <devices.h>
 #include <common.h>
 #include <klib.h>
-void spin_test(void *dummy){
-    char c=((char*)dummy)[0];
+void spin_test(void *arg){
+    char c=((char*)arg)[0];
     static spinlock_t global_lk;
     spinlock_t local_lk;
     while(1){
