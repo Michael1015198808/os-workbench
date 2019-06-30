@@ -55,8 +55,9 @@ static void os_init() {
     dev->init();
 #define CURRENT_TEST spin_test
 #define TEST_NAME(idx) "CURRENT_TEST" #idx
-#define TEST_REQUIREMENT "CURRENT_TEST" ## "_init"
-    TEST_REQUIREMENT
+#define TEST_REQUIREMENT "CURRENT_TEST"  "_init"
+#define spin_test_init 1;
+    TEST_REQUIREMENT;
     kmt->create(pmm->alloc(sizeof(task_t)),TEST_NAME(1),CURRENT_TEST,"a");
     kmt->create(pmm->alloc(sizeof(task_t)),TEST_NAME(2),CURRENT_TEST,"b");
     kmt->create(pmm->alloc(sizeof(task_t)),TEST_NAME(3),CURRENT_TEST,"c");
