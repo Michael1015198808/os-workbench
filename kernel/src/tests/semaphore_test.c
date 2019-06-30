@@ -3,7 +3,7 @@
 #include <klib.h>
 
 semaphore_t test_sem[2];
-static int to_run=1;
+static volatile int to_run=1;
 void semaphore_test_init(void){
     kmt->sem_init(test_sem,"test sem:0",0);
     kmt->sem_init(&test_sem[1],"test sem:1",1);
