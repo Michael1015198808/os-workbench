@@ -223,7 +223,7 @@ static void sem_add_task(sem_t *sem){
     if(sem->tail>=POOL_LEN)sem->tail-=POOL_LEN;
 
     pthread_mutex_unlock(&(sem->lock));
-    while(tasks[current]->attr&TASK_SLEEP);
+    //while(tasks[current]->attr&TASK_SLEEP);
     _yield();
     intr_open();
 }
