@@ -237,7 +237,6 @@ static void sem_add_task(sem_t *sem){
 
 static void sem_remove_task(sem_t *sem){
 
-    while(sem->pool[sem->head]->attr&TASK_RUNNING);
     neg_flag(sem->pool[sem->head],TASK_SLEEP);
     if(++sem->head>=POOL_LEN)sem->head-=POOL_LEN;
 }
@@ -246,9 +245,9 @@ void kmt_sem_wait_real(sem_t *sem){
     intr_close();
     pthread_mutex_lock(&(sem->lock));
 
-    /*if(--sem->value<0){
+    if(--sem->value<0){
         return sem_add_task(sem);
-    }*/
+    }
     pthread_mutex_unlock(&(sem->lock));
     intr_open();
 }
@@ -260,9 +259,9 @@ void kmt_sem_signal_real(sem_t *sem){
     intr_close();
     pthread_mutex_lock(&(sem->lock));
 
-    /*if(++sem->value<=0){
+    if(++sem->value<=0){
         sem_remove_task(sem);
-    }*/
+    }
     pthread_mutex_unlock(&(sem->lock));
     intr_open();
 }
