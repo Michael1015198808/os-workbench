@@ -14,8 +14,8 @@ int tasks_idx=0;
     detail_log(tasks_log,tasks_idx,"lock"); \
 
 #define trace_pthread_mutex_unlock(_lk) \
-    detail_log(tasks_log,tasks_idx,"unlock"); \
-    pthread_mutex_unlock(_lk);
+    pthread_mutex_unlock(_lk); \
+    detail_log(tasks_log,tasks_idx,"unlock");
 
 /* tasks, tasks_cnt
  * shared by
