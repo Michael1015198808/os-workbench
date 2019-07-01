@@ -1,9 +1,11 @@
 #ifndef NO_TEST
 
-void memory_test(void);
-void printf_test(void*);
-void spin_test(void*);
-void semaphore_test(void*);
-void multithread_test(void*);
+typedef void (*test_func)(void*);
+test_func memory_test;
+test_func printf_test;
+test_func spin_test;
+test_func semaphore_test;
+test_func multithread_test;
+test_func fib_test;
 
 #endif
