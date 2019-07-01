@@ -14,7 +14,7 @@ void semaphore_test(void *arg){
     while(1){
         //while(to_run!=idx);
         kmt->sem_wait(  &test_sem[idx]);
-        printf("%d%cHello!\n",_cpu(),c);
+        printf("%d%cHello!\n",_intr_read(),c);
         //to_run^=1;
         kmt->sem_signal(&test_sem[1-idx]);
     }
