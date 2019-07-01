@@ -90,7 +90,9 @@ static void hello() {
 static void os_run() {
     hello();
     _intr_write(1);
-    while(1);
+    while(1){
+        _yield();
+    }
 }
 
 static _Context *os_trap(_Event ev, _Context *context) {
