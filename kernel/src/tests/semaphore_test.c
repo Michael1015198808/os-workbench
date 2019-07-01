@@ -4,11 +4,13 @@
 
 #ifndef NO_TEST
 semaphore_t test_sem[4];
+char *args[4]={"1","2","3","4"};
 void semaphore_test_init(void){
     char sem_name[15]="test sem:";
     for(int i=0;i<LEN(test_sem);++i){
         sprintf(&sem_name[8],"%d",i);
         kmt->sem_init(&test_sem[i],sem_name,0);
+        kmt->create(pmm->alloc(sizeof(task_t)),"semaphore_test",semaphore_test,args[i]);
     }
     kmt->sem_signal(&test_sem[0]);
 }
