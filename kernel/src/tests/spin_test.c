@@ -3,6 +3,7 @@
 #include <klib.h>
 
 #ifndef NO_TEST
+
 void spin_test_init(void){
     return;
 }
@@ -22,4 +23,5 @@ void spin_test(void *arg){
         kmt->spin_unlock(&global_lk);
     }
 }
+
 #endif
