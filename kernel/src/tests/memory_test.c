@@ -17,7 +17,7 @@ static inline void check(uint8_t *p,int a,int b,long long len){
         report_if(p[i]!=(uint8_t)(a+=b));
     }
 }
-void memory_test(){
+void memory_test(void *dummy){
     int *a=pmm->alloc(MAXN*sizeof(int)),
         *b=pmm->alloc(MAXN*sizeof(int));
     int cpu_id=_cpu();
