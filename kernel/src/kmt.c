@@ -11,10 +11,8 @@ char tasks_log[66000];
 int tasks_idx=0,tasks_lk_holder;
 #define trace_pthread_mutex_lock(_lk) \
     pthread_mutex_lock(_lk); \
-    tasks_lk_holder=current;
 
 #define trace_pthread_mutex_unlock(_lk) \
-    tasks_lk_holder=-1; \
     pthread_mutex_unlock(_lk);
 
 /* tasks, tasks_cnt
