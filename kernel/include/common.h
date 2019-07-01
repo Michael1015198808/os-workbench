@@ -7,7 +7,7 @@
 #include <limits.h>
 #include <stdint.h>
 
-#define NO_TEST
+//#define NO_TEST
 #include <test.h>
 
 #include <my_trace.h>
