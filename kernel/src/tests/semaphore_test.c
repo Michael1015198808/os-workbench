@@ -2,20 +2,24 @@
 #include <common.h>
 #include <klib.h>
 
-semaphore_t test_sem[2];
+semaphore_t test_sem[4];
 //static volatile int to_run=1;
 void semaphore_test_init(void){
-    kmt->sem_init(&test_sem[0],"test sem:0",0);
-    kmt->sem_init(&test_sem[1],"test sem:1",1);
+    char sem_name[15]="test sem:";
+    for(int i=0;i<LEN(test_sem);++i){
+        sprintf(&sem_name[8],"%d",i);
+        kmt->sem_init(&test_sem[i],sem_name,0);
+    }
+    kmt->sem_signal(&test_sem[0]);
 }
 void semaphore_test(void *arg){
     char c=((char*)arg)[0];
-    int idx=c-'a';
+    int idx=c-'1';
     while(1){
         //while(to_run!=idx);
         kmt->sem_wait(  &test_sem[idx]);
-        printf("[cpu%d]%d%cHello!\n",_cpu(),_intr_read(),c);
+        printf("[cpu%d]%c%dHello!\n",_cpu(),c,_intr_read());
         //to_run^=1;
-        kmt->sem_signal(&test_sem[1-idx]);
+        kmt->sem_signal(&test_sem[(idx+1)&3]);
     }
 }
