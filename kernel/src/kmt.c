@@ -246,9 +246,9 @@ void kmt_sem_wait_real(sem_t *sem){
     intr_close();
     pthread_mutex_lock(&(sem->lock));
 
-    if(--sem->value<0){
+    /*if(--sem->value<0){
         return sem_add_task(sem);
-    }
+    }*/
     pthread_mutex_unlock(&(sem->lock));
     intr_open();
 }
@@ -260,9 +260,9 @@ void kmt_sem_signal_real(sem_t *sem){
     intr_close();
     pthread_mutex_lock(&(sem->lock));
 
-    if(++sem->value<=0){
+    /*if(++sem->value<=0){
         sem_remove_task(sem);
-    }
+    }*/
     pthread_mutex_unlock(&(sem->lock));
     intr_open();
 }
