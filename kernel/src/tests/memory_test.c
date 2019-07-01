@@ -1,6 +1,7 @@
 #include <common.h>
 #include <klib.h>
 
+#ifndef NO_TEST
 #define MAXN 50
 #define MAXM 200
 void memory_test_init(void){
@@ -47,3 +48,5 @@ void memory_test(){
         pmm->free(p[i]);
     printf("[cpu%d] finish memory test.\n",_cpu());
 }
+
+#endif

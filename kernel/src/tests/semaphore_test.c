@@ -2,6 +2,7 @@
 #include <common.h>
 #include <klib.h>
 
+#ifndef NO_TEST
 semaphore_t test_sem[4];
 void semaphore_test_init(void){
     char sem_name[15]="test sem:";
@@ -21,3 +22,5 @@ void semaphore_test(void *arg){
         kmt->sem_signal(&test_sem[rand()&3]);
     }
 }
+
+#endif

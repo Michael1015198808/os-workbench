@@ -49,15 +49,18 @@ void intr_reading(void *idle){
     }
 }
 
-static void os_init() {
-    pmm->init();
-    kmt->init();
-    dev->init();
-#define CURRENT_TEST semaphore_test
+#define CURRENT_TEST multithread_test
 #define TEST_NAME(idx) TO_STRING(CURRENT_TEST) TO_STRING(idx)
 #define TEST_REQUIREMENT() \
     void MACRO_CONCAT(MACRO_SELF(CURRENT_TEST),_init)(void); \
     MACRO_CONCAT(MACRO_SELF(CURRENT_TEST),_init)()
+
+static void os_init() {
+    pmm->init();
+    kmt->init();
+    dev->init();
+    TEST_REQUIREMENT();
+    /*
     kmt->create(pmm->alloc(sizeof(task_t)),"sem-test1",sem_test,"!");
     kmt->create(pmm->alloc(sizeof(task_t)),"sem-test2",sem_test,"!");
     kmt->create(pmm->alloc(sizeof(task_t)),"echo-test:n",echo_test,"n");
@@ -65,12 +68,10 @@ static void os_init() {
     kmt->create(pmm->alloc(sizeof(task_t)),"echo-test:s",echo_test,"s");
     kmt->create(pmm->alloc(sizeof(task_t)),"echo-test:l",echo_test,"l");
     kmt->sem_init(&echo_sem,"echo-sem",10);
-    TEST_REQUIREMENT();
     kmt->create(pmm->alloc(sizeof(task_t)),TEST_NAME(1),CURRENT_TEST,"1");
     kmt->create(pmm->alloc(sizeof(task_t)),TEST_NAME(2),CURRENT_TEST,"2");
     kmt->create(pmm->alloc(sizeof(task_t)),TEST_NAME(3),CURRENT_TEST,"3");
     kmt->create(pmm->alloc(sizeof(task_t)),TEST_NAME(4),CURRENT_TEST,"4");
-    /*
     kmt->create(pmm->alloc(sizeof(task_t)),"reading",intr_reading,NULL);
     kmt->create(pmm->alloc(sizeof(task_t)),"idle1",idle,NULL);
     kmt->create(pmm->alloc(sizeof(task_t)),"idle2",idle,NULL);
