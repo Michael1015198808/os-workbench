@@ -49,7 +49,7 @@ void intr_reading(void *idle){
     }
 }
 
-#define CURRENT_TEST semaphore_test
+#define CURRENT_TEST multithread_test
 #define TEST_NAME(idx) TO_STRING(CURRENT_TEST) TO_STRING(idx)
 #define TEST_REQUIREMENT() \
     void MACRO_CONCAT(MACRO_SELF(CURRENT_TEST),_init)(void); \
