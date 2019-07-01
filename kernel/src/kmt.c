@@ -224,6 +224,7 @@ static void sem_add_task(sem_t *sem){
 
     pthread_mutex_unlock(&(sem->lock));
     while(tasks[current]->attr&TASK_SLEEP);
+    intr_open();
 }
 
 static void sem_remove_task(sem_t *sem){
