@@ -12,12 +12,7 @@ static intptr_t atomic_xchg(volatile pthread_mutex_t *addr,intptr_t newval) {
 //TODO: handle reentrance
 //TODO: handle waiting by maintaining a thread pool
 void pthread_mutex_lock(pthread_mutex_t* locked) {
-  while (1) {
-    intptr_t value = atomic_xchg(locked, 1);
-    if (value == 0) {
-      break;
-    }
-  }
+  while (atomic_xchg(locked, 1));
 }
 void pthread_mutex_unlock(pthread_mutex_t* locked) {
   atomic_xchg(locked, 0);
