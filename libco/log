@@ -1,5 +1,0 @@
-git add ./co.c ./tests/main.c ./co.h ./tests/co-test.h -A --ignore-errors
-while (test -e .git/index.lock); do sleep 0.1; done
-(hostnamectl && uptime) | git commit -F - -q --author='tracer-nju <tracer@nju.edu.cn>' --no-verify --allow-empty
-sync
-gcc -fPIC -shared -m64 -U_FORTIFY_SOURCE -O1 -std=gnu11 -ggdb -Wall -Werror -Wno-unused-result -Wno-unused-value ./co.c -o libco-64.so 
