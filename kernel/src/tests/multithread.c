@@ -3,7 +3,7 @@
 #include <klib.h>
 
 #ifndef NO_TEST
-sem_t sem_p, sem_c, mutex;
+static sem_t sem_p, sem_c, mutex;
 void producer(void *arg) {
   device_t *tty = dev_lookup("tty1");
   while (1) {
