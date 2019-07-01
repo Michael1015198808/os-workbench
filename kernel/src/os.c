@@ -65,12 +65,12 @@ static void os_init() {
     kmt->create(pmm->alloc(sizeof(task_t)),"echo-test:s",echo_test,"s");
     kmt->create(pmm->alloc(sizeof(task_t)),"echo-test:l",echo_test,"l");
     kmt->sem_init(&echo_sem,"echo-sem",10);
-    /*
     TEST_REQUIREMENT();
     kmt->create(pmm->alloc(sizeof(task_t)),TEST_NAME(1),CURRENT_TEST,"1");
     kmt->create(pmm->alloc(sizeof(task_t)),TEST_NAME(2),CURRENT_TEST,"2");
     kmt->create(pmm->alloc(sizeof(task_t)),TEST_NAME(3),CURRENT_TEST,"3");
     kmt->create(pmm->alloc(sizeof(task_t)),TEST_NAME(4),CURRENT_TEST,"4");
+    /*
     kmt->create(pmm->alloc(sizeof(task_t)),"reading",intr_reading,NULL);
     kmt->create(pmm->alloc(sizeof(task_t)),"idle1",idle,NULL);
     kmt->create(pmm->alloc(sizeof(task_t)),"idle2",idle,NULL);

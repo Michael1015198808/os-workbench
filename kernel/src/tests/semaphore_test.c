@@ -3,7 +3,6 @@
 #include <klib.h>
 
 semaphore_t test_sem[4];
-//static volatile int to_run=1;
 void semaphore_test_init(void){
     char sem_name[15]="test sem:";
     for(int i=0;i<LEN(test_sem);++i){
@@ -16,11 +15,9 @@ void semaphore_test(void *arg){
     char c=((char*)arg)[0];
     int idx=c-'1';
     while(1){
-        //while(to_run!=idx);
         kmt->sem_wait(  &test_sem[idx]);
         Assert(_intr_read()==1,"");
         printf("[cpu%d]%cHello!\n",_cpu(),c);
-        //to_run^=1;
         kmt->sem_signal(&test_sem[rand()&3]);
     }
 }
