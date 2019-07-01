@@ -5,7 +5,7 @@
     (dest=pmm->alloc(strlen(src)+1), \
     strcpy(dest,src) )
 
-task_t *tasks[20]={};
+task_t *tasks[40]={};
 static spinlock_t tasks_lk;
 #define trace_pthread_mutex_lock(_lk) \
     pthread_mutex_lock(_lk); \
