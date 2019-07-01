@@ -58,19 +58,6 @@ static void os_init() {
 #define TEST_REQUIREMENT() \
     void MACRO_CONCAT(MACRO_SELF(CURRENT_TEST),_init)(void); \
     MACRO_CONCAT(MACRO_SELF(CURRENT_TEST),_init)()
-    TEST_REQUIREMENT();
-    kmt->create(pmm->alloc(sizeof(task_t)),TEST_NAME(1),CURRENT_TEST,"1");
-    kmt->create(pmm->alloc(sizeof(task_t)),TEST_NAME(2),CURRENT_TEST,"2");
-    kmt->create(pmm->alloc(sizeof(task_t)),TEST_NAME(3),CURRENT_TEST,"3");
-    kmt->create(pmm->alloc(sizeof(task_t)),TEST_NAME(4),CURRENT_TEST,"4");
-    /*
-    kmt->create(pmm->alloc(sizeof(task_t)),"reading",intr_reading,NULL);
-    kmt->create(pmm->alloc(sizeof(task_t)),"idle1",idle,NULL);
-    kmt->create(pmm->alloc(sizeof(task_t)),"idle2",idle,NULL);
-    kmt->create(pmm->alloc(sizeof(task_t)),"shell1",mysh,"tty1");
-    kmt->create(pmm->alloc(sizeof(task_t)),"shell2",mysh,"tty2");
-    kmt->create(pmm->alloc(sizeof(task_t)),"shell3",mysh,"tty3");
-    kmt->create(pmm->alloc(sizeof(task_t)),"shell4",mysh,"tty4");
     kmt->create(pmm->alloc(sizeof(task_t)),"sem-test1",sem_test,"!");
     kmt->create(pmm->alloc(sizeof(task_t)),"sem-test2",sem_test,"!");
     kmt->create(pmm->alloc(sizeof(task_t)),"echo-test:n",echo_test,"n");
@@ -78,6 +65,19 @@ static void os_init() {
     kmt->create(pmm->alloc(sizeof(task_t)),"echo-test:s",echo_test,"s");
     kmt->create(pmm->alloc(sizeof(task_t)),"echo-test:l",echo_test,"l");
     kmt->sem_init(&echo_sem,"echo-sem",10);
+    /*
+    TEST_REQUIREMENT();
+    kmt->create(pmm->alloc(sizeof(task_t)),TEST_NAME(1),CURRENT_TEST,"1");
+    kmt->create(pmm->alloc(sizeof(task_t)),TEST_NAME(2),CURRENT_TEST,"2");
+    kmt->create(pmm->alloc(sizeof(task_t)),TEST_NAME(3),CURRENT_TEST,"3");
+    kmt->create(pmm->alloc(sizeof(task_t)),TEST_NAME(4),CURRENT_TEST,"4");
+    kmt->create(pmm->alloc(sizeof(task_t)),"reading",intr_reading,NULL);
+    kmt->create(pmm->alloc(sizeof(task_t)),"idle1",idle,NULL);
+    kmt->create(pmm->alloc(sizeof(task_t)),"idle2",idle,NULL);
+    kmt->create(pmm->alloc(sizeof(task_t)),"shell1",mysh,"tty1");
+    kmt->create(pmm->alloc(sizeof(task_t)),"shell2",mysh,"tty2");
+    kmt->create(pmm->alloc(sizeof(task_t)),"shell3",mysh,"tty3");
+    kmt->create(pmm->alloc(sizeof(task_t)),"shell4",mysh,"tty4");
     */
     local_log("Os init finished\n");
 }
