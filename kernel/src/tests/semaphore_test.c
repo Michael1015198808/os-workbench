@@ -19,7 +19,7 @@ void semaphore_test(void *arg){
         //while(to_run!=idx);
         kmt->sem_wait(  &test_sem[idx]);
         Assert(_intr_read()==1,"");
-        printf("[cpu%d]%c%dHello!\n",_cpu(),c);
+        printf("[cpu%d]%cHello!\n",_cpu(),c);
         //to_run^=1;
         kmt->sem_signal(&test_sem[rand()&3]);
     }
