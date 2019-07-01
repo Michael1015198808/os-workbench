@@ -12,11 +12,11 @@ int tasks_idx=0,tasks_lk_holder;
 #define trace_pthread_mutex_lock(_lk) \
     pthread_mutex_lock(_lk); \
     detail_log(tasks_log,tasks_idx,"lock"); \
-    _lk##_holder=current;
+    tasks_lk_holder=current;
 
 #define trace_pthread_mutex_unlock(_lk) \
     detail_log(tasks_log,tasks_idx,"unlock"); \
-    _lk##_holder=-1; \
+    tasks_lk_holder=-1; \
     pthread_mutex_unlock(_lk);
 
 /* tasks, tasks_cnt
