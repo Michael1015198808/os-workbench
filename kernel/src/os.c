@@ -57,7 +57,7 @@ void intr_reading(void *idle){
 
 void main_dead_loop(void){
     int main();
-    asm volatile("jmp %0"::"g"(main));
+    asm volatile("jmp main");
 }
 static void os_init() {
     pmm->init();
