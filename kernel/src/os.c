@@ -59,7 +59,7 @@ void prevent_reboot(void){
     printf("OS reboot\n");
     dead_loop();
 }
-void main_dead_loop(void){
+void dead_loop(void){
     asm volatile("jmp dead_loop");
 }
 static void os_init() {
