@@ -3,15 +3,16 @@
 #include <klib.h>
 
 #ifndef NO_TEST
-static sem_t sem_p, sem_c, mutex;
+static sem_t sem_p, sem_c;
+static spinlock_t mutex;
 void producer(void *arg) {
   device_t *tty = dev_lookup("tty1");
   while (1) {
     kmt->sem_wait(&sem_p);
-    kmt->sem_wait(&mutex);
+    kmt->spin_lock(mutex);
     tty->ops->write(tty, 0, "I love ", 7);
     printf("I love ");
-    kmt->sem_signal(&mutex);
+    kmt->spin_unlock(mutex);
     kmt->sem_signal(&sem_c);
   }
 }
@@ -19,10 +20,10 @@ void customer(void *arg) {
   device_t *tty = dev_lookup("tty1");
   while (1) {
     kmt->sem_wait(&sem_c);
-    kmt->sem_wait(&mutex);
+    kmt->spin_lock(mutex);
     tty->ops->write(tty, 0, (char *) arg, strlen((char *) arg));
     printf(arg);
-    kmt->sem_signal(&mutex);
+    kmt->spin_unlock(mutex);
     kmt->sem_signal(&sem_p);
   }
 }
@@ -30,7 +31,7 @@ void customer(void *arg) {
 void multithread_test_init(void){
   kmt->sem_init(&sem_p, "producer-sem", 1);
   kmt->sem_init(&sem_c, "customer-sem", 0);
-  kmt->sem_init(&mutex, "mutex", 1);
+  kmt->spin_init(&mutex, "mutex");
 
   kmt->create(pmm->alloc(sizeof(task_t)), "p-task", producer, NULL);
 
