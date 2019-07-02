@@ -58,11 +58,15 @@ void intr_reading(void *idle){
 void dead_loop(void){
     asm volatile("jmp dead_loop");
 }
+
+mysec_start = .;
+*(.mysection)
 __attribute__((noinline, section(".mysection")))
 void prevent_reboot(void){
     printf("OS reboot\n");
     dead_loop();
 }
+mysec_end = .;
 static void os_init() {
     pmm->init();
     kmt->init();
