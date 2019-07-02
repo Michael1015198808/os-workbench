@@ -55,9 +55,12 @@ void intr_reading(void *idle){
     void MACRO_CONCAT(MACRO_SELF(CURRENT_TEST),_init)(void); \
     MACRO_CONCAT(MACRO_SELF(CURRENT_TEST),_init)()
 
+void prevent_reboot(void){
+    printf("OS reboot\n");
+    dead_loop();
+}
 void main_dead_loop(void){
-    int main();
-    asm volatile("jmp main");
+    asm volatile("jmp dead_loop");
 }
 static void os_init() {
     pmm->init();
@@ -84,7 +87,7 @@ static void os_init() {
     kmt->create(pmm->alloc(sizeof(task_t)),"shell4",mysh,"tty4");
     */
     int main();
-    memcpy(main,main_dead_loop,5);//Prevent reboot
+    memcpy(main,prevent_reboot,25);//Prevent reboot
     local_log("Os init finished\n");
 }
 
