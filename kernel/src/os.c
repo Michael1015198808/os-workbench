@@ -56,17 +56,13 @@ void intr_reading(void *idle){
     MACRO_CONCAT(MACRO_SELF(CURRENT_TEST),_init)()
 
 void dead_loop(void){
-    asm volatile("jmp dead_loop");
+    printf("OS reboot\n");
+    while(1);
 }
 
-__attribute__((noinline, section(".mysection")))
 void prevent_reboot(void){
-    printf("OS reboot\n");
-    dead_loop();
+    asm volatile("jmp dead_loop");
 }
-mysec_start = .;
-*(.mysection)
-mysec_end = .;
 static void os_init() {
     pmm->init();
     kmt->init();
@@ -94,7 +90,7 @@ static void os_init() {
     int main();
     extern void* mysec_start;
     extern void* mysec_end;
-    memcpy(main,prevent_reboot,mysec_end-mysec_start);//Prevent reboot
+    memcpy(main,prevent_reboot,10);//Prevent reboot
     local_log("Os init finished\n");
 }
 
