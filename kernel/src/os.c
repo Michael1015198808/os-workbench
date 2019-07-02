@@ -55,12 +55,12 @@ void intr_reading(void *idle){
     void MACRO_CONCAT(MACRO_SELF(CURRENT_TEST),_init)(void); \
     MACRO_CONCAT(MACRO_SELF(CURRENT_TEST),_init)()
 
+void dead_loop(void){
+    asm volatile("jmp dead_loop");
+}
 void prevent_reboot(void){
     printf("OS reboot\n");
     dead_loop();
-}
-void dead_loop(void){
-    asm volatile("jmp dead_loop");
 }
 static void os_init() {
     pmm->init();
