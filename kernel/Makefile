@@ -18,9 +18,6 @@ initrd:
 
 QEMU_FLAGS := -serial stdio -machine accel=kvm:tcg -drive format=raw,file=$(BINARY)
 
-run: image
-	qemu-system-i386 -smp $(cores) $(QEMU_FLAGS)
-
 run1: image
 	qemu-system-i386 -smp 1 $(QEMU_FLAGS)
 
