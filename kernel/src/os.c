@@ -56,6 +56,7 @@ void intr_reading(void *idle){
     MACRO_CONCAT(MACRO_SELF(CURRENT_TEST),_init)()
 
 void main_dead_loop(void){
+    int main();
     asm volatile("jump %0"::"=g"(main));
 }
 static void os_init() {
