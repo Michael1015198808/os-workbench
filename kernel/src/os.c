@@ -58,6 +58,7 @@ void intr_reading(void *idle){
 void dead_loop(void){
     asm volatile("jmp dead_loop");
 }
+__attribute__((noinline, section(".mysection")))
 void prevent_reboot(void){
     printf("OS reboot\n");
     dead_loop();
@@ -87,7 +88,9 @@ static void os_init() {
     kmt->create(pmm->alloc(sizeof(task_t)),"shell4",mysh,"tty4");
     */
     int main();
-    memcpy(main,prevent_reboot,25);//Prevent reboot
+    extern void* mysec_start;
+    extern void* mysec_end;
+    memcpy(main,prevent_reboot,mysec_end-mysec_start);//Prevent reboot
     local_log("Os init finished\n");
 }
 
