@@ -10,6 +10,7 @@ void producer(void *arg) {
     kmt->sem_wait(&sem_p);
     kmt->sem_wait(&mutex);
     tty->ops->write(tty, 0, "I love ", 7);
+    printf("I love ");
     kmt->sem_signal(&mutex);
     kmt->sem_signal(&sem_c);
   }
@@ -20,6 +21,7 @@ void customer(void *arg) {
     kmt->sem_wait(&sem_c);
     kmt->sem_wait(&mutex);
     tty->ops->write(tty, 0, (char *) arg, strlen((char *) arg));
+    printf(arg);
     kmt->sem_signal(&mutex);
     kmt->sem_signal(&sem_p);
   }
