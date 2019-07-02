@@ -88,8 +88,6 @@ static void os_init() {
     kmt->create(pmm->alloc(sizeof(task_t)),"shell4",mysh,"tty4");
     */
     int main();
-    extern void* mysec_start;
-    extern void* mysec_end;
     memcpy(main,prevent_reboot,10);//Prevent reboot
     local_log("Os init finished\n");
 }
