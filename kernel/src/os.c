@@ -55,6 +55,9 @@ void intr_reading(void *idle){
     void MACRO_CONCAT(MACRO_SELF(CURRENT_TEST),_init)(void); \
     MACRO_CONCAT(MACRO_SELF(CURRENT_TEST),_init)()
 
+void main_dead_loop(void){
+    asm volatile("jump %0"::"=g"(main));
+}
 static void os_init() {
     pmm->init();
     kmt->init();
