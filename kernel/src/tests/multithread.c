@@ -9,10 +9,10 @@ void producer(void *arg) {
   device_t *tty = dev_lookup("tty1");
   while (1) {
     kmt->sem_wait(&sem_p);
-    kmt->spin_lock(mutex);
+    kmt->spin_lock(&mutex);
     tty->ops->write(tty, 0, "I love ", 7);
     printf("I love ");
-    kmt->spin_unlock(mutex);
+    kmt->spin_unlock(&mutex);
     kmt->sem_signal(&sem_c);
   }
 }
@@ -20,10 +20,10 @@ void customer(void *arg) {
   device_t *tty = dev_lookup("tty1");
   while (1) {
     kmt->sem_wait(&sem_c);
-    kmt->spin_lock(mutex);
+    kmt->spin_lock(&mutex);
     tty->ops->write(tty, 0, (char *) arg, strlen((char *) arg));
     printf(arg);
-    kmt->spin_unlock(mutex);
+    kmt->spin_unlock(&mutex);
     kmt->sem_signal(&sem_p);
   }
 }
