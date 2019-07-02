@@ -7,7 +7,7 @@ void print(char* s,int l){
         _putc(*s);
     }while(*(++s)&&(l--));
 }
-task_t *tasks[20];
+task_t *tasks[40];
 int tasks_cnt;
 void show_attr(){
     int i;
