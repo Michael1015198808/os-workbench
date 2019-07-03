@@ -50,7 +50,7 @@ static void os_init() {
     pmm->init();
     kmt->init();
     dev->init();
-    //TEST_REQUIREMENT();
+    TEST_REQUIREMENT();
 #undef CURRENT_TEST
 #define CURRENT_TEST context_test
     //TEST_REQUIREMENT();
