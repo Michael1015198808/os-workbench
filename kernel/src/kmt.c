@@ -87,8 +87,8 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
             Assert(_intr_read()==0,"%d",cpu_id);
             if((tasks[current]->attr&TASK_SLEEP)==0)
                 return NULL;
-            for(volatile uint32_t sleep=1;sleep<10000000;++sleep);//Sleep if can't get any process to run
-            trace_pthread_mutex_lock(&tasks_lk);
+            current=-1;
+            asm volatile("jmp idle");
         }
     }while(tasks[new]->attr);
 
