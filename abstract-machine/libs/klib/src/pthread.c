@@ -17,4 +17,7 @@ void pthread_mutex_lock(pthread_mutex_t* locked) {
 void pthread_mutex_unlock(pthread_mutex_t* locked) {
   atomic_xchg(locked, 0);
 }
+int pthread_mutex_trylock(pthread_mutex_t* locked) {
+    return atomic_xchg(locked, 1);
+}
 #endif

@@ -28,6 +28,7 @@
 #define pthread_mutex_t my_pthread_mutex_t
 #define pthread_mutex_lock my_pthread_mutex_lock
 #define pthread_mutex_unlock my_pthread_mutex_unlock
+#define pthread_mutex_trylock my_pthread_mutex_trylock
 #endif
 
 #ifdef __cplusplus
@@ -71,6 +72,7 @@ typedef volatile uintptr_t pthread_mutex_t;
 #define PTHREAD_MUTEX_INITIALIZER 0
 void pthread_mutex_lock(pthread_mutex_t* locked);
 void pthread_mutex_unlock(pthread_mutex_t* locked);
+int pthread_mutex_trylock(pthread_mutex_t* locked);
 
 // assert.h
 #ifdef NDEBUG
