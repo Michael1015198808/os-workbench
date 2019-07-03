@@ -5,10 +5,10 @@
     (dest=pmm->alloc(strlen(src)+1), \
     strcpy(dest,src) )
 
-task_t *tasks[40]={};
+task_t *tasks[40]={},*currents[4]={};
 static pthread_mutex_t tasks_lk;
 char tasks_log[66000];
-int tasks_idx=0;
+int tasks_idx=0,tasks_cnt=0;
 #define trace_pthread_mutex_lock(_lk) \
     pthread_mutex_lock(_lk);
 
@@ -22,7 +22,6 @@ int tasks_idx=0;
  *   kmt_context_save
  *   kmt_context_switch
  */
-task_t *currents[4]={},tasks_cnt=0;
 #define current currents[cpu_id]
 
 void show_sem_list(sem_t *sem){
