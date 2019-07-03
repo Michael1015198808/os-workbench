@@ -195,6 +195,10 @@ void kmt_spin_unlock(spinlock_t *lk){
                 pthread_mutex_unlock(&(lk->locked));
                 intr_open();
             }
+            if(lk->reen<0){
+                local_log("Unlock > Lock!\n");
+                while(1);
+            }
         }
     }else{
         Assert(0,"Lock[%s] isn't locked!\n",lk->name);
