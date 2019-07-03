@@ -71,7 +71,6 @@ static _Context* kmt_context_save(_Event ev, _Context *c){
 }
 //int log_idx=0;
 //char log[120000]={};
-_Context idle_context;
 
 static _Context* kmt_context_switch(_Event ev, _Context *c){
     int cpu_id=_cpu(),new=current;
@@ -89,8 +88,7 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
             Assert(_intr_read()==0,"%d",cpu_id);
             if((tasks[current]->attr&TASK_SLEEP)==0)
                 return NULL;
-            current=-1;
-            return &idle_context;
+            trace_pthread_mutex_lock(&tasks_lk);
         }
     }while(tasks[new]->attr);
 
@@ -112,11 +110,6 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
     return &tasks[current]->context;
 }
 
-void idle(void *arg){
-    while(1){
-        for(volatile int i=0;i<10000;++i)_yield();
-    };
-}
 void kmt_init(void){
     os->on_irq(INT_MIN, _EVENT_NULL, kmt_context_save);
     os->on_irq(INT_MAX, _EVENT_NULL, kmt_context_switch);

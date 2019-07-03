@@ -50,22 +50,15 @@ void intr_reading(void *idle){
     void MACRO_CONCAT(MACRO_SELF(CURRENT_TEST),_init)(void); \
     MACRO_CONCAT(MACRO_SELF(CURRENT_TEST),_init)()
 
-
-volatile int wait=1;
-void atomic_test(void *arg){
-    static pthread_mutex_t lk;
-    _intr_write(0);
-    pthread_mutex_lock(&lk);
-    while(wait);
-    pthread_mutex_unlock(&lk);
-    while(1);
+void idle(void *arg){
+    while(1){
+        _yield();
+    };
 }
 static void os_init() {
     pmm->init();
     kmt->init();
     dev->init();
-    kmt->create(pmm->alloc(sizeof(task_t)),"test1",atomic_test,"!");
-    kmt->create(pmm->alloc(sizeof(task_t)),"test2",atomic_test,"!");
     //TEST_REQUIREMENT();
 #undef CURRENT_TEST
 #define CURRENT_TEST context_test
@@ -79,12 +72,12 @@ static void os_init() {
     kmt->create(pmm->alloc(sizeof(task_t)),"echo-test:l",echo_test,"l");
     kmt->sem_init(&echo_sem,"echo-sem",10);
     kmt->create(pmm->alloc(sizeof(task_t)),"reading",intr_reading,NULL);
-    kmt->create(pmm->alloc(sizeof(task_t)),"idle2",idle,NULL);
     kmt->create(pmm->alloc(sizeof(task_t)),"shell1",mysh,"tty1");
     kmt->create(pmm->alloc(sizeof(task_t)),"shell2",mysh,"tty2");
     kmt->create(pmm->alloc(sizeof(task_t)),"shell3",mysh,"tty3");
     kmt->create(pmm->alloc(sizeof(task_t)),"shell4",mysh,"tty4");
     */
+    kmt->create(pmm->alloc(sizeof(task_t)),"idle",idle,NULL);
     local_log("Os init finished\n");
 }
 
