@@ -15,17 +15,21 @@ void semaphore_test_init(void){
     kmt->sem_signal(&test_sem[0]);
 }
 void semaphore_test(void *arg){
+    static volatile int to_run=0;
     char c=((char*)arg)[0];
     int idx=c-'1';
     while(1){
+        while(to_run!=idx);
         Assert(_intr_read()==1,"ncli%d",ncli[_cpu()]);
         kmt->sem_wait(  &test_sem[idx]);
         Assert(_intr_read()==1,"ncli%d",ncli[_cpu()]);
         int next=rand()&3;
         printf("[cpu%d]%c->%dHello!\n",_cpu(),c,next+1);
         Assert(_intr_read()==1,"ncli%d",ncli[_cpu()]);
+        Assert(ncli[_cpu()]==0,"ncli%d",ncli[_cpu()]);
         kmt->sem_signal(&test_sem[next]);
         Assert(_intr_read()==1,"ncli%d",ncli[_cpu()]);
+        to_run=next;
     }
 }
 
