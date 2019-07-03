@@ -42,10 +42,6 @@ void sem_test(void *arg){
     void MACRO_CONCAT(MACRO_SELF(CURRENT_TEST),_init)(void); \
     MACRO_CONCAT(MACRO_SELF(CURRENT_TEST),_init)()
 
-void idle(void *arg){
-    _intr_write(1);
-    while(1);
-}
 static void os_init() {
     pmm->init();
     kmt->init();
@@ -67,9 +63,6 @@ static void os_init() {
     kmt->create(pmm->alloc(sizeof(task_t)),"shell3",mysh,"tty3");
     kmt->create(pmm->alloc(sizeof(task_t)),"shell4",mysh,"tty4");
     */
-    for(int i=0;i<_ncpu();++i){
-        kmt->create(pmm->alloc(sizeof(task_t)),"idle",idle,NULL);
-    }
     local_log("Os init finished\n");
 }
 
