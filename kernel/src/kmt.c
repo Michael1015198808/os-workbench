@@ -65,7 +65,7 @@ static _Context* kmt_context_save(_Event ev, _Context *c){
     int cpu_id=_cpu();
     if(current){
         current->context=*c;
-        current->ncli=ncli[cpu_id];
+        Assert((current->ncli=ncli[cpu_id])==0,"ncli!=0\n");
     }
     return NULL;
 }
