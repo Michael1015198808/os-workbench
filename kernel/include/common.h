@@ -35,7 +35,7 @@ volatile int ncli[4];
 typedef struct task{
     //int32_t id;
     volatile uint32_t attr;
-    pthread_mutex_t attr_lock;
+    pthread_mutex_t running;
     char* name;
     _Context context;
 #ifdef TASK_FENCE

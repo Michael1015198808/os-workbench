@@ -44,8 +44,7 @@ void sem_test(void *arg){
 
 void idle(void *arg){
     _intr_write(1);
-    while(1){
-    };
+    while(1);
 }
 static void os_init() {
     pmm->init();

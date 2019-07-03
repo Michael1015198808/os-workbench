@@ -74,7 +74,6 @@ static _Context* kmt_context_save(_Event ev, _Context *c){
 
 static _Context* kmt_context_switch(_Event ev, _Context *c){
     int cpu_id=_cpu(),new=current;
-    trace_pthread_mutex_lock(&tasks_lk);
     Assert(_intr_read()==0,"%d",cpu_id);
     int cnt=10000;
 
@@ -84,24 +83,19 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
         --cnt;
         if(new>=tasks_cnt){new=0;}
         if(cnt==0){
-            trace_pthread_mutex_unlock(&tasks_lk);
             Assert(_intr_read()==0,"%d",cpu_id);
             if((tasks[current]->attr&TASK_SLEEP)==0)
                 return NULL;
             cnt=10000;
-            trace_pthread_mutex_lock(&tasks_lk);
         }
-    }while(tasks[new]->attr);
+    }while(pthread_mutex_trylock(&tasks[new]));
 
     if(current>=0){
-        neg_flag(tasks[current],TASK_RUNNING);
+        pthread_mutex_unlock(&tasks[current]);
     }
-
-    set_flag(tasks[new],TASK_RUNNING);
 
     current=new;
     
-    trace_pthread_mutex_unlock(&tasks_lk);
     for(int i=0;i<4;++i){
         if(tasks[current]->fence1[i]!=0x13579ace||tasks[current]->fence2[i]!=0xeca97531){
             log("Stack over/under flow!\n");
