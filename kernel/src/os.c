@@ -51,12 +51,12 @@ void intr_reading(void *idle){
     MACRO_CONCAT(MACRO_SELF(CURRENT_TEST),_init)()
 
 
-volatile int i=1;
+volatile int wait=1;
 void atomic_test(void *arg){
     static pthread_mutex_t lk;
     _intr_write(0);
     pthread_mutex_lock(&lk);
-    while(i);
+    while(wait);
     pthread_mutex_unlock(&lk);
     while(1);
 }
