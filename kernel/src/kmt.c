@@ -113,12 +113,6 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
 void kmt_init(void){
     os->on_irq(INT_MIN, _EVENT_NULL, kmt_context_save);
     os->on_irq(INT_MAX, _EVENT_NULL, kmt_context_switch);
-    void *p=pmm->alloc(sizeof(task_t));
-    idle_context = *_kcontext(
-            (_Area){
-            (void*)p,
-            p+sizeof(task_t)
-            }, idle, NULL);
 }
 int kmt_create(task_t *task, const char *name, void (*entry)(void*), void *arg){
     static int ignore_num=0;
