@@ -5,7 +5,10 @@
 #ifndef NO_TEST
 
 void spin_test_init(void){
-    return;
+    kmt->create(pmm->alloc(sizeof(task_t)), "spin_test", spin_test, (void*)'a');
+    kmt->create(pmm->alloc(sizeof(task_t)), "spin_test", spin_test, (void*)'b');
+    kmt->create(pmm->alloc(sizeof(task_t)), "spin_test", spin_test, (void*)'c');
+    kmt->create(pmm->alloc(sizeof(task_t)), "spin_test", spin_test, (void*)'d');
 }
 void spin_test(void *arg){
     char c=((char*)arg)[0];
