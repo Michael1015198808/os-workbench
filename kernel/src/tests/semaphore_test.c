@@ -18,11 +18,14 @@ void semaphore_test(void *arg){
     char c=((char*)arg)[0];
     int idx=c-'1';
     while(1){
+        Assert(_intr_read()==1,"ncli%d",ncli[_cpu()]);
         kmt->sem_wait(  &test_sem[idx]);
         Assert(_intr_read()==1,"ncli%d",ncli[_cpu()]);
         int next=rand()&3;
         printf("[cpu%d]%c->%dHello!\n",_cpu(),c,next+1);
+        Assert(_intr_read()==1,"ncli%d",ncli[_cpu()]);
         kmt->sem_signal(&test_sem[next]);
+        Assert(_intr_read()==1,"ncli%d",ncli[_cpu()]);
     }
 }
 
