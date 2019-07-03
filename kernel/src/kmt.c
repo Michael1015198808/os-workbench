@@ -227,7 +227,7 @@ void kmt_sem_init(sem_t *sem, const char *name, int value){
 
 static void sem_add_task(sem_t *sem){
     int cpu_id=_cpu();
-    task_t park=current;
+    task_t* park=current;
 
     sem->pool[sem->tail++]=park;
     set_flag(park,TASK_SLEEP);
