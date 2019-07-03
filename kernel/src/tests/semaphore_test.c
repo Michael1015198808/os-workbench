@@ -18,17 +18,16 @@ void semaphore_test(void *arg){
     static volatile int to_run=0;
     char c=((char*)arg)[0];
     int idx=c-'1';
+    if(idx==0){for(volatile int i=0;i<1000000;++i);}
     while(1){
         Assert(_intr_read()==1,"ncli%d",ncli[_cpu()]);
         kmt->sem_wait(  &test_sem[idx]);
-        while(to_run!=idx);
         Assert(_intr_read()==1,"ncli%d",ncli[_cpu()]);
         int next=rand()&3;
         printf("[cpu%d]%c->%dHello!\n",_cpu(),c,next+1);
         Assert(_intr_read()==1,"ncli%d",ncli[_cpu()]);
         Assert(ncli[_cpu()]==0,"ncli%d",ncli[_cpu()]);
         kmt->sem_signal(&test_sem[next]);
-        to_run=next;
         Assert(_intr_read()==1,"ncli%d",ncli[_cpu()]);
     }
 }
