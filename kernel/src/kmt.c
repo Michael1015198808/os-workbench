@@ -89,7 +89,7 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
             Assert(_intr_read()==0,"%d",cpu_id);
             if((current->attr&TASK_SLEEP)==0)
                 return NULL;
-            return &idles[cpu_id]->context;
+            return &idles[cpu_id].context;
         }
     }while(tasks[new]->attr ||
            pthread_mutex_trylock(&tasks[new]->running));
@@ -119,7 +119,7 @@ void kmt_init(void){
             (_Area){
             (void*)idles[i].stack,
             &(idles[i].stack_end)
-            }, entry, arg);
+            }, idle, NULL);
     }
 }
 int kmt_create(task_t *task, const char *name, void (*entry)(void*), void *arg){
