@@ -5,7 +5,7 @@
     (dest=pmm->alloc(strlen(src)+1), \
     strcpy(dest,src) )
 
-task_t *tasks[40]={},*currents[4]={};
+task_t *tasks[40]={},*currents[4]={},idles[4];
 static pthread_mutex_t tasks_lk;
 char tasks_log[66000];
 int tasks_idx=0,tasks_cnt=0;
@@ -76,6 +76,10 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
     Assert(_intr_read()==0,"%d",cpu_id);
     int cnt=10000;
 
+    if(current){
+        pthread_mutex_unlock(&current->running);
+    }
+
     do{
         //current=rand()%tasks_cnt;
         ++new;
@@ -85,14 +89,10 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
             Assert(_intr_read()==0,"%d",cpu_id);
             if((current->attr&TASK_SLEEP)==0)
                 return NULL;
-            cnt=10000;
+            return &idles[cpu_id]->context;
         }
     }while(tasks[new]->attr ||
            pthread_mutex_trylock(&tasks[new]->running));
-
-    if(current){
-        pthread_mutex_unlock(&current->running);
-    }
 
     current=tasks[new];
     
@@ -105,9 +105,22 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
     return &current->context;
 }
 
+void idle(void *arg){
+    _intr_write(1);
+    while(1);
+}
 void kmt_init(void){
     os->on_irq(INT_MIN, _EVENT_NULL, kmt_context_save);
     os->on_irq(INT_MAX, _EVENT_NULL, kmt_context_switch);
+    for(int i=0;i<_ncpu();++i){
+        idles[i]->attr=TASK_RUNABLE;
+        idles[i]->running=0;
+        idles[i].context= *_kcontext(
+            (_Area){
+            (void*)idles[i]->stack,
+            &(idles[i]->stack_end)
+            }, entry, arg);
+    }
 }
 int kmt_create(task_t *task, const char *name, void (*entry)(void*), void *arg){
     static int ignore_num=0;
