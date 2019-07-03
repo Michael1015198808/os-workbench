@@ -22,7 +22,7 @@ void semaphore_test(void *arg){
         Assert(_intr_read()==1,"ncli%d",ncli[_cpu()]);
         int next=rand()&3;
         printf("[cpu%d]%c->%dHello!\n",_cpu(),c,next);
-        kmt->sem_signal(&test_sem[]);
+        kmt->sem_signal(&test_sem[next]);
     }
 }
 
