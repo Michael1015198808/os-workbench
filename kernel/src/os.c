@@ -49,7 +49,7 @@ void intr_reading(void *idle){
     }
 }
 
-#define CURRENT_TEST multithread_test
+#define CURRENT_TEST semaphore_test
 #define TEST_NAME(idx) TO_STRING(CURRENT_TEST) TO_STRING(idx)
 #define TEST_REQUIREMENT() \
     void MACRO_CONCAT(MACRO_SELF(CURRENT_TEST),_init)(void); \
@@ -60,7 +60,7 @@ static void os_init() {
     pmm->init();
     kmt->init();
     dev->init();
-    //TEST_REQUIREMENT();
+    TEST_REQUIREMENT();
 #undef CURRENT_TEST
 #define CURRENT_TEST context_test
     TEST_REQUIREMENT();
