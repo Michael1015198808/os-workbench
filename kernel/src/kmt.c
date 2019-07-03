@@ -74,7 +74,7 @@ static _Context* kmt_context_save(_Event ev, _Context *c){
 //char log[120000]={};
 
 static _Context* kmt_context_switch(_Event ev, _Context *c){
-    int cpu_id=_cpu(),new=rand()%tasks_cnt;
+    int cpu_id=_cpu(),new=-1;
     Assert(_intr_read()==0,"%d",cpu_id);
     int cnt=10000;
 
@@ -84,7 +84,7 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
 
     do{
         //current=rand()%tasks_cnt;
-        ++new;
+        new=rand()%tasks_cnt;
         --cnt;
         if(new>=tasks_cnt){new=0;}
         if(cnt==0){
