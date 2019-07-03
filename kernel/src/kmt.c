@@ -113,12 +113,12 @@ void kmt_init(void){
     os->on_irq(INT_MIN, _EVENT_NULL, kmt_context_save);
     os->on_irq(INT_MAX, _EVENT_NULL, kmt_context_switch);
     for(int i=0;i<_ncpu();++i){
-        idles[i]->attr=TASK_RUNABLE;
-        idles[i]->running=0;
+        idles[i].attr=TASK_RUNABLE;
+        idles[i].running=0;
         idles[i].context= *_kcontext(
             (_Area){
-            (void*)idles[i]->stack,
-            &(idles[i]->stack_end)
+            (void*)idles[i].stack,
+            &(idles[i].stack_end)
             }, entry, arg);
     }
 }
