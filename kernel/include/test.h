@@ -7,5 +7,6 @@ test_func spin_test;
 test_func semaphore_test;
 test_func multithread_test;
 test_func fib_test;
+test_func context_test;
 
 #endif
