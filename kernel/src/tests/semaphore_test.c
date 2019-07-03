@@ -15,7 +15,6 @@ void semaphore_test_init(void){
     kmt->sem_signal(&test_sem[0]);
 }
 void semaphore_test(void *arg){
-    static volatile int to_run=0;
     char c=((char*)arg)[0];
     int idx=c-'1';
     if(idx==0){for(volatile int i=0;i<1000000;++i);}
