@@ -125,7 +125,7 @@ void kmt_init(void){
     }
 }
 int kmt_create(task_t *task, const char *name, void (*entry)(void*), void *arg){
-    static int ignore_num=0;
+    static int ignore_num=2;
     if(ignore_num>0){
         --ignore_num;
         return 0;
@@ -236,8 +236,6 @@ static void sem_add_task(sem_t *sem){
     pthread_mutex_unlock(&(sem->lock));
     intr_open();
     while(park->attr&TASK_SLEEP);
-    //_yield();
-    //Assert(!(park->attr&TASK_SLEEP),"This task is still sleeping\n");
 }
 
 static void sem_remove_task(sem_t *sem){
