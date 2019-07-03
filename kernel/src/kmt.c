@@ -88,10 +88,10 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
                 return NULL;
             cnt=10000;
         }
-    }while(pthread_mutex_trylock(tasks[new]->running));
+    }while(pthread_mutex_trylock(&tasks[new]->running));
 
     if(current>=0){
-        pthread_mutex_unlock(tasks[current]->running);
+        pthread_mutex_unlock(&tasks[current]->running);
     }
 
     current=new;
