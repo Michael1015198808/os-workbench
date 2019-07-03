@@ -89,6 +89,7 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
             Assert(_intr_read()==0,"%d",cpu_id);
             if((current->attr&TASK_SLEEP)==0)
                 return NULL;
+            current=NULL;
             return &idles[cpu_id].context;
         }
     }while(tasks[new]->attr ||
