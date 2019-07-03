@@ -58,7 +58,6 @@ void idle(void *arg){
 static void os_init() {
     pmm->init();
     kmt->init();
-    kmt->create(pmm->alloc(sizeof(task_t)),"idle",idle,NULL);
     dev->init();
     //TEST_REQUIREMENT();
 #undef CURRENT_TEST
@@ -78,6 +77,9 @@ static void os_init() {
     kmt->create(pmm->alloc(sizeof(task_t)),"shell3",mysh,"tty3");
     kmt->create(pmm->alloc(sizeof(task_t)),"shell4",mysh,"tty4");
     */
+    for(int i=0;i<_ncpu();++i){
+        kmt->create(pmm->alloc(sizeof(task_t)),"idle",idle,NULL);
+    }
     local_log("Os init finished\n");
 }
 
