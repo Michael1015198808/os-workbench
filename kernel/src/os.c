@@ -70,9 +70,30 @@ static void hello() {
     //My printf is thread-safe
     printf("nmsl from CPU #%d\n",_cpu());
 }
+void stack_checker(){
+    extern task_t *tasks[40];
+    extern int tasks_cnt;
+    _intr_write(0);
+    while(1){
+        for(int i=0;i<tasks_cnt;++i){
+            for(int j=0;j<4;++j){
+                if(staks[i]->fence1[j]!=0x13579ace||
+                   tasks[i]->fence2[j]!=0xeca97531){
+                    printf("Stack over/under flow!\n");
+                    report_if(1);
+                    while(1);
+                }
+            }
+        }
+    }
+}
 
 static void os_run() {
+    _intr_write(0);
     hello();
+    if(_cpu()==0){
+        stack_checker();
+    }
     _intr_write(1);
     while(1);
 }

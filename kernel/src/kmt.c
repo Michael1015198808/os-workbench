@@ -249,7 +249,6 @@ void kmt_sem_wait_real(sem_t *sem){
     pthread_mutex_lock(&(sem->lock));
 
     if(--sem->value<0){
-        printf("%d(",_cpu());
         return sem_add_task(sem);
     }
     pthread_mutex_unlock(&(sem->lock));
@@ -264,7 +263,6 @@ void kmt_sem_signal_real(sem_t *sem){
     pthread_mutex_lock(&(sem->lock));
 
     if(++sem->value<=0){
-        printf("%d)",_cpu());
         sem_remove_task(sem);
     }
     pthread_mutex_unlock(&(sem->lock));
