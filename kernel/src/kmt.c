@@ -104,7 +104,7 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
         }
     }
     ncli[cpu_id]=current->ncli;
-    return &current->context;
+    return &tasks[new]->context;
 }
 
 void idle(void *arg){
