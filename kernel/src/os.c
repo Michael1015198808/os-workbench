@@ -77,7 +77,7 @@ void stack_checker(){
     while(1){
         for(int i=0;i<tasks_cnt;++i){
             for(int j=0;j<4;++j){
-                if(staks[i]->fence1[j]!=0x13579ace||
+                if(tasks[i]->fence1[j]!=0x13579ace||
                    tasks[i]->fence2[j]!=0xeca97531){
                     printf("Stack over/under flow!\n");
                     report_if(1);
