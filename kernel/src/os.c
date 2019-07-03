@@ -73,13 +73,13 @@ static void os_init() {
     kmt->create(pmm->alloc(sizeof(task_t)),"echo-test:l",echo_test,"l");
     kmt->sem_init(&echo_sem,"echo-sem",10);
     kmt->create(pmm->alloc(sizeof(task_t)),"reading",intr_reading,NULL);
-    kmt->create(pmm->alloc(sizeof(task_t)),"idle1",idle,NULL);
     kmt->create(pmm->alloc(sizeof(task_t)),"idle2",idle,NULL);
     kmt->create(pmm->alloc(sizeof(task_t)),"shell1",mysh,"tty1");
     kmt->create(pmm->alloc(sizeof(task_t)),"shell2",mysh,"tty2");
     kmt->create(pmm->alloc(sizeof(task_t)),"shell3",mysh,"tty3");
     kmt->create(pmm->alloc(sizeof(task_t)),"shell4",mysh,"tty4");
     */
+    kmt->create(pmm->alloc(sizeof(task_t)),"idle1",idle,NULL);
     local_log("Os init finished\n");
 }
 
