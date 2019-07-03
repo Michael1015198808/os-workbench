@@ -80,7 +80,7 @@ static void os_run() {
 static _Context *os_trap(_Event ev, _Context *context) {
     _intr_write(0);
     _Context *ret = context;
-    puts("trap");
+    printf("trap");
 
     for(struct irq *handler=irq_guard.next;
         handler!=&irq_guard;
