@@ -51,7 +51,7 @@ void intr_reading(void *idle){
     MACRO_CONCAT(MACRO_SELF(CURRENT_TEST),_init)()
 
 
-void atomic_test(void){
+void atomic_test(void *arg){
     static pthread_mutex_t lk;
     static volatile int i=1;
     _intr_write(0);
