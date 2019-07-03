@@ -90,7 +90,7 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
             if((tasks[current]->attr&TASK_SLEEP)==0)
                 return NULL;
             current=-1;
-            asm volatile("jmp idle");
+            return &idle_context;
         }
     }while(tasks[new]->attr);
 
