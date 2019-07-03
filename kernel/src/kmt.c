@@ -212,8 +212,8 @@ void kmt_sem_init(sem_t *sem, const char *name, int value){
 static void sem_add_task(sem_t *sem){
     int cpu_id=_cpu();
 
-    sem->pool[sem->tail++]=tasks[current];
-    set_flag(tasks[current],TASK_SLEEP);
+    sem->pool[sem->tail++]=current;
+    set_flag(current,TASK_SLEEP);
     if(sem->tail>=POOL_LEN)sem->tail-=POOL_LEN;
 
     pthread_mutex_unlock(&(sem->lock));
