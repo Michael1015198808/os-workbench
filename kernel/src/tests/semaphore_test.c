@@ -17,7 +17,6 @@ void semaphore_test_init(void){
 void semaphore_test(void *arg){
     char c=((char*)arg)[0];
     int idx=c-'1';
-    if(idx==0){for(volatile int i=0;i<1000000;++i);}
     while(1){
         Assert(_intr_read()==1,"ncli%d",ncli[_cpu()]);
         kmt->sem_wait(  &test_sem[idx]);
