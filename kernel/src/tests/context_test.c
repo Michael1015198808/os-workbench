@@ -6,12 +6,12 @@
 void hello1(void *arg){
     while(1){
         asm volatile("nop");
-        printf("Hello%c\n",*(char*)arg);
+        printf("Hello%c\n",(char)arg);
     }
 }
 void hello2(void *arg){
     while(1){
-        printf("Hello%c\n",*(char*)arg);
+        printf("Hello%c\n",(char)arg);
         asm volatile("nop");
     }
 }
