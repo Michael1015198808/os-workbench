@@ -91,10 +91,10 @@ void stack_checker(){
 static void os_run() {
     _intr_write(0);
     hello();
-    if(_cpu()==0){
+    /*if(_cpu()==0){
         while(1);
         stack_checker();
-    }
+    }*/
     _intr_write(1);
     while(1);
 }
