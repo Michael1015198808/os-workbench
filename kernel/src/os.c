@@ -51,7 +51,7 @@ void intr_reading(void *idle){
     MACRO_CONCAT(MACRO_SELF(CURRENT_TEST),_init)()
 
 
-void test(void){
+void atomic_test(void){
     static pthread_mutex_t lk;
     static volatile int i=1;
     _intr_write(0);
@@ -62,8 +62,8 @@ static void os_init() {
     pmm->init();
     kmt->init();
     dev->init();
-    kmt->create(pmm->alloc(sizeof(task_t)),"test1",test,"!");
-    kmt->create(pmm->alloc(sizeof(task_t)),"test2",test,"!");
+    kmt->create(pmm->alloc(sizeof(task_t)),"test1",atomic_test,"!");
+    kmt->create(pmm->alloc(sizeof(task_t)),"test2",atomic_test,"!");
     //TEST_REQUIREMENT();
 #undef CURRENT_TEST
 #define CURRENT_TEST context_test
