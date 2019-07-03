@@ -64,7 +64,7 @@ static int add_task(task_t *task){
 
 static _Context* kmt_context_save(_Event ev, _Context *c){
     int cpu_id=_cpu();
-    if(current!=-1){
+    if(current>0){
         tasks[current]->context=*c;
     }
     return NULL;
