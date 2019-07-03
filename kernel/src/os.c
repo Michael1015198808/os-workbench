@@ -35,11 +35,6 @@ void sem_test(void *arg){
         _yield();
     }
 }
-void idle(void *arg){
-    while(1){
-        for(volatile int i=0;i<10000;++i)_yield();
-    };
-}
 
 void intr_reading(void *idle){
     while(1){
@@ -79,7 +74,6 @@ static void os_init() {
     kmt->create(pmm->alloc(sizeof(task_t)),"shell3",mysh,"tty3");
     kmt->create(pmm->alloc(sizeof(task_t)),"shell4",mysh,"tty4");
     */
-    kmt->create(pmm->alloc(sizeof(task_t)),"idle1",idle,NULL);
     local_log("Os init finished\n");
 }
 
