@@ -22,7 +22,7 @@ int tasks_idx=0;
  *   kmt_context_save
  *   kmt_context_switch
  */
-int currents[4]={-1,-1,-1,-1},tasks_cnt=0;
+task_t *currents[4]={},tasks_cnt=0;
 #define current currents[cpu_id]
 
 void show_sem_list(sem_t *sem){
@@ -64,8 +64,8 @@ static int add_task(task_t *task){
 
 static _Context* kmt_context_save(_Event ev, _Context *c){
     int cpu_id=_cpu();
-    if(current!=-1){
-        tasks[current]->context=*c;
+    if(current){
+        current->context=*c;
     }
     return NULL;
 }
@@ -73,7 +73,7 @@ static _Context* kmt_context_save(_Event ev, _Context *c){
 //char log[120000]={};
 
 static _Context* kmt_context_switch(_Event ev, _Context *c){
-    int cpu_id=_cpu(),new=current;
+    int cpu_id=_cpu(),new=rand()%tasks_cnt;
     Assert(_intr_read()==0,"%d",cpu_id);
     int cnt=10000;
 
@@ -84,26 +84,26 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
         if(new>=tasks_cnt){new=0;}
         if(cnt==0){
             Assert(_intr_read()==0,"%d",cpu_id);
-            if((tasks[current]->attr&TASK_SLEEP)==0)
+            if((current->attr&TASK_SLEEP)==0)
                 return NULL;
             cnt=10000;
         }
     }while(tasks[new]->attr ||
            pthread_mutex_trylock(&tasks[new]->running));
 
-    if(current>=0){
-        pthread_mutex_unlock(&tasks[current]->running);
+    if(current){
+        pthread_mutex_unlock(&current->running);
     }
 
-    current=new;
+    current=tasks[new];
     
     for(int i=0;i<4;++i){
-        if(tasks[current]->fence1[i]!=0x13579ace||tasks[current]->fence2[i]!=0xeca97531){
+        if(current->fence1[i]!=0x13579ace||current->fence2[i]!=0xeca97531){
             log("Stack over/under flow!\n");
             while(1);
         }
     }
-    return &tasks[current]->context;
+    return &current->context;
 }
 
 void kmt_init(void){
