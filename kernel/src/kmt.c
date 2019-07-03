@@ -65,6 +65,7 @@ static _Context* kmt_context_save(_Event ev, _Context *c){
     int cpu_id=_cpu();
     if(current){
         current->context=*c;
+        current->ncli=ncli[cpu_id];
     }
     return NULL;
 }
@@ -103,6 +104,7 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
             while(1);
         }
     }
+    ncli[cpu_id]=current->ncli;
     return &current->context;
 }
 
@@ -135,6 +137,7 @@ int kmt_create(task_t *task, const char *name, void (*entry)(void*), void *arg){
     Assert(tasks_cnt<LEN(tasks),"%d\n",tasks_cnt);
     task->attr=TASK_RUNABLE;
     task->running=0;
+    task->ncli=0;
     copy_name(task->name,name);
 
     task->context = *_kcontext(
@@ -194,7 +197,7 @@ void kmt_spin_lock(spinlock_t *lk){
 
 void kmt_spin_unlock(spinlock_t *lk){
     if(lk->locked){
-        if(lk->owner!=_cpu()){
+        if(0 && lk->owner!=_cpu()){
             local_log("Lock[%s] isn't held by this CPU!\n",lk->name);
             report_if(1);
         }else{
