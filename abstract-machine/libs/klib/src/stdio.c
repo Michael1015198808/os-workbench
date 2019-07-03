@@ -4,6 +4,13 @@
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 
 static int vsnprintf(char *out, size_t n, const char *fmt, va_list ap);
+int puts(const char *s){
+    int i=0;
+    for(;s[i];++i){
+        _putc(s[i]);
+    }
+    return i;
+}
 int printf(const char *fmt, ...) {
     va_list ap;
     va_start(ap,fmt);
