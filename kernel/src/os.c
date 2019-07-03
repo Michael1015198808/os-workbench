@@ -36,14 +36,6 @@ void sem_test(void *arg){
     }
 }
 
-void intr_reading(void *idle){
-    while(1){
-        int i=_intr_read();
-        _putc('0'+i);
-        _putc('\n');
-    }
-}
-
 #define CURRENT_TEST semaphore_test
 #define TEST_NAME(idx) TO_STRING(CURRENT_TEST) TO_STRING(idx)
 #define TEST_REQUIREMENT() \
@@ -51,11 +43,8 @@ void intr_reading(void *idle){
     MACRO_CONCAT(MACRO_SELF(CURRENT_TEST),_init)()
 
 void idle(void *arg){
-    _intr_write(0);
+    _intr_write(1);
     while(1){
-        for(volatile int i=0;i<10000;++i);
-        _yield();
-        Assert(_intr_read()==0,"Interupt be opened!");
     };
 }
 static void os_init() {
@@ -74,7 +63,6 @@ static void os_init() {
     kmt->create(pmm->alloc(sizeof(task_t)),"echo-test:s",echo_test,"s");
     kmt->create(pmm->alloc(sizeof(task_t)),"echo-test:l",echo_test,"l");
     kmt->sem_init(&echo_sem,"echo-sem",10);
-    kmt->create(pmm->alloc(sizeof(task_t)),"reading",intr_reading,NULL);
     kmt->create(pmm->alloc(sizeof(task_t)),"shell1",mysh,"tty1");
     kmt->create(pmm->alloc(sizeof(task_t)),"shell2",mysh,"tty2");
     kmt->create(pmm->alloc(sizeof(task_t)),"shell3",mysh,"tty3");
