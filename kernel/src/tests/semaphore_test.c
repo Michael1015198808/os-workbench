@@ -4,7 +4,7 @@
 
 #ifndef NO_TEST
 semaphore_t test_sem[4];
-char args[]={"14"};
+char args[]={"1234"};
 void semaphore_test_init(void){
     char sem_name[15]="test sem:";
     for(int i=0;i<LEN(test_sem);++i){
@@ -28,8 +28,8 @@ void semaphore_test(void *arg){
         Assert(_intr_read()==1,"ncli%d",ncli[_cpu()]);
         Assert(ncli[_cpu()]==0,"ncli%d",ncli[_cpu()]);
         kmt->sem_signal(&test_sem[next]);
-        Assert(_intr_read()==1,"ncli%d",ncli[_cpu()]);
         to_run=next;
+        Assert(_intr_read()==1,"ncli%d",ncli[_cpu()]);
     }
 }
 
