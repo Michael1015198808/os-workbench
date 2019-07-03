@@ -56,9 +56,9 @@ void idle(void *arg){
     };
 }
 static void os_init() {
-    kmt->create(pmm->alloc(sizeof(task_t)),"idle",idle,NULL);
     pmm->init();
     kmt->init();
+    kmt->create(pmm->alloc(sizeof(task_t)),"idle",idle,NULL);
     dev->init();
     //TEST_REQUIREMENT();
 #undef CURRENT_TEST
