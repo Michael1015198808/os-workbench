@@ -64,7 +64,7 @@ static int add_task(task_t *task){
 
 static _Context* kmt_context_save(_Event ev, _Context *c){
     int cpu_id=_cpu();
-    if(current>0){
+    if(current!=-1){
         tasks[current]->context=*c;
     }
     return NULL;
@@ -76,7 +76,7 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
     int cpu_id=_cpu(),new=current;
     trace_pthread_mutex_lock(&tasks_lk);
     Assert(_intr_read()==0,"%d",cpu_id);
-    uint16_t cnt=0;
+    int cnt=10000;
 
     do{
         //current=rand()%tasks_cnt;
@@ -88,6 +88,7 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
             Assert(_intr_read()==0,"%d",cpu_id);
             if((tasks[current]->attr&TASK_SLEEP)==0)
                 return NULL;
+            cnt=10000;
             trace_pthread_mutex_lock(&tasks_lk);
         }
     }while(tasks[new]->attr);
