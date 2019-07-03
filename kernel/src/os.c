@@ -80,6 +80,7 @@ static void os_run() {
 static _Context *os_trap(_Event ev, _Context *context) {
     _intr_write(0);
     _Context *ret = context;
+    puts("trap");
 
     for(struct irq *handler=irq_guard.next;
         handler!=&irq_guard;
@@ -90,6 +91,7 @@ static _Context *os_trap(_Event ev, _Context *context) {
         }
     }
     Assert(ret!=NULL,"\nkmt_context_switch returns NULL\n");
+    printf("%x\n",ret);
     return ret;
 }
 
