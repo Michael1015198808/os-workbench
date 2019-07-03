@@ -15,10 +15,10 @@ void hello2(void *arg){
         asm volatile("nop");
     }
 }
-contest_test_init(){
-    kmt->create(pmm->alloc(sizeof(task_t)), "hello1[1]", hello1, 'a');
-    kmt->create(pmm->alloc(sizeof(task_t)), "hello2[1]", hello2, 'b');
-    kmt->create(pmm->alloc(sizeof(task_t)), "hello1[2]", hello1, 'c');
-    kmt->create(pmm->alloc(sizeof(task_t)), "hello2[2]", hello2, 'd');
+void contest_test_init(void){
+    kmt->create(pmm->alloc(sizeof(task_t)), "hello1[1]", hello1, (void*)'a');
+    kmt->create(pmm->alloc(sizeof(task_t)), "hello2[1]", hello2, (void*)'b');
+    kmt->create(pmm->alloc(sizeof(task_t)), "hello1[2]", hello1, (void*)'c');
+    kmt->create(pmm->alloc(sizeof(task_t)), "hello2[2]", hello2, (void*)'d');
 }
 #endif
