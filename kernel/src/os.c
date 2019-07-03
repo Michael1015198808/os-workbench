@@ -51,10 +51,19 @@ void intr_reading(void *idle){
     MACRO_CONCAT(MACRO_SELF(CURRENT_TEST),_init)()
 
 
+void test(void){
+    static pthread_mutex_t lk;
+    static volatile int i=1;
+    _intr_write(0);
+    pthread_mutex_lock(&lk);
+    while(i);
+}
 static void os_init() {
     pmm->init();
     kmt->init();
     dev->init();
+    kmt->create(pmm->alloc(sizeof(task_t)),"test1",test,"!");
+    kmt->create(pmm->alloc(sizeof(task_t)),"test2",test,"!");
     //TEST_REQUIREMENT();
 #undef CURRENT_TEST
 #define CURRENT_TEST context_test
