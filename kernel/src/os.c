@@ -51,8 +51,11 @@ void intr_reading(void *idle){
     MACRO_CONCAT(MACRO_SELF(CURRENT_TEST),_init)()
 
 void idle(void *arg){
+    _intr_write(0);
     while(1){
+        for(volatile int i=0;i<10000;++i);
         _yield();
+        Assert(_intr_read()==0,"Interupt be opened!");
     };
 }
 static void os_init() {
