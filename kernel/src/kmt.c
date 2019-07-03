@@ -81,7 +81,7 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
     do{
         //current=rand()%tasks_cnt;
         ++new;
-        ++cnt;
+        --cnt;
         if(new>=tasks_cnt){new=0;}
         if(cnt==0){
             trace_pthread_mutex_unlock(&tasks_lk);
