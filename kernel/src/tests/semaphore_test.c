@@ -11,7 +11,6 @@ void semaphore_test_init(void){
         sprintf(&sem_name[8],"%d",i);
         kmt->sem_init(&test_sem[i],sem_name,0);
         kmt->create(pmm->alloc(sizeof(task_t)),"semaphore_test",semaphore_test,args+i);
-        kmt->create(pmm->alloc(sizeof(task_t)),"semaphore_test",semaphore_test,args+i);
     }
     kmt->sem_signal(&test_sem[0]);
 }
