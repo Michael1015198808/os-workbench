@@ -109,6 +109,7 @@ static inline _Context* kmt_context_switch_real(_Event ev, _Context *c){
     return &tasks[new]->context;
 }
 static _Context* kmt_context_switch(_Event ev, _Context *c){
+    int cpu_id=_cpu();
     _Context* ret=kmt_context_switch(ev,c);
     if(last&&current!=last){
         pthread_mutex_unlock(&last->running);
