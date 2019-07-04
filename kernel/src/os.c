@@ -46,12 +46,15 @@ void yield_test(void *dummy){
     _intr_close();
     _putc('0'+_cpu());
     _putc('0'+_intr_read());
+    _putc('\n');
     _yield();
     _putc('0'+_cpu());
     _putc('0'+_intr_read());
+    _putc('\n');
     _intr_open();
     _putc('0'+_cpu());
     _putc('0'+_intr_read());
+    _putc('\n');
     while(1);
 }
 static void os_init() {
