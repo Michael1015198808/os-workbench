@@ -5,28 +5,31 @@
 #ifndef NO_TEST
 static sem_t sem_p, sem_c;
 static spinlock_t mutex;
-char *name=NULL;
+volatile int i=0;
 void producer(void *arg) {
   device_t *tty = dev_lookup("tty1");
   while (1) {
     kmt->sem_wait(&sem_p);
+    while(i);
     tty->ops->write(tty, 0, "I love ", 7);
-    tty->ops->write(tty, 0, name, strlen(name));
-    printf("I love %s",name);
+    printf("I love ");
     kmt->sem_signal(&sem_c);
   }
 }
 void customer(void *arg) {
+  device_t *tty = dev_lookup("tty1");
   while (1) {
     kmt->sem_wait(&sem_c);
-    name=arg;
+    while(!i);
+    tty->ops->write(tty, 0, (char *) arg, strlen((char *) arg));
+    printf(arg);
     kmt->sem_signal(&sem_p);
   }
 }
 
 void multithread_test_init(void){
-  kmt->sem_init(&sem_p, "producer-sem", 0);
-  kmt->sem_init(&sem_c, "customer-sem", 1);
+  kmt->sem_init(&sem_p, "producer-sem", 1);
+  kmt->sem_init(&sem_c, "customer-sem", 0);
   kmt->spin_init(&mutex, "mutex");
 
   kmt->create(pmm->alloc(sizeof(task_t)), "p-task", producer, NULL);
