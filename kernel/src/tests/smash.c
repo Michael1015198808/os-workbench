@@ -12,6 +12,7 @@ void move_esp(int depth){
 void smash_test(void *idle){
     while(1){
         move_esp(10);
+        _putc('!');
     }
 }
 void smash_test_init(void){
