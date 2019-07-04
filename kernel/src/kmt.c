@@ -87,13 +87,13 @@ static inline _Context* kmt_context_switch_real(_Event ev, _Context *c){
         --cnt;
         if(new>=tasks_cnt){new=0;}
         if(cnt==0){
-            Assert("Should not reach here!");
             Assert(_intr_read()==0,"%d",cpu_id);
             current=NULL;
             return &idles[cpu_id].context;
         }
     }while(tasks[new]->attr ||
-           pthread_mutex_trylock(&tasks[new]->running));
+            (tasks[new]->cpu!=cpu_id&&
+           pthread_mutex_trylock(&tasks[new]->running)));
 
     current=tasks[new];
     current->cpu=cpu_id;
@@ -136,7 +136,7 @@ void kmt_init(void){
     }
 }
 int kmt_create(task_t *task, const char *name, void (*entry)(void*), void *arg){
-    static int ignore_num=2;
+    static int ignore_num=0;
     if(ignore_num>0){
         --ignore_num;
         return 0;
