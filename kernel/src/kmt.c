@@ -65,7 +65,7 @@ static _Context* kmt_context_save(_Event ev, _Context *c){
     int cpu_id=_cpu();
 #define last lasts[cpu_id]
     if(last){
-        pthread_mutex_unlock(last->running);
+        pthread_mutex_unlock(&last->running);
     }
     last=current;
     if(current){
