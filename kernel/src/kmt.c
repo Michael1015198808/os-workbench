@@ -235,7 +235,7 @@ static void sem_add_task(sem_t *sem){
 
     pthread_mutex_unlock(&(sem->lock));
     intr_open();
-    _yield()
+    _yield();
     while(park->attr&TASK_SLEEP);
 }
 
