@@ -17,7 +17,6 @@ void producer(void *arg) {
   }
 }
 void customer(void *arg) {
-  device_t *tty = dev_lookup("tty1");
   while (1) {
     kmt->sem_wait(&sem_c);
     kmt->sem_signal(&sem_p);
