@@ -64,7 +64,7 @@ static void os_init() {
     dev->init();
     //TEST_REQUIREMENT();
 #undef CURRENT_TEST
-#define CURRENT_TEST semaphore_test
+#define CURRENT_TEST context_test
     TEST_REQUIREMENT();
     /*
     kmt->create(pmm->alloc(sizeof(task_t)),"sem-test1",sem_test,"!");
