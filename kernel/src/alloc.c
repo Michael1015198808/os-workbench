@@ -10,7 +10,7 @@ struct header{
     uint32_t fence;
     __attribute__((aligned(0x10)))struct{}space;//space doesn't take any storage
     //directly return &space
-}static free_list[4]={},*global;//Sentinels
+}static free_list[MAX_CPU]={},*global;//Sentinels
 typedef struct header header;
 #define align(_A,_B) (_A=( (_A+_B-1)/_B)*_B)
 #define PG_SIZE (8 KB)
