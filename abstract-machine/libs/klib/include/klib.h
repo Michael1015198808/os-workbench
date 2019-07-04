@@ -123,7 +123,6 @@ void _intr_open();
 
 volatile int intr_idx;
 pthread_mutex_t intr_lk;
-volatile int ncli[4];
 #define intr_log(...) /*\
     pthread_mutex_lock(&intr_lk); \
     LOG("[%d,%d]\n",ncli[0],ncli[1]); \
