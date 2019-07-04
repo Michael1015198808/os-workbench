@@ -3,8 +3,8 @@
 #include "../am/src/x86/x86-qemu.h"
 //Only for the macro MAX_CPU
 
-//volatile int ncli[MAX_CPU]={},ori[MAX_CPU]={};
-volatile int ncli[4]={},ori[4]={};
+//volatile int ncli[MAX_CPU]={},intena[MAX_CPU]={};
+volatile int ncli[MAX_CPU]={},intena[MAX_CPU]={};
 
 volatile int intr_idx=0;
 pthread_mutex_t intr_lk=PTHREAD_MUTEX_INITIALIZER;
@@ -15,15 +15,15 @@ void _intr_close(){
     cli();
     int cpu_id=_cpu();
     Assert(ncli[cpu_id]>=0);
-    ori[cpu_id]|=int_on;
+    intena[cpu_id]|=int_on;
     ++ncli[cpu_id];
 }
 void _intr_open(){
     int cpu_id=_cpu();
     --ncli[cpu_id];
     if(ncli[cpu_id]==0){
-        if(ori[cpu_id]){
-            ori[cpu_id]=0;
+        if(intena[cpu_id]){
+            intena[cpu_id]=0;
             sti();
         }
     }

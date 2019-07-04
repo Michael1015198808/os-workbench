@@ -1,13 +1,15 @@
 #ifndef __COMMON_H__
 #define __COMMON_H__
 
-#include <x86-qemu.h>
 #include <kernel.h>
 #include <klib.h>
 #include <nanos.h>
 #include <limits.h>
 #include <stdint.h>
 
+#ifndef MAX_CPU
+    #define MAX_CPU 8
+#endif
 //#define NO_TEST
 #include <test.h>
 
