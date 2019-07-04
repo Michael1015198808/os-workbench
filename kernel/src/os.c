@@ -42,7 +42,7 @@ void sem_test(void *arg){
     void MACRO_CONCAT(MACRO_SELF(CURRENT_TEST),_init)(void); \
     MACRO_CONCAT(MACRO_SELF(CURRENT_TEST),_init)()
 
-void yield_test(void *){
+void yield_test(void *dummy){
     _intr_close();
     _putc('0'+_intr_read());
     _yield();
