@@ -52,7 +52,8 @@ typedef struct task{
 }task_t;
 
 typedef struct spinlock{
-    uint32_t reen,owner;
+    uint32_t reen;
+    task_t* owner;
     pthread_mutex_t locked;
     char *name;
 #ifdef spinlock_log

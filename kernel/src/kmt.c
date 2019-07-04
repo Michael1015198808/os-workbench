@@ -170,7 +170,7 @@ void kmt_spin_lock(spinlock_t *lk){
     int cpu_id=_cpu();
     while(1){
         if(lk->locked){
-            if(lk->owner==cpu_id){
+            if(lk->owner==current){
                 ++lk->reen;
                 break;
             }else{
@@ -190,7 +190,7 @@ void kmt_spin_lock(spinlock_t *lk){
         pthread_mutex_lock(&lk->locked);
         intr_close();
         lk->reen=1;
-        lk->owner=cpu_id;
+        lk->owner=current;
         break;
     }//Use break to release lock and restore intr
     intr_open();
@@ -198,8 +198,8 @@ void kmt_spin_lock(spinlock_t *lk){
 
 void kmt_spin_unlock(spinlock_t *lk){
     if(lk->locked){
-        if(lk->owner!=_cpu()){
-            local_log("Lock[%s] isn't held by this CPU!\n",lk->name);
+        if(lk->owner!=current){
+            local_log("Lock[%s] isn't held by this routine!\n",lk->name);
             report_if(1);
         }else{
             if(--lk->reen==0){
