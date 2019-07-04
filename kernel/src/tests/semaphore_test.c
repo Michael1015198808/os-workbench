@@ -14,6 +14,8 @@ void semaphore_test_init(void){
     }
     kmt->sem_signal(&test_sem[0]);
 }
+#undef Assert
+#define Assert(...) 
 void semaphore_test(void *arg){
     char c=((char*)arg)[0];
     int idx=c-'0';
