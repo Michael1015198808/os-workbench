@@ -62,7 +62,6 @@ static void os_init() {
     pmm->init();
     kmt->init();
     dev->init();
-    kmt->create(pmm->alloc(sizeof(task_t)),"yield-test",yield_test,NULL);
     //TEST_REQUIREMENT();
 #undef CURRENT_TEST
 #define CURRENT_TEST smash_test
