@@ -35,7 +35,7 @@ volatile int ncli[MAX_CPU],intena[MAX_CPU];
 #define TASK_RUNABLE 0
 #define TASK_SLEEP 1
 #define TASK_RUNNING 2
-typedef struct task{
+typedef union task{
     //int32_t id;
     volatile uint32_t attr,ncli,intena;
     pthread_mutex_t running;

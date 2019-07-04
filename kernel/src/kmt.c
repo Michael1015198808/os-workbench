@@ -5,7 +5,7 @@
     (dest=pmm->alloc(strlen(src)+1), \
     strcpy(dest,src) )
 
-task_t *tasks[40]={},*currents[MAX_CPU]={},idles[MAX_CPU];
+task_t *tasks[40]={},*currents[MAX_CPU]={},idles[MAX_CPU],*lasts[MAX_CPU];
 static pthread_mutex_t tasks_lk;
 char tasks_log[66000];
 int tasks_idx=0,tasks_cnt=0;
@@ -63,12 +63,16 @@ static int add_task(task_t *task){
 
 static _Context* kmt_context_save(_Event ev, _Context *c){
     int cpu_id=_cpu();
+#define last lasts[cpu_id]
+    if(last){
+        kmt->unlock(last->running);
+    }
+    last=current;
     if(current){
         current->context=*c;
         current->ncli=ncli[cpu_id];
         current->intena=intena[cpu_id];
         report_if(current->ncli<0);
-        pthread_mutex_unlock(&current->running);
     }
     return NULL;
 }
