@@ -65,8 +65,8 @@ static void os_init() {
     kmt->create(pmm->alloc(sizeof(task_t)),"yield-test",yield_test,NULL);
     //TEST_REQUIREMENT();
 #undef CURRENT_TEST
-#define CURRENT_TEST semaphore_test
-    //TEST_REQUIREMENT();
+#define CURRENT_TEST smash_test
+    TEST_REQUIREMENT();
     /*
     kmt->create(pmm->alloc(sizeof(task_t)),"sem-test1",sem_test,"!");
     kmt->create(pmm->alloc(sizeof(task_t)),"sem-test2",sem_test,"!");
