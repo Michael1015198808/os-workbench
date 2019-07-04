@@ -4,6 +4,7 @@
 #ifndef NO_TEST
 void move_esp(int depth){
     int large_variable[10];
+    (void)large_variable;
     if(depth>0){
         move_esp(depth-1);
     }
