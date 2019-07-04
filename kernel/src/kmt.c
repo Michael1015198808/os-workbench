@@ -64,6 +64,10 @@ static int add_task(task_t *task){
 
 static _Context* kmt_context_save(_Event ev, _Context *c){
     int cpu_id=_cpu();
+    if(last&&current!=last){
+        last->cpu=-1;
+        pthread_mutex_unlock(&last->running);
+    }
     last=current;
     if(current){
         current->context=*c;
@@ -109,12 +113,7 @@ static inline _Context* kmt_context_switch_real(_Event ev, _Context *c){
     return &tasks[new]->context;
 }
 static _Context* kmt_context_switch(_Event ev, _Context *c){
-    int cpu_id=_cpu();
     _Context* ret=kmt_context_switch_real(ev,c);
-    if(last&&current!=last){
-        last->cpu=-1;
-        pthread_mutex_unlock(&last->running);
-    }
     return ret;
 }
 
