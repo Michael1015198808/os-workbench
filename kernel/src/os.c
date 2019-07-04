@@ -44,10 +44,13 @@ void sem_test(void *arg){
 
 void yield_test(void *dummy){
     _intr_close();
+    _putc('0'+_cpu());
     _putc('0'+_intr_read());
     _yield();
+    _putc('0'+_cpu());
     _putc('0'+_intr_read());
     _intr_open();
+    _putc('0'+_cpu());
     _putc('0'+_intr_read());
     while(1);
 }
