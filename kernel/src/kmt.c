@@ -23,6 +23,7 @@ int tasks_idx=0,tasks_cnt=0;
  *   kmt_context_switch
  */
 #define current currents[cpu_id]
+#define last lasts[cpu_id]
 
 void show_sem_list(sem_t *sem){
     int p;
@@ -63,10 +64,6 @@ static int add_task(task_t *task){
 
 static _Context* kmt_context_save(_Event ev, _Context *c){
     int cpu_id=_cpu();
-#define last lasts[cpu_id]
-    if(last){
-        pthread_mutex_unlock(&last->running);
-    }
     last=current;
     if(current){
         current->context=*c;
@@ -98,6 +95,10 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
            pthread_mutex_trylock(&tasks[new]->running));
 
     current=tasks[new];
+
+    if(last&&current!=last){
+        pthread_mutex_unlock(&last->running);
+    }
     
     for(int i=0;i<4;++i){
         if(current->fence1[i]!=0x13579ace||current->fence2[i]!=0xeca97531){
