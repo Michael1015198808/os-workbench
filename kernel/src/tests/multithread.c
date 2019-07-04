@@ -13,6 +13,7 @@ void producer(void *arg) {
     while(i);
     tty->ops->write(tty, 0, "I love ", 7);
     printf("I love ");
+    i=1;
     kmt->sem_signal(&sem_c);
   }
 }
@@ -23,6 +24,7 @@ void customer(void *arg) {
     while(!i);
     tty->ops->write(tty, 0, (char *) arg, strlen((char *) arg));
     printf(arg);
+    i=0;
     kmt->sem_signal(&sem_p);
   }
 }
