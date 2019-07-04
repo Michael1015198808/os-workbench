@@ -42,8 +42,9 @@ void sem_test(void *arg){
     void MACRO_CONCAT(MACRO_SELF(CURRENT_TEST),_init)(void); \
     MACRO_CONCAT(MACRO_SELF(CURRENT_TEST),_init)()
 
+static spinlock_t yield_lk;
 void yield_test(void *dummy){
-    _intr_close();
+    kmt->spin_lock(&yield_lk);
     _putc('0'+_cpu());
     _putc('0'+_intr_read());
     _putc('\n');
@@ -51,7 +52,7 @@ void yield_test(void *dummy){
     _putc('0'+_cpu());
     _putc('0'+_intr_read());
     _putc('\n');
-    _intr_open();
+    kmt->spin_unlock(&yield_lk);
     _putc('0'+_cpu());
     _putc('0'+_intr_read());
     _putc('\n');
@@ -61,6 +62,7 @@ static void os_init() {
     pmm->init();
     kmt->init();
     dev->init();
+    kmt->spin_init(&lk,"yield_lk");
     kmt->create(pmm->alloc(sizeof(task_t)),"_yield-test",yield_test,NULL);
     //TEST_REQUIREMENT();
 #undef CURRENT_TEST
