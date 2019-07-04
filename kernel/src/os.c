@@ -62,7 +62,7 @@ static void os_init() {
     pmm->init();
     kmt->init();
     dev->init();
-    kmt->spin_init(&lk,"yield_lk");
+    kmt->spin_init(&yield_lk,"yield_lk");
     kmt->create(pmm->alloc(sizeof(task_t)),"_yield-test",yield_test,NULL);
     //TEST_REQUIREMENT();
 #undef CURRENT_TEST
