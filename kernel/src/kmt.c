@@ -197,6 +197,7 @@ void kmt_spin_lock(spinlock_t *lk){
 }
 
 void kmt_spin_unlock(spinlock_t *lk){
+    int cpu_id=_cpu();
     if(lk->locked){
         if(lk->owner!=current){
             local_log("Lock[%s] isn't held by this routine!\n",lk->name);
