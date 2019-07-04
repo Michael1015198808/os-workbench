@@ -92,11 +92,9 @@ static inline _Context* kmt_context_switch_real(_Event ev, _Context *c){
             return &idles[cpu_id].context;
         }
     }while(tasks[new]->attr ||
-           (tasks[new]->cpu!=cpu_id&&
-           pthread_mutex_trylock(&tasks[new]->running)));
+           pthread_mutex_trylock(&tasks[new]->running));
 
     current=tasks[new];
-    current->cpu=cpu_id;
 
     for(int i=0;i<4;++i){
         if(current->fence1[i]!=0x13579ace||current->fence2[i]!=0xeca97531){
@@ -109,9 +107,8 @@ static inline _Context* kmt_context_switch_real(_Event ev, _Context *c){
     return &tasks[new]->context;
 }
 static _Context* kmt_context_switch(_Event ev, _Context *c){
-    int cpu_id=_cpu();
     _Context* ret=kmt_context_switch(ev,c);
-    if(last&&current!=last){
+    if(last){
         pthread_mutex_unlock(&last->running);
     }
     return ret;
