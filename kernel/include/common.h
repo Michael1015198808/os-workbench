@@ -1,6 +1,7 @@
 #ifndef __COMMON_H__
 #define __COMMON_H__
 
+#include <x86-qemu.h>
 #include <kernel.h>
 #include <klib.h>
 #include <nanos.h>
