@@ -67,7 +67,7 @@ static _Context* kmt_context_save(_Event ev, _Context *c){
         current->context=*c;
         current->ncli=ncli[cpu_id];
         current->intena=intena[cpu_id];
-        report_if(current->ncli>0);
+        report_if(current->ncli<0);
     }
     return NULL;
 }
