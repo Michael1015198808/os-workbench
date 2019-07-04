@@ -134,7 +134,7 @@ void kmt_init(void){
     }
 }
 int kmt_create(task_t *task, const char *name, void (*entry)(void*), void *arg){
-    static int ignore_num=2;
+    static int ignore_num=0;
     if(ignore_num>0){
         --ignore_num;
         return 0;
