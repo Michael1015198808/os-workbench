@@ -21,7 +21,7 @@
 #define MACRO_CONCAT(_arg1,_arg2) MACRO_CONCAT_REAL(_arg1,_arg2)
 #define TO_STRING(_arg)     MACRO_VALUE(_arg)
 
-#define local_log(...) log(__VA_ARGS__)
+#define local_log(...) 
 
 #define LEN(arr) ((sizeof(arr) / sizeof(arr[0])))
 
