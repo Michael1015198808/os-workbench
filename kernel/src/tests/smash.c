@@ -16,6 +16,7 @@ void smash_test(void *idle){
     }
 }
 void smash_test_init(void){
-    kmt->create(pmm->alloc(sizeof(task_t)),"smash-test",smash_test,NULL);
+    kmt->create(pmm->alloc(sizeof(task_t)),"smash-test1",smash_test,NULL);
+    kmt->create(pmm->alloc(sizeof(task_t)),"smash-test2",smash_test,NULL);
 }
 #endif
