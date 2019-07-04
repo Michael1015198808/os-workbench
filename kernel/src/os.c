@@ -42,14 +42,22 @@ void sem_test(void *arg){
     void MACRO_CONCAT(MACRO_SELF(CURRENT_TEST),_init)(void); \
     MACRO_CONCAT(MACRO_SELF(CURRENT_TEST),_init)()
 
+void yield_test(void *){
+    _intr_close();
+    _putc('0'+_intr_read());
+    _yield();
+    _putc('0'+_intr_read());
+    while(1);
+}
 static void os_init() {
     pmm->init();
     kmt->init();
     dev->init();
-    TEST_REQUIREMENT();
+    kmt->create(pmm->alloc(sizeof(task_t)),"_yield-test",yield_test,NULL);
+    //TEST_REQUIREMENT();
 #undef CURRENT_TEST
 #define CURRENT_TEST semaphore_test
-    TEST_REQUIREMENT();
+    //TEST_REQUIREMENT();
     /*
     kmt->create(pmm->alloc(sizeof(task_t)),"sem-test1",sem_test,"!");
     kmt->create(pmm->alloc(sizeof(task_t)),"sem-test2",sem_test,"!");
