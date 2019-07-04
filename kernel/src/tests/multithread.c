@@ -19,13 +19,14 @@ void producer(void *arg) {
 void customer(void *arg) {
   while (1) {
     kmt->sem_wait(&sem_c);
+    name=arg;
     kmt->sem_signal(&sem_p);
   }
 }
 
 void multithread_test_init(void){
-  kmt->sem_init(&sem_p, "producer-sem", 1);
-  kmt->sem_init(&sem_c, "customer-sem", 0);
+  kmt->sem_init(&sem_p, "producer-sem", 0);
+  kmt->sem_init(&sem_c, "customer-sem", 1);
   kmt->spin_init(&mutex, "mutex");
 
   kmt->create(pmm->alloc(sizeof(task_t)), "p-task", producer, NULL);
