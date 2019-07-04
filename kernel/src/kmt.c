@@ -87,6 +87,7 @@ static inline _Context* kmt_context_switch_real(_Event ev, _Context *c){
         --cnt;
         if(new>=tasks_cnt){new=0;}
         if(cnt==0){
+            Assert("Should not reach here!");
             Assert(_intr_read()==0,"%d",cpu_id);
             current=NULL;
             return &idles[cpu_id].context;
