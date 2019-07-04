@@ -203,7 +203,7 @@ void kmt_spin_unlock(spinlock_t *lk){
             report_if(1);
         }else{
             if(--lk->reen==0){
-                lk->owner=-1;
+                lk->owner=NULL;
                 pthread_mutex_unlock(&(lk->locked));
                 intr_open();
             }
