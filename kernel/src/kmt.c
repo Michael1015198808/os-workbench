@@ -117,8 +117,8 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
 }
 
 void idle(void *arg){
-    _intr_write(1);
-    while(1);
+    _intr_write(0);
+    while(1)_yield();
 }
 void kmt_init(void){
     os->on_irq(INT_MIN, _EVENT_NULL, kmt_context_save);
