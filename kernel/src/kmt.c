@@ -76,7 +76,7 @@ static _Context* kmt_context_save(_Event ev, _Context *c){
 //int log_idx=0;
 //char log[120000]={};
 
-static _Context* kmt_context_switch(_Event ev, _Context *c){
+static inline _Context* kmt_context_switch_real(_Event ev, _Context *c){
     int cpu_id=_cpu(),new=-1;
     Assert(_intr_read()==0,"%d",cpu_id);
     int cnt=10000;
@@ -92,14 +92,12 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
             return &idles[cpu_id].context;
         }
     }while(tasks[new]->attr ||
-           pthread_mutex_trylock(&tasks[new]->running));
+           (tasks[new]->cpu!=cpu_id&&
+           pthread_mutex_trylock(&tasks[new]->running)));
 
     current=tasks[new];
+    current->cpu=cpu_id;
 
-    if(last&&current!=last){
-        pthread_mutex_unlock(&last->running);
-    }
-    
     for(int i=0;i<4;++i){
         if(current->fence1[i]!=0x13579ace||current->fence2[i]!=0xeca97531){
             log("Stack over/under flow!\n");
@@ -109,6 +107,13 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
     ncli[cpu_id]=current->ncli;
     intena[cpu_id]=current->intena;
     return &tasks[new]->context;
+}
+static _Context* kmt_context_switch(_Event ev, _Context *c){
+    _Context* ret=kmt_context_switch(ev,c);
+    if(last&&current!=last){
+        pthread_mutex_unlock(&last->running);
+    }
+    return ret;
 }
 
 void idle(void *arg){
