@@ -65,7 +65,7 @@ static _Context* kmt_context_save(_Event ev, _Context *c){
     int cpu_id=_cpu();
     if(current){
         current->context=*c;
-        Assert((current->ncli=ncli[cpu_id])==0,"ncli!=0\n");
+        current->ncli=ncli[cpu_id];
         current->intena=intena[cpu_id];
     }
     return NULL;
@@ -104,6 +104,7 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
         }
     }
     ncli[cpu_id]=current->ncli;
+    intena[cpu_id]=current->intena;
     return &tasks[new]->context;
 }
 
