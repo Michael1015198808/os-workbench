@@ -68,6 +68,7 @@ static _Context* kmt_context_save(_Event ev, _Context *c){
         current->ncli=ncli[cpu_id];
         current->intena=intena[cpu_id];
         report_if(current->ncli<0);
+        pthread_mutex_unlock(&current->running);
     }
     return NULL;
 }
@@ -78,10 +79,6 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
     int cpu_id=_cpu(),new=-1;
     Assert(_intr_read()==0,"%d",cpu_id);
     int cnt=10000;
-
-    if(current){
-        pthread_mutex_unlock(&current->running);
-    }
 
     do{
         //current=rand()%tasks_cnt;
