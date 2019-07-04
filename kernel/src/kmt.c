@@ -5,7 +5,7 @@
     (dest=pmm->alloc(strlen(src)+1), \
     strcpy(dest,src) )
 
-task_t *tasks[40]={},*currents[4]={},idles[4];
+task_t *tasks[40]={},*currents[MAX_CPU]={},idles[MAX_CPU];
 static pthread_mutex_t tasks_lk;
 char tasks_log[66000];
 int tasks_idx=0,tasks_cnt=0;
@@ -235,6 +235,7 @@ static void sem_add_task(sem_t *sem){
 
     pthread_mutex_unlock(&(sem->lock));
     intr_open();
+    _yield();
     while(park->attr&TASK_SLEEP);
 }
 
