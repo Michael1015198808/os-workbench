@@ -29,7 +29,7 @@ void mysh(void *name) {
         args[0]=input;
         do{
             int i=1,j=1;
-            for(;i<nread;++i){
+            for(;i<=nread;++i){
                 if(input[i-1]==' '){
                     input[i-1]='\0';
                     args[j]=input+i;
@@ -46,7 +46,8 @@ void mysh(void *name) {
                 char warn[]="mysh: command not found: ";
                 tty_write(tty,warn);
                 tty_write(tty,args[0]);
-            }
+                break;
+            }else
             if(!strcmp(input,buildin[i].name)){
                 buildin[i].binary(args,tty);
                 break;
