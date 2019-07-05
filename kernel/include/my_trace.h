@@ -1,5 +1,5 @@
-#ifndef _MY_TRACE_H
-#define _MY_TRACE_H
+#ifndef __MY_TRACE_H
+#define __MY_TRACE_H
 
     //#define spinlock_log
     
@@ -31,4 +31,5 @@
 
 #ifndef detail_log
 #define detail_log(...)
-#endif
+
+#endif//__MY_TRACE_H

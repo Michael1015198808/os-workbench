@@ -7,6 +7,10 @@
 #include <limits.h>
 #include <stdint.h>
 
+#include <devices.h>
+#include <vfs.h>
+#include <fs.h>
+
 #ifndef MAX_CPU
     #define MAX_CPU 8
 #endif
@@ -49,7 +53,9 @@ typedef struct task{
 #ifdef TASK_FENCE
     uint32_t fence2[4];
 #endif
+    vfile_t *fd[16];
 }task_t;
+extern task_t currents[MAX_CPU];
 
 typedef struct spinlock{
     uint32_t reen;

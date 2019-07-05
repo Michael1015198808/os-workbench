@@ -1,6 +1,7 @@
-#include <common.h>
+#ifndef __DEVICES_H
+#define __DEVICES_H
+
 #include <amdev.h>
-#include <klib.h>
 
 #define LENGTH(arr) ((sizeof(arr) / sizeof(arr[0])))
 
@@ -104,3 +105,5 @@ typedef struct {
 extern char keymap[], keymap_shift[];
 
 #define TERM_FONT font_sans
+
+#endif
