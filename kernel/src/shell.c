@@ -46,6 +46,7 @@ void mysh(void *name) {
                 char warn[]="mysh: command not found: ";
                 tty_write(tty,warn);
                 tty_write(tty,args[0]);
+                tty_write(tty,"\n");
                 break;
             }else
             if(!strcmp(input,buildin[i].name)){
