@@ -21,7 +21,7 @@ void mysh(void *name) {
         input[nread-1]=' ';
         for(int i=1,j=0;i<=nread;++i){
             if(input[i-1]==' '){
-                input[i]='\0';
+                input[i-1]='\0';
                 args[j]=input+i;
                 ++j;
             }
