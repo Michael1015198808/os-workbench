@@ -1,4 +1,5 @@
 #include <klib.h>
+#include <devices.h>
 int echo(void *args[],device_t *dev){
     int i=1;
     while(1){
