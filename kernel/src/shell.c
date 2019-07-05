@@ -30,7 +30,7 @@ void mysh(void *name) {
             args[0]=input;
             int i=1,j=1;
             for(;i<=nread;++i){
-                if(input[i-1]==' '){
+                if(input[i-1]==' '&&input[i]!=' '){
                     input[i-1]='\0';
                     args[j]=input+i;
                     ++j;
