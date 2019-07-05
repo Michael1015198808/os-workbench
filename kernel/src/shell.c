@@ -19,12 +19,20 @@ void mysh(void *name) {
         tty->ops->write(tty, 0, prompt, strlen(prompt)+1);
         int nread = tty->ops->read(tty, 0, input, sizeof(input));
         input[nread-1]=' ';
-        for(int i=1,j=0;i<=nread;++i){
-            if(input[i-1]==' '){
-                input[i-1]='\0';
-                args[j]=input+i;
-                ++j;
+        args[0]=input;
+        do{
+            int i=1,j=1;
+            for(;i<nread;++i){
+                if(input[i-1]==' '){
+                    input[i-1]='\0';
+                    args[j]=input+i;
+                    ++j;
+                }
             }
+            args[j]=NULL;
+        }while(0);
+        for(int i=0;args[i];++i){
+            printf("args[%d]:%s\n",i,args[i]);
         }
         for(int i=0;i<LEN(buildin);++i){
             if(!strcmp(input,buildin[i].name)){
