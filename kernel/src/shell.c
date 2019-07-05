@@ -6,7 +6,7 @@
 
 static struct Command{
     const char *name;
-    int(*const binary)(void*);
+    int(*const binary)(void*[]);
 }buildin[]={
     "echo",echo
 };
