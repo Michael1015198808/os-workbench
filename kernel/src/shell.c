@@ -5,7 +5,8 @@
 #include <buildin.h>
 
 #define tty_write(tty, string) \
-    tty->ops->read(tty, 0, string, strlen(string)+1)
+    tty->ops->write(tty, 0, string, strlen(string)+1)
+
 #define pair(command) \
     {#command, command}
 static struct Command{
