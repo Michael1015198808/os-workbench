@@ -8,7 +8,7 @@ static struct Command{
     const char *name;
     int(*const binary)(void*[]);
 }buildin[]={
-    "echo",echo
+    {"echo",echo}
 };
 void mysh(void *name) {
   device_t *tty = dev_lookup(name);
