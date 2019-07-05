@@ -25,7 +25,6 @@ void mysh(void *name) {
         tty_write(tty,prompt);
         //tty->ops->write(tty, 0, prompt, strlen(prompt)+1);
         int nread = tty->ops->read(tty, 0, input, sizeof(input));
-        input[nread-1]=' ';
         do{
             args[0]=input;
             int i=1,j=1;
