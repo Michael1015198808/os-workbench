@@ -1,3 +1,4 @@
+#include <klib.h>
 int echo(void *args[]){
     int i=0;
     while(1){
