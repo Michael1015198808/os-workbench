@@ -5,7 +5,7 @@
 #include <buildin.h>
 
 #define tty_write(tty, string) \
-    tty->ops->write(tty, 0, string, strlen(string)+1)
+    tty->ops->write(tty, 0, string, strlen(string))
 
 #define pair(command) \
     {#command, command}
