@@ -35,6 +35,7 @@ void mysh(void *name) {
                     if(input[i]!=' '){
                         args[j]=input+i;
                         ++j;
+                    }
                 }
             }
             args[j]=NULL;
