@@ -6,17 +6,30 @@
 
 static struct Command{
     const char *name;
-    int(*const binary)(void*[]);
+    int(*const binary)(void*[],device_t*);
 }buildin[]={
     {"echo",echo}
 };
 void mysh(void *name) {
-  device_t *tty = dev_lookup(name);
-  while (1) {
-    char line[128], text[128];
-    sprintf(text, "(%s) $ ", name); tty->ops->write(tty, 0, text, strlen(text)+1);
-    int nread = tty->ops->read(tty, 0, line, sizeof(line));
-    line[nread - 1] = '\0';
-    sprintf(text, "Echo: %s.\n", line); tty->ops->write(tty, 0, text, strlen(text)+1);
-  }
+    device_t *tty = dev_lookup(name);
+    while (1) {
+        char input[128], prompt[128];
+        void *args[10];
+        sprintf(prompt, "(%s) $ ", name);
+        tty->ops->write(tty, 0, prompt, strlen(prompt)+1);
+        int nread = tty->ops->read(tty, 0, input, sizeof(input));
+        for(int i=0,j=0;i<nread;++i){
+            if(input[i]==' '){
+                input[i]='\0';
+                args[j]=input+i;
+                ++j;
+            }
+        }
+        for(int i=0;i<LEN(buildin);++i){
+            if(!strcmp(input,buildin[i].name)){
+                buildin[i].binary(args,tty);
+                break;
+            }
+        }
+    }
 }

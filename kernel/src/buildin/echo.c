@@ -1,13 +1,13 @@
 #include <klib.h>
-int echo(void *args[]){
-    int i=0;
+int echo(void *args[],device_t *dev){
+    int i=1;
     while(1){
-        printf("%s",(char*)(args[i]));
+        dev->ops->write("%s",(char*)(args[i]));
         ++i;
         if(args[i]){
-            printf(" ");
+            dev->ops->write(dev,0, " ",2);
         }else{
-            printf("\n");
+            dev->ops->write(dev,0,"\n",2);
             return 0;
         }
     }
