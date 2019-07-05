@@ -3,7 +3,7 @@
 int echo(void *args[],device_t *dev){
     int i=1;
     while(1){
-        dev->ops->write("%s",(char*)(args[i]));
+        dev->ops->write(dev,0,(char*)(args[i]),strlen(args[i])+1);
         ++i;
         if(args[i]){
             dev->ops->write(dev,0, " ",2);
