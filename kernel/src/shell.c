@@ -18,7 +18,8 @@ void mysh(void *name) {
         sprintf(prompt, "(%s) $ ", name);
         tty->ops->write(tty, 0, prompt, strlen(prompt)+1);
         int nread = tty->ops->read(tty, 0, input, sizeof(input));
-        for(int i=0,j=0;i<nread;++i){
+        input[nread]=' ';
+        for(int i=0,j=0;i<=nread;++i){
             if(input[i]==' '){
                 input[i]='\0';
                 args[j]=input+i;
