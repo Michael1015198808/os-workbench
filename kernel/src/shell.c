@@ -42,7 +42,7 @@ void mysh(void *name) {
         }
         for(int i=0;;++i){
             if(i==LEN(buildin)){
-                const char warn[]="mysh: command not found: ";
+                char warn[]="mysh: command not found: ";
                 tty_write(tty,warn);
                 tty_write(tty,args[0]);
             }
