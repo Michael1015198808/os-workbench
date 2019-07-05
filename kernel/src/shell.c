@@ -4,11 +4,16 @@
 #include <devices.h>
 #include <buildin.h>
 
+#define tty_write(tty, string) \
+    tty->ops->read(tty, 0, string, strlen(string)+1)
+#define pair(command) \
+    {#command, command}
 static struct Command{
     const char *name;
     int(*const binary)(void*[],device_t*);
 }buildin[]={
-    {"echo",echo}
+    pair(echo),
+    pair(cat)
 };
 void mysh(void *name) {
     device_t *tty = dev_lookup(name);
@@ -16,7 +21,8 @@ void mysh(void *name) {
         char input[128], prompt[128];
         void *args[10];
         sprintf(prompt, "(%s) $ ", name);
-        tty->ops->write(tty, 0, prompt, strlen(prompt)+1);
+        tty_write(prompt);
+        //tty->ops->write(tty, 0, prompt, strlen(prompt)+1);
         int nread = tty->ops->read(tty, 0, input, sizeof(input));
         input[nread-1]=' ';
         args[0]=input;
@@ -34,7 +40,12 @@ void mysh(void *name) {
         for(int i=0;args[i];++i){
             printf("args[%d]:%s\n",i,args[i]);
         }
-        for(int i=0;i<LEN(buildin);++i){
+        for(int i=0;;++i){
+            if(i==LEN(buildin)){
+                const char warn[]="mysh: command not found: ";
+                tty_write(tty,warn);
+                tty_write(tty,args[0]);
+            }
             if(!strcmp(input,buildin[i].name)){
                 buildin[i].binary(args,tty);
                 break;
