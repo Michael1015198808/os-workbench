@@ -36,7 +36,6 @@ int exec_buildin(const char* file,void* args[],int *is_buildin){
     }
 }
 const char* const buildin_help(void* arg){
-    const char* const cmd=arg;
     for(int i=0;;++i){
         if(i==LEN(buildin)){
             return NULL;
