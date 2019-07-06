@@ -31,9 +31,11 @@ typedef struct {
 ssize_t std_read(void *buf);
 ssize_t std_write(void *buf);
 
-#define VFILE_FILE 1
-#define VFILE_DEV 2
-#define VFILE_PROC 3
+#define VFILE_FILE  1
+#define VFILE_DEV   2
+#define VFILE_PROC  3
+#define VFILE_MEM   4
+#define VFILE_NULL  5
 typedef struct {
     void *actual;
     int type;

@@ -113,31 +113,32 @@ int runcmd(struct cmd *cmd){
             */
 
         case PIPE:
-            TODO();
-            /*
             pcmd = (struct pipecmd*)cmd;
-            if(pipe(p) < 0)
-            panic("pipe");
-            if(fork1() == 0){
-                close(1);
-                dup(p[1]);
-                close(p[0]);
-                close(p[1]);
-                runcmd(pcmd->left);
+
+            intr_close();
+            int cpu_id=_cpu();
+            task_t* current=currents[cpu_id];
+            intr_open();
+            char buf[0x100];//Manually 
+            vfile_t *backup[3];
+            for(int i=0;i<3;++i){
+                backup[i]=current->fd[i];
+                current->fd[i]=malloc(sizeof(vfile_t));
+                current->fd[i]->type=VFILE_NULL;
             }
-            if(fork1() == 0){
-                close(0);
-                dup(p[0]);
-                close(p[0]);
-                close(p[1]);
-                runcmd(pcmd->right);
+            current->fd[1]->type    =VFILE_MEM;
+            current->fd[1]->actual  =buf;
+            task_t* son=pmm->alloc(sizeof(task_t));
+            kmt->create(son,"fork-and-run",runcmd,pcmd->left);
+            kmt->teardown(son);
+            current->fd[0]=malloc(sizeof(vfile_t));
+            current->fd[0]->type    =VFILE_MEM;
+            current->fd[0]->actual  =buf;
+            for(int i=1;i<3;++i){
+                current->fd[i]=bakcup[i];
             }
-            close(p[0]);
-            close(p[1]);
-            wait();
-            wait();
+            runcmd(pcmd->right);
             break;
-            */
 
         case BACK:
             TODO();
