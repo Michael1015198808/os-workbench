@@ -14,4 +14,6 @@ declare(cat)="Concatenate FILE(s) to standard output.";
 
 int exec_buildin(const char* file,void* args[],int *is_buildin);
 
+struct cmd;
+void runcmd(struct cmd* cmd);
 #endif//__SHELL_H
