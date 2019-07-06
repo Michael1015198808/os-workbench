@@ -5,7 +5,7 @@
 #include <amdev.h>
 #include <klib.h>
 
-MODULE {
+typedef struct {
   void (*init)();
   int (*access)(const char *path, int mode);
   int (*mount)(const char *path, filesystem_t *fs);
@@ -19,7 +19,7 @@ MODULE {
   ssize_t (*write)(int fd, void *buf, size_t nbyte);
   off_t (*lseek)(int fd, off_t offset, int whence);
   int (*close)(int fd);
-} MOD_NAME(vfs);
+} MODULE(vfs);
 
 #define VFILE_FILE 1
 #define VFILE_DEV 2
