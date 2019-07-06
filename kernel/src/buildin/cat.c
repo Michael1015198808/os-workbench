@@ -6,6 +6,7 @@ int cat(void *args[],device_t *dev){
     int nread=0;
     while( (nread=
                 vfs->read(STDIN,buf,sizeof(buf))) ){
+        printf("%d\n",nread);
         if(buf[nread]=='\0')break;
         buf[nread]='\0';
         std_write(buf);
