@@ -65,7 +65,7 @@ static ssize_t vfs_read(int fd,void *buf,size_t nbyte){
     _intr_open();
     return ret;
 }
-static ssize_t vfs_write_real(int fd,void *buf,size_t nbyte){
+static inline ssize_t vfs_write_real(int fd,void *buf,size_t nbyte){
     int cpu_id=_cpu();
     switch(current->fd[fd]){
         case VFILE_DEV:
