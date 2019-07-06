@@ -11,6 +11,8 @@
         help_##command \
     }
 
+handler echo;
+const char* const help_echo;
 static struct Command{
     const char *const name;
     int(*const binary)(void*[]);
