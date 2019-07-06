@@ -6,7 +6,6 @@
     strcpy(dest,src) )
 
 task_t *tasks[40]={},*currents[MAX_CPU]={},idles[MAX_CPU],*lasts[MAX_CPU];
-static int free_task_id[40],free_task_id_cnt=0;
 static pthread_mutex_t tasks_lk,free_task_lk=PTHREAD_MUTEX_INITIALIZER;
 char tasks_log[66000];
 int tasks_idx=0,tasks_cnt=0;
@@ -44,12 +43,6 @@ void show(){
 }
 
 static int add_task(task_t *task){
-    if(free_task_id_cnt>0){
-        pthread_mutex_lock(&free_task_lk);
-        int ret=free_task_id[--free_task_id_cnt];
-        pthread_mutex_unlock(&free_task_lk);
-        return ret;
-    }
     pthread_mutex_lock(&tasks_lk);
     int ret=tasks_cnt;
     tasks[tasks_cnt++]=task;
@@ -175,9 +168,10 @@ void kmt_teardown(task_t *task){
     while(!(task->attr&TASK_ZOMBIE));
     for(int i=0;i<40;++i){
         if(tasks[i]==task){
-            pthread_mutex_lock(&free_task_lk);
-            free_task_id[free_task_id_cnt++]=i;
-            pthread_mutex_unlock(&free_task_lk);
+            pthread_mutex_lock(&tasks_lk);
+            --tasks_cnt;
+            tasks[i]=tasks[tasks_cnt];
+            pthread_mutex_unlock(&tasks_lk);
         }
     }
     pmm->free(task);
