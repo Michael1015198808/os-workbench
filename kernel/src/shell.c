@@ -12,7 +12,8 @@ static struct Command{
     int(*const binary)(void*[]);
 }buildin[]={
     pair(echo),
-    pair(cat)
+    pair(cat),
+    pair(exit)
 };
 static void inline command_handler(char *input,void *args[10],int nread){
     input[nread-1]='\0';
