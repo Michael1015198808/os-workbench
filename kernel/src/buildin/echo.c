@@ -4,12 +4,12 @@
 int echo(void *args[],device_t *dev){
     int i=1;
     while(1){
-        std_write(winfo(args[i]));
+        std_write(args[i]);
         ++i;
         if(args[i]){
-            std_write(winfo(" "));
+            std_write(" ");
         }else{
-            std_write(winfo("\n"));
+            std_write("\n");
             return 0;
         }
     }
