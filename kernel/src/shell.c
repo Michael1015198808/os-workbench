@@ -46,9 +46,9 @@ void mysh(void *name) {
         input[nread-1]='\0';
 
         command_handler(input,args,nread);
-        /*for(int i=0;args[i];++i){
+        for(int i=0;args[i];++i){
             printf("args[%d]:%s\n",i,args[i]);
-        }*/
+        }
         for(int i=0;;++i){
             if(i==LEN(buildin)){
                 char warn[]="mysh: command not found: ";
