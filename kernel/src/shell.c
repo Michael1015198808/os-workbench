@@ -5,7 +5,7 @@
 #include <buildin.h>
 
 #define pair(command) \
-    {#command, command,help##_command}
+    {#command, command,help##MACRO_VALUE(command)}
 
 static struct Command{
     const char *const name;
