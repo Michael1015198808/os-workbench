@@ -7,9 +7,9 @@ static vfile_t* get_fd(void){
     return current->fd;
     intr_open();
 }
-static int new_fd_num(const task_t const *cur){
+static int new_fd_num(int cpu_id){
     for(int i=0;i<FD_NUM;++i){
-        if(!cur->fd[i]){
+        if(!current->fd[i]){
             return i;
         }
     }
@@ -18,7 +18,7 @@ static int new_fd_num(const task_t const *cur){
 static inline int vfs_open_real(const char *path,int flags){
     int cpu_id=_cpu();
     device_t *dev=dev_lookup(path);
-    int fd=new_fd_num(current);
+    int fd=new_fd_num(cpu_id);
     Assert(fd==-1,"No more file descripter!");//Or return -1;
     if(dev){
         current->fd[fd].type=VFILE_DEV;
