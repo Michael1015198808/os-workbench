@@ -35,7 +35,7 @@ int mysh_wc(char *argv[]){
                 printf(1, "wc: cannot open %s\n", argv[i]);
                 return -1;
             }
-            wc(fd, argv[i]);
+            single_wc(fd, argv[i]);
             close(fd);
         }
         for(int i=0;i<3;++i){
@@ -44,7 +44,7 @@ int mysh_wc(char *argv[]){
         }
         std_write("total\n");
     }else{
-        wc(0, "");
+        single_wc(0, "");
     }
     return 0;
 }
