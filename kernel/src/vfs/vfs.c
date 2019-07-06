@@ -99,7 +99,7 @@ void vfs_init(void){
 int vfs_access(const char *path, int mode){
     TODO();
 }
-int vfs_mount(const char *path, filesystem_t *fs){
+int vfs_mount(const char *path, filesystem *fs){
     TODO();
 }
 int vfs_unmount(const char *path){
