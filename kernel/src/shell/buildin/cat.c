@@ -2,7 +2,7 @@
 #include <devices.h>
 const char *warn="Haven't realized!\n";
 
-static void cat_from_stdin(void){
+static inline void cat_from_stdin(char buf[0x200]){
     int nread=0;
     while((nread=vfs->read(STDIN,buf,sizeof(buf)))){
         if(nread==0)return 0;
@@ -16,7 +16,7 @@ int cat(void *args[]){
     if(args[1]){
         for(int i=1;args[i];++i){
             if(strcmp(args[i],"-")){
-                cat_from_stdin();
+                cat_from_stdin(buf);
             }else{
                 int fd=vfs->open(args[i]),nread=0;
                 do{
@@ -26,7 +26,7 @@ int cat(void *args[]){
             }
         }
     }else{
-        cat_from_stdin();
+        cat_from_stdin(buf);
     }
     return 1;
 }
