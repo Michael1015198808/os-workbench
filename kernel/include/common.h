@@ -17,6 +17,9 @@
 
 #include <my_trace.h>
 
+#define info(string) \
+    (string), strlen((string))
+
 #define TODO() Assert(0,"Haven't be realized!\n");
 #define MACRO_VALUE(_arg)     #_arg
 #define MACRO_SELF(_arg)      _arg

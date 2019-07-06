@@ -7,9 +7,6 @@
 #define tty_write(tty, string) \
     tty->ops->write(tty, 0, string, strlen(string))
 
-#define info(string) \
-    (string), strlen((string))
-
 #define pair(command) \
     {#command, command}
 static struct Command{
@@ -36,8 +33,8 @@ static void inline command_handler(char *input,void *args[10],int nread){
     }while(0);
 }
 void mysh(void *name) {
-    Assert(vfs->open("tty",7)!=0,"Error on fd");
-    Assert(vfs->open("tty",7)!=1,"Error on fd");
+    Assert(vfs->open(name,7)!=0,"Error on fd");
+    Assert(vfs->open(name,7)!=1,"Error on fd");
     device_t *tty = dev_lookup(name);
     while (1) {
         char input[128], prompt[128];
@@ -55,13 +52,13 @@ void mysh(void *name) {
         for(int i=0;;++i){
             if(i==LEN(buildin)){
                 char warn[]="mysh: command not found: ";
-                tty_write(tty,warn);
-                tty_write(tty,args[0]);
-                tty_write(tty,"\n");
+                vfs->write(1,info(warn));
+                vfs->write(1,info(args[0]));
+                vfs->write(1,info("\n"));
                 break;
             }else
             if(!strcmp(input,buildin[i].name)){
-                buildin[i].binary(args,tty);
+                buildin[i].binary(args);
                 break;
             }
         }
