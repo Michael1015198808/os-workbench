@@ -3,6 +3,7 @@
 const char *warn="Haven't realized!\n";
 
 static void cat_from_stdin(void){
+    int nread=0;
     while((nread=vfs->read(STDIN,buf,sizeof(buf)))){
         if(nread==0)return 0;
         buf[nread]='\0';
@@ -12,7 +13,6 @@ static void cat_from_stdin(void){
 
 int cat(void *args[]){
     char buf[0x200];
-    int nread=0;
     if(args[1]){
         for(int i=1;args[i];++i){
             if(strcmp(args[i],"-")){
