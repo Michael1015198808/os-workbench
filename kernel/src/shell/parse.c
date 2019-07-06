@@ -59,7 +59,7 @@ void panic(char*);
 struct cmd *parsecmd(char*);
 
 // Execute cmd.  Never returns.
-void runcmd(struct cmd *cmd){
+int runcmd(struct cmd *cmd){
     int p[2];
     struct backcmd *bcmd;
     struct execcmd *ecmd;
@@ -85,9 +85,7 @@ void runcmd(struct cmd *cmd){
             ecmd = (struct execcmd*)cmd;
             if(ecmd->argv[0] == 0)
                 return;
-            vfs->exec(ecmd->argv[0], (void**)(ecmd->argv));
-            fprintf(2, "exec %s failed\n", ecmd->argv[0]);
-            break;
+            return vfs->exec(ecmd->argv[0], (void**)(ecmd->argv));
 
         case REDIR:
             TODO();

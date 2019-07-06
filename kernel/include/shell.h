@@ -12,6 +12,6 @@ handler cat;
 int exec_buildin(const char* file,void* args[],int *is_buildin);
 
 struct cmd;
-void runcmd(struct cmd* cmd);
+int runcmd(struct cmd* cmd);
 struct cmd* parsecmd(char *s);
 #endif//__SHELL_H
