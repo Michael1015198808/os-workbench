@@ -4,7 +4,7 @@
 int mysh_help(void *args[]){
     for(int i=0;args[i];++i){
         const char* const buildin_help(void*);
-        void* help=buildin_help(args[i]);
+        void* help=(void*)buildin_help(args[i]);
         if(help){
             std_write(help);
         }else{
