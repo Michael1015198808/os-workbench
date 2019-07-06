@@ -75,7 +75,7 @@ int runcmd(struct cmd *cmd){
     (void)rcmd;
 
     if(cmd == 0)
-        return;
+        return -1;
 
     switch(cmd->type){
         default:
@@ -84,7 +84,7 @@ int runcmd(struct cmd *cmd){
         case EXEC:
             ecmd = (struct execcmd*)cmd;
             if(ecmd->argv[0] == 0)
-                return;
+                return -1;
             return vfs->exec(ecmd->argv[0], (void**)(ecmd->argv));
 
         case REDIR:
@@ -147,7 +147,8 @@ int runcmd(struct cmd *cmd){
             break;
             */
         }
-    return;
+    Assert(0,"Should not reach here!\n");
+    return -1;
 }
 
 void
