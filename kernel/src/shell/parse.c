@@ -11,6 +11,11 @@
 #define LIST  4
 #define BACK  5
 
+#define O_RDONLY TODO()
+#define O_WRONLY TODO()
+#define O_CREATE TODO()
+
+
 #define MAXARGS 10
 
 struct cmd {
@@ -54,80 +59,87 @@ void panic(char*);
 struct cmd *parsecmd(char*);
 
 // Execute cmd.  Never returns.
-void
-runcmd(struct cmd *cmd)
-{
-  int p[2];
-  struct backcmd *bcmd;
-  struct execcmd *ecmd;
-  struct listcmd *lcmd;
-  struct pipecmd *pcmd;
-  struct redircmd *rcmd;
+void runcmd(struct cmd *cmd){
+    int p[2];
+    struct backcmd *bcmd;
+    struct execcmd *ecmd;
+    struct listcmd *lcmd;
+    struct pipecmd *pcmd;
+    struct redircmd *rcmd;
 
-  if(cmd == 0)
-    exit();
+    if(cmd == 0)
+        return;
 
-  switch(cmd->type){
-  default:
-    panic("command parsing failed!\n");
+    switch(cmd->type){
+        default:
+            panic("command parsing failed!\n");
 
-  case EXEC:
-    ecmd = (struct execcmd*)cmd;
-    if(ecmd->argv[0] == 0)
-      exit();
-    vfs->exec(ecmd->argv[0], ecmd->argv);
-    fprintf(2, "exec %s failed\n", ecmd->argv[0]);
-    break;
+        case EXEC:
+            ecmd = (struct execcmd*)cmd;
+            if(ecmd->argv[0] == 0)
+                return;
+            vfs->exec(ecmd->argv[0], ecmd->argv);
+            fprintf(2, "exec %s failed\n", ecmd->argv[0]);
+            break;
 
-  case REDIR:
-    rcmd = (struct redircmd*)cmd;
-    close(rcmd->fd);
-    if(open(rcmd->file, rcmd->mode) < 0){
-      fprintf(2, "open %s failed\n", rcmd->file);
-      exit();
-    }
-    runcmd(rcmd->cmd);
-    break;
+        case REDIR:
+            rcmd = (struct redircmd*)cmd;
+            close(rcmd->fd);
+            if(open(rcmd->file, rcmd->mode) < 0){
+                fprintf(2, "open %s failed\n", rcmd->file);
+                return;
+            }
+            runcmd(rcmd->cmd);
+            break;
 
-  case LIST:
-    lcmd = (struct listcmd*)cmd;
-    if(fork1() == 0)
-      runcmd(lcmd->left);
-    wait();
-    runcmd(lcmd->right);
-    break;
+        case LIST:
+            TODO();
+            /*
+            lcmd = (struct listcmd*)cmd;
+            if(fork1() == 0)
+            runcmd(lcmd->left);
+            wait();
+            runcmd(lcmd->right);
+            break;
+            */
 
-  case PIPE:
-    pcmd = (struct pipecmd*)cmd;
-    if(pipe(p) < 0)
-      panic("pipe");
-    if(fork1() == 0){
-      close(1);
-      dup(p[1]);
-      close(p[0]);
-      close(p[1]);
-      runcmd(pcmd->left);
-    }
-    if(fork1() == 0){
-      close(0);
-      dup(p[0]);
-      close(p[0]);
-      close(p[1]);
-      runcmd(pcmd->right);
-    }
-    close(p[0]);
-    close(p[1]);
-    wait();
-    wait();
-    break;
+        case PIPE:
+            TODO();
+            /*
+            pcmd = (struct pipecmd*)cmd;
+            if(pipe(p) < 0)
+            panic("pipe");
+            if(fork1() == 0){
+                close(1);
+                dup(p[1]);
+                close(p[0]);
+                close(p[1]);
+                runcmd(pcmd->left);
+            }
+            if(fork1() == 0){
+                close(0);
+                dup(p[0]);
+                close(p[0]);
+                close(p[1]);
+                runcmd(pcmd->right);
+            }
+            close(p[0]);
+            close(p[1]);
+            wait();
+            wait();
+            break;
+            */
 
-  case BACK:
-    bcmd = (struct backcmd*)cmd;
-    if(fork1() == 0)
-      runcmd(bcmd->cmd);
-    break;
-  }
-  exit();
+        case BACK:
+            TODO();
+            /*
+            bcmd = (struct backcmd*)cmd;
+            if(fork1() == 0)
+            runcmd(bcmd->cmd);
+            break;
+            */
+        }
+    return;
 }
 
 int
