@@ -4,7 +4,7 @@
 typedef int handler(void*[]);
 #define declare(function) \
     handler(function); \
-    const char* const help_##_function
+    const char* const help_##_function;
 declare(echo);
 declare(cat);
 
