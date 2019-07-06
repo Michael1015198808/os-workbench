@@ -47,8 +47,9 @@ void mysh(void *name) {
         char input[128], prompt[128];
         void *args[10];
         sprintf(prompt, "(%s) $ ", name);
-        vfs->write(1,info(prompt));
+        vfs->write(1,winfo(prompt));
         //tty_write(tty,prompt);
+        int nread=vfs->read(rinfo(input));
         int nread = tty->ops->read(tty, 0, input, sizeof(input));
         
         command_handler(input,args,nread);

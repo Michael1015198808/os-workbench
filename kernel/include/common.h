@@ -17,8 +17,11 @@
 
 #include <my_trace.h>
 
-#define info(string) \
+#define winfo(string) \
     (string), strlen((string))
+
+#define rinfo(string) \
+    (string), sizeof((string))
 
 #define TODO() Assert(0,"Haven't be realized!\n");
 #define MACRO_VALUE(_arg)     #_arg
