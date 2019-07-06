@@ -7,9 +7,9 @@ int echo(void *args[],device_t *dev){
         vfs->write(0,info(args[i]));
         ++i;
         if(args[i]){
-            vfs->write(0,info(" ");
+            vfs->write(0,info(" "));
         }else{
-            vfs->write(0,info("\n");
+            vfs->write(0,info("\n"));
             return 0;
         }
     }
