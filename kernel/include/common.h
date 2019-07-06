@@ -7,9 +7,6 @@
 #include <limits.h>
 #include <stdint.h>
 
-#include <devices.h>
-#include <vfs.h>
-#include <fs.h>
 
 #ifndef MAX_CPU
     #define MAX_CPU 8
