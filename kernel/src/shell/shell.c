@@ -24,7 +24,7 @@ void mysh(void *name) {
         int cpu_id=_cpu();
         task_t* son=pmm->alloc(sizeof(task_t));
         for(int i=0;i<3;++i){
-            son->fd[i]=current->fd[i];
+            son->fd[i]=currents[cpu_id]->fd[i];
         }
         intr_open();
         kmt->create(son,"fork-and-run",fork_and_run,input);

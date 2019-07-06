@@ -65,7 +65,6 @@ typedef struct task{
 #endif
     vfile_t* fd[FD_NUM];
 }task_t;
-#define current currents[cpu_id]
 extern task_t* currents[MAX_CPU];
 
 typedef struct spinlock{
