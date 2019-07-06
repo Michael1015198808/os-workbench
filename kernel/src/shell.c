@@ -4,8 +4,8 @@
 #include <devices.h>
 #include <buildin.h>
 
-#define tty_write(tty, string) \
-    tty->ops->write(tty, 0, string, strlen(string))
+#define info(string) \
+    (string), strlen((string))
 
 #define pair(command) \
     {#command, command}
@@ -33,14 +33,16 @@ static void inline command_handler(char *input,void *args[10],int nread){
     }while(0);
 }
 void mysh(void *name) {
+    Assert(vfs->open("tty",7)!=0,"Error on fd");
+    Assert(vfs->open("tty",7)!=1,"Error on fd");
     device_t *tty = dev_lookup(name);
     while (1) {
         char input[128], prompt[128];
         void *args[10];
         sprintf(prompt, "(%s) $ ", name);
-        tty_write(tty,prompt);
+        vfs->write(1,info(prompt));
         //tty->ops->write(tty, 0, prompt, strlen(prompt)+1);
-        int nread = tty->ops->read(tty, 0, input, sizeof(input));
+        int nread = vfs->read(0,info(prompt));
         input[nread-1]='\0';
 
         command_handler(input,args,nread);
