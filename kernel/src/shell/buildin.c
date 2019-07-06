@@ -26,7 +26,7 @@ int exec_buildin(const char* file,void* args[],int *is_buildin){
             *is_buildin=0;
             break;
         }else
-        if(!strcmp(input,buildin[i].name)){
+        if(!strcmp(file,buildin[i].name)){
             *is_buildin=1;
             buildin[i].binary(args);
             break;
