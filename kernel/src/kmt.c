@@ -176,7 +176,7 @@ void kmt_teardown(task_t *task){
     for(int i=0;i<40;++i){
         if(tasks[i]==task){
             pthread_mutex_lock(&free_task_lk);
-            free_task_id[free_task_id++]=i;
+            free_task_id[free_task_id_cnt++]=i;
             pthread_mutex_unlock(&free_task_lk);
         }
     }
