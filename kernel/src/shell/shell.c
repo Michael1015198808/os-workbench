@@ -18,6 +18,6 @@ void mysh(void *name) {
         sprintf(prompt, "(%s) $ ", name);
         std_write(prompt);
         int nread=std_read(input);
-        runcmd(parsecmd(buf));
+        runcmd(parsecmd(input));
     }
 }
