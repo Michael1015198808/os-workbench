@@ -17,7 +17,7 @@ void mysh(void *name) {
         void *args[10];
         sprintf(prompt, "(%s) $ ", name);
         std_write(prompt);
-        int nread=std_read(input);
+        std_read(input);
         runcmd(parsecmd(input));
     }
 }
