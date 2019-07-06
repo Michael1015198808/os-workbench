@@ -30,7 +30,7 @@ int mysh_wc(char *argv[]){
     int cnt[3]={};
 
     if(argv[1]){
-        for(int i = 1; i < argc; i++){
+        for(int i = 1;argv[i]; i++){
             if((fd=vfs->open(argv[i],0))<0){
                 printf(1, "wc: cannot open %s\n", argv[i]);
                 return -1;
