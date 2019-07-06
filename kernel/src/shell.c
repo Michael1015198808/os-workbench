@@ -36,13 +36,15 @@ void mysh(void *name) {
     int stdin=vfs->open(name,7);
     Assert(stdin==0,"Error on fd-stdin:%d",stdin);
     Assert(vfs->open(name,7)==1,"Error on fd");
+    device_t* tty=dev_lookup(name);
     while (1) {
         char input[128], prompt[128];
         void *args[10];
         sprintf(prompt, "(%s) $ ", name);
         vfs->write(1,info(prompt));
         //tty->ops->write(tty, 0, prompt, strlen(prompt)+1);
-        int nread = vfs->read(0,info(input));
+        //int nread = vfs->read(0,info(input));
+        int nread = tty->ops->read(tty,0,info(input));
         input[nread-1]='\0';
 
         command_handler(input,args,nread);
