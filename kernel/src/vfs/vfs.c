@@ -43,7 +43,7 @@ static int vfs_open(const char *path, int flags){
 }
 static inline ssize_t vfs_read_real(int fd, void* buf,size_t nbyte){
     int cpu_id=_cpu();
-    switch(current->fd[fd]){
+    switch(current->fd[fd].type){
         case VFILE_DEV:
             {
                 device_t* dev=(device_t*)current->fd[fd].actual;
@@ -69,7 +69,7 @@ static ssize_t vfs_read(int fd,void *buf,size_t nbyte){
 }
 static inline ssize_t vfs_write_real(int fd,void *buf,size_t nbyte){
     int cpu_id=_cpu();
-    switch(current->fd[fd]){
+    switch(current->fd[fd].type){
         case VFILE_DEV:
             {
                 device_t *dev=current->fd[fd].actual;
