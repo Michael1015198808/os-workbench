@@ -58,8 +58,14 @@ static inline ssize_t vfs_read_real(int fd, void* buf,size_t nbyte){
         case VFILE_PROC:
             TODO();
             break;
+        case VFILE_MEM:
+            memcpy(buf,current->fd[fd]->actual,nbyte);
+            current->fd[fd]->actual+=nbyte;
+            return nbyte;
+        case VFILE_NULL:
+            return nbyte;
         default:
-            Assert(0,"Unknown fd");
+            Assert(0,"Unknown fd type:%d\n",current->fd[fd]->type);
             break;
     }
 }
@@ -91,7 +97,7 @@ static inline ssize_t vfs_write_real(int fd,void *buf,size_t nbyte){
         case VFILE_NULL:
             return nbyte;
         default:
-            Assert(0,"Unknown fd");
+            Assert(0,"Unknown fd type:%d\n",current->fd[fd]->type);
             break;
     }
 }
