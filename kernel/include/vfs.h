@@ -7,6 +7,7 @@
 #define STDIN  0
 #define STDOUT 1
 #define STDERR 2
+
 struct filesystem;
 typedef struct filesystem filesystem;
 
@@ -25,6 +26,9 @@ typedef struct {
   off_t (*lseek)(int fd, off_t offset, int whence);
   int (*close)(int fd);
 } MODULE(vfs);
+
+ssize_t std_read(void *buf);
+ssize_t std_write(void *buf);
 
 #define VFILE_FILE 1
 #define VFILE_DEV 2
