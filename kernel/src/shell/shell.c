@@ -14,7 +14,6 @@ void mysh(void *name) {
     }
     while (1) {
         char input[0x100], prompt[0x100];
-        void *args[10];
         sprintf(prompt, "(%s) $ ", name);
         std_write(prompt);
         std_read(input);
