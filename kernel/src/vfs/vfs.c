@@ -11,7 +11,7 @@ static vfile_t* get_fd(void){
 }
 static int new_fd_num(int cpu_id){
     for(int i=0;i<FD_NUM;++i){
-        if(!(current->fd[i].type)){
+        if(!(current->fd[i])){
             return i;
         }
     }
@@ -22,17 +22,18 @@ static inline int vfs_open_real(const char *path,int flags){
     device_t *dev=dev_lookup(path);
     int fd=new_fd_num(cpu_id);
     Assert(fd!=-1,"No more file descripter!");//Or return -1;
+    current->fd[fd]=pmm->alloc(sizeof(vfile_t));
     if(dev){
-        current->fd[fd].type=VFILE_DEV;
-        current->fd[fd].actual=dev;
+        current->fd[fd]->type=VFILE_DEV;
+        current->fd[fd]->actual=dev;
         return fd;
     }
     if(1){
-        current->fd[fd].type=VFILE_FILE;
+        current->fd[fd]->type=VFILE_FILE;
         TODO();
     }
     if(1){
-        current->fd[fd].type=VFILE_PROC;
+        current->fd[fd]->type=VFILE_PROC;
         TODO();
     }
 }
@@ -44,10 +45,10 @@ static int vfs_open(const char *path, int flags){
 }
 static inline ssize_t vfs_read_real(int fd, void* buf,size_t nbyte){
     int cpu_id=_cpu();
-    switch(current->fd[fd].type){
+    switch(current->fd[fd]->type){
         case VFILE_DEV:
             {
-                device_t* dev=(device_t*)current->fd[fd].actual;
+                device_t* dev=(device_t*)current->fd[fd]->actual;
                 return dev->ops->read(dev,0,buf,nbyte);
             }
             break;
@@ -70,10 +71,10 @@ static ssize_t vfs_read(int fd,void *buf,size_t nbyte){
 }
 static inline ssize_t vfs_write_real(int fd,void *buf,size_t nbyte){
     int cpu_id=_cpu();
-    switch(current->fd[fd].type){
+    switch(current->fd[fd]->type){
         case VFILE_DEV:
             {
-                device_t *dev=current->fd[fd].actual;
+                device_t *dev=current->fd[fd]->actual;
                 return dev->ops->write(dev,0,buf,nbyte);
             }
             break;
