@@ -119,7 +119,7 @@ int runcmd(struct cmd *cmd){
             int cpu_id=_cpu();
             task_t* current=currents[cpu_id];
             intr_open();
-            char buf[0x100];//Manually 
+            char buf[0x100]={};//Manually 
             vfile_t *backup[3];
             for(int i=0;i<3;++i){
                 backup[i]=current->fd[i];
