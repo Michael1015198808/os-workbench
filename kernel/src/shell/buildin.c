@@ -24,12 +24,11 @@ int exec_buildin(const char* file,void* args[],int *is_buildin){
     for(int i=0;;++i){
         if(i==LEN(buildin)){
             *is_buildin=0;
-            break;
+            return 0;
         }else
         if(!strcmp(file,buildin[i].name)){
             *is_buildin=1;
-            buildin[i].binary(args);
-            break;
+            return buildin[i].binary(args);
         }
     }
 }
