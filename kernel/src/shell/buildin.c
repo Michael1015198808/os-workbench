@@ -21,7 +21,9 @@ static struct Command{
 }buildin[]={
     pair(echo),
     pair(cat),
-    pair(help)
+    pair(help),
+    pair(cd),
+    pair(wc),
 };
 
 int exec_buildin(const char* file,void* args[],int *is_buildin){
