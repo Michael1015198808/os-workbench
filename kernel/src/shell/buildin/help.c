@@ -2,7 +2,7 @@
 #include <devices.h>
 
 int mysh_help(void *args[]){
-    for(int i=0;args[i];++i){
+    for(int i=1;args[i];++i){
         const char* const buildin_help(void*);
         void* help=(void*)buildin_help(args[i]);
         if(help){
@@ -12,6 +12,7 @@ int mysh_help(void *args[]){
             std_write(args[i]);
             std_write("'");
         }
+        std_write("\n");
     }
     return 0;
 }
