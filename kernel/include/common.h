@@ -17,7 +17,7 @@
 
 #include <my_trace.h>
 
-#define TODO Assert(0,"Haven't be realized!\n");
+#define TODO() Assert(0,"Haven't be realized!\n");
 #define MACRO_VALUE(_arg)     #_arg
 #define MACRO_SELF(_arg)      _arg
 #define MACRO_CONCAT_REAL(_arg1,_arg2) _arg1 ## _arg2
