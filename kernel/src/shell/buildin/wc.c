@@ -40,7 +40,7 @@ int mysh_wc(char *argv[]){
                 return -1;
             }
             single_wc(fd, argv[i],cnt);
-            close(fd);
+            vfs->close(fd);
         }
         for(int i=0;i<3;++i){
             sprintf(info,"%4d ",cnt[i]);
