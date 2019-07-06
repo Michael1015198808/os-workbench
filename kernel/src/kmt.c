@@ -22,7 +22,6 @@ int tasks_idx=0,tasks_cnt=0;
  *   kmt_context_save
  *   kmt_context_switch
  */
-#define current currents[cpu_id]
 #define last lasts[cpu_id]
 
 void show_sem_list(sem_t *sem){
