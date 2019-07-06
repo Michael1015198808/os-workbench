@@ -33,7 +33,8 @@ static void inline command_handler(char *input,void *args[10],int nread){
     }while(0);
 }
 void mysh(void *name) {
-    Assert(vfs->open(name,7)!=0,"Error on fd");
+    int stdin=vfs->open(name,7);
+    Assert(stdin!=0,"Error on fd-stdin:%d",stdin);
     Assert(vfs->open(name,7)!=1,"Error on fd");
     while (1) {
         char input[128], prompt[128];
