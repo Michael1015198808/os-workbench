@@ -8,6 +8,7 @@ static void fork_and_run(void *input){
         runcmd(parsecmd((char*)input));
 }
 void mysh(void *name) {
+    char pwd[0x100]="/";
     {
         for(int i=0;i<3;++i){
             char *std_name[3]={"stdin","stdout","stderr"};
@@ -17,7 +18,7 @@ void mysh(void *name) {
     }
     while (1) {
         char input[0x100], prompt[0x100];
-        sprintf(prompt, "(%s) $ ", name);
+        sprintf(prompt, "(%s) [%s] $ ", name,pwd);
         std_write(prompt);
         int nread=std_read(input);
         input[nread-1]='\0';
