@@ -41,6 +41,8 @@
 #define STK_SZ ((1<<12)-64)
 volatile int ncli[MAX_CPU],intena[MAX_CPU];
 
+typedef void(*task_fun)(void*)
+
 int fprintf(int fd, const char *fmt, ...);
 void exit(void);
 

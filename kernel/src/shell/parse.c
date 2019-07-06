@@ -129,7 +129,7 @@ int runcmd(struct cmd *cmd){
             current->fd[1]->type    =VFILE_MEM;
             current->fd[1]->actual  =buf;
             task_t* son=pmm->alloc(sizeof(task_t));
-            kmt->create(son,"fork-and-run",runcmd,pcmd->left);
+            kmt->create(son,"fork-and-run",(task_fun)runcmd,pcmd->left);
             kmt->teardown(son);
             current->fd[0]=pmm->alloc(sizeof(vfile_t));
             current->fd[0]->type    =VFILE_MEM;
