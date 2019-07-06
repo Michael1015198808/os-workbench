@@ -29,7 +29,7 @@ void mysh(void *name) {
             kmt->teardown(son);
         }else{
             void* cd_args[]={pwd,input};
-            mysh_cd();
+            mysh_cd(cd_args);
         }
     }
 }
