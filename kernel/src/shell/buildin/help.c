@@ -2,6 +2,10 @@
 #include <devices.h>
 
 int mysh_help(void *args[]){
+    if(!args[1]){
+        std_write("Type `help name' to find out more about the function `name'.");
+        return 0;
+    }
     for(int i=1;args[i];++i){
         const char* const buildin_help(void*);
         void* help=(void*)buildin_help(args[i]);
