@@ -57,7 +57,6 @@ void mysh(void *name) {
         for(int i=0;args[i];++i){
             printf("args[%d]:%s\n",i,args[i]);
         }
-        /*
         for(int i=0;;++i){
             if(i==LEN(buildin)){
                 char warn[]="mysh: command not found: ";
@@ -67,10 +66,9 @@ void mysh(void *name) {
                 break;
             }else
             if(!strcmp(input,buildin[i].name)){
-                buildin[i].binary(args,tty);
+                buildin[i].binary(args);
                 break;
             }
         }
-        */
     }
 }
