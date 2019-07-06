@@ -18,7 +18,7 @@ int cat(void *args[]){
             if(strcmp(args[i],"-")){
                 cat_from_stdin(buf);
             }else{
-                int fd=vfs->open(args[i]),nread=0;
+                int fd=vfs->open(args[i],7),nread=0;
                 do{
                     nread=vfs->read(fd,buf,sizeof(buf));
                     vfs->write(STDOUT,buf,nread);
