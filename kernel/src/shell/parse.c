@@ -135,7 +135,7 @@ int runcmd(struct cmd *cmd){
             current->fd[0]->type    =VFILE_MEM;
             current->fd[0]->actual  =buf;
             for(int i=1;i<3;++i){
-                current->fd[i]=bakcup[i];
+                current->fd[i]=backup[i];
             }
             runcmd(pcmd->right);
             break;
