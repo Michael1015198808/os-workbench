@@ -115,6 +115,12 @@ int vfs_link(const char *oldpath, const char *newpath){
 int vfs_unlink(const char *path){
     TODO();
 }
+off_t vfs_lseek(int fd,off_t offset, int whence){
+    TODO();
+}
+int vfs_close(int fd){
+    TODO();
+}
 
 MODULE_DEF(vfs){
   .init     =vfs_init,
