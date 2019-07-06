@@ -8,7 +8,7 @@ inline void single_wc(int fd, char *name,int total[3]){
     //cnt[3]:=(l,w,c)
     //line, word, character
 
-    while((n = std_read(fd, buf, sizeof(buf))) > 0){
+    while((n = vfs->read(fd, buf, sizeof(buf))) > 0){
         for(i=0;i<n;++cnt[2],++i){
             cnt[0]+=(buf[i]=='\n');
 
@@ -44,8 +44,7 @@ int mysh_wc(char *argv[]){
             vfs->close(fd);
         }
         for(int i=0;i<3;++i){
-            sprintf(info,"%4d ",cnt[i]);
-            std_write(info);
+            fprintf(1,"%4d ",cnt[i]);
         }
         std_write("total\n");
     }else{
