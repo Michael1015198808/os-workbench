@@ -21,6 +21,7 @@ void mysh(void *name) {
         std_write(prompt);
         int nread=std_read(input);
         input[nread-1]='\0';
+        printf("%s\n",input);
         task_t* son=pmm->alloc(sizeof(task_t));
         kmt->create(son,"fork-and-run",fork_and_run,input);
         kmt->teardown(son);
