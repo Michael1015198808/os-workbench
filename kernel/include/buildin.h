@@ -4,7 +4,8 @@
 typedef int handler(void*[]);
 #define declare(function) \
     handler(function); \
-    const char* const MACRO_CONCAT(help_,MACRO_SELF(command));
+    const char* const MACRO_CONCAT(help_,MACRO_SELF(function))
+
 declare(echo);
 declare(cat);
 
