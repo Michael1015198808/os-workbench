@@ -3,8 +3,8 @@
 const char *warn="Haven't realized!\n";
 int cat(void *args[],device_t *dev){
     char buf[0x200];
-    while(1){
-        int nread=vfs->read(STDIN,buf,sizeof(buf));
+    int nread=0;
+    while(nread=vfs->read(STDIN,buf,sizeof(buf))){
         buf[nread]='\0';
         std_write(buf);
     }

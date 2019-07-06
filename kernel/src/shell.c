@@ -57,10 +57,9 @@ void mysh(void *name) {
         }
         for(int i=0;;++i){
             if(i==LEN(buildin)){
-                char warn[]="mysh: command not found: ";
-                std_write(warn);
                 std_write(args[0]);
-                std_write("\n");
+                char warn[]=": command not found\n";
+                std_write(warn);
                 break;
             }else
             if(!strcmp(input,buildin[i].name)){

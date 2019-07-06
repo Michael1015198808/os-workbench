@@ -252,7 +252,14 @@ void tty_task(void *arg) {
         }
       }
       if (ev.ctrl) {
-        if (ev.data == 'c') printf("Ctrl - c\n");
+          switch(ev.data){
+            case 'c':
+                printf("Ctrl - c\n");
+                break;
+            case 'd':
+                ttydev->ops->write(ttydev, 0, &"\0", 1);
+                break;
+          }
       }
       if (!ev.ctrl && !ev.alt) {
         char ch = ev.data;
