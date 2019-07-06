@@ -19,7 +19,8 @@ void mysh(void *name) {
         char input[0x100], prompt[0x100];
         sprintf(prompt, "(%s) $ ", name);
         std_write(prompt);
-        std_read(input);
+        int nread=std_read(input);
+        input[nread-1]='\0';
         task_t* son=pmm->alloc(sizeof(task_t));
         kmt->create(son,"fork-and-run",fork_and_run,input);
         kmt->teardown(son);
