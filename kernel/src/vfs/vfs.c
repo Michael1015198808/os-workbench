@@ -85,11 +85,9 @@ static inline ssize_t vfs_write_real(int fd,void *buf,size_t nbyte){
             TODO();
             break;
         case VFILE_MEM:
-            {
-                int ret=memcpy(current->fd[fd]->actual,buf,nbyte);
-                current->fd[fd]->actual+=ret;
-                return ret;
-            }
+            memcpy(current->fd[fd]->actual,buf,nbyte);
+            current->fd[fd]->actual+=nbyte;
+            return nbyte;
         case VFILE_NULL:
             return nbyte;
         default:
