@@ -18,7 +18,7 @@ static struct Command{
     pair(cat)
 };
 static void inline command_handler(char *input,void *args[10],int nread){
-    (void)buildin;
+    input[nread-1]='\0';
     do{
         args[0]=input;
         int i=1,j=1;
