@@ -24,7 +24,7 @@ inline void single_wc(int fd, char *name,int total[3]){
         vfs->write(2, winfo("wc: read error\n"));
         exit();
     }
-    std_write(1, "%4d %4d %4d %s\n", l, w, c, name);
+    fprintf(1, "%4d %4d %4d %s\n", cnt[0], cnt[1], cnt[2], name);
     for(int i=0;i<3;++i){
         total[i]+=cnt[i];
     }
