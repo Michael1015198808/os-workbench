@@ -20,7 +20,8 @@ static struct Command{
     const char *const help;
 }buildin[]={
     pair(echo),
-    pair(cat)
+    pair(cat),
+    pair(help)
 };
 
 int exec_buildin(const char* file,void* args[],int *is_buildin){
