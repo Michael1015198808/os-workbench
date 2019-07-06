@@ -4,6 +4,9 @@
 #include <devices.h>
 #include <shell.h>
 
+#define IN_BUILDIN_C
+#include <help.h>
+
 #define pair(command) \
     { \
         #command, \
