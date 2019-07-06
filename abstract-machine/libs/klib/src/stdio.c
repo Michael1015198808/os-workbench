@@ -13,9 +13,9 @@ int puts(const char *s){
 }
 int printf(const char *fmt, ...) {
     va_list ap;
-    va_start(ap,fmt);
 #define MAX 200
     char buf[MAX];
+    va_start(ap,fmt);
     int i,n=vsnprintf(buf,-1,fmt,ap);
     assert(n<MAX);
 #undef MAX
@@ -37,13 +37,15 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
 int sprintf(char *out, const char *fmt, ...) {
     va_list ap;
     va_start(ap,fmt);
-    return vsnprintf(out,-1,fmt,ap);
+    int ret=vsnprintf(out,-1,fmt,ap);
+    return ret;
 }
 
 int snprintf(char *out, size_t n, const char *fmt, ...) {
     va_list ap;
     va_start(ap,fmt);
-    return vsnprintf(out,n,fmt,ap);
+    int ret=vsnprintf(out,n,fmt,ap);
+    return ret;
 }
 //Added by Michael
 //Should work as an assistant.

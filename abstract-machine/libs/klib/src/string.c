@@ -100,4 +100,18 @@ void *memmove(void *dest, const void *src, size_t n){
     pthread_mutex_unlock(&lk);
     return dest;
 }
+
+//Return *s in s such that *s == c
+//If no such *s exists, return NULL
+char* strchr(const char *s, char c){
+    while(*s){
+        if(*s == c){
+            return (char*)s;
+        }else{
+            ++s;
+        }
+    }
+    return NULL;
+}
+
 #endif
