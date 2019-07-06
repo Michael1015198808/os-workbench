@@ -4,6 +4,9 @@
 #include <devices.h>
 #include <buildin.h>
 
+#define tty_write(tty, string) \
+    tty->ops->write(tty, 0, string, strlen(string))
+
 #define info(string) \
     (string), strlen((string))
 
