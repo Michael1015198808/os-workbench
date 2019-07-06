@@ -6,4 +6,5 @@ int mysh_cd(void* args[]){
     char* input=args[1]+2;
     (void)pwd;
     (void)input;
+    return -1;
 }
