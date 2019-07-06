@@ -1,4 +1,4 @@
-typedef const char* const help_info;
+typedef char* help_info;
 help_info help_echo =
     "Write arguments to the standard output";
 
