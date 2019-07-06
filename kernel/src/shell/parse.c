@@ -123,7 +123,7 @@ int runcmd(struct cmd *cmd){
             vfile_t *backup[3];
             for(int i=0;i<3;++i){
                 backup[i]=current->fd[i];
-                current->fd[i]=malloc(sizeof(vfile_t));
+                current->fd[i]=pmm->alloc(sizeof(vfile_t));
                 current->fd[i]->type=VFILE_NULL;
             }
             current->fd[1]->type    =VFILE_MEM;
@@ -131,7 +131,7 @@ int runcmd(struct cmd *cmd){
             task_t* son=pmm->alloc(sizeof(task_t));
             kmt->create(son,"fork-and-run",runcmd,pcmd->left);
             kmt->teardown(son);
-            current->fd[0]=malloc(sizeof(vfile_t));
+            current->fd[0]=pmm->alloc(sizeof(vfile_t));
             current->fd[0]->type    =VFILE_MEM;
             current->fd[0]->actual  =buf;
             for(int i=1;i<3;++i){
