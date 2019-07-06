@@ -10,7 +10,7 @@
 #define pair(command) \
     { \
         #command, \
-        mysh_command,  \
+        mysh_##command,  \
         help_##command \
     }
 
