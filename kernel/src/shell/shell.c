@@ -23,8 +23,13 @@ void mysh(void *name) {
         int nread=std_read(input);
         input[nread-1]='\0';
         printf("%s\n",input);
-        task_t* son=pmm->alloc(sizeof(task_t));
-        kmt->create(son,"fork-and-run",fork_and_run,input);
-        kmt->teardown(son);
+        if(strncmp("cd",input,2)){
+            task_t* son=pmm->alloc(sizeof(task_t));
+            kmt->create(son,"fork-and-run",fork_and_run,input);
+            kmt->teardown(son);
+        }else{
+            void* cd_args[]={pwd,input};
+            mysh_cd();
+        }
     }
 }

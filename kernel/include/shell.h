@@ -6,7 +6,7 @@
 handler(echo);
 handler(cat);
 handler(help);
-handler(test);
+handler(cd);
 
 int exec_buildin(const char* file,void* args[],int *is_buildin);
 
