@@ -8,6 +8,8 @@ typedef int handler(void*[]);
 
 handler echo;
 handler cat;
+handler help;
+handler test;
 
 int exec_buildin(const char* file,void* args[],int *is_buildin);
 
