@@ -138,4 +138,4 @@ MODULE_DEF(vfs){
   .write    =vfs_write,
   .lseek    =vfs_lseek,
   .close    =vfs_close
-}
+};
