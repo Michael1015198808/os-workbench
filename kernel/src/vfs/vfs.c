@@ -59,9 +59,12 @@ static inline ssize_t vfs_read_real(int fd, void* buf,size_t nbyte){
             TODO();
             break;
         case VFILE_MEM:
-            memcpy(buf,current->fd[fd]->actual,nbyte);
-            current->fd[fd]->actual+=nbyte;
-            return nbyte;
+            {
+            strncpy(buf,current->fd[fd]->actual,nbyte);
+            int ret=strlen(buf);
+            current->fd[fd]->actual+=ret;
+            return ret;
+            }
         case VFILE_NULL:
             return nbyte;
         default:
