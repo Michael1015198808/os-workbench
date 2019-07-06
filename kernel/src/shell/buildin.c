@@ -10,7 +10,7 @@
 #define pair(command) \
     { \
         #command, \
-        command,  \
+        mysh_command,  \
         help_##command \
     }
 
@@ -32,6 +32,17 @@ int exec_buildin(const char* file,void* args[],int *is_buildin){
         if(!strcmp(file,buildin[i].name)){
             *is_buildin=1;
             return buildin[i].binary(args);
+        }
+    }
+}
+const char* const buildin_help(void* arg){
+    const char* const cmd=arg;
+    for(int i=0;;++i){
+        if(i==LEN(buildin)){
+            return NULL;
+        }else
+        if(!strcmp(file,buildin[i].name)){
+            return buildin[i].help;
         }
     }
 }

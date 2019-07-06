@@ -11,7 +11,7 @@ static inline void cat_from_stdin(char buf[0x200]){
     }
 }
 
-int cat(void *args[]){
+int mysh_cat(void *args[]){
     char buf[0x200];
     if(args[1]){
         for(int i=1;args[i];++i){

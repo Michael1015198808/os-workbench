@@ -1,7 +1,7 @@
 #include <klib.h>
 #include <devices.h>
 
-int echo(void *args[]){
+int mysh_echo(void *args[]){
     int i=1;
     while(1){
         std_write(args[i]);

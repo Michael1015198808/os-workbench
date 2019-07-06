@@ -12,7 +12,7 @@
 #ifndef MAX_CPU
     #define MAX_CPU 8
 #endif
-//#define NO_TEST
+#define NO_TEST
 #include <test.h>
 
 #include <my_trace.h>
