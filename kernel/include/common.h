@@ -59,7 +59,7 @@ typedef struct task{
 #ifdef TASK_FENCE
     uint32_t fence2[4];
 #endif
-    vfile_t fd[FD_NUM];
+    vfile_t* fd[FD_NUM];
 }task_t;
 extern task_t* currents[MAX_CPU];
 

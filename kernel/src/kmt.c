@@ -148,7 +148,7 @@ int kmt_create(task_t *task, const char *name, void (*entry)(void*), void *arg){
     task->ncli=0;
     copy_name(task->name,name);
     for(int i=0;i<FD_NUM;++i){
-        task->fd[i].type=0;
+        task->fd[i]=NULL;
     }
 
     task->context = *_kcontext(

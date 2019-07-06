@@ -1,5 +1,6 @@
 #include <common.h>
 #include <devices.h>
+#include <shell.h>
 
 #define current currents[cpu_id]
 static vfile_t* get_fd(void){
@@ -87,11 +88,22 @@ static inline ssize_t vfs_write_real(int fd,void *buf,size_t nbyte){
             break;
     }
 }
-static inline ssize_t vfs_write(int fd,void* buf,size_t nbyte){
+static ssize_t vfs_write(int fd,void* buf,size_t nbyte){
     intr_close();
     ssize_t ret=vfs_write_real( fd,buf,nbyte);
     intr_open();
     return ret;
+}
+static int vfs_exec(const char* file,void *args[]){
+    int ret,is_buildin;
+    ret=exec_buildin(file,args,&is_buildin);
+    if(is_buildin){
+        return ret;
+    }else{
+        std_write(args[0]);
+        char warn[]=": command not found\n";
+        std_write(warn);
+    }
 }
 void vfs_init(void){
     TODO();
@@ -136,6 +148,7 @@ MODULE_DEF(vfs){
   .open     =vfs_open,
   .read     =vfs_read,
   .write    =vfs_write,
+  .exec     =vfs_exec,
   .lseek    =vfs_lseek,
   .close    =vfs_close
 };
