@@ -4,11 +4,15 @@
 #include <devices.h>
 #include <buildin.h>
 
+#define info(string) \
+    (string),(strlen(string))
+
 #define tty_write(tty, string) \
     tty->ops->write(tty, 0, string, strlen(string))
 
 #define pair(command) \
     {#command, command}
+
 static struct Command{
     const char *name;
     int(*const binary)(void*[]);
@@ -46,7 +50,7 @@ void mysh(void *name) {
         char input[128], prompt[128];
         void *args[10];
         sprintf(prompt, "(%s) $ ", name);
-        vfs->write(1,prompt);
+        vfs->write(1,info(prompt));
         //tty_write(tty,prompt);
         int nread = tty->ops->read(tty, 0, input, sizeof(input));
         
