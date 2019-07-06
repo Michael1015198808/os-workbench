@@ -11,7 +11,7 @@
     {#command, command}
 static struct Command{
     const char *name;
-    int(*const binary)(void*[],device_t*);
+    int(*const binary)(void*[]);
 }buildin[]={
     pair(echo),
     pair(cat)
