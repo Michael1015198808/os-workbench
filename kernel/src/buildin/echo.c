@@ -4,12 +4,12 @@
 int echo(void *args[],device_t *dev){
     int i=1;
     while(1){
-        vfs->write(0,info(args[i]));
+        vfs->write(0,winfo(args[i]));
         ++i;
         if(args[i]){
-            vfs->write(0,info(" "));
+            vfs->write(0,winfo(" "));
         }else{
-            vfs->write(0,info("\n"));
+            vfs->write(0,winfo("\n"));
             return 0;
         }
     }
