@@ -9,7 +9,7 @@ static vfile_t* get_fd(void){
 }
 static int new_fd_num(int cpu_id){
     for(int i=0;i<FD_NUM;++i){
-        if(!current->fd[i]){
+        if(!(current->fd[i])){
             return i;
         }
     }
