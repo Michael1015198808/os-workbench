@@ -41,7 +41,7 @@ const char* const buildin_help(void* arg){
         if(i==LEN(buildin)){
             return NULL;
         }else
-        if(!strcmp(file,buildin[i].name)){
+        if(!strcmp(arg,buildin[i].name)){
             return buildin[i].help;
         }
     }
