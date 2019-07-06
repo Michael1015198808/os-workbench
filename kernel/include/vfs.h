@@ -1,14 +1,16 @@
 #ifndef __VFS_H
 #define __VFS_H
 
-#include <common.h>
 #include <amdev.h>
 #include <klib.h>
+
+struct filesystem;
+typedef struct filesystem filesystem;
 
 typedef struct {
   void (*init)();
   int (*access)(const char *path, int mode);
-  int (*mount)(const char *path, filesystem_t *fs);
+  int (*mount)(const char *path, filesystem *fs);
   int (*unmount)(const char *path);
   int (*mkdir)(const char *path);
   int (*rmdir)(const char *path);

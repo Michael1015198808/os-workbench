@@ -2,10 +2,10 @@
 #define __FS_H
 typedef struct fsops fsops_t;
 
-struct filesystem {
+typedef struct filesystem{
   fsops_t *ops;
   dev_t *dev;
-};
+}filesystem;
 
 struct fsops {
   void (*init)(struct filesystem *fs, const char *name, dev_t *dev);
@@ -29,7 +29,7 @@ typedef struct inodeops {
 struct inode {
   int refcnt;
   void *ptr;       // private data
-  filesystem_t *fs;
+  filesystem *fs;
   inodeops_t *ops; // 在inode被创建时，由文件系统的实现赋值
                    // inode ops也是文件系统的一部分
 };
