@@ -63,6 +63,8 @@ static int add_task(task_t *task){
     }
 
 static _Context* kmt_context_save(_Event ev, _Context *c){
+    pthread_mutex_lock(&tasks_lk);
+    pthread_mutex_unlock(&tasks_lk);//Similar to rw-lock
     int cpu_id=_cpu();
     if(last&&current!=last){
         last->cpu=-1;
@@ -141,15 +143,18 @@ int kmt_create(task_t *task, const char *name, void (*entry)(void*), void *arg){
     }
     //task->id=tasks_cnt;
     local_log("create (%d)%s\n",tasks_cnt,name);
+    task->attr=TASK_SLEEP;
     int task_idx=add_task(task);
     Assert(tasks_cnt<LEN(tasks),"%d\n",tasks_cnt);
-    task->attr=TASK_RUNABLE;
     task->running=0;
     task->ncli=0;
     copy_name(task->name,name);
+    intr_close();
+    int cpu_id=_cpu();
     for(int i=0;i<FD_NUM;++i){
-        task->fd[i]=NULL;
+        task->fd[i]=current->fd[i];
     }
+    intr_open();
 
     task->context = *_kcontext(
             (_Area){
@@ -162,6 +167,7 @@ int kmt_create(task_t *task, const char *name, void (*entry)(void*), void *arg){
         task->fence2[i]=0xeca97531;
     }
 #endif
+    task->attr=TASK_RUNABLE;
     return task_idx;
 }
 void kmt_teardown(task_t *task){
