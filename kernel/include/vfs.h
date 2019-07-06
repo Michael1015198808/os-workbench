@@ -4,6 +4,9 @@
 #include <amdev.h>
 #include <klib.h>
 
+#define STDIN  0
+#define STDOUT 1
+#define STDERR 2
 struct filesystem;
 typedef struct filesystem filesystem;
 
