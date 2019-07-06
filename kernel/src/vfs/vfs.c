@@ -137,5 +137,5 @@ MODULE_DEF(vfs){
   .read     =vfs_read,
   .write    =vfs_write,
   .lseek    =vfs_lseek,
-  .close    =vfs_close,
+  .close    =vfs_close
 }
