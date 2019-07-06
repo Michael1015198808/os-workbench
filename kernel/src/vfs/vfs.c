@@ -141,8 +141,8 @@ MODULE_DEF(vfs){
 };
 
 ssize_t std_read(void *buf){
-    vfs->read(STDIN,buf,-1);
+    return vfs->read(STDIN,buf,-1);
 }
 ssize_t std_write(void *buf){
-    vfs->write(STDOUT,buf,strlen(buf));
+    return vfs->write(STDOUT,buf,strlen(buf));
 }
