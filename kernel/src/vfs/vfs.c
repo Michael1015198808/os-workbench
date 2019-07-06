@@ -61,7 +61,7 @@ static inline ssize_t vfs_read_real(int fd, void* buf,size_t nbyte){
 }
 static ssize_t vfs_read(int fd,void *buf,size_t nbyte){
     _intr_close();
-    ssize_t ret=vfs_read_real(int fd,void *buf,size_t nbyte);
+    ssize_t ret=vfs_read_real(fd,buf,nbyte);
     _intr_open();
     return ret;
 }
@@ -87,7 +87,7 @@ static inline ssize_t vfs_write_real(int fd,void *buf,size_t nbyte){
 }
 static inline ssize_t vfs_write(int fd,void* buf,size_t nbyte){
     intr_close();
-    ssize_t ret=vfs_write_real(int fd,void* buf,size_t nbyte);
+    ssize_t ret=vfs_write_real( fd,buf,nbyte);
     intr_open();
     return ret;
 }
