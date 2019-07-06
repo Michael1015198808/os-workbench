@@ -20,7 +20,13 @@ void mysh(void *name) {
         sprintf(prompt, "(%s) $ ", name);
         std_write(prompt);
         std_read(input);
+        intr_close();
+        int cpu_id=_cpu();
         task_t* son=pmm->alloc(sizeof(task_t));
+        for(int i=0;i<3;++i){
+            son->fd[i]=current->fd[i];
+        }
+        intr_open();
         kmt->create(son,"fork-and-run",fork_and_run,input);
         kmt->teardown(son);
     }
