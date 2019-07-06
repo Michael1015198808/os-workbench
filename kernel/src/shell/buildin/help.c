@@ -3,7 +3,7 @@
 
 int mysh_help(void *args[]){
     if(!args[1]){
-        std_write("Type `help name' to find out more about the function `name'.");
+        std_write("Type `help name' to find out more about the function `name'.\n");
         return 0;
     }
     for(int i=1;args[i];++i){
