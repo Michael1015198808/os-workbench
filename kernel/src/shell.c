@@ -4,9 +4,6 @@
 #include <devices.h>
 #include <buildin.h>
 
-#define tty_write(tty, string) \
-    tty->ops->write(tty, 0, string, strlen(string))
-
 #define pair(command) \
     {#command, command}
 
@@ -42,16 +39,12 @@ void mysh(void *name) {
         temp=vfs->open(name,7);
         Assert(temp==1,"fd of stdin should be 1, instead of %d!\n",temp);
     }
-    device_t *tty = dev_lookup(name);
-    (void)tty;
     while (1) {
         char input[128], prompt[128];
         void *args[10];
         sprintf(prompt, "(%s) $ ", name);
-        vfs->write(STDOUT,winfo(prompt));
-        //tty_write(tty,prompt);
-        int nread=vfs->read(STDIN,input,sizeof(input));
-        //int nread = tty->ops->read(tty, 0, input, sizeof(input));
+        std_write(prompt);
+        int nread=std_read(input);
         
         command_handler(input,args,nread);
         for(int i=0;args[i];++i){
@@ -60,9 +53,9 @@ void mysh(void *name) {
         for(int i=0;;++i){
             if(i==LEN(buildin)){
                 char warn[]="mysh: command not found: ";
-                tty_write(tty,warn);
-                tty_write(tty,args[0]);
-                tty_write(tty,"\n");
+                std_write(warn);
+                std_write(args[0]);
+                std_write("\n");
                 break;
             }else
             if(!strcmp(input,buildin[i].name)){

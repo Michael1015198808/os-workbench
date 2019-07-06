@@ -139,3 +139,10 @@ MODULE_DEF(vfs){
   .lseek    =vfs_lseek,
   .close    =vfs_close
 };
+
+ssize_t std_read(void *buf){
+    vfs->read(STDIN,buf,-1);
+}
+ssize_t std_write(void *buf){
+    vfs->write(STDOUT,buf,strlen(buf));
+}
