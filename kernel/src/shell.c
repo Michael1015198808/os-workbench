@@ -8,7 +8,7 @@
     { \
         #command, \
         command,  \
-        MACRO_CONCAT(help_,MACRO_SELF(command)) \
+        help_##command \
     }
 
 static struct Command{
