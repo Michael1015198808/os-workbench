@@ -21,9 +21,9 @@ MODULE {
   int (*close)(int fd);
 } MOD_NAME(vfs);
 
-#define VFILE_FILE 0
-#define VFILE_DEV 1
-#define VFILE_PROC 2
+#define VFILE_FILE 1
+#define VFILE_DEV 2
+#define VFILE_PROC 3
 typedef struct {
     void *actual;
     int type;

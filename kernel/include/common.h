@@ -19,6 +19,7 @@
 
 #include <my_trace.h>
 
+#define TODO Assert(0,"Haven't be realized!\n");
 #define MACRO_VALUE(_arg)     #_arg
 #define MACRO_SELF(_arg)      _arg
 #define MACRO_CONCAT_REAL(_arg1,_arg2) _arg1 ## _arg2
@@ -39,6 +40,7 @@ volatile int ncli[MAX_CPU],intena[MAX_CPU];
 #define TASK_RUNABLE 0
 #define TASK_SLEEP 1
 #define TASK_RUNNING 2
+#define FD_NUM 16
 typedef struct task{
     //int32_t id;
     volatile uint32_t attr,ncli,intena,cpu;
@@ -53,9 +55,9 @@ typedef struct task{
 #ifdef TASK_FENCE
     uint32_t fence2[4];
 #endif
-    vfile_t *fd[16];
+    vfile_t fd[FD_NUM];
 }task_t;
-extern task_t currents[MAX_CPU];
+extern task_t* currents[MAX_CPU];
 
 typedef struct spinlock{
     uint32_t reen;
