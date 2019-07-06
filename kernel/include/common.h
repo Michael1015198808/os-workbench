@@ -34,6 +34,7 @@
 #define STK_SZ ((1<<12)-64)
 volatile int ncli[MAX_CPU],intena[MAX_CPU];
 
+struct vfile_t;
 #define TASK_RUNABLE 0
 #define TASK_SLEEP 1
 #define TASK_RUNNING 2
