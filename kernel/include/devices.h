@@ -1,6 +1,7 @@
 #ifndef __DEVICES_H
 #define __DEVICES_H
 
+#include <common.h>
 #include <amdev.h>
 
 #define LENGTH(arr) ((sizeof(arr) / sizeof(arr[0])))
