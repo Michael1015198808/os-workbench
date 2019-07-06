@@ -6,9 +6,7 @@ typedef int handler(void*[]);
     handler function; \
     extern const char* const MACRO_CONCAT(help_,MACRO_SELF(function))
 
-
-handler echo; \
-extern const char* const help_echo;
+declare(echo);
 declare(cat);
 
 #endif//__BUILDIN_H
