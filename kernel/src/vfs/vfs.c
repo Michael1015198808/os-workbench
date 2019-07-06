@@ -104,6 +104,7 @@ static int vfs_exec(const char* file,void *args[]){
         std_write(args[0]);
         char warn[]=": command not found\n";
         std_write(warn);
+        return -1;
     }
 }
 void vfs_init(void){
