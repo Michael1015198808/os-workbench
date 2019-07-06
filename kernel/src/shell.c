@@ -43,6 +43,7 @@ void mysh(void *name) {
         Assert(temp==1,"fd of stdin should be 1, instead of %d!\n",temp);
     }
     device_t *tty = dev_lookup(name);
+    (void)tty;
     while (1) {
         char input[128], prompt[128];
         void *args[10];
