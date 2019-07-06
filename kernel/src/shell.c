@@ -34,13 +34,20 @@ static void inline command_handler(char *input,void *args[10],int nread){
     }while(0);
 }
 void mysh(void *name) {
+    {
+        int temp=-1;
+        temp=vfs->open("tty1",7);
+        Assert(temp==0,"fd of stdin should be 0, instead of %d!\n",temp);
+        temp=vfs->open("name",7);
+        Assert(temp==1,"fd of stdin should be 1, instead of %d!\n",temp);
+    }
     device_t *tty = dev_lookup(name);
     while (1) {
         char input[128], prompt[128];
         void *args[10];
         sprintf(prompt, "(%s) $ ", name);
-        tty_write(tty,prompt);
-        //tty->ops->write(tty, 0, prompt, strlen(prompt)+1);
+        vfs->write(1,prompt);
+        //tty_write(tty,prompt);
         int nread = tty->ops->read(tty, 0, input, sizeof(input));
         
         command_handler(input,args,nread);
