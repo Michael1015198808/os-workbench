@@ -16,7 +16,7 @@ static struct Command{
     pair(echo),
     pair(cat)
 };
-static void inline command_handler(char *input,void *args[10]){
+static void inline command_handler(char *input,void *args[10],int nread){
     do{
         args[0]=input;
         int i=1,j=1;
@@ -43,7 +43,7 @@ void mysh(void *name) {
         int nread = tty->ops->read(tty, 0, input, sizeof(input));
         input[nread-1]='\0';
 
-        command_handler(input,args);
+        command_handler(input,args,nread);
         /*for(int i=0;args[i];++i){
             printf("args[%d]:%s\n",i,args[i]);
         }*/
