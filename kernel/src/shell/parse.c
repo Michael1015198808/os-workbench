@@ -67,6 +67,13 @@ void runcmd(struct cmd *cmd){
     struct pipecmd *pcmd;
     struct redircmd *rcmd;
 
+    (void)p;
+    (void)bcmd;
+    (void)ecmd;
+    (void)lcmd;
+    (void)pcmd;
+    (void)rcmd;
+
     if(cmd == 0)
         return;
 
@@ -78,11 +85,13 @@ void runcmd(struct cmd *cmd){
             ecmd = (struct execcmd*)cmd;
             if(ecmd->argv[0] == 0)
                 return;
-            vfs->exec(ecmd->argv[0], ecmd->argv);
+            vfs->exec(ecmd->argv[0], (void**)(ecmd->argv));
             fprintf(2, "exec %s failed\n", ecmd->argv[0]);
             break;
 
         case REDIR:
+            TODO();
+            /*
             rcmd = (struct redircmd*)cmd;
             close(rcmd->fd);
             if(open(rcmd->file, rcmd->mode) < 0){
@@ -91,6 +100,7 @@ void runcmd(struct cmd *cmd){
             }
             runcmd(rcmd->cmd);
             break;
+            */
 
         case LIST:
             TODO();
@@ -142,32 +152,10 @@ void runcmd(struct cmd *cmd){
     return;
 }
 
-int
-getcmd(char *buf, int nbuf)
-{
-  fprintf(2, "$ ");
-  memset(buf, 0, nbuf);
-  gets(buf, nbuf);
-  if(buf[0] == 0) // EOF
-    return -1;
-  return 0;
-}
-
 void
 panic(char *s)
 {
     vfs->write(2,s,strlen(s));
-}
-
-int
-fork1(void)
-{
-  int pid;
-
-  pid = fork();
-  if(pid == -1)
-    panic("fork");
-  return pid;
 }
 
 //PAGEBREAK!
