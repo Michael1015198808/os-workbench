@@ -1,5 +1,6 @@
 #include <common.h>
 
+#define current currents[cpu_id]
 static vfile_t* get_fd(void){
     intr_close();
     int cpu_id=_cpu();
@@ -44,11 +45,11 @@ static inline ssize_t vfs_read_real(int fd, void* buf,size_t nbyte){
     switch(current->fd[fd]){
         case VFILE_DEV:
             {
-                device_t *dev=current->fd[fd].actual;
+                device_t* dev=(device_t*)current->fd[fd].actual;
                 return dev->ops->read(dev,0,buf,nbyte);
             }
             break;
-        base VFILE_FILE:
+        case VFILE_FILE:
             TODO();
             break;
         case VFILE_PROC:
@@ -74,7 +75,7 @@ static inline ssize_t vfs_write_real(int fd,void *buf,size_t nbyte){
                 return dev->ops->write(dev,0,buf,nbyte);
             }
             break;
-        base VFILE_FILE:
+        case VFILE_FILE:
             TODO();
             break;
         case VFILE_PROC:
