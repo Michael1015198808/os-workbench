@@ -3,7 +3,7 @@
 #include <shell.h>
 
 #define current currents[cpu_id]
-static vfile_t* get_fd(void){
+static vfile_t** get_fd(void){
     intr_close();
     int cpu_id=_cpu();
     return current->fd;
