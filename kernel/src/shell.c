@@ -34,10 +34,10 @@ static void inline command_handler(char *input,void *args[10],int nread){
 }
 void mysh(void *name) {
     {
-        int temp=vfs->open(name,7);
+        /*int temp=vfs->open(name,7);
         Assert(temp==0,"Error on fd-stdin:%d",temp);
         temp=vfs->open(name,7);
-        Assert(temp==1,"Error on fd-stdout:%d",temp);
+        Assert(temp==1,"Error on fd-stdout:%d",temp);*/
     }
     device_t* tty=dev_lookup(name);//For debugging
     while (1) {
@@ -50,6 +50,7 @@ void mysh(void *name) {
         //int nread = vfs->read(0,info(input));
         input[nread-1]='\0';
 
+        printf("%s\n",input);
         command_handler(input,args,nread);
         for(int i=0;args[i];++i){
             printf("args[%d]:%s\n",i,args[i]);
