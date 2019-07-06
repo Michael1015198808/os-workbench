@@ -75,7 +75,7 @@ int runcmd(struct cmd *cmd){
     (void)rcmd;
 
     if(cmd == 0)
-        return -1;
+        exit();
 
     switch(cmd->type){
         default:
@@ -84,8 +84,9 @@ int runcmd(struct cmd *cmd){
         case EXEC:
             ecmd = (struct execcmd*)cmd;
             if(ecmd->argv[0] == 0)
-                return -1;
-            return vfs->exec(ecmd->argv[0], (void**)(ecmd->argv));
+                exit();
+            vfs->exec(ecmd->argv[0], (void**)(ecmd->argv));
+            exit();
 
         case REDIR:
             TODO();
@@ -94,7 +95,7 @@ int runcmd(struct cmd *cmd){
             close(rcmd->fd);
             if(open(rcmd->file, rcmd->mode) < 0){
                 fprintf(2, "open %s failed\n", rcmd->file);
-                return;
+                exit();
             }
             runcmd(rcmd->cmd);
             break;
@@ -148,7 +149,7 @@ int runcmd(struct cmd *cmd){
             */
         }
     Assert(0,"Should not reach here!\n");
-    return -1;
+    exit();
 }
 
 void
