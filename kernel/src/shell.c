@@ -37,9 +37,9 @@ static void inline command_handler(char *input,void *args[10],int nread){
 void mysh(void *name) {
     {
         int temp=-1;
-        temp=vfs->open("tty1",7);
+        temp=vfs->open(name,7);
         Assert(temp==0,"fd of stdin should be 0, instead of %d!\n",temp);
-        temp=vfs->open("name",7);
+        temp=vfs->open(name,7);
         Assert(temp==1,"fd of stdin should be 1, instead of %d!\n",temp);
     }
     device_t *tty = dev_lookup(name);
