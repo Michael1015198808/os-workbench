@@ -5,15 +5,15 @@
 #include <buildin.h>
 
 #define pair(command) \
-    {#command, command}
+    {#command, command,help##_command}
 
 static struct Command{
-    const char *name;
+    const char *const name;
     int(*const binary)(void*[]);
+    const char *const help;
 }buildin[]={
     pair(echo),
-    pair(cat),
-    pair(exit)
+    pair(cat)
 };
 static void inline command_handler(char *input,void *args[10],int nread){
     input[nread-1]='\0';
