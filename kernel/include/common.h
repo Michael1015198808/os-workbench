@@ -42,10 +42,12 @@
 volatile int ncli[MAX_CPU],intena[MAX_CPU];
 
 int fprintf(int fd, const char *fmt, ...);
+void exit(void);
 
-#define TASK_RUNABLE 0
-#define TASK_SLEEP 1
-#define TASK_RUNNING 2
+#define TASK_RUNABLE    0
+#define TASK_SLEEP      1
+#define TASK_RUNNING    2
+#define TASK_ZOMBIE     4
 #define FD_NUM 16
 typedef struct task{
     //int32_t id;

@@ -6,7 +6,8 @@
     strcpy(dest,src) )
 
 task_t *tasks[40]={},*currents[MAX_CPU]={},idles[MAX_CPU],*lasts[MAX_CPU];
-static pthread_mutex_t tasks_lk;
+static int free_task_id[40],free_task_id_cnt=0;
+static pthread_mutex_t tasks_lk,free_task_lk=PTHREAD_MUTEX_INITIALIZER;
 char tasks_log[66000];
 int tasks_idx=0,tasks_cnt=0;
 #define trace_pthread_mutex_lock(_lk) \
@@ -43,6 +44,12 @@ void show(){
 }
 
 static int add_task(task_t *task){
+    if(free_task_id_cnt>0){
+        pthread_mutex_lock(&free_task_lk);
+        int ret=free_task_id[--free_task_id_cnt];
+        pthread_mutex_unlock(&free_task_lk);
+        return ret;
+    }
     pthread_mutex_lock(&tasks_lk);
     int ret=tasks_cnt;
     tasks[tasks_cnt++]=task;
@@ -165,7 +172,15 @@ int kmt_create(task_t *task, const char *name, void (*entry)(void*), void *arg){
     return task_idx;
 }
 void kmt_teardown(task_t *task){
-    Assert(0);
+    while(!(task->attr&TASK_ZOMBIE));
+    for(int i=0;i<40;++i){
+        if(tasks[i]==task){
+            pthread_mutex_lock(&free_task_lk);
+            free_task_id[free_task_id++]=i;
+            pthread_mutex_unlock(&free_task_lk);
+        }
+    }
+    pmm->free(task);
     pmm->free(task->name);
     return ;
 }
@@ -276,6 +291,12 @@ void kmt_sem_signal(sem_t *sem){
     kmt_sem_signal_real(sem);
 }
 
+void exit(void){
+    intr_close();
+    int cpu_id=_cpu();
+    set_flag(current,TASK_ZOMBIE);
+    _yield();
+}
 MODULE_DEF(kmt) {
   .init        =kmt_init,
   .create      =kmt_create,

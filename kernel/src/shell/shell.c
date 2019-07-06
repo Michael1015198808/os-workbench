@@ -4,6 +4,9 @@
 #include <devices.h>
 #include <shell.h>
 
+static void fork_and_run(void *input){
+        runcmd(parsecmd((char*)input));
+}
 void mysh(void *name) {
     {
         for(int i=0;i<3;++i){
@@ -17,6 +20,8 @@ void mysh(void *name) {
         sprintf(prompt, "(%s) $ ", name);
         std_write(prompt);
         std_read(input);
-        runcmd(parsecmd(input));
+        task_t* son=pmm->alloc(sizeof(task_t));
+        kmt->create(son,"fork-and-run",fork_and_run,input);
+        kmt->teardown(son);
     }
 }

@@ -155,6 +155,7 @@ void
 panic(char *s)
 {
     vfs->write(2,s,strlen(s));
+    exit();
 }
 
 //PAGEBREAK!
