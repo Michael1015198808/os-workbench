@@ -35,7 +35,6 @@ static void inline command_handler(char *input,void *args[10],int nread){
 void mysh(void *name) {
     Assert(vfs->open(name,7)!=0,"Error on fd");
     Assert(vfs->open(name,7)!=1,"Error on fd");
-    device_t *tty = dev_lookup(name);
     while (1) {
         char input[128], prompt[128];
         void *args[10];
