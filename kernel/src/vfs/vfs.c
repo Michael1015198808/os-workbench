@@ -30,8 +30,8 @@ static inline int vfs_open_real(const char *path,int flags){
     if(path[0]=='/'){//Temporarily
         current->fd[fd]->type=VFILE_FILE;
         current->fd[fd]->ptr=rd[0].ops->lookup(&rd[0],path,flags);
-        inodeops_t yls_iops;
-        Assert(((inode_t*)current->fd[fd]->ptr)->ops==yls_iops,
+        extern inodeops_t yls_iops;
+        Assert(((inode_t*)current->fd[fd]->ptr)->ops==&yls_iops,
                 "Something wrong happens when try to open /!");
     }else{
         device_t *dev=dev_lookup(path);
