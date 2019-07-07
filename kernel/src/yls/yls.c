@@ -49,7 +49,7 @@ ssize_t yls_iread(vfile_t *file,char* buf, size_t size){
     switch(node->type){
         case YLS_DIR:
             {
-                uint32_t off;
+                uint32_t off,nread;
                 if(fs->dev->ops->read(fs->dev,node->info,&off,4)!=4)return -1;
                 if(node->cnt==7){
                     node->cnt=0;
