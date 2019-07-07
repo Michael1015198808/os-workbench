@@ -46,7 +46,7 @@ union yls_node{
         uint32_t type;
         uint32_t ptr;
         uint32_t name;
-    }
+    };
     uint8_t align[0x10];
 };
 
@@ -55,7 +55,7 @@ struct info{
     char mem[0x40-4];
 };
 
-inodeops yls_iops={
+inodeops_t yls_iops={
     /*
     .open   =yls_iopen,
     .close  =yls_iclose,
