@@ -25,7 +25,7 @@ static inline int vfs_open_real(const char *path,int flags){
     current->fd[fd]=pmm->alloc(sizeof(vfile_t));
     if(strchr("/.",path[0])){//Temporarily
         current->fd[fd]->type=VFILE_FILE;
-        rd[0].lookup(rd[0],path,flags);
+        rd[0].ops->lookup(rd[0],path,flags);
     }else{
         device_t *dev=dev_lookup(path);
         current->fd[fd]->type=VFILE_DEV;
