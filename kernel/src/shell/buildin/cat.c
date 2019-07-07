@@ -9,7 +9,7 @@ static inline void cat_from_stdin(char buf[0x200]){
         buf[nread]='\0';
         std_write(buf);
     }
-    return nread==0?0:-1;
+    return (nread==0)?0:-1;
 }
 
 int mysh_cat(void *args[]){
