@@ -126,6 +126,7 @@ static int vfs_exec(const char* file,void *args[]){
         return -1;
     }
 }
+extern fsops_t yls_ops;
 void vfs_init(void){
     rd[0].ops=&yls_ops;
     rd[0].dev=dev_lookup("ramdisk0");
