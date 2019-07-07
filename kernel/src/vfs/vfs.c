@@ -3,6 +3,7 @@
 #include <shell.h>
 #include <fs.h>
 
+#define this_fd current->fd[fd]
 static task_t* get_cur(void){
     _intr_close();
     int cpu_id=_cpu();
@@ -55,7 +56,9 @@ static inline ssize_t vfs_read_real(int fd, void* buf,size_t nbyte){
             }
             break;
         case VFILE_FILE:
-            TODO();
+            {
+                inode_t* inode=current->fd[fd]->type
+            }
             break;
         case VFILE_PROC:
             TODO();
