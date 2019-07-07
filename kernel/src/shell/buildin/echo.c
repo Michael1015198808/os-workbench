@@ -5,7 +5,8 @@ int mysh_echo(void *args[]){
     int i=1;
     if(!args[1]){
         std_write("\n");
-    }else
+        return 0;
+    }
     while(1){
         std_write(args[i]);
         ++i;
