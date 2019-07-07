@@ -47,17 +47,20 @@ static int vfs_open(const char *path, int flags){
 }
 static inline ssize_t vfs_read_real(int fd, void* buf,size_t nbyte){
     task_t* current=get_cur();
+    ssize_t nread;
     switch(this_fd->type){
         case VFILE_DEV:
             {
                 device_t* dev=(device_t*)this_fd->ptr;
-                ssize_t nread=dev->ops->read(dev,0,buf,nbyte);
+                nread=dev->ops->read(dev,0,buf,nbyte);
                 return nread;
             }
             break;
         case VFILE_FILE:
             {
-                //inode_t* inode=this_fd->type;
+                inode_t* inode=this_fd->ptr;
+                nread=inode->ops->read(this_fd,buf,nbyte);
+                return nread;
             }
             break;
         case VFILE_PROC:

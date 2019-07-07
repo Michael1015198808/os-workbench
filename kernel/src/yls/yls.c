@@ -40,11 +40,21 @@ fsops_t yls_ops={
     .close=yls_close
 };
 
+ssize_t yls_iread(vfile_t *file,char* buf, size_t size){
+    yls_node* node= ((inodt_t*)file->ptr)->ptr;
+    fprintf(1,"type:%x\nptr:%x\nname:%x\n",yls_node.type,yls_node.ptr,yls_node.name);
+    TODO();
+    while(size>0){
+    }
+    return 0;
+}
 inodeops_t yls_iops={
     /*
     .open   =yls_iopen,
     .close  =yls_iclose,
+    */
     .read   =yls_iread,
+    /*
     .write  =yls_iwrite,
     .lseek  =yls_ilseek,
     .mkdir  =yls_imkdir,
