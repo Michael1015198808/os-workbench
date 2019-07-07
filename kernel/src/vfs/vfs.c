@@ -1,6 +1,7 @@
 #include <common.h>
 #include <devices.h>
 #include <shell.h>
+#include <fs.h>
 
 #define current currents[cpu_id]
 static vfile_t** get_fd(void){
