@@ -23,10 +23,10 @@ int mysh_ls(void *args[]){
             for(int i=1;args[i];++i){
                 std_write(args[i]);
                 std_write(":\n");
-                single_ls(args[i]);
+                single_ls(args[i],&err);
             }
         }else{
-            single_ls(args[1]);
+            single_ls(args[1],&err);
         }
     }else{
         single_ls(".",&err);
