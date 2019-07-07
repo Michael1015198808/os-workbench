@@ -69,6 +69,7 @@ static int tty_cook(tty_t *tty, char ch) {
   switch (ch) {
     case '\n':
       tty_enqueue(q, ch);
+    case '\0':
       tty_enqueue(q, '\0');
       kmt->sem_signal(&tty->cooked);
       break;
