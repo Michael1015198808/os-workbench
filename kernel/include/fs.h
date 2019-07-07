@@ -1,13 +1,17 @@
 #ifndef __FS_H
 #define __FS_H
 typedef struct fsops fsops_t;
+typedef struct file file_t;
+typedef struct inode inode_t;
+typedef struct inodeops inodeops_t;
+typedef struct filesystem filesystem;
 
-typedef struct filesystem{
+struct filesystem{
     fsops_t *ops;
     //Call devops by fsops
     device_t *dev;
     void* ptr;
-}filesystem;
+};
 
 struct fsops {
   void (*init)(struct filesystem *fs, const char *name, device_t *dev);
@@ -15,8 +19,7 @@ struct fsops {
   int (*close)(inode_t *inode);
 } ;
 
-typedef struct file file_t;
-typedef struct inodeops {
+struct inodeops {
   int (*open)(file_t *file, int flags);
   int (*close)(file_t *file);
   ssize_t (*read)(file_t *file, char *buf, size_t size);
@@ -27,7 +30,7 @@ typedef struct inodeops {
   int (*link)(const char *name, inode_t *inode);
   int (*unlink)(const char *name);
   // 你可以自己设计readdir的功能
-} inodeops_t;
+};
 
 struct inode {
   int refcnt;
