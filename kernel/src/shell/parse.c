@@ -14,9 +14,7 @@ void panic(char *s){
 //PAGEBREAK!
 // Constructors
 
-struct cmd*
-execcmd(void)
-{
+struct cmd* execcmd(void){
   struct execcmd *cmd;
 
   cmd = pmm->alloc(sizeof(*cmd));
@@ -25,9 +23,7 @@ execcmd(void)
   return (struct cmd*)cmd;
 }
 
-struct cmd*
-redircmd(struct cmd *subcmd, char *file, char *efile, int mode, int fd)
-{
+struct cmd* redircmd(struct cmd *subcmd, char *file, char *efile, int mode, int fd){
   struct redircmd *cmd;
 
   cmd = pmm->alloc(sizeof(*cmd));
@@ -41,9 +37,7 @@ redircmd(struct cmd *subcmd, char *file, char *efile, int mode, int fd)
   return (struct cmd*)cmd;
 }
 
-struct cmd*
-pipecmd(struct cmd *left, struct cmd *right)
-{
+struct cmd* pipecmd(struct cmd *left, struct cmd *right){
   struct pipecmd *cmd;
 
   cmd = pmm->alloc(sizeof(*cmd));
@@ -54,9 +48,7 @@ pipecmd(struct cmd *left, struct cmd *right)
   return (struct cmd*)cmd;
 }
 
-struct cmd*
-listcmd(struct cmd *left, struct cmd *right)
-{
+struct cmd* listcmd(struct cmd *left, struct cmd *right){
   struct listcmd *cmd;
 
   cmd = pmm->alloc(sizeof(*cmd));
@@ -67,9 +59,7 @@ listcmd(struct cmd *left, struct cmd *right)
   return (struct cmd*)cmd;
 }
 
-struct cmd*
-backcmd(struct cmd *subcmd)
-{
+struct cmd* backcmd(struct cmd *subcmd){
   struct backcmd *cmd;
 
   cmd = pmm->alloc(sizeof(*cmd));

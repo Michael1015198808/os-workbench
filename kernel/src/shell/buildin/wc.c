@@ -36,18 +36,24 @@ int mysh_wc(char *argv[]){
 
     if(argv[1]){
         for(int i = 1;argv[i]; i++){
-            int fd=-1;
-            if((fd=vfs->open(argv[i],0))<0){
-                fprintf(2, "wc: cannot open %s\n", argv[i]);
-                return -1;
+            if(strcmp("-",argv[i])){
+                int fd=-1;
+                if((fd=vfs->open(argv[i],0))<0){
+                    fprintf(2, "wc: cannot open %s\n", argv[i]);
+                    return -1;
+                }
+                single_wc(fd, argv[i],cnt);
+                vfs->close(fd);
+            }else{
+                single_wc(0,"-",cnt);
             }
-            single_wc(fd, argv[i],cnt);
-            vfs->close(fd);
         }
-        for(int i=0;i<3;++i){
-            fprintf(1,"%4d ",cnt[i]);
+        if(argv[2]){
+            for(int i=0;i<3;++i){
+                fprintf(1,"%4d ",cnt[i]);
+            }
+            std_write("total\n");
         }
-        std_write("total\n");
     }else{
         single_wc(0, "",cnt);
     }

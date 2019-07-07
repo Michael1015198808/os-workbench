@@ -127,12 +127,12 @@ static int vfs_exec(const char* file,void *args[]){
     }
 }
 void vfs_init(void){
-    rd[0].ops=NULL;
+    rd[0].ops=&yls_ops;
     rd[0].dev=dev_lookup("ramdisk0");
     rd[0].ptr=NULL;
-    rd[0].ops=NULL;
-    rd[0].dev=dev_lookup("ramdisk1");
-    rd[0].ptr=NULL;
+    rd[1].ops=&yls_ops;
+    rd[1].dev=dev_lookup("ramdisk1");
+    rd[1].ptr=NULL;
 }
 int vfs_access(const char *path, int mode){
     TODO();

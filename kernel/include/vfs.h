@@ -8,6 +8,12 @@
 #define STDOUT 1
 #define STDERR 2
 
+#define O_RDONLY 1
+#define O_WRONLY 2
+#define O_CREATE 4
+
+#define O_RDWR (O_RDONLY | O_WRONLY)
+
 struct filesystem;
 typedef struct filesystem filesystem;
 
@@ -40,8 +46,9 @@ ssize_t std_write(void *buf);
 #define VFILE_NULL  5
 //Read from it always returns 0(Work as EOF)
 //Write to it always returns nbyte
-typedef struct {
+struct vfile{
     void *ptr;
     int type;
-}vfile_t;
+};
+typedef vfile vfile_t;
 #endif

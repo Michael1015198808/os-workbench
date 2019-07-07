@@ -5,10 +5,6 @@
 #define LIST  4
 #define BACK  5
 
-#define O_RDONLY 0
-#define O_WRONLY 0
-#define O_CREATE 0
-
 
 #define MAXARGS 10
 
