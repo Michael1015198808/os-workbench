@@ -72,7 +72,7 @@ static inline int run_pipe_cmd(struct cmd *cmd){
     intr_open();
 
     struct pipecmd* pcmd = (struct pipecmd*)cmd;
-    char buf[0x400]={};//Manually 
+    char buf[0x100]={};//Manually 
 
     vfile_t *backup[3];
 
