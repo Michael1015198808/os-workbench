@@ -26,18 +26,18 @@ static inline int vfs_open_real(const char *path,int flags){
     int fd=new_fd_num(current);
     Assert(fd!=-1,"No more file descripter!");//Or return -1;
 
-    current->fd[fd]=pmm->alloc(sizeof(vfile_t));
+    this_fd=pmm->alloc(sizeof(vfile_t));
 
     if(path[0]=='/'){//Temporarily
-        current->fd[fd]->type=VFILE_FILE;
-        current->fd[fd]->ptr=rd[0].ops->lookup(&rd[0],path,flags);
+        this_fd->type=VFILE_FILE;
+        this_fd->ptr=rd[0].ops->lookup(&rd[0],path,flags);
         extern inodeops_t yls_iops;
-        Assert(((inode_t*)current->fd[fd]->ptr)->ops==&yls_iops,
+        Assert(((inode_t*)this_fd->ptr)->ops==&yls_iops,
                 "Something wrong happens when try to open /!");
     }else{
         device_t *dev=dev_lookup(path);
-        current->fd[fd]->type=VFILE_DEV;
-        current->fd[fd]->ptr=dev;
+        this_fd->type=VFILE_DEV;
+        this_fd->ptr=dev;
     }
     return fd;
 }
@@ -47,17 +47,17 @@ static int vfs_open(const char *path, int flags){
 }
 static inline ssize_t vfs_read_real(int fd, void* buf,size_t nbyte){
     task_t* current=get_cur();
-    switch(current->fd[fd]->type){
+    switch(this_fd->type){
         case VFILE_DEV:
             {
-                device_t* dev=(device_t*)current->fd[fd]->ptr;
+                device_t* dev=(device_t*)this_fd->ptr;
                 ssize_t nread=dev->ops->read(dev,0,buf,nbyte);
                 return nread;
             }
             break;
         case VFILE_FILE:
             {
-                inode_t* inode=current->fd[fd]->type
+                //inode_t* inode=this_fd->type;
             }
             break;
         case VFILE_PROC:
@@ -65,15 +65,15 @@ static inline ssize_t vfs_read_real(int fd, void* buf,size_t nbyte){
             break;
         case VFILE_MEM:
             {
-                strncpy(buf,current->fd[fd]->ptr,nbyte);
+                strncpy(buf,this_fd->ptr,nbyte);
                 int ret=strlen(buf);
-                current->fd[fd]->ptr+=ret;
+                this_fd->ptr+=ret;
                 return ret;
             }
         case VFILE_NULL:
             return 0;
         default:
-            Assert(0,"Unknown fd type:%d\n",current->fd[fd]->type);
+            Assert(0,"Unknown fd type:%d\n",this_fd->type);
             break;
     }
     Assert(0,"Should not reach here!\n");
@@ -84,10 +84,10 @@ static ssize_t vfs_read(int fd,void *buf,size_t nbyte){
 }
 static inline ssize_t vfs_write_real(int fd,void *buf,size_t nbyte){
     task_t* current=get_cur();
-    switch(current->fd[fd]->type){
+    switch(this_fd->type){
         case VFILE_DEV:
             {
-                device_t *dev=current->fd[fd]->ptr;
+                device_t *dev=this_fd->ptr;
                 return dev->ops->write(dev,0,buf,nbyte);
             }
             break;
@@ -98,8 +98,8 @@ static inline ssize_t vfs_write_real(int fd,void *buf,size_t nbyte){
             TODO();
             break;
         case VFILE_MEM:
-            memcpy(current->fd[fd]->ptr,buf,nbyte);
-            current->fd[fd]->ptr+=nbyte;
+            memcpy(this_fd->ptr,buf,nbyte);
+            this_fd->ptr+=nbyte;
             *(char*)current->fd[fd]->ptr='\0';
             return nbyte;
         case VFILE_NULL:
