@@ -10,7 +10,7 @@ typedef struct filesystem{
 }filesystem;
 
 struct fsops {
-  void (*init)(struct filesystem *fs, const char *name, dev_t *dev);
+  void (*init)(struct filesystem *fs, const char *name, device_t *dev);
   inode_t *(*lookup)(struct filesystem *fs, const char *path, int flags);
   int (*close)(inode_t *inode);
 } ;
