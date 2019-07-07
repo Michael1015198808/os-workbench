@@ -18,11 +18,13 @@ inode_t *yls_lookup(struct filesystem* fs, const char* path, int flags){
 #define read(off,buf,count) fs->dev->ops->read(fs->dev,off,buf,count);
 
     read(HEADER_LEN,cur,0x10);
-    inode_t ret={
+    inode_t* ret=pmm->alloc(sizeof(inode_t));
+    inode_t tmp={
         .ptr=cur,
         .fs=fs,
         .ops=&yls_iops
     };
+    *ret=tmp;
     return ret;
 }
 int yls_close(inode_t *inode){
