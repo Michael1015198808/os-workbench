@@ -50,6 +50,8 @@ ssize_t yls_iread(vfile_t *file,char* buf, size_t size){
                 uint32_t off,nread;
                 printf("yls_iread reads from %x\n",node->info);
                 if(fs->dev->ops->read(fs->dev,node->info,&off,4)!=4)return -1;
+                if(off==0)return 0;
+                printf("find a file at %x\n",off);
                 if(node->cnt==7){
                     node->cnt=0;
                     node->info=0;
@@ -58,7 +60,6 @@ ssize_t yls_iread(vfile_t *file,char* buf, size_t size){
                     ++node->cnt;
                     node->info+=4;
                 }
-                if(off==0)return 0;
                 off+=8;//To name
                 nread=fs->dev->ops->read(fs->dev,off,buf,0x40-4);
                 ret+=nread;
