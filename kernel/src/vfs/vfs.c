@@ -99,7 +99,7 @@ static inline ssize_t vfs_write_real(int fd,void *buf,size_t nbyte){
         case VFILE_MEM:
             memcpy(current->fd[fd]->ptr,buf,nbyte);
             current->fd[fd]->ptr+=nbyte;
-            *current->fd[fd]->ptr='\0';
+            *(char*)current->fd[fd]->ptr='\0';
             return nbyte;
         case VFILE_NULL:
             return nbyte;
