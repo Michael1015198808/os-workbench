@@ -99,7 +99,7 @@ inline void backup_fd(vfile_t *backup[3],task_t* current){
 }
 inline void restore_fd(vfile_t *backup[3],task_t* current){
     for(int i=0;i<3;++i){
-        pmm->free(current->fd[i]);
+        //pmm->free(current->fd[i]);
         current->fd[i]=backup[i];
     }
 }
