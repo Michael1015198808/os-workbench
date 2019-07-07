@@ -6,11 +6,9 @@ static inline void single_ls(const char* path,int* err){
     int cnt=0;
     char buf[200];
     while((nread=vfs->read(fd,buf,sizeof(buf)))>0){
-        /*
         if(cnt+strlen(buf)>40){
             std_write("\n");
         }
-        */
         printf("ls:read %d\n",nread);
         cnt+=fprintf(STDOUT,"%s  ",buf);
     }
@@ -34,5 +32,6 @@ int mysh_ls(void *args[]){
     }else{
         single_ls(".",&err);
     }
+    std_write("\n");
     return err;
 }
