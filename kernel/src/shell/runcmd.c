@@ -85,7 +85,7 @@ inline int run_pipe_cmd(struct cmd *cmd){
 
     current->fd[0]->type=VFILE_MEM;
     current->fd[0]->ptr =buf;
-    runcmd(pcmd->right);
+    return runcmd(pcmd->right);
 }
 inline void backup_fd(vfile_t *backup[3],task_t* current){
     for(int i=0;i<3;++i){
