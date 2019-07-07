@@ -44,7 +44,7 @@ static int vfs_open(const char *path, int flags){
     return ret;
 }
 static inline ssize_t vfs_read_real(int fd, void* buf,size_t nbyte){
-    int cpu_id=_cpu();
+    task_t* current=get_cur();
     switch(current->fd[fd]->type){
         case VFILE_DEV:
             {
@@ -75,13 +75,11 @@ static inline ssize_t vfs_read_real(int fd, void* buf,size_t nbyte){
     Assert(0,"Should not reach here!\n");
 }
 static ssize_t vfs_read(int fd,void *buf,size_t nbyte){
-    _intr_close();
     ssize_t ret=vfs_read_real(fd,buf,nbyte);
-    _intr_open();
     return ret;
 }
 static inline ssize_t vfs_write_real(int fd,void *buf,size_t nbyte){
-    int cpu_id=_cpu();
+    task_t* current=get_cur();
     switch(current->fd[fd]->type){
         case VFILE_DEV:
             {
@@ -108,9 +106,7 @@ static inline ssize_t vfs_write_real(int fd,void *buf,size_t nbyte){
     }
 }
 static ssize_t vfs_write(int fd,void* buf,size_t nbyte){
-    intr_close();
     ssize_t ret=vfs_write_real( fd,buf,nbyte);
-    intr_open();
     return ret;
 }
 static int vfs_exec(const char* file,void *args[]){
