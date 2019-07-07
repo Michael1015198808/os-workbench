@@ -3,8 +3,10 @@
 typedef struct fsops fsops_t;
 
 typedef struct filesystem{
-  fsops_t *ops;
-  dev_t *dev;
+    fsops_t *ops;
+    //Call devops by fsops
+    device_t *dev;
+    void* ptr;
 }filesystem;
 
 struct fsops {
@@ -40,4 +42,5 @@ typedef struct file {
   uint64_t offset;
 } file_t;
 
+filesystem rd[2];//Ramdisk
 #endif//__FS_H

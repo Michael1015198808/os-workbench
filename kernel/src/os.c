@@ -62,6 +62,7 @@ static void os_init() {
     pmm->init();
     kmt->init();
     dev->init();
+    vfs->init();
     /*
     kmt->create(pmm->alloc(sizeof(task_t)),"sem-test1",sem_test,"!");
     kmt->create(pmm->alloc(sizeof(task_t)),"sem-test2",sem_test,"!");

@@ -25,7 +25,7 @@ static inline int vfs_open_real(const char *path,int flags){
     current->fd[fd]=pmm->alloc(sizeof(vfile_t));
     if(dev){
         current->fd[fd]->type=VFILE_DEV;
-        current->fd[fd]->actual=dev;
+        current->fd[fd]->ptr=dev;
         return fd;
     }
     if(1){
@@ -48,8 +48,9 @@ static inline ssize_t vfs_read_real(int fd, void* buf,size_t nbyte){
     switch(current->fd[fd]->type){
         case VFILE_DEV:
             {
-                device_t* dev=(device_t*)current->fd[fd]->actual;
-                return dev->ops->read(dev,0,buf,nbyte);
+                device_t* dev=(device_t*)current->fd[fd]->ptr;
+                ssize_t nread=dev->ops->read(dev,0,buf,nbyte);
+                return nread;
             }
             break;
         case VFILE_FILE:
@@ -60,17 +61,18 @@ static inline ssize_t vfs_read_real(int fd, void* buf,size_t nbyte){
             break;
         case VFILE_MEM:
             {
-            strncpy(buf,current->fd[fd]->actual,nbyte);
-            int ret=strlen(buf);
-            current->fd[fd]->actual+=ret;
-            return ret;
+                strncpy(buf,current->fd[fd]->ptr,nbyte);
+                int ret=strlen(buf);
+                current->fd[fd]->ptr+=ret;
+                return ret;
             }
         case VFILE_NULL:
-            return nbyte;
+            return 0;
         default:
             Assert(0,"Unknown fd type:%d\n",current->fd[fd]->type);
             break;
     }
+    Assert(0,"Should not reach here!\n");
 }
 static ssize_t vfs_read(int fd,void *buf,size_t nbyte){
     _intr_close();
@@ -83,7 +85,7 @@ static inline ssize_t vfs_write_real(int fd,void *buf,size_t nbyte){
     switch(current->fd[fd]->type){
         case VFILE_DEV:
             {
-                device_t *dev=current->fd[fd]->actual;
+                device_t *dev=current->fd[fd]->ptr;
                 return dev->ops->write(dev,0,buf,nbyte);
             }
             break;
@@ -94,8 +96,8 @@ static inline ssize_t vfs_write_real(int fd,void *buf,size_t nbyte){
             TODO();
             break;
         case VFILE_MEM:
-            memcpy(current->fd[fd]->actual,buf,nbyte);
-            current->fd[fd]->actual+=nbyte;
+            memcpy(current->fd[fd]->ptr,buf,nbyte);
+            current->fd[fd]->ptr+=nbyte;
             return nbyte;
         case VFILE_NULL:
             return nbyte;
@@ -123,7 +125,12 @@ static int vfs_exec(const char* file,void *args[]){
     }
 }
 void vfs_init(void){
-    TODO();
+    rd[0].ops=NULL;
+    rd[0].dev=dev_lookup("ramdisk0");
+    rd[0].ptr=NULL;
+    rd[0].ops=NULL;
+    rd[0].dev=dev_lookup("ramdisk1");
+    rd[0].ptr=NULL;
 }
 int vfs_access(const char *path, int mode){
     TODO();
