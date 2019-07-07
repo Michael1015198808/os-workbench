@@ -8,13 +8,12 @@ static void yls_init(struct filesystem *fs,const char* name,device_t* dev){
     return;
 }
 
-#define read(off,buf,count) fs->dev->ops->read(fs->dev,off,buf,count);
 inode_t *yls_lookup(struct filesystem* fs, const char* path, int flags){
     int path_len=strlen(path)-1;//Starts from "/"
     ++path;
 
     yls_node *cur=pmm->alloc(sizeof(yls_node));
-    read(HEADER_LEN,cur,12);
+    fs->dev->ops->read(fs->dev,HEADER_LEN,cur,12);
     cur->cnt=0;
 
     while(path_len>0){
