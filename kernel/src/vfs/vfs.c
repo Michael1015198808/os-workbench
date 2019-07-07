@@ -3,14 +3,14 @@
 #include <shell.h>
 #include <fs.h>
 
-#define current currents[cpu_id]
-static vfile_t** get_fd(void){
-    intr_close();
+static task_t* get_cur(void){
+    _intr_close();
     int cpu_id=_cpu();
-    return current->fd;
-    intr_open();
+    return currents[cpu_id];
+    _intr_open();
 }
-static int new_fd_num(int cpu_id){
+
+static int new_fd_num(task_t* current){
     for(int i=0;i<FD_NUM;++i){
         if(!(current->fd[i])){
             return i;
@@ -18,14 +18,20 @@ static int new_fd_num(int cpu_id){
     }
     return -1;//No more file descripter (number)!
 }
+
 static inline int vfs_open_real(const char *path,int flags){
-    int cpu_id=_cpu();
-    int fd=new_fd_num(cpu_id);
+    task_t* current=get_cur();
+
+    int fd=new_fd_num(current);
     Assert(fd!=-1,"No more file descripter!");//Or return -1;
+
     current->fd[fd]=pmm->alloc(sizeof(vfile_t));
+
     if(path[0]=='/'){//Temporarily
         current->fd[fd]->type=VFILE_FILE;
-        rd[0].ops->lookup(&rd[0],path,flags);
+        current->fd[fd]->ptr=rd[0].ops->lookup(&rd[0],path,flags);
+        Assert(((inode_t*)current->fd[fd]->ptr)->ops==yls_iops,
+                "Something wrong happens when try to open /!");
     }else{
         device_t *dev=dev_lookup(path);
         current->fd[fd]->type=VFILE_DEV;
@@ -34,9 +40,7 @@ static inline int vfs_open_real(const char *path,int flags){
     return fd;
 }
 static int vfs_open(const char *path, int flags){
-    _intr_close();
     int ret=vfs_open_real(path,flags);
-    _intr_open();
     return ret;
 }
 static inline ssize_t vfs_read_real(int fd, void* buf,size_t nbyte){

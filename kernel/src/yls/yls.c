@@ -7,16 +7,25 @@ inodeops_t yls_iops;
 static void yls_init(struct filesystem *fs,const char* name,device_t* dev){
     return;
 }
-inode_t *yls_lookup(struct filesystem* fs, const char* path, int flags){
-    yls_node *cur=pmm->alloc(sizeof(yls_node));
-#define read(off,buf,count) fs->dev->ops->read(fs->dev,off,buf,count);
 
+#define read(off,buf,count) fs->dev->ops->read(fs->dev,off,buf,count);
+inode_t *yls_lookup(struct filesystem* fs, const char* path, int flags){
+    int path_len=strlen(path)-1;//Starts from "/"
+    ++path;
+
+    yls_node *cur=pmm->alloc(sizeof(yls_node));
     read(HEADER_LEN,cur,0x10);
+
+    while(path_len>0){
+        TODO();
+    }
+
     inode_t* ret=pmm->alloc(sizeof(inode_t));
     inode_t tmp={
         .ptr=cur,
         .fs=fs,
-        .ops=&yls_iops
+        .ops=&yls_iops,
+        .offset=0
     };
     *ret=tmp;
     return ret;

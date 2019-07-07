@@ -51,4 +51,4 @@ struct vfile{
     int type;
 };
 typedef struct vfile vfile_t;
-#endif
+#endif//__VFS_H
