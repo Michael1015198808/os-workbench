@@ -4,7 +4,7 @@
 void panic(char*);
 int runcmd(struct cmd *cmd);
 inline int run_pipe_cmd(struct cmd *cmd);
-inline void backup_fd(vfile_t *backup[3],task_t* current){
+inline void backup_fd(vfile_t *backup[3],task_t* current);
 
 // Execute cmd.  Never returns.
 int runcmd(struct cmd *cmd){
