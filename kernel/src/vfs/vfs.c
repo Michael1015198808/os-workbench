@@ -20,23 +20,18 @@ static int new_fd_num(int cpu_id){
 }
 static inline int vfs_open_real(const char *path,int flags){
     int cpu_id=_cpu();
-    device_t *dev=dev_lookup(path);
     int fd=new_fd_num(cpu_id);
     Assert(fd!=-1,"No more file descripter!");//Or return -1;
     current->fd[fd]=pmm->alloc(sizeof(vfile_t));
-    if(dev){
+    if(path[0]!="/"&&path[0]!="."){//Temporarily
+        device_t *dev=dev_lookup(path);
         current->fd[fd]->type=VFILE_DEV;
         current->fd[fd]->ptr=dev;
-        return fd;
-    }
-    if(1){
+    }else{
         current->fd[fd]->type=VFILE_FILE;
-        TODO();
+        rd[0].lookup(rd[0],path,flags);
     }
-    if(1){
-        current->fd[fd]->type=VFILE_PROC;
-        TODO();
-    }
+    return fd;
 }
 static int vfs_open(const char *path, int flags){
     _intr_close();
