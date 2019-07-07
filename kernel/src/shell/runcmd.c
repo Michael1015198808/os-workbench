@@ -1,9 +1,10 @@
 #include <common.h>
+#include <parse.h>
+
 void panic(char*);
 int runcmd(struct cmd *cmd);
 inline int run_pipe_cmd(struct cmd *cmd);
 inline void backup_fd(vfile_t *backup[3],task_t* current){
-struct cmd;
 
 // Execute cmd.  Never returns.
 int runcmd(struct cmd *cmd){
