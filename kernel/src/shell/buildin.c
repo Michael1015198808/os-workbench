@@ -24,6 +24,7 @@ static struct Command{
     pair(help),
     pair(cd),
     pair(wc),
+    pair(ls),
 };
 
 int exec_buildin(const char* file,void* args[],int *is_buildin){
