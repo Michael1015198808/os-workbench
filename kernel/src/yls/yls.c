@@ -41,11 +41,18 @@ fsops_t yls_ops={
 };
 
 ssize_t yls_iread(vfile_t *file,char* buf, size_t size){
+    ssize_t nread=0;
+
     yls_node* node= ((inode_t*)file->ptr)->ptr;
-    fprintf(1,"type:%x\nptr:%x\nname:%x\n",node->type,node->ptr,node->name);
-    TODO();
-    while(size>0){
+    switch(node->type){
+        case YLS_DIR:
+            nread=0;
+            return nread;
+        case YLS_FILE:
+            TODO();
+            break;
     }
+    Assert(0,"Should not reach here!\n");
     return 0;
 }
 inodeops_t yls_iops={
