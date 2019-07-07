@@ -60,7 +60,7 @@ ssize_t yls_iread(vfile_t *file,char* buf, size_t size){
                 }
                 if(off==0)return 0;
                 off+=8;//To name
-                nread=fs->dev->ops->read(fs->dev,node->info,buf,0x40-4);
+                nread=fs->dev->ops->read(fs->dev,off,buf,0x40-4);
                 ret+=nread;
                 return ret;
             }
