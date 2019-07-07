@@ -11,7 +11,7 @@ static inline void single_ls(const char* path,int* err){
             std_write("\n");
         }
         */
-        printf("%d\n",nread);
+        printf("ls:read %d\n",nread);
         cnt+=fprintf(STDOUT,"%s  ",buf);
     }
     if(nread<0){
