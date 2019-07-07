@@ -8,7 +8,7 @@ inline void backup_fd(vfile_t *backup[3],task_t* current){
 
 // Execute cmd.  Never returns.
 int runcmd(struct cmd *cmd){
-    int p[2];
+    struct execcmd *ecmd;
 
     if(cmd == 0)
         exit();
