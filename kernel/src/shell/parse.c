@@ -113,6 +113,7 @@ int runcmd(struct cmd *cmd){
             */
 
         case PIPE:
+            run_pipe_cmd(cmd);
             pcmd = (struct pipecmd*)cmd;
 
             intr_close();
