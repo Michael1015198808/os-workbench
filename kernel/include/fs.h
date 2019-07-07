@@ -15,6 +15,7 @@ struct fsops {
   int (*close)(inode_t *inode);
 } ;
 
+typedef struct file file_t;
 typedef struct inodeops {
   int (*open)(file_t *file, int flags);
   int (*close)(file_t *file);
@@ -36,11 +37,11 @@ struct inode {
                    // inode ops也是文件系统的一部分
 };
 
-typedef struct file {
+struct file {
   int refcnt; // 引用计数
   inode_t *inode;
   uint64_t offset;
-} file_t;
+};
 
 filesystem rd[2];//Ramdisk
 #endif//__FS_H
