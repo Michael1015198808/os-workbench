@@ -66,20 +66,16 @@ int runcmd(struct cmd *cmd){
     exit();
 }
 static inline int run_pipe_cmd(struct cmd *cmd){
-
-    struct pipecmd* pcmd = (struct pipecmd*)cmd;
-
     intr_close();
     int cpu_id=_cpu();
     task_t* current=currents[cpu_id];
     intr_open();
+
+    struct pipecmd* pcmd = (struct pipecmd*)cmd;
+
     char buf[0x100]={};//Manually 
     vfile_t *backup[3];
-    for(int i=0;i<3;++i){
-        backup[i]=current->fd[i];
-        current->fd[i]=pmm->alloc(sizeof(vfile_t));
-        current->fd[i]->type=VFILE_NULL;
-    }
+    backup_fd(backup,current);
     current->fd[1]->type=VFILE_MEM;
     current->fd[1]->ptr =buf;
     task_t* son=pmm->alloc(sizeof(task_t));
