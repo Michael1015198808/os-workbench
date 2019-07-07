@@ -54,6 +54,7 @@ struct info{
 };
 
 inodeops yls_iops={
+    /*
     .open   =yls_iopen,
     .close  =yls_iclose,
     .read   =yls_iread,
@@ -63,4 +64,5 @@ inodeops yls_iops={
     .rmdir  =yls_irmdir,
     .link   =yls_ilink,
     .unlink =yls_iunlink
+    */
 };
