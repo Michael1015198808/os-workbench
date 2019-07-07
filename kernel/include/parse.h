@@ -50,4 +50,3 @@ struct backcmd {
 
 struct cmd *parsecmd(char*);
 
-

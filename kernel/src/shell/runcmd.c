@@ -3,7 +3,7 @@
 
 void panic(char*);
 int runcmd(struct cmd *cmd);
-inline int run_pipe_cmd(struct cmd *cmd);
+static inline int run_pipe_cmd(struct cmd *cmd);
 inline void backup_fd(vfile_t *backup[3],task_t* current);
 
 // Execute cmd.  Never returns.
@@ -64,7 +64,7 @@ int runcmd(struct cmd *cmd){
     Assert(0,"Should not reach here!\n");
     exit();
 }
-inline int run_pipe_cmd(struct cmd *cmd){
+static inline int run_pipe_cmd(struct cmd *cmd){
     intr_close();
     int cpu_id=_cpu();
     task_t* current=currents[cpu_id];
