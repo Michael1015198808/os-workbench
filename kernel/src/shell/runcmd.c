@@ -80,14 +80,14 @@ static inline int run_pipe_cmd(struct cmd *cmd){
         current->fd[i]=pmm->alloc(sizeof(vfile_t));
         current->fd[i]->type=VFILE_NULL;
     }
-    current->fd[1]->type    =VFILE_MEM;
-    current->fd[1]->actual  =buf;
+    current->fd[1]->type=VFILE_MEM;
+    current->fd[1]->ptr =buf;
     task_t* son=pmm->alloc(sizeof(task_t));
     kmt->create(son,"fork-and-run",(task_fun)runcmd,pcmd->left);
     kmt->teardown(son);
     current->fd[0]=pmm->alloc(sizeof(vfile_t));
-    current->fd[0]->type    =VFILE_MEM;
-    current->fd[0]->actual  =buf;
+    current->fd[0]->type=VFILE_MEM;
+    current->fd[0]->ptr =buf;
     for(int i=1;i<3;++i){
         current->fd[i]=backup[i];
     }
