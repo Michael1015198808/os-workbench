@@ -184,8 +184,12 @@ int tty_init(device_t *dev) {
   return 0;
 }
 
+static volatile int tty_eof=0;
 ssize_t tty_read(device_t *dev, off_t offset, void *buf, size_t count) {
   tty_t *tty = dev->ptr;
+  if(tty_eof){
+      return tty_eof=0;
+  }
   kmt->sem_wait(&tty->cooked);
   kmt->sem_wait(&tty->lock);
   size_t nread = 0;
@@ -257,7 +261,7 @@ void tty_task(void *arg) {
                 printf("Ctrl - c\n");
                 break;
             case 'd':
-                ttydev->ops->write(ttydev, 0, &"\0", 1);
+                tty_eof=1;
                 break;
           }
       }
