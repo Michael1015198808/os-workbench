@@ -15,15 +15,17 @@ typedef struct info info;
 union yls_node{
     struct{
         uint32_t type;
-        uint32_t ptr;
+        uint32_t info;
         uint32_t name;
+        uint32_t cnt;
     };
     uint8_t align[0x10];
 };
 
 struct info{
-    uint32_t next;
     char mem[0x40-4];
+    uint32_t next;
 };
+#define OFFS_PER_MEM (sizeof(((info*)0)->mem)/4)
 
 #endif//__YLS_H

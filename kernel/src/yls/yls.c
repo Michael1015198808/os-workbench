@@ -14,7 +14,8 @@ inode_t *yls_lookup(struct filesystem* fs, const char* path, int flags){
     ++path;
 
     yls_node *cur=pmm->alloc(sizeof(yls_node));
-    read(HEADER_LEN,cur,0x10);
+    read(HEADER_LEN,cur,12);
+    cur->cnt=0;
 
     while(path_len>0){
         TODO();
@@ -41,13 +42,29 @@ fsops_t yls_ops={
 };
 
 ssize_t yls_iread(vfile_t *file,char* buf, size_t size){
-    ssize_t nread=0;
+    ssize_t ret=0;
 
+    filesystem* fs= ((inode_t*)file->ptr)->fs;
     yls_node* node= ((inode_t*)file->ptr)->ptr;
     switch(node->type){
         case YLS_DIR:
-            nread=0;
-            return nread;
+            {
+                uint32_t off;
+                if(fs->dev->ops->read(fs->dev,node->info,&off,4)!=4)return -1;
+                if(node->cnt==7){
+                    node->cnt=0;
+                    node->info=0;
+                    TODO();
+                }else{
+                    ++node->cnt;
+                    node->info+=4;
+                }
+                if(off==0)return 0;
+                off+=8;//To name
+                nread=fs->dev->ops->read(fs->dev,node->info,buf,0x40-4);
+                ret+=nread;
+                return ret;
+            }
         case YLS_FILE:
             TODO();
             break;
