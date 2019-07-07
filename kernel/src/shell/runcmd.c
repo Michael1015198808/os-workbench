@@ -74,8 +74,8 @@ static inline int run_pipe_cmd(struct cmd *cmd){
     char buf[0x400]={};//Manually 
 
     vfile_t *backup[3];
-    backup_fd(backup,current);
 
+    backup_fd(backup,current);
     current->fd[1]->type=VFILE_MEM;
     current->fd[1]->ptr =buf;
 
@@ -83,8 +83,10 @@ static inline int run_pipe_cmd(struct cmd *cmd){
     kmt->create(son,"fork-and-run",(task_fun)runcmd,pcmd->left);
     kmt->teardown(son);
 
+    restore_fd(backup,current);
     current->fd[0]->type=VFILE_MEM;
     current->fd[0]->ptr =buf;
+
     return runcmd(pcmd->right);
 }
 inline void backup_fd(vfile_t *backup[3],task_t* current){
