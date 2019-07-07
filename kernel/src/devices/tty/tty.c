@@ -258,6 +258,7 @@ void tty_task(void *arg) {
                 printf("Ctrl - c\n");
                 break;
             case 'd':
+                printf("Ctrl - d(Considered as EOF)\n");
                 tty_cook(ttydev->ptr,'\0');
                 break;
           }

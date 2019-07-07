@@ -1,6 +1,7 @@
 #include <klib.h>
 #include <devices.h>
 
+const char space[]=" \r\t\n\v";
 static inline void single_wc(int fd, char *name,int total[3]){
     char buf[0x200];
     int i,n;
@@ -12,7 +13,7 @@ static inline void single_wc(int fd, char *name,int total[3]){
         for(i=0;i<n;++cnt[2],++i){
             cnt[0]+=(buf[i]=='\n');
 
-            if(strchr(" \r\t\n\v", buf[i]))
+            if(strchr(space, buf[i]))
                 inword = 0;
             else if(!inword){
                 ++cnt[1];

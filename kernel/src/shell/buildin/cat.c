@@ -4,11 +4,12 @@ const char *warn="Haven't realized!\n";
 
 static inline void cat_from_stdin(char buf[0x200]){
     int nread=0;
-    while((nread=vfs->read(STDIN,buf,0x200-1))){
+    while((nread=vfs->read(STDIN,buf,0x200-1))>0){
         printf("cat read %d bytes\n",nread);
         buf[nread]='\0';
         std_write(buf);
     }
+    return nread==0?0:-1;
 }
 
 int mysh_cat(void *args[]){
