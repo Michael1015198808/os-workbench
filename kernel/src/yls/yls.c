@@ -41,8 +41,8 @@ fsops_t yls_ops={
 };
 
 ssize_t yls_iread(vfile_t *file,char* buf, size_t size){
-    yls_node* node= ((inodt_t*)file->ptr)->ptr;
-    fprintf(1,"type:%x\nptr:%x\nname:%x\n",yls_node.type,yls_node.ptr,yls_node.name);
+    yls_node* node= ((inode_t*)file->ptr)->ptr;
+    fprintf(1,"type:%x\nptr:%x\nname:%x\n",node->type,node->ptr,node->name);
     TODO();
     while(size>0){
     }
