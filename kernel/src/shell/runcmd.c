@@ -66,28 +66,31 @@ int runcmd(struct cmd *cmd){
     exit();
 }
 static inline int run_pipe_cmd(struct cmd *cmd){
+
+    struct pipecmd* pcmd = (struct pipecmd*)cmd;
+
     intr_close();
     int cpu_id=_cpu();
     task_t* current=currents[cpu_id];
     intr_open();
-
-    struct pipecmd* pcmd = (struct pipecmd*)cmd;
     char buf[0x100]={};//Manually 
-
     vfile_t *backup[3];
-
-    backup_fd(backup,current);
-    current->fd[1]->type=VFILE_MEM;
-    current->fd[1]->ptr =buf;
-
+    for(int i=0;i<3;++i){
+        backup[i]=current->fd[i];
+        current->fd[i]=pmm->alloc(sizeof(vfile_t));
+        current->fd[i]->type=VFILE_NULL;
+    }
+    current->fd[1]->type    =VFILE_MEM;
+    current->fd[1]->actual  =buf;
     task_t* son=pmm->alloc(sizeof(task_t));
     kmt->create(son,"fork-and-run",(task_fun)runcmd,pcmd->left);
     kmt->teardown(son);
-
-    restore_fd(backup,current);
-    current->fd[0]->type=VFILE_MEM;
-    current->fd[0]->ptr =buf;
-
+    current->fd[0]=pmm->alloc(sizeof(vfile_t));
+    current->fd[0]->type    =VFILE_MEM;
+    current->fd[0]->actual  =buf;
+    for(int i=1;i<3;++i){
+        current->fd[i]=backup[i];
+    }
     return runcmd(pcmd->right);
 }
 inline void backup_fd(vfile_t *backup[3],task_t* current){
