@@ -50,5 +50,5 @@ struct vfile{
     void *ptr;
     int type;
 };
-typedef vfile vfile_t;
+typedef struct vfile vfile_t;
 #endif
