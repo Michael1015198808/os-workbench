@@ -70,7 +70,7 @@ inline int run_pipe_cmd(struct cmd *cmd){
     task_t* current=currents[cpu_id];
     intr_open();
 
-    pcmd = (struct pipecmd*)cmd;
+    struct pipecmd* pcmd = (struct pipecmd*)cmd;
     char buf[0x400]={};//Manually 
 
     vfile_t *backup[3];
