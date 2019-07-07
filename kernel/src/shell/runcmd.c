@@ -9,18 +9,6 @@ inline void backup_fd(vfile_t *backup[3],task_t* current){
 // Execute cmd.  Never returns.
 int runcmd(struct cmd *cmd){
     int p[2];
-    struct backcmd *bcmd;
-    struct execcmd *ecmd;
-    struct listcmd *lcmd;
-    struct pipecmd *pcmd;
-    struct redircmd *rcmd;
-
-    (void)p;
-    (void)bcmd;
-    (void)ecmd;
-    (void)lcmd;
-    (void)pcmd;
-    (void)rcmd;
 
     if(cmd == 0)
         exit();
