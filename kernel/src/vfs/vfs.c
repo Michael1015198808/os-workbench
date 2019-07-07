@@ -23,13 +23,13 @@ static inline int vfs_open_real(const char *path,int flags){
     int fd=new_fd_num(cpu_id);
     Assert(fd!=-1,"No more file descripter!");//Or return -1;
     current->fd[fd]=pmm->alloc(sizeof(vfile_t));
-    if(path[0]!="/"&&path[0]!="."){//Temporarily
+    if(strchr("/.",path)){//Temporarily
+        current->fd[fd]->type=VFILE_FILE;
+        rd[0].lookup(rd[0],path,flags);
+    }else{
         device_t *dev=dev_lookup(path);
         current->fd[fd]->type=VFILE_DEV;
         current->fd[fd]->ptr=dev;
-    }else{
-        current->fd[fd]->type=VFILE_FILE;
-        rd[0].lookup(rd[0],path,flags);
     }
     return fd;
 }
