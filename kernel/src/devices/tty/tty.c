@@ -257,7 +257,7 @@ void tty_task(void *arg) {
                 printf("Ctrl - c\n");
                 break;
             case 'd':
-                ttydev->ops->write(ttydev, 0, &"\0", 1);
+                tty_cook(tty,'\0');
                 break;
           }
       }
