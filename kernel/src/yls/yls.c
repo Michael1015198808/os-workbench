@@ -56,6 +56,7 @@ ssize_t yls_iread(vfile_t *file,char* buf, size_t size){
         case YLS_DIR:
             {
                 uint32_t off,nread;
+                printf("yls_iread reads from %x\n",node->info);
                 if(fs->dev->ops->read(fs->dev,node->info,&off,4)!=4)return -1;
                 if(node->cnt==7){
                     node->cnt=0;
