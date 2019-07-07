@@ -85,6 +85,7 @@ static inline int run_pipe_cmd(struct cmd *cmd){
     kmt->teardown(son);
 
     restore_fd(backup,current);
+    current->fd[0]=pmm->alloc(sizeof(vfile_t));
     current->fd[0]->type=VFILE_MEM;
     current->fd[0]->ptr =buf;
 
