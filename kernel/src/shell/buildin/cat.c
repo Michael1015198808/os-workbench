@@ -30,5 +30,5 @@ int mysh_cat(void *args[]){
     }else{
         cat_from_stdin(buf,&err);
     }
-    return *err;
+    return err;
 }
