@@ -25,7 +25,7 @@ void dir_cat(char* dest,const char* src){
         dest[len-1]='/';
     }
     while(src){
-        int next=get_first_slash(src);
+        int next=get_first_slash(src),flag=0;
         switch(next){
             case -1:
                 strcat(dest,src);
@@ -35,19 +35,22 @@ void dir_cat(char* dest,const char* src){
                 break;
             case 1:
                 if(strncmp(src,".",1)){
-                    goto *default;
+                    flag=1;
                 }
                 break;
             case 2:
                 if(strncmp(src,"..",2)){
-                    goto *default;
+                    flag=1;
                 }else{
                     dest[get_last_slash(dest)]='\0';
                 }
                 break;
             default:
-                strncat(dest,src,next+1);
+                flag=1;
                 break;
+        }
+        if(flag){
+            strncat(dest,src,next+1);
         }
         src+=(next+1);
     }
