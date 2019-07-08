@@ -9,7 +9,6 @@ static void yls_init(struct filesystem *fs,const char* name,device_t* dev){
 }
 
 inode_t *yls_lookup(struct filesystem* fs, const char* path, int flags){
-    printf("lookup %s\n",path);
     int path_len=strlen(path)-1;//Starts from "/"
     ssize_t(*read)(device_t*,off_t,void*,size_t);read=fs->dev->ops->read;
     ++path;
