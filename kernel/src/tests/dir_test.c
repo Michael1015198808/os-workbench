@@ -36,6 +36,5 @@ void dir_test_init(void){
         }
     }
     printf("dir_test PASSED!\n");
-    while(1);
 }
 #endif
