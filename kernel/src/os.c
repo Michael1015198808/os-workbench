@@ -36,7 +36,7 @@ void sem_test(void *arg){
     }
 }
 
-#define CURRENT_TEST multithread_test
+#define CURRENT_TEST dir_test
 #define TEST_NAME(idx) TO_STRING(CURRENT_TEST) TO_STRING(idx)
 #define TEST_REQUIREMENT() \
     void MACRO_CONCAT(MACRO_SELF(CURRENT_TEST),_init)(void); \
@@ -59,6 +59,7 @@ void yield_test(void *dummy){
     while(1);
 }
 static void os_init() {
+    TEST_REQUIREMENT();
     pmm->init();
     kmt->init();
     dev->init();

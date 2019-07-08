@@ -42,6 +42,7 @@
 volatile int ncli[MAX_CPU],intena[MAX_CPU];
 
 typedef void(*task_fun)(void*);
+task_t* get_cur(void);
 
 int fprintf(int fd, const char *fmt, ...);
 void exit(void);
@@ -66,6 +67,7 @@ typedef struct task{
     uint32_t fence2[4];
 #endif
     vfile_t* fd[FD_NUM];
+    char pwd[0x100];
 }task_t;
 extern task_t* currents[MAX_CPU];
 

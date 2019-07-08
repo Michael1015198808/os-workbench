@@ -17,6 +17,19 @@ static inline void single_ls(const char* path,int* err){
     }
 }
 
+//path here may be relative or absolute
+static inline void path_to_absolute(const char* path,int* err){
+    if(path[0]=='/'){
+        //absolute
+        single_ls(path,err);
+    }else{
+        //Relative
+        task_t* cur=get_cur();
+        dir_cat(cur->pwd,path);
+        single_ls(path,err);
+    }
+}
+
 int mysh_ls(void *args[]){
     int err=0;
     if(args[1]){

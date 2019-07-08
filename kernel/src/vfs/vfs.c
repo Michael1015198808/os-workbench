@@ -4,12 +4,6 @@
 #include <fs.h>
 
 #define this_fd current->fd[fd]
-static task_t* get_cur(void){
-    _intr_close();
-    int cpu_id=_cpu();
-    return currents[cpu_id];
-    _intr_open();
-}
 
 static int new_fd_num(task_t* current){
     for(int i=0;i<FD_NUM;++i){
