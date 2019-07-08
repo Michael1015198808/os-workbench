@@ -30,6 +30,7 @@ static inline void path_to_absolute(const char* path,int* err){
         char tmp[0x100];
         strcpy(tmp,cur->pwd);
         dir_cat(tmp,path);
+        printf("ls %s\n",tmp);
         single_ls(tmp,err);
     }
 }
