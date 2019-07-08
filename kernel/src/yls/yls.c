@@ -19,8 +19,8 @@ inode_t *yls_lookup(struct filesystem* fs, const char* path, int flags){
     while(path_len>0){
         if(cur->type!=YLS_DIR){
             const char* const NOT_DIR="not a directory:";
-            vfs->write(2,NOT_DIR,sizeof(NOT_DIR));
-            vfs->write(2,path,strlen(path));
+            vfs->write(2,(char*)NOT_DIR,sizeof(NOT_DIR));
+            vfs->write(2,(char*)path,strlen(path));
         }
         TODO();
     }
