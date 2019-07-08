@@ -59,6 +59,11 @@ void dir_cat(char* dest,const char* src){
         dest[len]='/';
         dest[len+1]='\0';
     }
+    len=strlen(src);
+    if(src[len-1]!='/'){
+        src[len]='/';
+        src[len+1]='\0';
+    }
     dir_cat_real(dest,src);
 
     //Remove '/' from end
