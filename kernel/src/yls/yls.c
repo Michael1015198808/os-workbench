@@ -41,7 +41,7 @@ inode_t *yls_lookup(struct filesystem* fs, const char* path, int flags){
                 off=next;
             }else{
                 const char* const NO_FILE=": No such file or directory\n";
-                vfs->write(2,(char*)path);
+                vfs->write(2,(char*)path,path_len);
                 vfs->write(2,(char*)NO_FILE,sizeof(NOFILE));
             }
         }
