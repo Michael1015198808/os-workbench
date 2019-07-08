@@ -19,6 +19,7 @@ struct{
 };
 void dir_test_init(void){
     char dest[0x100];
+    printf("dir_test STARTED!\n");
     for(int i=0;i<LEN(tests);++i){
         strcpy(dest,tests[i].pwd);
         dir_cat(dest,tests[i].rela);
