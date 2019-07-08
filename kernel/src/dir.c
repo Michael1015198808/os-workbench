@@ -24,6 +24,8 @@ static inline void dir_cat_real(char* dest,const char* src){
         int next=get_first_slash(src),flag=0;
         if(next==-1)next=strlen(src)-1;
         switch(next){
+            case -1:
+                return;
             case 0:
                 break;
             case 1:
