@@ -23,7 +23,7 @@ void dir_cat(char* dest,const char* src){
     int len=strlen(dest);
     if(dest[len-1]!='/'){
         dest[len]='/';
-        dest[len+1]'\0';
+        dest[len+1]='\0';
     }
     while(src){
         int next=get_first_slash(src),flag=0;
