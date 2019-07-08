@@ -14,7 +14,7 @@ inode_t *yls_lookup(struct filesystem* fs, const char* path, int flags){
     ++path;
 
     yls_node *cur=pmm->alloc(sizeof(yls_node));
-    fs->dev->ops->read(fs->dev,HEADER_LEN,cur,12);
+    read(fs->dev,HEADER_LEN,cur,12);
 
     while(path_len>0){
         if(cur->type!=YLS_DIR){
