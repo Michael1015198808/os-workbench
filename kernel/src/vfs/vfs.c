@@ -22,14 +22,14 @@ static inline int vfs_open_real(const char *path,int flags){
 
     this_fd=pmm->alloc(sizeof(vfile_t));
 
-    if(path[0]=='/'){//Temporarily
+    if(strncmp(path,"/dev/",5)){//Temporarily
         this_fd->type=VFILE_FILE;
         this_fd->ptr=rd[0].ops->lookup(&rd[0],path,flags);
         extern inodeops_t yls_iops;
         Assert(((inode_t*)this_fd->ptr)->ops==&yls_iops,
                 "Something wrong happens when try to open /!");
     }else{
-        device_t *dev=dev_lookup(path);
+        device_t *dev=dev_lookup(path+5);
         this_fd->type=VFILE_DEV;
         this_fd->ptr=dev;
     }
