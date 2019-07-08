@@ -9,7 +9,6 @@ static void yls_init(struct filesystem *fs,const char* name,device_t* dev){
 }
 
 inode_t *yls_lookup(struct filesystem* fs, const char* path, int flags){
-    printf("lookup %s\n",path);
     int path_len=strlen(path)-1;//Starts from "/"
     ssize_t(*read)(device_t*,off_t,void*,size_t);read=fs->dev->ops->read;
     ++path;
@@ -23,7 +22,30 @@ inode_t *yls_lookup(struct filesystem* fs, const char* path, int flags){
             vfs->write(2,(char*)NOT_DIR,sizeof(NOT_DIR));
             vfs->write(2,(char*)path,strlen(path));
         }
-        TODO();
+        uint32_t off=cur->info,next=0;
+        while(1){
+            for(int i=0;i<OFFS_PER_MEM;++i){
+                read(fs->dev,HEADER_LEN+off,&next,4);//Get next's yls_node
+                read(fs->dev,HEADER_LEN+next+8,&next,4);//Get next's name's offset
+                char name[0x40-4];
+                read(fs->dev,HEADER_LEN+next,name,4);//Get next's name
+                if(strncmp(name,path,strlen(path))){
+                    path_len-=strlen(path);
+                    path    +=strlen(path);
+                    goto found;
+                }
+                off+=4;
+            }
+            read(fs->dev,HEADER_LEN+off,&next,4);
+            if(next){
+                off=next;
+            }else{
+                const char* const NO_FILE=": No such file or directory\n";
+                vfs->write(2,(char*)path);
+                vfs->write(2,(char*)NO_FILE,sizeof(NOFILE));
+            }
+        }
+found:;
     }
 
     inode_t* ret=pmm->alloc(sizeof(inode_t));
@@ -59,7 +81,7 @@ ssize_t yls_iread(vfile_t *file,char* buf, size_t size){
                 if(fs->dev->ops->read(fs->dev,node->info,&off,4)!=4)return -1;
                 if(off==0)return 0;
                 printf("find a file at %x\n",off);
-                if(node->cnt==7){
+                if(node->cnt==OFFS_PER_MEM){
                     node->cnt=0;
                     node->info=0;
                     TODO();
