@@ -21,7 +21,7 @@ void dir_test_init(void){
         if(strcmp(dest,tests[i].ans)){
             Assert(0,"dir_cat(%s,%s) should be %s\nyour ans:%s\n"
                     ,tests[i].pwd
-                    ,tests[i].pela
+                    ,tests[i].rela
                     ,tests[i].ans
                     ,dest);
             return;
