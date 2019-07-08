@@ -6,7 +6,7 @@
 #ifndef NO_TEST
 struct{
     const char* src,dest,ans;
-}tests={
+}const tests[]={
     {"/"        ,"test"     ,"/test"},
     {"/test"    ,"test"     ,"/test/test"},
     {"/test/"   ,"test"     ,"/test/test"},
