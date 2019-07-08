@@ -174,7 +174,7 @@ int kmt_create(task_t *task, const char *name, void (*entry)(void*), void *arg){
     return task_idx;
 }
 void kmt_teardown(task_t *task){
-    while(!(task->attr&TASK_ZOMBIE))_yield();
+    while(!(task->attr&TASK_ZOMBIE));
     for(int i=0;i<40;++i){
         if(tasks[i]==task){
             pthread_mutex_lock(&tasks_lk);
