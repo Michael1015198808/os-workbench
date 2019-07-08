@@ -11,7 +11,11 @@ struct{
     {"/"        ,"test"     ,"/test"},
     {"/test"    ,"test"     ,"/test/test"},
     {"/test/"   ,"test"     ,"/test/test"},
-    {"/test/"   ,"test/"    ,"/test/test"}
+    {"/test/"   ,"test/"    ,"/test/test"},
+    {"/test/"   ,"."        ,"/test"},
+    {"/test/"   ,".."       ,"/"},
+    {"/test/"   ,"a/../b"   ,"/test/b"},
+    {"/test/"   ,"../.."    ,"/"},
 };
 void dir_test_init(void){
     char dest[0x100];
@@ -27,5 +31,7 @@ void dir_test_init(void){
             return;
         }
     }
+    printf("dir_test PASSED!\n");
+    while(1);
 }
 #endif
