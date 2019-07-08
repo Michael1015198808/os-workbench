@@ -51,13 +51,18 @@ static inline void dir_cat_real(char* dest,const char* src){
     }
 }
 void dir_cat(char* dest,const char* src){
-    int len=strlen(dest);
+    int len=-1;
+
+    //Add '/' to end
+    len=strlen(dest);
     if(dest[len-1]!='/'){
         dest[len]='/';
         dest[len+1]='\0';
     }
     dir_cat_real(dest,src);
-    int len=strlen(dest);
+
+    //Remove '/' from end
+    len=strlen(dest);
     if(dest[len-1]=='/'){
         dest[len-1]='\0';
     }
