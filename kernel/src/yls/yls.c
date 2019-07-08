@@ -14,7 +14,6 @@ inode_t *yls_lookup(struct filesystem* fs, const char* path, int flags){
     ++path;
 
     yls_node *cur=pmm->alloc(sizeof(yls_node));
-    read(fs->dev,HEADER_LEN,cur,12);
     uint32_t off=cur->info;
 
     while(path_len>0){
@@ -34,7 +33,7 @@ inode_t *yls_lookup(struct filesystem* fs, const char* path, int flags){
                 if(strncmp(name,path,strlen(path))){
                     path_len-=strlen(path);
                     path    +=strlen(path);
-                    cur=next_off;
+                    off=next_off;
                     goto found;
                 }
                 off+=4;
@@ -50,6 +49,7 @@ inode_t *yls_lookup(struct filesystem* fs, const char* path, int flags){
         }
 found:;
     }
+    read(fs->dev,HEADER_LEN,cur,12);
 
     inode_t* ret=pmm->alloc(sizeof(inode_t));
     inode_t tmp={
