@@ -16,6 +16,7 @@ static inline void single_ls(const char* path,int* err){
     if(nread<0){
         *err=-1;
     }
+    std_write("\n");
 }
 
 //path here may be relative or absolute
@@ -46,6 +47,5 @@ int mysh_ls(void *args[]){
     }else{
         single_ls(".",&err);
     }
-    std_write("\n");
     return err;
 }
