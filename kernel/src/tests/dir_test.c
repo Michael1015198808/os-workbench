@@ -23,7 +23,8 @@ void dir_test_init(void){
         strcpy(dest,tests[i].pwd);
         dir_cat(dest,tests[i].rela);
         if(strcmp(dest,tests[i].ans)){
-            Assert(0,"dir_cat(%s,%s) should be %s\nyour ans:%s\n"
+            Assert(0,"wrong on test %d\ndir_cat(%s,%s) should be %s\nyour ans:%s\n"
+                    ,i
                     ,tests[i].pwd
                     ,tests[i].rela
                     ,tests[i].ans
