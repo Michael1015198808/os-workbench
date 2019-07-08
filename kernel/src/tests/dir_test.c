@@ -4,8 +4,9 @@
 #include <dir.h>
 
 #ifndef NO_TEST
+typedef const char* dir
 struct{
-    const char* src,dest,ans;
+    dir src,dest,ans;
 }tests[]={
     {"/"        ,"test"     ,"/test"},
     {"/test"    ,"test"     ,"/test/test"},
