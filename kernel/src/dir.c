@@ -50,7 +50,7 @@ static inline void dir_cat_real(char* dest,const char* src){
         src+=(next+1);
     }
 }
-void dir_cat(char* dest,const char* src){
+void dir_cat(char* dest,char* src){
     int len=-1;
 
     //Add '/' to end
