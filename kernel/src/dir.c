@@ -19,12 +19,7 @@ int get_last_slash_from(const char* const path,int idx){
 int get_last_slash(const char* const path){
     return get_last_slash_from(path,strlen(path));
 }
-void dir_cat(char* dest,const char* src){
-    int len=strlen(dest);
-    if(dest[len-1]!='/'){
-        dest[len]='/';
-        dest[len+1]='\0';
-    }
+static inline void dir_cat_real(char* dest,const char* src){
     while(src){
         int next=get_first_slash(src),flag=0;
         switch(next){
@@ -32,7 +27,6 @@ void dir_cat(char* dest,const char* src){
                 strcat(dest,src);
                 return;
             case 0:
-                Assert(0,"Should not reach here!\n");
                 break;
             case 1:
                 if(strncmp(src,".",1)){
@@ -54,5 +48,17 @@ void dir_cat(char* dest,const char* src){
             strncat(dest,src,next+1);
         }
         src+=(next+1);
+    }
+}
+void dir_cat(char* dest,const char* src){
+    int len=strlen(dest);
+    if(dest[len-1]!='/'){
+        dest[len]='/';
+        dest[len+1]='\0';
+    }
+    dir_cat_real(dest,src);
+    int len=strlen(dest);
+    if(dest[len-1]=='/'){
+        dest[len-1]='\0';
     }
 }
