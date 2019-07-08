@@ -8,14 +8,15 @@ typedef const char* dir;
 struct{
     dir pwd,rela,ans;
 }tests[]={
-    {"/"        ,"test"     ,"/test"},
-    {"/test"    ,"test"     ,"/test/test"},
-    {"/test/"   ,"test"     ,"/test/test"},
-    {"/test/"   ,"test/"    ,"/test/test"},
-    {"/test/"   ,"."        ,"/test"},
-    {"/test/"   ,".."       ,"/"},
-    {"/test/"   ,"a/../b"   ,"/test/b"},
-    //{"/test/"   ,"../.."    ,"/"},
+    {"/"        ,"test"     ,"/test"        },
+    {"/test"    ,"test"     ,"/test/test"   },
+    {"/test/"   ,"test"     ,"/test/test"   },
+    {"/test/"   ,"test/"    ,"/test/test"   },
+    {"/test/"   ,"."        ,"/test"        },
+    {"/test/"   ,".."       ,"/"            },
+    {"/test/"   ,"a/../b"   ,"/test/b"      },
+    {"/test/"   ,"../.."    ,"/"            },
+    {"/test/"   ,"../../a"  ,"/a"           },
 };
 void dir_test_init(void){
     char dest[0x100];
