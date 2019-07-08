@@ -1,22 +1,22 @@
 #include <dir.h>
 #include <common.h>
 
-inline int get_first_slash_from(const char* const path,int idx){
+int get_first_slash_from(const char* const path,int idx){
     for(;path[idx];++idx){
         if(path[idx]=='/')return idx;
     }
     return -1;
 }
-inline int get_first_slash(const char* const path){
+int get_first_slash(const char* const path){
     return get_first_slag_from(path,0);
 }
-inline int get_last_slash_from(const char* const path,int idx){
+int get_last_slash_from(const char* const path,int idx){
     for(;idx>0;--idx){
         if(path[idx]=='/')return idx;
     }
     return -1;
 }
-inline int get_last_slash(const char* const path){
+int get_last_slash(const char* const path){
     return get_last_slash_from(path,strlen(path));
 }
 void dir_cat(char* dest,const char* src){
