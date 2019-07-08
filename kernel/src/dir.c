@@ -8,7 +8,7 @@ int get_first_slash_from(const char* const path,int idx){
     return -1;
 }
 int get_first_slash(const char* const path){
-    return get_first_slag_from(path,0);
+    return get_first_slash_from(path,0);
 }
 int get_last_slash_from(const char* const path,int idx){
     for(;idx>0;--idx){
@@ -35,12 +35,12 @@ void dir_cat(char* dest,const char* src){
                 break;
             case 1:
                 if(strncmp(src,".",1)){
-                    goto default;
+                    goto *default;
                 }
                 break;
             case 2:
                 if(strncmp(src,"..",2)){
-                    goto default;
+                    goto *default;
                 }else{
                     dest[get_last_slash(dest)]='\0';
                 }

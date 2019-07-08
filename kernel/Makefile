@@ -14,7 +14,10 @@ include ../Makefile.lab
 .PHONY: initrd
 
 initrd:
-	@seq 1 8192 > build/ramdisk.img
+	@gcc -o initrd/initrd initrd/initrd.c
+	@initrd/initrd > build/ramdisk.img
+#@seq 1 8192 > build/ramdisk.img
+
 
 QEMU_FLAGS := -serial stdio -machine accel=kvm -drive format=raw,file=$(BINARY)
 

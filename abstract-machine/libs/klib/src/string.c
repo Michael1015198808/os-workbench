@@ -42,6 +42,17 @@ char* strcat(char* dst, const char* src) {
     return dst;
 }
 
+char* strncat(char* dst, const char* src,size_t n) {
+    size_t dest_len=strlen(dst);
+    size_t i;
+    for(i=0;i<n&&src[i]!='\0';++i){
+        dst[dest_len+i]=src[i];
+    }
+    dst[dest_len+i]='\0';
+    return dst;
+}
+
+
 int strcmp(const char* s1, const char* s2) {
     while(*s1==*s2&&*s1!='\0'){
         ++s1;
@@ -101,7 +112,7 @@ void *memmove(void *dest, const void *src, size_t n){
     return dest;
 }
 
-//Return *s in s such that *s == c
+//Return s' in s such that *s' == c
 //If no such *s exists, return NULL
 char* strchr(const char *s, char c){
     while(*s){
