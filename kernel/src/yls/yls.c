@@ -42,7 +42,7 @@ inode_t *yls_lookup(struct filesystem* fs, const char* path, int flags){
             }else{
                 const char* const NO_FILE=": No such file or directory\n";
                 vfs->write(2,(char*)path,path_len);
-                vfs->write(2,(char*)NO_FILE,sizeof(NOFILE));
+                vfs->write(2,(char*)NO_FILE,sizeof(NO_FILE));
             }
         }
 found:;
