@@ -18,7 +18,7 @@ void dir_test_init(void){
     for(int i=0;i<LEN(tests);++i){
         strcpy(dest,tests[i].dest);
         dir_cat(dest,tests[i].src);
-        if(strcmp(dest,tests[i])){
+        if(strcmp(dest,tests[i].ans)){
             Assert(0,"dir_cat(%s,%s) should be %s\nyour ans:%s\n"
                     ,tests[i].dest
                     ,tests[i].src
