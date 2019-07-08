@@ -10,12 +10,18 @@ static void yls_init(struct filesystem *fs,const char* name,device_t* dev){
 
 inode_t *yls_lookup(struct filesystem* fs, const char* path, int flags){
     int path_len=strlen(path)-1;//Starts from "/"
+    ssize_t (*read)(vfile_t*,char*,size_t)=fs->dev->ops->read;
     ++path;
 
     yls_node *cur=pmm->alloc(sizeof(yls_node));
     fs->dev->ops->read(fs->dev,HEADER_LEN,cur,12);
 
     while(path_len>0){
+        if(cur->type!=YLS_DIR){
+            const char* const NOT_DIR="not a directory:";
+            vfs->write(2,NOT_DIR,sizeof(NOT_DIR));
+            vfs->write(2,path,strlen(path));
+        }
         TODO();
     }
 

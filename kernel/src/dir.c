@@ -55,6 +55,7 @@ static inline void dir_cat_real(char* dest,const char* src){
     }
 }
 void dir_cat(char* dest,const char* src){
+    Assert(src[0]!='/',"Relative location shouldn't start with /");
     int len=-1;
 
     //Add '/' to end
