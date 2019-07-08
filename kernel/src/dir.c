@@ -1,3 +1,4 @@
+#include <dir.h>
 #include <common.h>
 
 inline int get_first_slash_from(const char* const path,int idx){
