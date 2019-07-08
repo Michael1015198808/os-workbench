@@ -4,7 +4,7 @@
 #include <dir.h>
 
 #ifndef NO_TEST
-typedef const char* dir
+typedef const char* dir;
 struct{
     dir src,dest,ans;
 }tests[]={
