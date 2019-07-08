@@ -156,7 +156,7 @@ int kmt_create(task_t *task, const char *name, void (*entry)(void*), void *arg){
         }
         strcpy(task->pwd,cur->pwd);
     }else{
-        local_log("No current task!\n");
+        strcpy(task->pwd,"/");
     }
 
     task->context = *_kcontext(

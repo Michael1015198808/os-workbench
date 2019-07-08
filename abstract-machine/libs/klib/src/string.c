@@ -26,9 +26,7 @@ char* strncpy(char* dst, const char* src, size_t n) {
     for(i=0;i<n&&src[i]!='\0';++i){
         dst[i]=src[i];
     }
-    for(;i<n;++i){
-        dst[i]='\0';
-    }
+    dst[i]='\0';
     return dst;
 }
 
@@ -63,7 +61,7 @@ int strcmp(const char* s1, const char* s2) {
 
 int strncmp(const char* s1, const char* s2, size_t n) {
     if(n==0){return 0;}
-    while(n>0&&*s1==*s2){
+    while(n>1&&*s1==*s2){
         ++s1;
         ++s2;
         --n;
