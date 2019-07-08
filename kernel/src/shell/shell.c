@@ -8,7 +8,7 @@ static void fork_and_run(void *input){
         runcmd(parsecmd((char*)input));
 }
 void mysh(void *name) {
-    char pwd[0x100]="/";
+    task_t* cur=get_cur();
     {
         for(int i=0;i<3;++i){
             char *std_name[3]={"stdin","stdout","stderr"};
@@ -18,7 +18,7 @@ void mysh(void *name) {
     }
     while (1) {
         char input[0x100], prompt[0x100];
-        sprintf(prompt, "(%s) [%s] $ ", name,pwd);
+        sprintf(prompt, "(%s) [%s] $ ", name,cur->pwd);
         std_write(prompt);
         int nread=std_read(input);
         input[nread-1]='\0';
@@ -28,7 +28,7 @@ void mysh(void *name) {
             kmt->create(son,"fork-and-run",fork_and_run,input);
             kmt->teardown(son);
         }else{
-            void* cd_args[]={pwd,input};
+            void* cd_args[]={cur->pwd,input};
             mysh_cd(cd_args);
         }
     }

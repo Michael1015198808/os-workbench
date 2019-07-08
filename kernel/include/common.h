@@ -30,7 +30,13 @@
 #define MACRO_CONCAT(_arg1,_arg2) MACRO_CONCAT_REAL(_arg1,_arg2)
 #define TO_STRING(_arg)     MACRO_VALUE(_arg)
 
-#define local_log(...) 
+#define _LOCAL
+
+#ifdef _LOCAL
+    #define local_log(...) log(__VA_ARGS__)
+#else
+    #define local_log(...) 
+#endif//_LOCAL
 
 #define LEN(arr) ((sizeof(arr) / sizeof(arr[0])))
 

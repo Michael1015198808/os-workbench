@@ -149,12 +149,15 @@ int kmt_create(task_t *task, const char *name, void (*entry)(void*), void *arg){
     task->running=0;
     task->ncli=0;
     copy_name(task->name,name);
-    intr_close();
-    int cpu_id=_cpu();
-    for(int i=0;i<FD_NUM;++i){
-        task->fd[i]=current->fd[i];
+    task_t* cur=get_cur();
+    if(cur){
+        for(int i=0;i<FD_NUM;++i){
+            task->fd[i]=cur->fd[i];
+        }
+        strcpy(task->pwd,cur->pwd);
+    }else{
+        local_log("No current task!\n");
     }
-    intr_open();
 
     task->context = *_kcontext(
             (_Area){
