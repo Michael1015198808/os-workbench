@@ -20,9 +20,10 @@ int get_last_slash(const char* const path){
     return get_last_slash_from(path,strlen(path));
 }
 static inline void dir_cat_real(char* dest,const char* src){
-    while(src){
+    int end=1;
+    while(end){
         int next=get_first_slash(src),flag=0;
-        if(next==-1)next=strlen(src)-1;
+        if(next==-1)end=0,next=strlen(src);
         switch(next){
             case -1:
                 return;
