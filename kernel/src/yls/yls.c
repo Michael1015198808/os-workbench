@@ -15,6 +15,7 @@ inode_t *yls_lookup(struct filesystem* fs, const char* path, int flags){
 
     yls_node *cur=pmm->alloc(sizeof(yls_node));
     read(fs->dev,HEADER_LEN,cur,12);
+    uint32_t off=cur->info;
 
     while(path_len>0){
         if(cur->type!=YLS_DIR){
@@ -22,16 +23,18 @@ inode_t *yls_lookup(struct filesystem* fs, const char* path, int flags){
             vfs->write(2,(char*)NOT_DIR,sizeof(NOT_DIR));
             vfs->write(2,(char*)path,strlen(path));
         }
-        uint32_t off=cur->info,next=0;
+        uint32_t next_off=0;
         while(1){
             for(int i=0;i<OFFS_PER_MEM;++i){
-                read(fs->dev,HEADER_LEN+off,&next,4);//Get next's yls_node
-                read(fs->dev,HEADER_LEN+next+8,&next,4);//Get next's name's offset
+                read(fs->dev,HEADER_LEN+off,&next_off,4);//Get next's yls_node
+                uint32_t next=0;
+                read(fs->dev,HEADER_LEN+next_off+8,&next,4);//Get next's name's offset
                 char name[0x40-4];
                 read(fs->dev,HEADER_LEN+next,name,4);//Get next's name
                 if(strncmp(name,path,strlen(path))){
                     path_len-=strlen(path);
                     path    +=strlen(path);
+                    cur=next_off;
                     goto found;
                 }
                 off+=4;
