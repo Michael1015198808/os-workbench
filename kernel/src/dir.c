@@ -11,7 +11,7 @@ int get_first_slash(const char* const path){
     return get_first_slash_from(path,0);
 }
 int get_last_slash_from(const char* const path,int idx){
-    for(;idx>0;--idx){
+    for(;idx>=0;--idx){
         if(path[idx]=='/')return idx;
     }
     return -1;
