@@ -38,11 +38,8 @@ static inline void dir_cat_real(char* dest,const char* src){
                 if(strncmp(src,"..",2)){
                     flag=1;
                 }else{
-                    printf("%s\n",dest);
                     dest[get_last_slash(dest)]='\0';
-                    printf("%s\n",dest);
                     dest[get_last_slash(dest)+1]='\0';
-                    printf("%s\n",dest);
                 }
                 break;
             default:
