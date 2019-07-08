@@ -39,6 +39,7 @@ static inline void dir_cat_real(char* dest,const char* src){
                     flag=1;
                 }else{
                     dest[get_last_slash(dest)]='\0';
+                    dest[get_last_slash(dest)+1]='\0';
                 }
                 break;
             default:
