@@ -23,6 +23,7 @@ static inline void dir_cat_real(char* dest,const char* src){
     int end=1;
     while(end){
         int next=get_first_slash(src),flag=0;
+        printf("%s,%s\n",dest,src);
         if(next==-1)end=0,next=strlen(src);
         switch(next){
             case -1:
