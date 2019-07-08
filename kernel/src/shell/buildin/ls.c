@@ -27,8 +27,10 @@ static inline void path_to_absolute(const char* path,int* err){
     }else{
         //Relative
         task_t* cur=get_cur();
-        dir_cat(cur->pwd,path);
-        single_ls(path,err);
+        char tmp[0x100];
+        strcpy(tmp,cur->pwd);
+        dir_cat(tmp,path);
+        single_ls(tmp,err);
     }
 }
 
