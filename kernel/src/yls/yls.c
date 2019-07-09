@@ -18,6 +18,7 @@ inode_t *yls_lookup(struct filesystem* fs, const char* path, int flags){
     read(fs->dev,HEADER_LEN,cur,12);
 
     int pos=find_path(fs->dev,cur,path);
+    printf("%s,%d,%c",path,pos,path[pos]);
 
     if(path[pos]!='\0'){//Look up failed at middle
         fprintf(2,"%s: No such file or directory\n",path);
