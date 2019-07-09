@@ -67,15 +67,7 @@ static void os_init() {
 #undef  CURRENT_TEST
 #define CURRENT_TEST semaphore_test
     TEST_REQUIREMENT();
-    /*
-    kmt->create(pmm->alloc(sizeof(task_t)),"sem-test1",sem_test,"!");
-    kmt->create(pmm->alloc(sizeof(task_t)),"sem-test2",sem_test,"!");
-    kmt->create(pmm->alloc(sizeof(task_t)),"echo-test:n",echo_test,"n");
-    kmt->create(pmm->alloc(sizeof(task_t)),"echo-test:m",echo_test,"m");
-    kmt->create(pmm->alloc(sizeof(task_t)),"echo-test:s",echo_test,"s");
-    kmt->create(pmm->alloc(sizeof(task_t)),"echo-test:l",echo_test,"l");
-    kmt->sem_init(&echo_sem,"echo-sem",10);
-    */
+
     kmt->create(pmm->alloc(sizeof(task_t)),"shell1",mysh,"/dev/tty1");
     kmt->create(pmm->alloc(sizeof(task_t)),"shell2",mysh,"/dev/tty2");
     kmt->create(pmm->alloc(sizeof(task_t)),"shell3",mysh,"/dev/tty3");
@@ -87,32 +79,12 @@ static void hello() {
     //My printf is thread-safe
     printf("hello from CPU #%d\n",_cpu());
 }
-void stack_checker(){
-    extern task_t *tasks[40];
-    extern int tasks_cnt;
-    _intr_write(0);
-    while(1){
-        for(int i=0;i<tasks_cnt;++i){
-            for(int j=0;j<4;++j){
-                if(tasks[i]->fence1[j]!=0x13579ace||
-                   tasks[i]->fence2[j]!=0xeca97531){
-                    printf("Stack over/under flow!\n");
-                    report_if(1);
-                    while(1);
-                }
-            }
-        }
-    }
-}
 
 static void os_run() {
     _intr_write(0);
     hello();
-    /*if(_cpu()==3){
-        stack_checker();
-    }*/
     _intr_write(1);
-    while(1);
+    while(1)_yield();
 }
 
 static _Context *os_trap(_Event ev, _Context *context) {
@@ -133,11 +105,10 @@ static _Context *os_trap(_Event ev, _Context *context) {
     return ret;
 }
 
-
 static void os_on_irq(int seq, int event, handler_t handler) {
     irq_handler *prev=&irq_guard,*p=irq_guard.next;
     //prev->new->p
-    while(p){
+    while(1){
         if(p->seq>seq||p==&irq_guard)break;
         prev=p;
         p=p->next;
