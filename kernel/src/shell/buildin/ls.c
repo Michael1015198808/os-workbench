@@ -39,11 +39,13 @@ static inline void single_rela_ls(const char* path,int* err){
 int mysh_ls(void *args[]){
     int err=0,i=1;
     if(args[1]){
-        single_rela_ls(args[1],&err);
         if(args[2]){
-            for(i=2;args[i];++i){
-                fprintf(STDOUT,"\n%s\n",args[i]);
+            for(i=1;args[i];++i){
+                fprintf(STDOUT,"%s:\n",args[i]);
                 single_rela_ls(args[i],&err);
+                if(args[i+1]){std_write("\n");}
+            }else{
+                single_rela_ls(args[1],&err);
             }
         }
     }else{
