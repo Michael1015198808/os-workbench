@@ -3,9 +3,10 @@
 #include <yls.h>
 #include <dir.h>
 
-int find_path(device_t* dev,yls_node* cur,const char* path){
+int find_path(device_t* dev,inode_t* inode,const char* path){
     int ret=0;//Starts from "/"
     ssize_t(*const read)(device_t*,off_t,void*,size_t)=dev->ops->read;
+    yls_node* cur=inode->ptr;
 
     while(path[ret]){
         uint32_t off=cur->info;

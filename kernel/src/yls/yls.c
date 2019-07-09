@@ -15,9 +15,14 @@ inode_t *yls_lookup(struct filesystem* fs, const char* path, int flags){
     ssize_t(*const read)(device_t*,off_t,void*,size_t)=fs->dev->ops->read;
 
     yls_node *cur=pmm->alloc(sizeof(yls_node));
+    inode_t* ret=pmm->alloc(sizeof(inode_t));
+    ret->ptr    =cur;
+    ret->fs     =fs;
+    ret->ops    =&yls_iops;
+    ret->offset =0;
     read(fs->dev,HEADER_LEN,cur,12);
 
-    int pos=find_path(fs->dev,cur,path);
+    int pos=find_path(fs->dev,ret,path);
 
     if(path[pos]!='\0'){//Look up failed at middle
         task_t* current=get_cur();
@@ -25,14 +30,6 @@ inode_t *yls_lookup(struct filesystem* fs, const char* path, int flags){
         exit();
     }
 
-    inode_t* ret=pmm->alloc(sizeof(inode_t));
-    inode_t tmp={
-        .ptr=cur,
-        .fs=fs,
-        .ops=&yls_iops,
-        .offset=0
-    };
-    *ret=tmp;
     return ret;
 }
 int yls_close(inode_t *inode){
