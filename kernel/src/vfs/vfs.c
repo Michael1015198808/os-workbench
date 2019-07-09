@@ -116,9 +116,7 @@ static int vfs_exec(const char* file,void *args[]){
     if(is_buildin){
         return ret;
     }else{
-        std_write(args[0]);
-        char warn[]=": command not found\n";
-        std_write(warn);
+        fprintf(STDERR,"%s: command not found\n",args[0]);
         return -1;
     }
 }
