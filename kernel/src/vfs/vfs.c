@@ -35,8 +35,13 @@ int vfs_unmount(const char *path){
     TODO();
 }
 int vfs_mkdir(const char* path){
+    yls_node cur;
+
+    inode_t inode;
+    inode.ptr=&cur;
+    inode.ops=&yls_iops;
+    inode.offset=0;
     /*
-    inode_t* inode=rd[0].ops->lookup(&rd[0],path,0777);
     extern inodeops_t yls_iops;
     Assert(inode->ops==&yls_iops,
             "Something wrong happens when try to open /");
@@ -46,19 +51,17 @@ int vfs_mkdir(const char* path){
         uint32_t type;
         const char* path;
     }info;
-    yls_node cur;
 
     extern ssize_t rd_read(device_t *dev, off_t offset, void *buf, size_t count);
     extern device_t *devices[];
     rd_read(devices[0],HEADER_LEN,&cur,12);
-    int pos=find_path(devices[0],&cur,path);
+    int pos=find_path(devices[0],&inode,path);
 
     info.type=YLS_DIR;
     info.path=path+pos;
     printf("%s\n%s\n",path,info.path);
 
-    TODO();
-    //return inode->ops->write(inode->ptr,(void*)&info,strlen(path));
+    return inode->ops->write(inode->ptr,(void*)&info,strlen(path));
 }
 int vfs_rmdir(const char *path){
     TODO();

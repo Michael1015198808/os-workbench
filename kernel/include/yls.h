@@ -9,6 +9,8 @@ typedef struct info info;
 int file_cmp    (device_t* dev,uint32_t off,const char* s);
 int string_cmp  (device_t* dev,uint32_t off,const char* s);
 int string_cpy  (device_t* dev,uint32_t off,const char* s);
+uint32_t new_block(device_t* dev,uint32_t size);
+uint32_t find_end(device_t* dev,uint32_t off);
 
 int find_path   (device_t* dev,inode_t* cur,const char* s);
 

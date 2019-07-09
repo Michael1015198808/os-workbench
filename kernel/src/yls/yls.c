@@ -83,26 +83,18 @@ ssize_t yls_iwrite(vfile_t* file,const char* buf,size_t size){
     switch(node->type){
         case YLS_DIR:
             {
-                while(1){
-                    for(int i=0;i<OFFS_PER_MEM;++i,node->info+=4){
-                        fs->dev->ops->read(fs->dev,node->info,&off,4);
-                        if(!off){
-                            uint32_t disk_sz;
-                            disk_sz=fs->dev->ops->read(fs->dev,0,&disk_sz,4);
-                            yls_node new_dir={
-                                .type=YLS_DIR,
-                                .info=disk_sz+0x10,
-                                .name=disk_sz+0x50
-                            };
-                            fs->dev->ops->write(fs->dev,disk_sz,&new_dir,12);
-                            ssize_t ret=string_cpy(fs->dev,disk_sz+0x50,buf);
-                            disk_sz+=0x80+(size/(0x40-4))*0x40;
-                            fs->dev->ops->write(fs->dev,0,&disk_sz,4);
-                            return ret;
-                        }
-                    }
-                    TODO();
+                while(buf){
+                    uint32_t next=new_block(fs->dev,0x10);
+                    yls_node new_node;
+                    new_node.type=0;
+                    new_node.info=new_block(0x40);
+                    new_node.name=new_block(0x40);
+                    fs->dev->ops->write(fs->dev,next,&new_node,12);
+                    int pos=get_first_layer(buf);
+                    fs->dev->ops->write(fs->dev,new_node.name,buf,pos-1);
+                    buf+=pos;
                 }
+                return size;
             }
             break;
         default:
