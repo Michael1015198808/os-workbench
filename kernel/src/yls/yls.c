@@ -78,7 +78,6 @@ ssize_t yls_iread(vfile_t* file,char* buf,size_t size){
 ssize_t yls_iwrite(vfile_t* file,const char* buf,size_t size){
     filesystem* fs= ((inode_t*)file->ptr)->fs;
     yls_node* node= ((inode_t*)file->ptr)->ptr;
-    uint32_t off=0;
 
     switch(node->type){
         case YLS_DIR:
