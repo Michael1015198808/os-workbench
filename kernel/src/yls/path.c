@@ -1,6 +1,7 @@
 #include <devices.h>
 #include <common.h>
 #include <yls.h>
+#include <vfs.h>
 #include <dir.h>
 
 int find_path(device_t* dev,inode_t* inode,const char* path){
