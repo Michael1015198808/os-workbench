@@ -1,6 +1,5 @@
 #include <devices.h>
 #include <dir.h>
-#include <fs.h>
 #include <vfs.h>
 
 //Compare filename and char*
