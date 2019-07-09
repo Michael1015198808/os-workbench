@@ -40,6 +40,7 @@ int vfs_mkdir(const char* path){
 
     inode_t inode;
     inode.ptr=&cur;
+    inode.fs=&rd[0];
     inode.ops=&yls_iops;
     inode.offset=0;
 
