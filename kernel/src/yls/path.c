@@ -3,10 +3,10 @@
 #include <dir.h>
 
 int find_path(device_t* dev,yls_node* cur,const char* path){
-    int ret;//Starts from "/"
+    int ret=0;//Starts from "/"
     ssize_t(*const read)(device_t*,off_t,void*,size_t)=dev->ops->read;
 
-    while(ret=0;path[ret];++ret){
+    while(path[ret]){
         uint32_t off=cur->info;
         if(cur->type!=YLS_DIR){
             fprintf(2,"%s: not a directory\n",path);
