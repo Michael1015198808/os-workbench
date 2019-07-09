@@ -1,7 +1,7 @@
 #include <common.h>
 #include <yls.h>
 
-inline int find_path(device_t* dev,yls_node* cur,const char* path){
+int find_path(device_t* dev,yls_node* cur,const char* path){
     int ret,path_len=strlen(path)-1;//Starts from "/"
     ssize_t(*const read)(device_t*,off_t,void*,size_t)=dev->ops->read;
 
