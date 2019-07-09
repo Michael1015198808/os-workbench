@@ -55,19 +55,19 @@ uint32_t new_block(device_t* dev,uint32_t size){
 }
 //Find end of info
 uint32_t find_end(device_t* dev,uint32_t off){
-    uint32_t info;
+    uint32_t read;
     while(1){
         for(int i=0;i<OFFS_PER_MEM;++i,off+=4){
-            dev->ops->read(dev,off,&info,4);
-            if(info==0){
+            dev->ops->read(dev,off,&read,4);
+            if(read==0){
                 return off;
             }
         }
-        dev->ops->read(dev,off,&info,4);
-        if(info==0){
-            info=new_block(dev,0x40);
-            dev->ops->write(dev,off,&info,4);
-            return info;
+        dev->ops->read(dev,off,&read,4);
+        if(read==0){
+            read=new_block(dev,0x40);
+            dev->ops->write(dev,off,&read,4);
+            return read;
         }
     }
 }
