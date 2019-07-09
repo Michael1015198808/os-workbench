@@ -82,6 +82,7 @@ ssize_t yls_iwrite(vfile_t* file,const char* buf,size_t size){
     switch(node->type){
         case YLS_DIR:
             {
+                uint32_t parent_info=node->info;
                 uint32_t type=((uint32_t*)buf)[0];
                 const char* path=((void**)buf)[1];
                 while(*path){
@@ -92,10 +93,11 @@ ssize_t yls_iwrite(vfile_t* file,const char* buf,size_t size){
                     new_node.name=new_block(fs->dev,0x40);
                     int pos=get_first_layer(path);
 
-                    fs->dev->ops->write(fs->dev,find_end(fs->dev,node->info),&next,12);//Parent's info
+                    fs->dev->ops->write(fs->dev,find_end(fs->dev,parent_info),&next,12);//Parent's info
                     fs->dev->ops->write(fs->dev,next,&new_node,12);//Son's tab
-                    fs->dev->ops->write(fs->dev,new_node.name,path,pos-1);//Son's name
+                    fs->dev->ops->write(fs->dev,new_node.name,path,pos);//Son's name
                     path+=pos;
+                    parent_info=new_node.info;
                 }
                 return size;
             }
