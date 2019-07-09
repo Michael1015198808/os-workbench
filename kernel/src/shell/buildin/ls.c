@@ -46,3 +46,14 @@ int mysh_ls(void *args[]){
     }
     return err;
 }
+
+/* ls test
+ * ls
+ * ls .
+ * ls /
+ * ls test
+ * ls /test
+ * ls test/
+ * ls /test/
+ * ls / test/
+ */
