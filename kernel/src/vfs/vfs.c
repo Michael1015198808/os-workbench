@@ -42,6 +42,10 @@ int vfs_mkdir(const char* path){
     inode.ptr=&cur;
     inode.ops=&yls_iops;
     inode.offset=0;
+
+    vfile_t vfile;
+    vfile.ptr=&inode;
+    vfile.type=VFILE_FILE;
     /*
     extern inodeops_t yls_iops;
     Assert(inode->ops==&yls_iops,
@@ -62,7 +66,7 @@ int vfs_mkdir(const char* path){
     info.path=path+pos;
     printf("%s\n%s\n",path,info.path);
 
-    return inode.ops->write(inode.ptr,(void*)&info,strlen(path));
+    return inode.ops->write(&vfile,(void*)&info,strlen(path));
 }
 int vfs_rmdir(const char *path){
     TODO();
