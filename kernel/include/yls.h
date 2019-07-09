@@ -10,6 +10,8 @@ int file_cmp    (device_t* dev,uint32_t off,const char* s);
 int string_cmp  (device_t* dev,uint32_t off,const char* s);
 int string_cpy  (device_t* dev,uint32_t off,const char* s);
 
+int find_path   (device_t* dev,yls_node* cur,const char* s);
+
 #define HEADER_LEN 0x100
 
 #define YLS_DIR  0
