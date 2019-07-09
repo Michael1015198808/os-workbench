@@ -35,7 +35,6 @@ int string_cmp(device_t* dev,uint32_t off,const char* s){
 }
 
 int string_cpy(device_t* dev,uint32_t off,const char* s){
-    info string;
     int to_cpy=strlen(s),ret=to_cpy;
     for(;
             to_cpy>0;
@@ -43,6 +42,8 @@ int string_cpy(device_t* dev,uint32_t off,const char* s){
         if(dev->ops->write(dev,off,s,0x40-4)<0){
             Assert(0,"Should not reach here!");
         }
+        uint32_t new_off=off+0x40;
+        dev->ops->write(dev,off+0x40-4,&new_off,4);
     }
     return ret;
 }
