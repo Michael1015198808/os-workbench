@@ -39,7 +39,7 @@ int exec_buildin(const char* file,void* args[],int *is_buildin){
             task_t* cur=get_cur();
             pmm->free(cur->name);
             cur->name=pmm->alloc(strlen(buildin[i].name)+1);
-            strcmp(cur->name,buildin[i].name);
+            strcpy(cur->name,buildin[i].name);
             return buildin[i].binary(args);
         }
     }
