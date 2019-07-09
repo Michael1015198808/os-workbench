@@ -34,8 +34,8 @@ inode_t *yls_lookup(struct filesystem* fs, const char* path, int flags){
                     if(len==-1){
                         path_len=0;
                     }else{
-                        path_len-=len;
-                        path    +=len;
+                        path_len-=len+1;
+                        path    +=len+1;
                     }
                     goto found;
                 }
