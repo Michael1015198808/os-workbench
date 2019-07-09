@@ -13,8 +13,9 @@ int file_cmp(device_t* dev,uint32_t off,const char* s){
 //Compare string blocks and char*
 int string_cmp(device_t* dev,uint32_t off,const char* s){
     info string;
-    int to_cmp;
-    for(to_cmp=get_first_slash(s);
+    int to_cmp=get_first_slash(s);
+    if(to_cmp==-1)to_cmp=strlen(s);
+    for(;
             to_cmp>0;
             to_cmp-=0x40-4,s+=0x40-4){
         dev->ops->read(dev,off,&string,sizeof(info));
