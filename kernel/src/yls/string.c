@@ -14,7 +14,6 @@ int file_cmp(device_t* dev,uint32_t off,const char* s){
 int string_cmp(device_t* dev,uint32_t off,const char* s){
     info string;
     int to_cmp=get_first_layer(s);
-    if(s[to_cmp]=='/')--to_cmp;//Do not need to compare '/'
     for(;
             to_cmp>0;
             to_cmp-=0x40-4,s+=0x40-4){
