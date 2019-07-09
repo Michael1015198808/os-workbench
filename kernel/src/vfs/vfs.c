@@ -42,7 +42,7 @@ int vfs_mkdir(const char *path){
     extern inodeops_t yls_iops;
     Assert(inode->ops==&yls_iops,
             "Something wrong happens when try to open /!");
-    return inode->ops->write(inode->ptr,&info,sizeof(info));
+    return inode->ops->write(inode->ptr,(void*)&info,strlen(path));
 }
 int vfs_rmdir(const char *path){
     TODO();
