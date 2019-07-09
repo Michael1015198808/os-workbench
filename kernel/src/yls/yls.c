@@ -135,7 +135,7 @@ ssize_t yls_iwrite(vfile_t* file,const char* buf,size_t size){
         default:
             TODO();
     }
-    return ret;
+    Assert(0,"Should not reach here");
 }
 inodeops_t yls_iops={
     /*
