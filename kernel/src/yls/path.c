@@ -1,8 +1,9 @@
 #include <common.h>
 #include <yls.h>
+#include <dir.h>
 
 int find_path(device_t* dev,yls_node* cur,const char* path){
-    int ret,path_len=strlen(path)-1;//Starts from "/"
+    int ret;//Starts from "/"
     ssize_t(*const read)(device_t*,off_t,void*,size_t)=dev->ops->read;
 
     while(ret=0;path[ret];++ret){
@@ -19,7 +20,7 @@ int find_path(device_t* dev,yls_node* cur,const char* path){
                     int len=get_first_slash(path);
                     read(dev,next_off,cur,12);
                     if(len==-1){
-                        path_len=0;
+                        path_len-=strlen(path);
                     }else{
                         path_len-=len+1;
                         path    +=len+1;
