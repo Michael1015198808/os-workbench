@@ -8,6 +8,7 @@ typedef struct info info;
 
 int file_cmp    (device_t* dev,uint32_t off,const char* s);
 int string_cmp  (device_t* dev,uint32_t off,const char* s);
+int string_cpy  (device_t* dev,uint32_t off,const char* s);
 
 #define HEADER_LEN 0x100
 

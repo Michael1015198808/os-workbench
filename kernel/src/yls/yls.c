@@ -122,7 +122,7 @@ ssize_t yls_iwrite(vfile_t* file,const char* buf,size_t size){
                                 .name=disk_sz+0x50
                             }
                             fs->dev->ops->write(fs->dev,0,&disk_sz,12);
-                            ssize_t ret=string_cpy(disk_sz+0x50,buf);
+                            ssize_t ret=string_cpy(fs->dev,disk_sz+0x50,buf);
                             disk_sz+=0x80+(size/(0x40-4))*0x40;
                             fs->dev->ops->write(fs->dev,0,&disk_sz,4);
                             return ret;
