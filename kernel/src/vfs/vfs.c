@@ -42,7 +42,7 @@ int vfs_mkdir(const char* path){
 
     struct{
         uint32_t type;
-        const char* offset;
+        const char* path;
     }info;
     yls_node cur;
 
@@ -53,6 +53,7 @@ int vfs_mkdir(const char* path){
 
     info.type=YLS_DIR;
     info.path=path+pos;
+    printf("%s\n%s\n",path,info.path);
 
     TODO();
     return inode->ops->write(inode->ptr,(void*)&info,strlen(path));
