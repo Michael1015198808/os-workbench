@@ -62,7 +62,7 @@ int vfs_mkdir(const char* path){
     info.path=path+pos;
     printf("%s\n%s\n",path,info.path);
 
-    return inode->ops->write(inode->ptr,(void*)&info,strlen(path));
+    return inode.ops->write(inode.ptr,(void*)&info,strlen(path));
 }
 int vfs_rmdir(const char *path){
     TODO();
