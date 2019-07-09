@@ -27,7 +27,7 @@ inode_t *yls_lookup(struct filesystem* fs, const char* path, int flags){
                 uint32_t next_off;
                 //Get next's yls_node from off
                 read(fs->dev,off,&next_off,4);
-                if(file_cmp(fs,next_off,path)){
+                if(file_cmp(fs->dev,next_off,path)){
                     int len=get_first_slash;
                     path_len-=len;
                     path    +=len;

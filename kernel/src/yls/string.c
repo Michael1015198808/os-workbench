@@ -4,14 +4,14 @@
 #include <fs.h>
 
 //Compare filename and char*
-int file_cmp(device_t* dev,uint32_t off,char* s){
+int file_cmp(device_t* dev,uint32_t off,const char* s){
     dev->ops->read(dev,off+8,&off,4);
     //Transfer yls_node's offset into yls_node's name's offset
     return string_cmp(dev,off,s);
 }
 
 //Compare string blocks and char*
-int string_cmp(device_t* dev,uint32_t off,char* s){
+int string_cmp(device_t* dev,uint32_t off,const char* s){
     info string;
     int to_cmp;
     for(to_cmp=get_first_slash(s);
