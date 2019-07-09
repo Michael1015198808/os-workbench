@@ -17,7 +17,6 @@ typedef struct header header;
 
 static void pmm_init() {
   int i,cpu_cnt=_ncpu();
-  Assert(cpu_cnt<=LEN(free_list));
   pm_start = (uintptr_t)_heap.start;
   align(pm_start,PG_SIZE);
   pm_end   = (uintptr_t)_heap.end;
@@ -132,6 +131,7 @@ static inline void kfree_real(void *ptr) {
         to_free->size+=sizeof(header)+p->size;
     }
 }
+
 static void kfree(void *ptr){
     if(ptr==NULL)return;
     kfree_real(ptr);
@@ -147,6 +147,7 @@ void show_free_list(void){
     }while(p!=&free_list[cpu_id]);
     printf("\n");
 }
+
 uintptr_t cnt_free_list(void){
     int cpu_id=_cpu();
     uintptr_t ret=0;

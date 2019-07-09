@@ -5,7 +5,7 @@
     (dest=pmm->alloc(strlen(src)+1), \
     strcpy(dest,src) )
 
-task_t *tasks[40]={},*currents[MAX_CPU]={},idles[MAX_CPU],*lasts[MAX_CPU];
+task_t *tasks[40]={},*currents[MAX_CPU]={},*lasts[MAX_CPU],idles[MAX_CPU];
 static pthread_mutex_t tasks_lk,free_task_lk=PTHREAD_MUTEX_INITIALIZER;
 char tasks_log[66000];
 int tasks_idx=0,tasks_cnt=0;
@@ -119,7 +119,6 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
 }
 
 void idle(void *arg){
-    _intr_write(0);
     while(1)_yield();
 }
 void kmt_init(void){
