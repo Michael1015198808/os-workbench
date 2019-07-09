@@ -44,9 +44,9 @@ int mysh_ls(void *args[]){
                 fprintf(STDOUT,"%s:\n",args[i]);
                 single_rela_ls(args[i],&err);
                 if(args[i+1]){std_write("\n");}
-            }else{
-                single_rela_ls(args[1],&err);
             }
+        }else{
+            single_rela_ls(args[1],&err);
         }
     }else{
         single_rela_ls(".",&err);
