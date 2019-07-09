@@ -35,6 +35,7 @@ int vfs_unmount(const char *path){
     TODO();
 }
 int vfs_mkdir(const char* path){
+    extern inodeops_t yls_iops;
     yls_node cur;
 
     inode_t inode;
