@@ -11,42 +11,17 @@ static void yls_init(struct filesystem *fs,const char* name,device_t* dev){
 
 inode_t *yls_lookup(struct filesystem* fs, const char* path, int flags){
     Assert(path[0]=='/',"Absolute path should start with /\n");
-    int path_len=strlen(path)-1;//Starts from "/"
-    ssize_t(*const read)(device_t*,off_t,void*,size_t)=fs->dev->ops->read;
     ++path;
+    ssize_t(*const read)(device_t*,off_t,void*,size_t)=fs->dev->ops->read;
 
     yls_node *cur=pmm->alloc(sizeof(yls_node));
     read(fs->dev,HEADER_LEN,cur,12);
 
-    while(path_len>0){
-        uint32_t off=cur->info;
-        if(cur->type!=YLS_DIR){
-            fprintf(2,"%s: not a directory\n",path);
-        }
-        while(1){
-            for(int i=0;i<OFFS_PER_MEM;++i,off+=4){
-                uint32_t next_off;
-                //Get next's yls_node from off
-                read(fs->dev,off,&next_off,4);
-                if(!file_cmp(fs->dev,next_off,path)){
-                    int len=get_first_slash(path);
-                    read(fs->dev,next_off,cur,12);
-                    if(len==-1){
-                        path_len=0;
-                    }else{
-                        path_len-=len+1;
-                        path    +=len+1;
-                    }
-                    goto found;
-                }
-            }
-            read(fs->dev,off,&off,4);
-            if(!off){
-                fprintf(2,"%s: No such file or directory\n",path);
-                exit();
-            }
-        }
-found:;
+    int pos=find_path(fs->dev,path,cur);
+
+    if(path[pos]!='\0'){//Look up failed at middle
+        fprintf(2,"%s: No such file or directory\n",path);
+        exit();
     }
 
     inode_t* ret=pmm->alloc(sizeof(inode_t));
