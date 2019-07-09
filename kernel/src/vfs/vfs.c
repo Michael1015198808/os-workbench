@@ -49,7 +49,7 @@ int vfs_mkdir(const char* path){
     extern ssize_t rd_read(device_t *dev, off_t offset, void *buf, size_t count);
     extern device_t *devices[];
     rd_read(devices[0],HEADER_LEN,&cur,12);
-    int pos=find_path(dev,cur,path);
+    int pos=find_path(devices[0],cur,path);
 
     info.type=YLS_DIR;
     info.path=path+pos;
