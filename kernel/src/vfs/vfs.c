@@ -34,8 +34,6 @@ int vfs_unmount(const char *path){
     TODO();
 }
 int vfs_mkdir(const char *path){
-    task_t* current=get_cur();
-
     inode_t* inode=rd[0].ops->lookup(&rd[0],path,0777);
     extern inodeops_t yls_iops;
     Assert(inode->ops==&yls_iops,
