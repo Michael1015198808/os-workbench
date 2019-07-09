@@ -6,6 +6,8 @@ static inline void single_ls(const char* path,int* err){
     int fd=vfs->open(path,O_RDONLY),nread=0;
     int cnt=0;
     char buf[200];
+
+    cnt+=fprintf(STDOUT,".  ..  ");
     while((nread=vfs->read(fd,buf,sizeof(buf)))>0){
         if(cnt+strlen(buf)>40){
             std_write("\n");
