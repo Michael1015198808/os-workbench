@@ -82,7 +82,7 @@ ssize_t yls_iwrite(vfile_t* file,const char* buf,size_t size){
     switch(node->type){
         case YLS_DIR:
             {
-                while(buf){
+                while(*buf){
                     uint32_t next=new_block(fs->dev,0x10);
                     yls_node new_node;
                     new_node.type=0;
