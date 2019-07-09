@@ -87,8 +87,8 @@ ssize_t yls_iwrite(vfile_t* file,const char* buf,size_t size){
                     uint32_t next=new_block(fs->dev,0x10);
                     yls_node new_node;
                     new_node.type=0;
-                    new_node.info=new_block(0x40);
-                    new_node.name=new_block(0x40);
+                    new_node.info=new_block(fs->dev,0x40);
+                    new_node.name=new_block(fs->dev,0x40);
                     fs->dev->ops->write(fs->dev,next,&new_node,12);
                     int pos=get_first_layer(buf);
                     fs->dev->ops->write(fs->dev,new_node.name,buf,pos-1);
