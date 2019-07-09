@@ -69,19 +69,18 @@ fsops_t yls_ops={
     .close=yls_close
 };
 
-ssize_t yls_iread(vfile_t *file,char* buf, size_t size){
+ssize_t yls_iread(vfile_t* file,char* buf,size_t size){
     ssize_t ret=0;
 
     filesystem* fs= ((inode_t*)file->ptr)->fs;
     yls_node* node= ((inode_t*)file->ptr)->ptr;
+
     switch(node->type){
         case YLS_DIR:
             {
                 uint32_t off,nread;
-                printf("yls_iread reads from %x\n",node->info);
                 if(fs->dev->ops->read(fs->dev,node->info,&off,4)!=4)return -1;
                 if(off==0)return 0;
-                printf("find a file at %x\n",off);
                 if(node->cnt==OFFS_PER_MEM){
                     node->cnt=0;
                     node->info=0;
@@ -103,14 +102,49 @@ ssize_t yls_iread(vfile_t *file,char* buf, size_t size){
     Assert(0,"Should not reach here!\n");
     return 0;
 }
+ssize_t yls_iwrite(vfile_t* file,const char* buf,size_t size){
+    filesystem* fs= ((inode_t*)file->ptr)->fs;
+    yls_node* node= ((inode_t*)file->ptr)->ptr;
+    uint32_t off=0;
+
+    switch(node->type){
+        case YLS_DIR:
+            {
+                while(1){
+                    for(int i=0;i<OFFS_PER_MEM;++i,node->info+=4){
+                        fs->dev->ops->read(fs->dev,node->info,&off,4);
+                        if(!off){
+                            uint32_t disk_sz;
+                            disk_sz=fs->dev->ops->read(fs->dev,0,&disk_sz,4);
+                            yls_node new_dir={
+                                .type=YLS_DIR,
+                                .info=disk_sz+0x10,
+                                .name=disk_sz+0x50
+                            }
+                            fs->dev->ops->write(fs->dev,0,&disk_sz,12);
+                            ssize_t ret=string_cpy(disk_sz+0x50,buf);
+                            disk_sz+=0x80+(size/(0x40-4))*0x40;
+                            fs->dev->ops->write(fs->dev,0,&disk_sz,4);
+                            return ret;
+                        }
+                    }
+                    TODO();
+                }
+            }
+            break;
+        default:
+            TODO();
+    }
+    return ret;
+}
 inodeops_t yls_iops={
     /*
     .open   =yls_iopen,
     .close  =yls_iclose,
     */
     .read   =yls_iread,
-    /*
     .write  =yls_iwrite,
+    /*
     .lseek  =yls_ilseek,
     .mkdir  =yls_imkdir,
     .rmdir  =yls_irmdir,

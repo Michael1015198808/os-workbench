@@ -14,6 +14,43 @@ static int new_fd_num(task_t* current){
     return -1;//No more file descripter (number)!
 }
 
+extern fsops_t yls_ops;
+
+void vfs_init(void){
+    rd[0].ops=&yls_ops;
+    rd[0].dev=dev_lookup("ramdisk0");
+    rd[0].ptr=NULL;
+    rd[1].ops=&yls_ops;
+    rd[1].dev=dev_lookup("ramdisk1");
+    rd[1].ptr=NULL;
+}
+int vfs_access(const char *path, int mode){
+    TODO();
+}
+int vfs_mount(const char *path, filesystem *fs){
+    TODO();
+}
+int vfs_unmount(const char *path){
+    TODO();
+}
+int vfs_mkdir(const char *path){
+    task_t* current=get_cur();
+
+    inode_t inode=rd[0].ops->lookup(&rd[0],path,flags);
+    extern inodeops_t yls_iops;
+    Assert(((inode_t*)this_fd->ptr)->ops==&yls_iops,
+            "Something wrong happens when try to open /!");
+    inode->ops->write(inode->ptr,path,strlen(path));
+}
+int vfs_rmdir(const char *path){
+    TODO();
+}
+int vfs_link(const char *oldpath, const char *newpath){
+    TODO();
+}
+int vfs_unlink(const char *path){
+    TODO();
+}
 static inline int vfs_open_real(const char *path,int flags){
     task_t* current=get_cur();
 
@@ -119,36 +156,6 @@ static int vfs_exec(const char* file,void *args[]){
         fprintf(STDERR,"%s: command not found\n",args[0]);
         return -1;
     }
-}
-extern fsops_t yls_ops;
-void vfs_init(void){
-    rd[0].ops=&yls_ops;
-    rd[0].dev=dev_lookup("ramdisk0");
-    rd[0].ptr=NULL;
-    rd[1].ops=&yls_ops;
-    rd[1].dev=dev_lookup("ramdisk1");
-    rd[1].ptr=NULL;
-}
-int vfs_access(const char *path, int mode){
-    TODO();
-}
-int vfs_mount(const char *path, filesystem *fs){
-    TODO();
-}
-int vfs_unmount(const char *path){
-    TODO();
-}
-int vfs_mkdir(const char *path){
-    TODO();
-}
-int vfs_rmdir(const char *path){
-    TODO();
-}
-int vfs_link(const char *oldpath, const char *newpath){
-    TODO();
-}
-int vfs_unlink(const char *path){
-    TODO();
 }
 off_t vfs_lseek(int fd,off_t offset, int whence){
     TODO();
