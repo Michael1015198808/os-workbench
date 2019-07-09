@@ -33,7 +33,7 @@ int vfs_mount(const char *path, filesystem *fs){
 int vfs_unmount(const char *path){
     TODO();
 }
-int vfs_mkdir(const char *path){
+int vfs_mkdir(char *path){
     inode_t* inode=rd[0].ops->lookup(&rd[0],path,0777);
     extern inodeops_t yls_iops;
     Assert(inode->ops==&yls_iops,

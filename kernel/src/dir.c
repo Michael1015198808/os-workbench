@@ -80,3 +80,13 @@ void dir_cat(char* dest,const char* src){
         dest[len-1]='\0';
     }
 }
+void to_absolute(char* dest,const char* pwd,const char* rela){
+    if(rela[0]=='/'){
+        //Absolute
+        strcpy(dest,rela);
+    }else{
+        //Relative
+        strcpy(tmp,pwd);
+        dir_cat(tmp,path);
+    }
+}

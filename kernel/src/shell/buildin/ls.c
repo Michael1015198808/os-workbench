@@ -23,17 +23,10 @@ static inline void single_ls(const char* path,int* err){
 
 //path here may be relative or absolute
 static inline void single_rela_ls(const char* path,int* err){
-    if(path[0]=='/'){
-        //Absolute
-        single_ls(path,err);
-    }else{
-        //Relative
-        task_t* cur=get_cur();
-        char tmp[0x100];
-        strcpy(tmp,cur->pwd);
-        dir_cat(tmp,path);
-        single_ls(tmp,err);
-    }
+    char tmp[0x100];
+    task_t* cur=get_cur();
+    to_absolute(tmp,cur->pwd,rela);
+    single_ls(tmp,err);
 }
 
 int mysh_ls(void *args[]){
