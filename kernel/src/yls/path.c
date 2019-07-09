@@ -21,9 +21,9 @@ int find_path(device_t* dev,yls_node* cur,const char* path){
                     int len=get_first_slash(path);
                     read(dev,next_off,cur,12);
                     if(len==-1){
-                        path    +=strlen(path);
+                        ret     +=strlen(path);
                     }else{
-                        path    +=len+1;
+                        ret     +=len+1;
                     }
                     goto found;
                 }
