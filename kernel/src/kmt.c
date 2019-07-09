@@ -275,6 +275,7 @@ void kmt_sem_wait_real(sem_t *sem){
     pthread_mutex_unlock(&(sem->lock));
     intr_open();
 }
+
 void kmt_sem_wait(sem_t *sem){
     kmt_sem_wait_real(sem);
 }
@@ -299,6 +300,7 @@ void exit(void){
     set_flag(current,TASK_ZOMBIE);
     _yield();
 }
+
 MODULE_DEF(kmt) {
   .init        =kmt_init,
   .create      =kmt_create,

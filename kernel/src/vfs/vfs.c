@@ -1,7 +1,7 @@
 #include <common.h>
 #include <devices.h>
 #include <shell.h>
-#include <fs.h>
+#include <vfs.h>
 #include <yls.h>
 
 #define this_fd current->fd[fd]

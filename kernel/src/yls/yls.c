@@ -1,7 +1,7 @@
 #include <devices.h>
 #include <dir.h>
 #include <fs.h>
-#include <yls.h>
+#include <vfs.h>
 
 inodeops_t yls_iops;
 
