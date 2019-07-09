@@ -9,47 +9,41 @@ static void yls_init(struct filesystem *fs,const char* name,device_t* dev){
 }
 
 inode_t *yls_lookup(struct filesystem* fs, const char* path, int flags){
+    Assert(path[0]=='/',"Absolute path should start with /\n");
     int path_len=strlen(path)-1;//Starts from "/"
-    ssize_t(*read)(device_t*,off_t,void*,size_t);read=fs->dev->ops->read;
+    ssize_t(*const read)(device_t*,off_t,void*,size_t)=fs->dev->ops->read;
     ++path;
 
     yls_node *cur=pmm->alloc(sizeof(yls_node));
-    uint32_t off=cur->info;
+    read(fs->dev,HEADER_LEN,cur,12);
 
     while(path_len>0){
+        uint32_t off=cur->info;
         if(cur->type!=YLS_DIR){
-            const char* const NOT_DIR="not a directory:";
-            vfs->write(2,(char*)NOT_DIR,sizeof(NOT_DIR));
-            vfs->write(2,(char*)path,strlen(path));
+            fprintf(2,"%s: not a directory\n",path);
         }
-        uint32_t next_off=0;
         while(1){
-            for(int i=0;i<OFFS_PER_MEM;++i){
-                read(fs->dev,HEADER_LEN+off,&next_off,4);//Get next's yls_node
-                uint32_t next=0;
-                read(fs->dev,HEADER_LEN+next_off+8,&next,4);//Get next's name's offset
-                char name[0x40-4];
-                read(fs->dev,HEADER_LEN+next,name,4);//Get next's name
-                if(strncmp(name,path,strlen(path))){
-                    path_len-=strlen(path);
-                    path    +=strlen(path);
-                    off=next_off;
+            for(int i=0;i<OFFS_PER_MEM;++i,off+=4){
+                uint32_t next_off;
+                //Get next's yls_node from off
+                read(fs->dev,off,&next_off,4);
+                if(file_cmp(fs,next_off,path)){
+                    int len=get_first_slash;
+                    path_len-=len;
+                    path    +=len;
+                    read(fs->dev,next_off,cur,12);
                     goto found;
                 }
-                off+=4;
             }
-            read(fs->dev,HEADER_LEN+off,&next_off,4);
+            read(fs->dev,off,&next_off,4);
             if(next_off){
                 off=next_off;
             }else{
-                const char* const NO_FILE=": No such file or directory\n";
-                vfs->write(2,(char*)path,path_len);
-                vfs->write(2,(char*)NO_FILE,sizeof(NO_FILE));
+                fprintf(2,"%s: No such file or directory\n",path);
             }
         }
 found:;
     }
-    read(fs->dev,HEADER_LEN,cur,12);
 
     inode_t* ret=pmm->alloc(sizeof(inode_t));
     inode_t tmp={
