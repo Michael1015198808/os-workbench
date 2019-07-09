@@ -113,6 +113,7 @@ static inline _Context* kmt_context_switch_real(_Event ev, _Context *c){
     intena[cpu_id]=current->intena;
     return &tasks[new]->context;
 }
+
 static _Context* kmt_context_switch(_Event ev, _Context *c){
     _Context* ret=kmt_context_switch_real(ev,c);
     return ret;
@@ -121,6 +122,7 @@ static _Context* kmt_context_switch(_Event ev, _Context *c){
 void idle(void *arg){
     while(1)_yield();
 }
+
 void kmt_init(void){
     os->on_irq(INT_MIN, _EVENT_NULL, kmt_context_save);
     os->on_irq(INT_MAX, _EVENT_NULL, kmt_context_switch);
@@ -134,6 +136,7 @@ void kmt_init(void){
             }, idle, NULL);
     }
 }
+
 int kmt_create(task_t *task, const char *name, void (*entry)(void*), void *arg){
     static int ignore_num=0;
     if(ignore_num>0){
@@ -172,6 +175,7 @@ int kmt_create(task_t *task, const char *name, void (*entry)(void*), void *arg){
     task->attr=TASK_RUNABLE;
     return task_idx;
 }
+
 void kmt_teardown(task_t *task){
     while(!(task->attr&TASK_ZOMBIE))_yield();
     for(int i=0;i<40;++i){
@@ -182,10 +186,11 @@ void kmt_teardown(task_t *task){
             pthread_mutex_unlock(&tasks_lk);
         }
     }
-    pmm->free(task);
     pmm->free(task->name);
+    pmm->free(task);
     return ;
 }
+
 void kmt_spin_init(spinlock_t *lk, const char *name){
     lk->locked=PTHREAD_MUTEX_INITIALIZER;
     copy_name(lk->name,name);
@@ -225,10 +230,6 @@ void kmt_spin_unlock(spinlock_t *lk){
                 pthread_mutex_unlock(&(lk->locked));
                 intr_open();
             }
-            if(lk->reen<0){
-                local_log("Unlock > Lock!\n");
-                while(1);
-            }
         }
     }else{
         Assert(0,"Lock[%s] isn't locked!\n",lk->name);
@@ -256,7 +257,6 @@ static void sem_add_task(sem_t *sem){
     pthread_mutex_unlock(&(sem->lock));
     intr_open();
     _yield();
-    while(park->attr&TASK_SLEEP);
 }
 
 static void sem_remove_task(sem_t *sem){
