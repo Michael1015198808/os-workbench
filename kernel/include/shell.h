@@ -9,6 +9,7 @@ handler(help);
 handler(cd);
 handler(wc);
 handler(ls);
+handler(mkdir);
 
 int exec_buildin(const char* file,void* args[],int *is_buildin);
 

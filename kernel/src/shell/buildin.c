@@ -25,6 +25,7 @@ static struct Command{
     pair(cd),
     pair(wc),
     pair(ls),
+    pair(mkdir),
 };
 
 int exec_buildin(const char* file,void* args[],int *is_buildin){

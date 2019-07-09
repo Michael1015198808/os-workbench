@@ -9,3 +9,4 @@ help(help)="Display information about builtin commands or commands with help inf
 help(cd)="Change the shell working directory.";
 help(wc)="Print newline, word, and byte counts for each FILE, and a total line if more than one FILE is specified.";
 help(ls)="List information about the FILEs (the current directory by default).";
+help(mkdir)="Create the DIRECTORY(ies), if they do not already exist.";
