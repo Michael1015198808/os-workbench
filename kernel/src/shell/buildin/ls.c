@@ -37,16 +37,14 @@ static inline void single_rela_ls(const char* path,int* err){
 }
 
 int mysh_ls(void *args[]){
-    int err=0;
+    int err=0,i=1;
     if(args[1]){
+        single_rela_ls(args[1],&err);
         if(args[2]){
-            for(int i=1;args[i];++i){
-                std_write(args[i]);
-                std_write(":\n");
+            for(i=2;args[i];++i){
+                fprintf(STDOUT,"\n%s\n",args[i]);
                 single_rela_ls(args[i],&err);
             }
-        }else{
-            single_rela_ls(args[1],&err);
         }
     }else{
         single_rela_ls(".",&err);
