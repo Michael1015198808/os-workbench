@@ -97,6 +97,7 @@ ssize_t yls_iwrite(vfile_t* file,const char* buf,size_t size){
                     fs->dev->ops->write(fs->dev,next,&new_node,12);//Son's tab
                     fs->dev->ops->write(fs->dev,new_node.name,path,pos);//Son's name
                     path+=pos;
+                    if(path=='/')++path;
                     parent_info=new_node.info;
                 }
                 return size;
