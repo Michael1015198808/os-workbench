@@ -47,3 +47,27 @@ int string_cpy(device_t* dev,uint32_t off,const char* s){
     }
     return ret;
 }
+
+uint32_t new_block(device_t* dev,uint32_t size){
+    uint32_t ret;
+    dev->ops->read(dev,0,&ret,0);
+    return ret;
+}
+//Find end of info
+uint32_t find_end(device_t* dev,uint32_t off){
+    uint32_t info;
+    while(1){
+        for(int i=0;i<OFFS_PER_MEM;++i,off+=4){
+            dev->ops->read(dev,off,&info,4);
+            if(info==0){
+                return off;
+            }
+        }
+        dev->ops->read(dev,off,&info,4);
+        if(info==0){
+            info=new_block(dev,0x40);
+            dev->ops->write(dev,off,&info,4);
+            return info;
+        }
+    }
+}

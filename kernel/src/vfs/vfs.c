@@ -33,15 +33,27 @@ int vfs_mount(const char *path, filesystem *fs){
 int vfs_unmount(const char *path){
     TODO();
 }
-int vfs_mkdir(const char *path){
+int vfs_mkdir(const char* path){
     inode_t* inode=rd[0].ops->lookup(&rd[0],path,0777);
-    struct{
-        uint32_t type;
-        void* offset;
-    }info;
     extern inodeops_t yls_iops;
     Assert(inode->ops==&yls_iops,
-            "Something wrong happens when try to open /!");
+            "Something wrong happens when try to open /");
+
+    struct{
+        uint32_t type;
+        const char* offset;
+    }info;
+    yls_node cur;
+
+    extern ssize_t rd_read(device_t *dev, off_t offset, void *buf, size_t count);
+    extern device_t *devices[];
+    rd_read(devices[0],HEADER_LEN,&cur,12);
+    int pos=find_path(dev,cur,path);
+
+    info.type=YLS_DIR;
+    info.path=path+pos;
+
+    TODO();
     return inode->ops->write(inode->ptr,(void*)&info,strlen(path));
 }
 int vfs_rmdir(const char *path){
