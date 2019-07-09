@@ -36,7 +36,7 @@ void sem_test(void *arg){
     }
 }
 
-#define CURRENT_TEST dir_test
+#define CURRENT_TEST multithread_test
 #define TEST_NAME(idx) TO_STRING(CURRENT_TEST) TO_STRING(idx)
 #define TEST_REQUIREMENT() \
     void MACRO_CONCAT(MACRO_SELF(CURRENT_TEST),_init)(void); \
@@ -59,11 +59,14 @@ void yield_test(void *dummy){
     while(1);
 }
 static void os_init() {
-    TEST_REQUIREMENT();
     pmm->init();
     kmt->init();
     dev->init();
     vfs->init();
+    TEST_REQUIREMENT();
+#undef  CURRENT_TEST
+#define CURRENT_TEST semaphore_test
+    TEST_REQUIREMENT();
     /*
     kmt->create(pmm->alloc(sizeof(task_t)),"sem-test1",sem_test,"!");
     kmt->create(pmm->alloc(sizeof(task_t)),"sem-test2",sem_test,"!");
