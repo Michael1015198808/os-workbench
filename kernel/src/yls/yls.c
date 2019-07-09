@@ -17,7 +17,7 @@ inode_t *yls_lookup(struct filesystem* fs, const char* path, int flags){
     yls_node *cur=pmm->alloc(sizeof(yls_node));
     read(fs->dev,HEADER_LEN,cur,12);
 
-    int pos=find_path(fs->dev,path,cur);
+    int pos=find_path(fs->dev,cur,path);
 
     if(path[pos]!='\0'){//Look up failed at middle
         fprintf(2,"%s: No such file or directory\n",path);
