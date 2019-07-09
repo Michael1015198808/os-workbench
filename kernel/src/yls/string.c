@@ -50,7 +50,7 @@ int string_cpy(device_t* dev,uint32_t off,const char* s){
 
 uint32_t new_block(device_t* dev,uint32_t size){
     uint32_t ret;
-    dev->ops->read(dev,0,&ret,0);
+    dev->ops->read(dev,0,&ret,4);
     return ret;
 }
 //Find end of info
