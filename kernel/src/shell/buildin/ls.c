@@ -25,7 +25,7 @@ static inline void single_ls(const char* path,int* err){
 static inline void single_rela_ls(const char* path,int* err){
     char tmp[0x100];
     task_t* cur=get_cur();
-    to_absolute(tmp,cur->pwd,rela);
+    to_absolute(tmp,cur->pwd,path);
     single_ls(tmp,err);
 }
 
