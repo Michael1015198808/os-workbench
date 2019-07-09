@@ -36,11 +36,10 @@ inode_t *yls_lookup(struct filesystem* fs, const char* path, int flags){
                     goto found;
                 }
             }
-            read(fs->dev,off,&next_off,4);
-            if(next_off){
-                off=next_off;
-            }else{
+            read(fs->dev,off,&off,4);
+            if(!off){
                 fprintf(2,"%s: No such file or directory\n",path);
+                return NULL;
             }
         }
 found:;
