@@ -36,9 +36,9 @@ int vfs_unmount(const char *path){
 int vfs_mkdir(const char *path){
     task_t* current=get_cur();
 
-    inode_t inode=rd[0].ops->lookup(&rd[0],path,0777);
+    inode_t* inode=rd[0].ops->lookup(&rd[0],path,0777);
     extern inodeops_t yls_iops;
-    Assert(((inode_t*)this_fd->ptr)->ops==&yls_iops,
+    Assert(inode->ops==&yls_iops,
             "Something wrong happens when try to open /!");
     inode->ops->write(inode->ptr,path,strlen(path));
 }
