@@ -37,7 +37,7 @@ struct pair{
     {0x1e0,0x74736574},//"/test"'s name 
 };
 int main(){
-    for(uint32_t i=0,j=0;i<0x300;){
+    for(uint32_t i=0,j=0;i<0x1000;){
 #ifdef READABLE
         if(!(i&0xf)){printf("\n %03x: ",i);}
 #endif
