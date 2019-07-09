@@ -1,4 +1,5 @@
 #include <devices.h>
+#include <dir.h>
 #include <yls.h>
 #include <fs.h>
 
