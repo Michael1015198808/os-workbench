@@ -6,8 +6,6 @@ static void blkfs_init(filesystem* fs,const char* name,device_t* dev){
     fs->name=name;
     fs->ops=NULL;
     fs->dev=NULL;
-
-    fs->inodeops=&blkfs_iops;
 }
 
 static fsops_t blkfs_ops={
