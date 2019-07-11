@@ -95,7 +95,7 @@ inline void backup_fd(vfile_t *backup[3],task_t* current){
         backup[i]=current->fd[i];
         current->fd[i]=pmm->alloc(sizeof(vfile_t));
         TODO();
-        current->fd[i]=vfs->open("/dev/null",0777);
+        current->fd[i]->inode=vfs->open("/dev/null",0777);
     }
 }
 inline void restore_fd(vfile_t *backup[3],task_t* current){
