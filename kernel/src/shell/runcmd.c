@@ -94,7 +94,8 @@ inline void backup_fd(vfile_t *backup[3],task_t* current){
     for(int i=0;i<3;++i){
         backup[i]=current->fd[i];
         current->fd[i]=pmm->alloc(sizeof(vfile_t));
-        current->fd[i]->type=VFILE_NULL;
+        TODO();
+        current->fd[i]=vfs->lookup("/dev/null",0777);
     }
 }
 inline void restore_fd(vfile_t *backup[3],task_t* current){
