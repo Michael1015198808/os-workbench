@@ -25,10 +25,10 @@ static int new_fd_num(task_t* current){
 extern fsops_t yls_ops;
 
 void vfs_init(void){
-    rd[0].ops.init (rd+0    ,"ramdisk0" ,dev_lookup("ramdisk0") );
-    rd[1].ops.init (rd+1    ,"ramdisk1" ,dev_lookup("ramdisk1") );
-    devfs.ops.init (&devfs  ,"devfs"    ,NULL                   );
-  //procfs.ops.init(        ,           ,                       );
+    rd[0].ops->init (rd+0    ,"ramdisk0" ,dev_lookup("ramdisk0") );
+    rd[1].ops->init (rd+1    ,"ramdisk1" ,dev_lookup("ramdisk1") );
+    devfs.ops->init (&devfs  ,"devfs"    ,NULL                   );
+  //procfs.ops->init(        ,           ,                       );
 }
 int vfs_access(const char *path, int mode){
     TODO();
@@ -53,7 +53,7 @@ int vfs_unmount_real(const char *path){
 }
 int vfs_unmount(const char* path){
     pthread_mutex_lock(&mount_table_lk);
-    int ret=vfs_unmount_real(path,fs);
+    int ret=vfs_unmount_real(path);
     pthread_mutex_unlock(&mount_table_lk);
     return ret;
 }
@@ -139,7 +139,7 @@ static ssize_t vfs_read(int fd,void *buf,size_t nbyte){
 }
 static inline ssize_t vfs_write_real(int fd,void *buf,size_t nbyte){
     task_t* current=get_cur();
-    return this_fd->inode->ops->write(this_fs,buf,nbyte);
+    return this_fd->inode->ops->write(this_fd,buf,nbyte);
 }
 static ssize_t vfs_write(int fd,void* buf,size_t nbyte){
     ssize_t ret=vfs_write_real(fd,buf,nbyte);
