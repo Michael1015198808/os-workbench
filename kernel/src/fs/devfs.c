@@ -54,12 +54,12 @@ static int devfs_iclose(vfile_t* file){
 
 static ssize_t devfs_iread(vfile_t* file,char* buf,size_t size){
     device_t* dev=get_dev(file);
-    return dev->ops->read(dev,buf,size);
+    return dev->ops->read(dev,file->offset,buf,size);
 }
 
 static ssize_t devfs_iwrite(vfile_t* file,char* buf,size_t size){
     device_t* dev=get_dev(file);
-    return dev->ops->write(dev,buf,size);
+    return dev->ops->write(dev,bfile->offset,uf,size);
 }
 //.func_name=dev_ifunc_name
 //i for inode
