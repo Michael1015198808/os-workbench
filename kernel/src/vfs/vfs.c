@@ -25,10 +25,10 @@ static int new_fd_num(task_t* current){
 extern fsops_t yls_ops;
 
 void vfs_init(void){
-    rd[0].fsops.init (rd+0    ,"ramdisk0" ,dev_lookup("ramdisk0") );
-    rd[1].fsops.init (rd+1    ,"ramdisk1" ,dev_lookup("ramdisk1") );
-    devfs.fsops.init (&devfs  ,"devfs"    ,NULL                   );
-  //procfs.fsops.init(        ,           ,                       );
+    rd[0].ops.init (rd+0    ,"ramdisk0" ,dev_lookup("ramdisk0") );
+    rd[1].ops.init (rd+1    ,"ramdisk1" ,dev_lookup("ramdisk1") );
+    devfs.ops.init (&devfs  ,"devfs"    ,NULL                   );
+  //procfs.ops.init(        ,           ,                       );
 }
 int vfs_access(const char *path, int mode){
     TODO();
@@ -44,8 +44,8 @@ int vfs_unmount_real(const char *path){
     for(int i=0;i<mount_table_cnt;++i){
         if(!strcmp(path,mount_table[i].path)){
             --mount_table_cnt;
-            mount_table[i].path=mount_table[mount_table].path;
-            mount_table[i].fs  =mount_table[mount_table].fs  ;
+            mount_table[i].path=mount_table[mount_table_cnt].path;
+            mount_table[i].fs  =mount_table[mount_table_cnt].fs  ;
             return 0;
         }
     }
@@ -58,6 +58,8 @@ int vfs_unmount(const char* path){
     return ret;
 }
 int vfs_mkdir(const char* path){
+    TODO();
+    /*
     extern inodeops_t yls_iops;
     yls_node cur;
 
@@ -70,11 +72,11 @@ int vfs_mkdir(const char* path){
     vfile_t vfile;
     vfile.ptr   =&inode;
     vfile.type  =VFILE_FILE;
-    /*
+    //
     extern inodeops_t yls_iops;
     Assert(inode->ops==&yls_iops,
             "Something wrong happens when try to open /");
-            */
+            //
 
     struct{
         uint32_t type;
@@ -91,6 +93,7 @@ int vfs_mkdir(const char* path){
     printf("%s\n%s\n",path,info.path);
 
     return inode.ops->write(&vfile,(void*)&info,strlen(path));
+    */
 }
 int vfs_rmdir(const char *path){
     TODO();
