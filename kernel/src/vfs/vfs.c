@@ -39,6 +39,7 @@ int vfs_mount(const char *path, filesystem *fs){
     mount_table[mount_table_cnt].fs=fs;
     ++mount_table_cnt;
     pthread_mutex_unlock(&mount_table_lk);
+    return 0;
 }
 int vfs_unmount_real(const char *path){
     for(int i=0;i<mount_table_cnt;++i){
