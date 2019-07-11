@@ -1,3 +1,4 @@
+#include <devices.h>
 #include <vfs.h>
 #include <common.h>
 /*
