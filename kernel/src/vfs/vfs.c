@@ -6,6 +6,13 @@
 
 #define this_fd current->fd[fd]
 
+struct{
+    const char* path;
+    filesystem_t* fs;
+}mount_table[20];
+int mount_table_cnt=0;
+pthread_mutex_t mount_table_lk=PTHREAD_MUTEX_INITIALIZER;
+
 static int new_fd_num(task_t* current){
     for(int i=0;i<FD_NUM;++i){
         if(!(current->fd[i])){
@@ -18,21 +25,37 @@ static int new_fd_num(task_t* current){
 extern fsops_t yls_ops;
 
 void vfs_init(void){
-    rd[0].ops=&yls_ops;
-    rd[0].dev=dev_lookup("ramdisk0");
-    rd[0].ptr=NULL;
-    rd[1].ops=&yls_ops;
-    rd[1].dev=dev_lookup("ramdisk1");
-    rd[1].ptr=NULL;
+    rd[0].init (rd+0    ,"ramdisk0" ,dev_lookup("ramdisk0") );
+    rd[1].init (rd+1    ,"ramdisk1" ,dev_lookup("ramdisk1") );
+    devfs.init (&devfs  ,"devfs"    ,NULL                   );
+  //procfs.init(        ,           ,                       );
 }
 int vfs_access(const char *path, int mode){
     TODO();
 }
 int vfs_mount(const char *path, filesystem *fs){
-    TODO();
+    pthread_mutex_lock(&mount_table_lk);
+    mount_table[mount_table_cnt].path=path;
+    mount_table[mount_table_cnt].fs=fs;
+    ++mount_table_cnt;
+    pthread_mutex_unlock(&mount_table_lk);
 }
-int vfs_unmount(const char *path){
-    TODO();
+int vfs_unmount_real(const char *path){
+    for(int i=0;i<mount_table_cnt;++i){
+        if(!strcmp(path),mount_table[i].path){
+            --mount_table_cnt;
+            mount_table[i].path=mount_table[mount_table].path;
+            mount_table[i].fs  =mount_table[mount_table].fs  ;
+            return 0;
+        }
+    }
+    return -1;
+}
+int vfs_mount(const char* path){
+    pthread_mutex_lock(&mount_table_lk);
+    int ret=vfs_mount_real(path);
+    pthread_mutex_unlock(&mount_table_lk);
+    return ret;
 }
 int vfs_mkdir(const char* path){
     extern inodeops_t yls_iops;
@@ -87,16 +110,15 @@ static inline int vfs_open_real(const char *path,int flags){
     this_fd=pmm->alloc(sizeof(vfile_t));
 
     if(strncmp(path,"/dev/",5)){//Temporarily
-        this_fd->type=VFILE_FILE;
-        this_fd->ptr=rd[0].ops->lookup(&rd[0],path,flags);
+        this_fd->inode=rd[0].ops->lookup(&rd[0],path,flags);
         extern inodeops_t yls_iops;
-        Assert(((inode_t*)this_fd->ptr)->ops==&yls_iops,
+        Assert(this_fd->inode->ops==&yls_iops,
                 "Something wrong happens when try to open /!");
     }else{
-        device_t *dev=dev_lookup(path+5);
-        this_fd->type=VFILE_DEV;
-        this_fd->ptr=dev;
+        this_fd->inode=devfs.ops->lookup(&devfs,path+5,flags);
     }
+    this_fd->offset=0;
+    this_fd->refcnt=1;
     return fd;
 }
 static int vfs_open(const char *path, int flags){
@@ -105,39 +127,8 @@ static int vfs_open(const char *path, int flags){
 }
 static inline ssize_t vfs_read_real(int fd, void* buf,size_t nbyte){
     task_t* current=get_cur();
-    ssize_t nread;
-    switch(this_fd->type){
-        case VFILE_DEV:
-            {
-                device_t* dev=(device_t*)this_fd->ptr;
-                nread=dev->ops->read(dev,0,buf,nbyte);
-                return nread;
-            }
-            break;
-        case VFILE_FILE:
-            {
-                inode_t* inode=this_fd->ptr;
-                nread=inode->ops->read(this_fd,buf,nbyte);
-                return nread;
-            }
-            break;
-        case VFILE_PROC:
-            TODO();
-            break;
-        case VFILE_MEM:
-            {
-                strncpy(buf,this_fd->ptr,nbyte);
-                int ret=strlen(buf);
-                this_fd->ptr+=ret;
-                return ret;
-            }
-        case VFILE_NULL:
-            return 0;
-        default:
-            Assert(0,"Unknown fd type:%d\n",this_fd->type);
-            break;
-    }
-    Assert(0,"Should not reach here!\n");
+    ssize_t nread=this_fd->inode->ops->read(this_fd,buf,nbyte);
+    return nread;
 }
 static ssize_t vfs_read(int fd,void *buf,size_t nbyte){
     ssize_t ret=vfs_read_real(fd,buf,nbyte);
@@ -145,33 +136,10 @@ static ssize_t vfs_read(int fd,void *buf,size_t nbyte){
 }
 static inline ssize_t vfs_write_real(int fd,void *buf,size_t nbyte){
     task_t* current=get_cur();
-    switch(this_fd->type){
-        case VFILE_DEV:
-            {
-                device_t *dev=this_fd->ptr;
-                return dev->ops->write(dev,0,buf,nbyte);
-            }
-            break;
-        case VFILE_FILE:
-            TODO();
-            break;
-        case VFILE_PROC:
-            TODO();
-            break;
-        case VFILE_MEM:
-            memcpy(this_fd->ptr,buf,nbyte);
-            this_fd->ptr+=nbyte;
-            *(char*)current->fd[fd]->ptr='\0';
-            return nbyte;
-        case VFILE_NULL:
-            return nbyte;
-        default:
-            Assert(0,"Unknown fd type:%d\n",current->fd[fd]->type);
-            break;
-    }
+    return this_fd->inode->ops->write(this_fs,buf,nbyte);
 }
 static ssize_t vfs_write(int fd,void* buf,size_t nbyte){
-    ssize_t ret=vfs_write_real( fd,buf,nbyte);
+    ssize_t ret=vfs_write_real(fd,buf,nbyte);
     return ret;
 }
 static int vfs_exec(const char* file,void *args[]){

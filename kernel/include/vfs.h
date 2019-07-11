@@ -51,15 +51,16 @@ ssize_t std_write(void *buf);
 //Read from it always returns 0(Work as EOF)
 //Write to it always returns nbyte
 struct vfile{
-    void *ptr;
-    int type;
+    uint64_t offset;
+    inode_t* inode;
+    int refcnt;
 };
 
 struct filesystem{
     fsops_t *ops;
     //Call devops by fsops
     device_t *dev;
-    void* ptr;
+    inode_t* inodeops;
 };
 
 struct fsops {
@@ -86,7 +87,6 @@ struct inode {
   filesystem *fs;
   inodeops_t *ops; // 在inode被创建时，由文件系统的实现赋值
                    // inode ops也是文件系统的一部分
-  int offset;
 };
 
 filesystem rd[2];//Ramdisk

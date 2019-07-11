@@ -1,0 +1,75 @@
+#include <vfs.h>
+#include <common.h>
+/*
+ * devfs_init
+ * devfs_lookup
+ * devfs_close
+ */
+
+static void devfs_init(filesystem_t* fs,const char* name,device_t *dev){
+    vfs->mount("/dev",fs);
+}
+
+static inode_t* devfs_lookup(filesystem_t* fs,const char* path,int flags){
+    inode_t* ret=pmm->alloc(sizeof(inode_t));
+    ret->ptr=dev_lookup(path);
+    ret->fs=&devfs;
+    ret->ops=dev_iops;
+    return ret;
+}
+
+static int devfs_close(inode_t* inode){
+    TODO();
+}
+
+static fsops_t devfs_ops={
+    .init=&devfs_init,
+    .lookup=&devfs_lookup,
+    .close=&devfs_close,
+};
+/*
+ * devfs_iopen
+ * devfs_iclose
+ * devfs_iread
+ * devfs_iwrite
+ * devfs_ilseek
+ * devfs_imkdir
+ * devfs_irmdir
+ * devfs_ilink
+ * devfs_unlink
+ */
+static device_t* get_dev(vfile_t* file){
+    return (device_t*)file->inode->ptr;
+}
+
+static int devfs_iopen(vfile_t* file,int flags){
+    TODO();
+}
+
+static int devfs_iclose(vfile_t* file){
+    TODO();
+}
+
+static ssize_t devfs_iread(vfile_t* file,char* buf,size_t size){
+    device_t* dev=get_dev(file);
+    return dev->ops->read(dev,buf,size);
+}
+
+static ssize_t devfs_iwrite(vfile_t* file,char* buf,size_t size){
+    device_t* dev=get_dev(file);
+    return dev->ops->write(dev,buf,size);
+}
+//.func_name=dev_ifunc_name
+//i for inode
+static inodeops_t dev_iops={
+    .open=devfs_iopen,
+    .close=devfs_iclose,
+    .read=devfs_iread,
+    .write=devfs_iwrite,
+};
+
+filesystem_t devfs={
+    .ops=&devfs_ops,
+    .dev=NULL,
+    .inodeops=&devfs_iops,
+};
