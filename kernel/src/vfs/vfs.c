@@ -25,10 +25,10 @@ static int new_fd_num(task_t* current){
 extern fsops_t yls_ops;
 
 void vfs_init(void){
-    rd[0].init (rd+0    ,"ramdisk0" ,dev_lookup("ramdisk0") );
-    rd[1].init (rd+1    ,"ramdisk1" ,dev_lookup("ramdisk1") );
-    devfs.init (&devfs  ,"devfs"    ,NULL                   );
-  //procfs.init(        ,           ,                       );
+    rd[0].fsops.init (rd+0    ,"ramdisk0" ,dev_lookup("ramdisk0") );
+    rd[1].fsops.init (rd+1    ,"ramdisk1" ,dev_lookup("ramdisk1") );
+    devfs.fsops.init (&devfs  ,"devfs"    ,NULL                   );
+  //procfs.fsops.init(        ,           ,                       );
 }
 int vfs_access(const char *path, int mode){
     TODO();
@@ -42,7 +42,7 @@ int vfs_mount(const char *path, filesystem *fs){
 }
 int vfs_unmount_real(const char *path){
     for(int i=0;i<mount_table_cnt;++i){
-        if(!strcmp(path),mount_table[i].path){
+        if(!strcmp(path,mount_table[i].path)){
             --mount_table_cnt;
             mount_table[i].path=mount_table[mount_table].path;
             mount_table[i].fs  =mount_table[mount_table].fs  ;
@@ -51,9 +51,9 @@ int vfs_unmount_real(const char *path){
     }
     return -1;
 }
-int vfs_mount(const char* path){
+int vfs_unmount(const char* path){
     pthread_mutex_lock(&mount_table_lk);
-    int ret=vfs_mount_real(path);
+    int ret=vfs_unmount_real(path,fs);
     pthread_mutex_unlock(&mount_table_lk);
     return ret;
 }

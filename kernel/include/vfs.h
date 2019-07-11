@@ -89,6 +89,8 @@ struct inode {
                    // inode ops也是文件系统的一部分
 };
 
-filesystem rd[2];//Ramdisk
+extern filesystem
+    rd[2],//Ramdisk
+    devfs;
 
 #endif//__VFS_H
