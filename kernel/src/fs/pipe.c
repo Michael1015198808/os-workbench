@@ -1,5 +1,5 @@
-#include <vfs.h>
 #include <common.h>
+#include <vfs.h>
 
 /*
 static ssize_t
