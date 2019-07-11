@@ -52,18 +52,18 @@ static int devfs_iclose(vfile_t* file){
     TODO();
 }
 
-static ssize_t devfs_iread(vfile_t* file,void* buf,size_t size){
+static ssize_t devfs_iread(vfile_t* file,char* buf,size_t size){
     device_t* dev=get_dev(file);
     return dev->ops->read(dev,file->offset,buf,size);
 }
 
-static ssize_t devfs_iwrite(vfile_t* file,const void* buf,size_t size){
+static ssize_t devfs_iwrite(vfile_t* file,const char* buf,size_t size){
     device_t* dev=get_dev(file);
     return dev->ops->write(dev,file->offset,buf,size);
 }
 //.func_name=dev_ifunc_name
 //i for inode
-static inodeops_t dev_iops={
+static inodeops_t devfs_iops={
     .open  =devfs_iopen,
     .close =devfs_iclose,
     .read  =devfs_iread,
