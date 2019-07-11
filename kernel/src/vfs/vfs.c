@@ -8,7 +8,7 @@
 
 struct{
     const char* path;
-    filesystem_t* fs;
+    filesystem* fs;
 }mount_table[20];
 int mount_table_cnt=0;
 pthread_mutex_t mount_table_lk=PTHREAD_MUTEX_INITIALIZER;
