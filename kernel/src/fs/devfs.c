@@ -7,7 +7,7 @@
  * devfs_close
  */
 
-inodeops_t devfs_iops;
+static inodeops_t devfs_iops;
 static void devfs_init(filesystem* fs,const char* name,device_t *dev){
     vfs->mount("/dev",fs);
 }
