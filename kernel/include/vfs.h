@@ -60,7 +60,7 @@ struct filesystem{
     fsops_t *ops;
     //Call devops by fsops
     device_t *dev;
-    inode_t* inodeops;
+    inodeops_t* inodeops;
 };
 
 struct fsops {
