@@ -7,6 +7,7 @@
  * devfs_close
  */
 
+inodeops_t devfs_iops;
 static void devfs_init(filesystem* fs,const char* name,device_t *dev){
     vfs->mount("/dev",fs);
 }
@@ -15,8 +16,7 @@ static inode_t* devfs_lookup(filesystem* fs,const char* path,int flags){
     inode_t* ret=pmm->alloc(sizeof(inode_t));
     ret->ptr=dev_lookup(path);
     ret->fs=&devfs;
-static inodeops_t dev_iops;
-    ret->ops=&dev_iops;
+    ret->ops=&devfs_iops;
     return ret;
 }
 
