@@ -93,9 +93,7 @@ static inline int run_pipe_cmd(struct cmd *cmd){
 inline void backup_fd(vfile_t *backup[3],task_t* current){
     for(int i=0;i<3;++i){
         backup[i]=current->fd[i];
-        current->fd[i]=pmm->alloc(sizeof(vfile_t));
-        TODO();
-        current->fd[i]->inode=vfs->open("/dev/null",0777);
+        current->fd[i]=NULL;
     }
 }
 inline void restore_fd(vfile_t *backup[3],task_t* current){
