@@ -19,7 +19,6 @@ inode_t *yls_lookup(struct filesystem* fs, const char* path, int flags){
     ret->ptr    =cur;
     ret->fs     =fs;
     ret->ops    =&yls_iops;
-    ret->offset =0;
     read(fs->dev,HEADER_LEN,cur,12);
 
     int pos=find_path(fs->dev,ret,path);
