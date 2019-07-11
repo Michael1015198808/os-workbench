@@ -44,8 +44,8 @@ fsops_t yls_ops={
 ssize_t yls_iread(vfile_t* file,char* buf,size_t size){
     ssize_t ret=0;
 
-    filesystem* fs= ((inode_t*)file->ptr)->fs;
-    yls_node* node= ((inode_t*)file->ptr)->ptr;
+    filesystem* fs= ((inode_t*)file->inode->ptr)->fs;
+    yls_node* node= ((inode_t*)file->inode->ptr)->ptr;
 
     switch(node->type){
         case YLS_DIR:
@@ -75,8 +75,8 @@ ssize_t yls_iread(vfile_t* file,char* buf,size_t size){
     return 0;
 }
 ssize_t yls_iwrite(vfile_t* file,const char* buf,size_t size){
-    filesystem* fs= ((inode_t*)file->ptr)->fs;
-    yls_node* node= ((inode_t*)file->ptr)->ptr;
+    filesystem* fs= ((inode_t*)file->inode->ptr)->fs;
+    yls_node* node= ((inode_t*)file->inode->ptr)->ptr;
 
     switch(node->type){
         case YLS_DIR:
