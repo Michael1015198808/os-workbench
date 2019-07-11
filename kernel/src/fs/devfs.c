@@ -24,9 +24,9 @@ static int devfs_close(inode_t* inode){
 }
 
 static fsops_t devfs_ops={
-    .init=&devfs_init,
-    .lookup=&devfs_lookup,
-    .close=&devfs_close,
+    .init  =devfs_init,
+    .lookup=devfs_lookup,
+    .close =devfs_close,
 };
 /*
  * devfs_iopen
@@ -63,10 +63,10 @@ static ssize_t devfs_iwrite(vfile_t* file,char* buf,size_t size){
 //.func_name=dev_ifunc_name
 //i for inode
 static inodeops_t dev_iops={
-    .open=devfs_iopen,
-    .close=devfs_iclose,
-    .read=devfs_iread,
-    .write=devfs_iwrite,
+    .open  =devfs_iopen,
+    .close =devfs_iclose,
+    .read  =devfs_iread,
+    .write =devfs_iwrite,
 };
 
 filesystem_t devfs={
