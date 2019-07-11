@@ -70,7 +70,7 @@ static inodeops_t devfs_iops={
     .write =devfs_iwrite,
 };
 
-filesystem devfs={
+const filesystem devfs={
     .ops=&devfs_ops,
     .dev=NULL,
     .inodeops=&devfs_iops,

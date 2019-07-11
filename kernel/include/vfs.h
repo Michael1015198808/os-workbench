@@ -57,6 +57,7 @@ struct vfile{
 };
 
 struct filesystem{
+    const char* name;
     fsops_t *ops;
     //Call devops by fsops
     device_t *dev;
@@ -90,7 +91,7 @@ struct inode {
 };
 
 extern filesystem
-    rd[2],//Ramdisk
+    blkfs[2],//Ramdisk
     devfs;
 
 #endif//__VFS_H

@@ -25,10 +25,10 @@ static int new_fd_num(task_t* current){
 extern fsops_t yls_ops;
 
 void vfs_init(void){
-    rd[0].ops->init (rd+0    ,"ramdisk0" ,dev_lookup("ramdisk0") );
-    rd[1].ops->init (rd+1    ,"ramdisk1" ,dev_lookup("ramdisk1") );
-    devfs.ops->init (&devfs  ,"devfs"    ,NULL                   );
-  //procfs.ops->init(        ,           ,                       );
+    blkfs[0].ops->init  (blkfs+0    ,"ramdisk0" ,dev_lookup("ramdisk0") );
+    blkfs[1].ops->init  (blkfs+1    ,"ramdisk1" ,dev_lookup("ramdisk1") );
+    devfs.ops->init     (&devfs     ,"devfs"    ,NULL                   );
+  //procfs.ops->init    (           ,           ,                       );
 }
 int vfs_access(const char *path, int mode){
     TODO();
@@ -114,7 +114,7 @@ static inline int vfs_open_real(const char *path,int flags){
     this_fd=pmm->alloc(sizeof(vfile_t));
 
     if(strncmp(path,"/dev/",5)){//Temporarily
-        this_fd->inode=rd[0].ops->lookup(&rd[0],path,flags);
+        this_fd->inode=blkfs[0].ops->lookup(&blkfs[0],path,flags);
         extern inodeops_t yls_iops;
         Assert(this_fd->inode->ops==&yls_iops,
                 "Something wrong happens when try to open /!");
