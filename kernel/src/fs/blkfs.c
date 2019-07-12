@@ -50,8 +50,8 @@ static fsops_t blkfs_ops={
 ssize_t blkfs_iread(vfile_t* file,char* buf,size_t size){
     ssize_t ret=0;
 
-    filesystem* fs= ((inode_t*)file->inode->ptr)->fs;
-    yls_node* node= ((inode_t*)file->inode->ptr)->ptr;
+    filesystem* fs= file->inode->fs;
+    yls_node* node= file->inode->ptr;
 
     switch(node->type){
         case YLS_DIR:
