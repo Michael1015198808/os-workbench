@@ -18,13 +18,13 @@ int mysh_cat(void *args[]){
     if(args[1]){
         for(int i=1;args[i];++i){
             if(strcmp(args[i],"-")){
-                cat_from_stdin(buf,&err);
-            }else{
                 int fd=vfs->open(args[i],7),nread=0;
                 do{
                     nread=vfs->read(fd,buf,sizeof(buf));
                     vfs->write(STDOUT,buf,nread);
                 }while(nread>0);
+            }else{
+                cat_from_stdin(buf,&err);
             }
         }
     }else{
