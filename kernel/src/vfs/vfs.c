@@ -115,9 +115,6 @@ static inline int vfs_open_real(const char *path,int flags){
 
     if(strncmp(path,"/dev/",5)){//Temporarily
         this_fd->inode=blkfs[0].ops->lookup(&blkfs[0],path,flags);
-        extern inodeops_t blkfs_iops;
-        Assert(this_fd->inode->ops==&blkfs_iops,
-                "Something wrong happens when try to open /!");
     }else{
         this_fd->inode=devfs.ops->lookup(&devfs,path+5,flags);
     }
