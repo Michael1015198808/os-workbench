@@ -22,7 +22,7 @@ int mysh_cat(void *args[]){
             if(strcmp(args[i],"-")){
                 char dir[0x100];
                 to_absolute(dir,pwd,args[i]);
-                int fd=vfs->open(args[i],7),nread=0;
+                int fd=vfs->open(dir,7),nread=0;
                 do{
                     nread=vfs->read(fd,buf,sizeof(buf));
                     vfs->write(STDOUT,buf,nread);
