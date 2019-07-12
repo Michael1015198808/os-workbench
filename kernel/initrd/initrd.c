@@ -41,7 +41,7 @@ struct pair{
     {0x228,0x00000270},//"/txt"'s name's offset
     {0x22c,CHECK_CODE},
     {0x230,0x34333231},//"/txt"'s info
-    {0x270,0x00747784},//"/txt"'s name
+    {0x270,0x00747874},//"/txt"'s name
 };
 int main(){
     for(uint32_t i=0,j=0;i<0x1000;){
