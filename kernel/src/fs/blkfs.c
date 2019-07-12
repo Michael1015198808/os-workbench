@@ -80,7 +80,7 @@ ssize_t inline blkfs_iread_real(vfile_t* file,char* buf,size_t size){
     Assert(0,"Should not reach here!\n");
     return 0;
 }
-ssize_t inline blkfs_iread(vfile_t* file,char* buf,size_t size){
+ssize_t blkfs_iread(vfile_t* file,char* buf,size_t size){
     ssize_t ret=blkfs_iread_real(file,buf,size);
     return ret;
 }
