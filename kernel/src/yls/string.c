@@ -38,13 +38,12 @@ int string_cmp(device_t* dev,uint32_t off,const char* s){
 int block_read (device_t* dev,uint32_t off,char* s,size_t nbyte){
     size_t rest=nbyte;
     for(;
-            rest>0x40-4;
+            off&&(rest>0x40-4);
             rest-=0x40-4,s+=0x40-4){
         if(dev->ops->read(dev,off,s,0x40-4)<0){
             return nbyte-rest;
         }
-        uint32_t new_off=off+0x40;
-        dev->ops->read(dev,off+0x40-4,&new_off,4);
+        dev->ops->read(dev,off+0x40-4,&off,4);
     }
     if(dev->ops->read(dev,off,s,rest)<0){
         return nbyte-rest;
@@ -60,8 +59,10 @@ int block_write(device_t* dev,uint32_t off,const char* s,size_t nbyte){
         if(dev->ops->write(dev,off,s,0x40-4)<0){
             return nbyte-rest;
         }
-        uint32_t new_off=off+0x40;
-        dev->ops->read(dev,off+0x40-4,&new_off,4);
+        dev->ops->read(dev,off+0x40-4,&off,4);
+        if(!off){
+            TODO();
+        }
     }
     if(dev->ops->write(dev,off,s,rest)<0){
         return nbyte-rest;
