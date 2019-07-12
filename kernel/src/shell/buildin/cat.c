@@ -1,3 +1,4 @@
+#include <dir.h>
 #include <klib.h>
 #include <devices.h>
 const char *warn="Haven't realized!\n";
