@@ -12,6 +12,9 @@
 #define O_WRONLY 2
 #define O_CREATE 4
 
+#define SEEK_SET 0
+#define SEEK_CUR 1
+#define SEEK_END 2
 #define O_RDWR (O_RDONLY | O_WRONLY)
 
 struct filesystem;

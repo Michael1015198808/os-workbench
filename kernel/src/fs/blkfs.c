@@ -7,7 +7,7 @@
  * vfile----offset
  *      |---refcnt /ptr(yls_node)
  *      \---inode---fs(blkfs)
- *                 \ops()
+ *                 \ops(blkfs_iops)
  */
 static void blkfs_init(filesystem* fs,const char* name,device_t* dev){
     fs->name=name;
@@ -38,7 +38,9 @@ static inode_t* blkfs_lookup(filesystem* fs,const char* path,int flags){
 }
 
 static int blkfs_close(inode_t* inode){
-    TODO();
+    pmm->free(inode->ptr);
+    pmm->free(inode);
+    return 0;
 }
 
 static fsops_t blkfs_ops={
@@ -47,7 +49,15 @@ static fsops_t blkfs_ops={
     .close =blkfs_close,
 };
 
-ssize_t inline blkfs_iread_real(vfile_t* file,char* buf,size_t size){
+static int blkfs_iclose(vfile_t* file){
+    --file->refcnt;
+    if(file->refcnt==0){
+        return file->inode->fs->ops->close(file->inode);
+    }
+    return 0;
+}
+
+static ssize_t inline blkfs_iread_real(vfile_t* file,char* buf,size_t size){
     ssize_t ret=0;
 
     filesystem* fs  =file->inode->fs;
@@ -82,11 +92,11 @@ ssize_t inline blkfs_iread_real(vfile_t* file,char* buf,size_t size){
     Assert(0,"Should not reach here!\n");
     return 0;
 }
-ssize_t blkfs_iread(vfile_t* file,char* buf,size_t size){
+static ssize_t blkfs_iread(vfile_t* file,char* buf,size_t size){
     ssize_t ret=blkfs_iread_real(file,buf,size);
     return ret;
 }
-ssize_t blkfs_iwrite(vfile_t* file,const char* buf,size_t size){
+static ssize_t blkfs_iwrite(vfile_t* file,const char* buf,size_t size){
     filesystem* fs= file->inode->fs;
     uint64_t fd_off =file->offset;
     yls_node* node= file->inode->ptr;
@@ -132,13 +142,33 @@ ssize_t blkfs_iwrite(vfile_t* file,const char* buf,size_t size){
     }
     Assert(0,"Should not reach here");
 }
+
+static off_t blkfs_ilseek(vfile_t* file,off_t offset,int whence){
+    switch(whence){
+        case SEEK_SET:
+            return file->offset=offset;
+        case SEEK_CUR:
+            return file->offset+=offset;
+        case SEEK_END:
+            TODO();
+    }
+    BARRIER();
+}
+
 static inodeops_t blkfs_iops={
     /*
     .open  =blkfs_iopen,
-    .close =blkfs_iclose,
     */
+    .close =blkfs_iclose,
     .read  =blkfs_iread,
     .write =blkfs_iwrite,
+    .lseek =blkfs_ilseek,
+    /*
+    .mkdir =blkfs_imkdir,
+    .rmdir =blkfs_rmdir,
+    .link  =blkfs_ilink,
+    .unlink=blkfs_iunlink,
+    */
 };
 
 filesystem blkfs[2]={

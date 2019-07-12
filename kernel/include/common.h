@@ -6,6 +6,7 @@
 #include <nanos.h>
 #include <limits.h>
 #include <stdint.h>
+#include <macros.h>
 
 #include <vfs.h>
 
