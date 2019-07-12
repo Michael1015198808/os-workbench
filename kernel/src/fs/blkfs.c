@@ -61,7 +61,6 @@ ssize_t inline blkfs_iread_real(vfile_t* file,char* buf,size_t size){
                 //Read a directory, you'll get
                 //names of directorys in it
                 //(So readdir is not needed)
-                const uint32_t sz=0x40-4;//Size of information per block
                 find_block(fs->dev,off,&fd_off);
                 if(off==0)return 0;//find_block fails
                 if(fs->dev->ops->read(fs->dev,off+fd_off,&off,4)!=4)return 0;

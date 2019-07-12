@@ -81,8 +81,9 @@ uint32_t find_end(device_t* dev,uint32_t off){
 }
 
 uint32_t find_block(device_t* dev,uint32_t off,uint64_t* fd_off){
+    const uint32_t sz=0x40-4;//Size of information per block
     for(;fd_off>sz;fd_off-=sz){
-        if(dev->ops->read(dev,node->info+sz,&off,4)!=4)return 0;
+        if(dev->ops->read(dev,off+sz,&off,4)!=4)return 0;
     }
     return off;
 }
