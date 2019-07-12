@@ -66,7 +66,7 @@ ssize_t inline blkfs_iread_real(vfile_t* file,char* buf,size_t size){
                 if(fs->dev->ops->read(fs->dev,off+fd_off,&off,4)!=4)return 0;
                 if(off==0)return 0;//Reach end of file
                 fs->dev->ops->read(fs->dev,off+8,&off,4);
-                ssize_t nread=fs->dev->ops->read(fs->dev,off,buf,sz);
+                ssize_t nread=info_read(fs->dev,off,buf,size);
                 ret+=nread;
                 file->offset+=4;
                 return ret;

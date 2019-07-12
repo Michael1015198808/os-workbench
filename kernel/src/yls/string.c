@@ -34,14 +34,30 @@ int string_cmp(device_t* dev,uint32_t off,const char* s){
     Assert(0,"Should not reach here");
 }
 
-int string_cpy(device_t* dev,uint32_t off,const char* s){
-    int to_cpy=strlen(s);
-
-    int info_cpy(device_t* dev,uint32_t off,const char* s,size_t to_cpy);
-    return info_cpy(dev,off,s,to_cpy);
+int string_read(device_t* dev,uint32_t off,const char* s){
 }
 
-int info_cpy(device_t* dev,uint32_t off,const char* s,size_t to_cpy){
+int info_read(device_t* dev,uint32_t off,const char* s,size_t to_cpy){
+    for(;
+            to_cpy>0;
+            to_cpy-=0x40-4,s+=0x40-4){
+        if(dev->ops->read(dev,off,s,0x40-4)<0){
+            Assert(0,"Should not reach here!");
+        }
+        uint32_t new_off=off+0x40;
+        dev->ops->read(dev,off+0x40-4,&new_off,4);
+    }
+    return to_cpy;
+}
+
+int string_write(device_t* dev,uint32_t off,const char* s){
+    int to_cpy=strlen(s);
+
+    int info_write(device_t* dev,uint32_t off,const char* s,size_t to_cpy);
+    return info_write(dev,off,s,to_cpy);
+}
+
+int info_write(device_t* dev,uint32_t off,const char* s,size_t to_cpy){
     for(;
             to_cpy>0;
             to_cpy-=0x40-4,s+=0x40-4){
