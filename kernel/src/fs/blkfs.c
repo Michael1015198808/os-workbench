@@ -80,7 +80,7 @@ ssize_t blkfs_iread(vfile_t* file,char* buf,size_t size){
 }
 ssize_t blkfs_iwrite(vfile_t* file,const char* buf,size_t size){
     filesystem* fs= ((inode_t*)file->inode->ptr)->fs;
-    blkfs_node* node= ((inode_t*)file->inode->ptr)->ptr;
+    yls_node* node= ((inode_t*)file->inode->ptr)->ptr;
 
     switch(node->type){
         case YLS_DIR:
