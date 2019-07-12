@@ -28,7 +28,8 @@ struct pair{
     {0x104,0x00000110},//"/"'s info's offset
     {0x108,0x02100150},//"/"'s name's offset
     {0x10c,CHECK_CODE},
-    {0x110,0x02200190},//"/txt"&"/"'s node
+    {0x110,0x00000190},//"/"'s node
+    {0x110,0x00000220},//"/txt"'s node
     {0x150,       '/'},//"/"'s name'
     {0x190,0x00000000},//"/test"
     {0x194,0x000001a0},//"/test"'s info's offset
