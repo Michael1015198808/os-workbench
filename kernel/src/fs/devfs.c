@@ -54,14 +54,14 @@ static int devfs_iclose(vfile_t* file){
 
 static ssize_t devfs_iread(vfile_t* file,char* buf,size_t size){
     device_t* dev=get_dev(file);
-    ssize_t ret=dev->ops->read(dev,file->offset,buf,size);
+    ssize_t ret  =dev->ops->read(dev,file->offset,buf,size);
     file->offset+=ret;
     return ret;
 }
 
 static ssize_t devfs_iwrite(vfile_t* file,const char* buf,size_t size){
     device_t* dev=get_dev(file);
-    ssize_t retdev->ops->write(dev,file->offset,buf,size);
+    ssize_t ret  =dev->ops->write(dev,file->offset,buf,size);
     file->offset+=ret;
     return ret;
 }
