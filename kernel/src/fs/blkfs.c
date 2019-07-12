@@ -62,7 +62,7 @@ ssize_t inline blkfs_iread_real(vfile_t* file,char* buf,size_t size){
                 //(So readdir is not needed)
                 const uint32_t sz=0x40-4;//Size of information per block
                 uint32_t off=node->info;
-                for(offset =file->offset;offset>sz;offset-=sz)
+                for(offset =file->offset;offset>sz;offset-=sz){
                     if(fs->dev->ops->read(fs->dev,node->info+sz,&off,4)!=4)return 0;
                 }
                 if(fs->dev->ops->read(fs->dev,off+offset,&off,4)!=4)return 0;
