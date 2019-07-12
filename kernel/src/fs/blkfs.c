@@ -3,7 +3,12 @@
 #include <vfs.h>
 #include <yls.h>
 #include <dir.h>
-
+/* blkfs:
+ * vfile----offset
+ *      |---refcnt /ptr(yls_node)
+ *      \---inode---fs(blkfs)
+ *                 \ops()
+ */
 static void blkfs_init(filesystem* fs,const char* name,device_t* dev){
     fs->name=name;
     fs->dev=dev;
@@ -79,8 +84,8 @@ ssize_t blkfs_iread(vfile_t* file,char* buf,size_t size){
     return 0;
 }
 ssize_t blkfs_iwrite(vfile_t* file,const char* buf,size_t size){
-    filesystem* fs= ((inode_t*)file->inode->ptr)->fs;
-    yls_node* node= ((inode_t*)file->inode->ptr)->ptr;
+    filesystem* fs= file->inode->fs;
+    yls_node* node= file->inode->ptr;
 
     switch(node->type){
         case YLS_DIR:
