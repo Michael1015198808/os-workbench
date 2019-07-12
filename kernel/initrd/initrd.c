@@ -30,11 +30,17 @@ struct pair{
     {0x10c,CHECK_CODE},
     {0x110,0x00000190},//"/"'s info
     {0x150,       '/'},//"/"'s name'
-    {0x190,0x00000000},//"/test"
+    {0x190,0x00000000},//"/txt"&"/test"
     {0x194,0x000001a0},//"/test"'s info's offset
     {0x198,0x000001e0},//"/test"'s name's offset
     {0x19c,CHECK_CODE},
     {0x1e0,0x74736574},//"/test"'s name 
+    {0x220,0x00000001},//"/txt"
+    {0x224,0x00000230},//"/txt"'s info's offset
+    {0x228,0x00000270},//"/txt"'s name's offset
+    {0x22c,CHECK_CODE},
+    {0x230,0x34333231},//"/txt"'s info
+    {0x270,0x00747784},//"/txt"'s name
 };
 int main(){
     for(uint32_t i=0,j=0;i<0x1000;){
