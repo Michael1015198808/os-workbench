@@ -6,8 +6,7 @@
 
 static void blkfs_init(filesystem* fs,const char* name,device_t* dev){
     fs->name=name;
-    fs->ops=NULL;
-    fs->dev=NULL;
+    fs->dev=dev;
 }
 
 static inode_t* blkfs_lookup(filesystem* fs,const char* path,int flags){
