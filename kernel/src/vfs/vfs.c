@@ -22,8 +22,6 @@ static int new_fd_num(task_t* current){
     return -1;//No more file descripter (number)!
 }
 
-extern fsops_t yls_ops;
-
 void vfs_init(void){
     blkfs[0].ops->init  (blkfs+0    ,"ramdisk0" ,dev_lookup("ramdisk0") );
     blkfs[1].ops->init  (blkfs+1    ,"ramdisk1" ,dev_lookup("ramdisk1") );
@@ -117,8 +115,8 @@ static inline int vfs_open_real(const char *path,int flags){
 
     if(strncmp(path,"/dev/",5)){//Temporarily
         this_fd->inode=blkfs[0].ops->lookup(&blkfs[0],path,flags);
-        extern inodeops_t yls_iops;
-        Assert(this_fd->inode->ops==&yls_iops,
+        extern inodeops_t blkfs_iops;
+        Assert(this_fd->inode->ops==&blkfs_iops,
                 "Something wrong happens when try to open /!");
     }else{
         this_fd->inode=devfs.ops->lookup(&devfs,path+5,flags);
