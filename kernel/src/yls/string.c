@@ -35,7 +35,13 @@ int string_cmp(device_t* dev,uint32_t off,const char* s){
 }
 
 int string_cpy(device_t* dev,uint32_t off,const char* s){
-    int to_cpy=strlen(s),ret=to_cpy;
+    int to_cpy=strlen(s);
+
+    int info_cpy(device_t* dev,uint32_t off,const char* s,size_t to_cpy);
+    return info_cpy(dev,off,s,to_cpy);
+}
+
+int info_cpy(device_t* dev,uint32_t off,const char* s,size_t to_cpy){
     for(;
             to_cpy>0;
             to_cpy-=0x40-4,s+=0x40-4){
@@ -45,7 +51,7 @@ int string_cpy(device_t* dev,uint32_t off,const char* s){
         uint32_t new_off=off+0x40;
         dev->ops->write(dev,off+0x40-4,&new_off,4);
     }
-    return ret;
+    return to_cpy;
 }
 
 uint32_t new_block(device_t* dev,uint32_t size){
@@ -72,4 +78,11 @@ uint32_t find_end(device_t* dev,uint32_t off){
             return read;
         }
     }
+}
+
+uint32_t find_block(device_t* dev,uint32_t off,uint64_t* fd_off){
+    for(;fd_off>sz;fd_off-=sz){
+        if(fs->dev->ops->read(fs->dev,node->info+sz,&off,4)!=4)return 0;
+    }
+    return off;
 }

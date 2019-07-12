@@ -51,8 +51,9 @@ ssize_t inline blkfs_iread_real(vfile_t* file,char* buf,size_t size){
     ssize_t ret=0;
 
     filesystem* fs  =file->inode->fs;
-    uint64_t offset =file->offset;
+    uint64_t fd_off =file->offset;
     yls_node* node  =file->inode->ptr;
+    uint32_t off=node->info;
 
     switch(node->type){
         case YLS_DIR:
@@ -61,12 +62,10 @@ ssize_t inline blkfs_iread_real(vfile_t* file,char* buf,size_t size){
                 //names of directorys in it
                 //(So readdir is not needed)
                 const uint32_t sz=0x40-4;//Size of information per block
-                uint32_t off=node->info;
-                for(offset =file->offset;offset>sz;offset-=sz){
-                    if(fs->dev->ops->read(fs->dev,node->info+sz,&off,4)!=4)return 0;
-                }
-                if(fs->dev->ops->read(fs->dev,off+offset,&off,4)!=4)return 0;
-                if(off==0)return 0;
+                find_block(fs->dev,off,&fd_off);
+                if(off==0)return 0;//find_block fails
+                if(fs->dev->ops->read(fs->dev,off+fd_off,&off,4)!=4)return 0;
+                if(off==0)return 0;//Reach end of file
                 fs->dev->ops->read(fs->dev,off+8,&off,4);
                 ssize_t nread=fs->dev->ops->read(fs->dev,off,buf,sz);
                 ret+=nread;
@@ -86,11 +85,14 @@ ssize_t blkfs_iread(vfile_t* file,char* buf,size_t size){
 }
 ssize_t blkfs_iwrite(vfile_t* file,const char* buf,size_t size){
     filesystem* fs= file->inode->fs;
+    uint64_t fd_off =file->offset;
     yls_node* node= file->inode->ptr;
+    uint32_t off=node->info;
 
     switch(node->type){
         case YLS_DIR:
             {
+                TODO();
                 //Write to a dir will create
                 //a file in it with name $buf
                 uint32_t parent_info=node->info;
@@ -112,6 +114,14 @@ ssize_t blkfs_iwrite(vfile_t* file,const char* buf,size_t size){
                     parent_info=new_node.info;
                 }
                 return size;
+            }
+            break;
+        case YLS_FILE:
+            {
+                find_block(fs->dev,off,&fd_off);
+                ssize_t nwrite=info_cpy(fs->dev,off,buf,size);
+                file->offset+=nwrite;
+                return nwrite;
             }
             break;
         default:
