@@ -63,7 +63,7 @@ static inline void dir_cat_real(char* dest,const char* src){
     }
 }
 
-inline const char* get_pwd(void){
+const char* get_pwd(void){
     return get_cur()->pwd;
 }
 
