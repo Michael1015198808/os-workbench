@@ -92,7 +92,7 @@ void to_absolute(char* dest,const char* pwd,const char* rela){
     }else{
         //Relative
         strcpy(dest,pwd);
-        strcat(dest,rela);
+        dir_cat(dest,rela);
     }
 }
 
