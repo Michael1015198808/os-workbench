@@ -1,17 +1,23 @@
 #include <common.h>
 #include <devices.h>
 
-extern devops_t tty_ops, fb_ops, rd_ops, input_ops;
+
 
 #define DEVICES(_) \
-  _(0, rd_t,    "ramdisk0", 1, &rd_ops) \
-  _(1, rd_t,    "ramdisk1", 2, &rd_ops) \
-  _(2, input_t, "input",    1, &input_ops) \
-  _(3, fb_t,    "fb",       1, &fb_ops) \
-  _(4, tty_t,   "tty1",     1, &tty_ops) \
-  _(5, tty_t,   "tty2",     2, &tty_ops) \
-  _(6, tty_t,   "tty3",     3, &tty_ops) \
-  _(7, tty_t,   "tty4",     4, &tty_ops)
+  _(0, rd_t,    "ramdisk0", 1, &rd_ops)     \
+  _(1, rd_t,    "ramdisk1", 2, &rd_ops)     \
+  _(2, input_t, "input",    1, &input_ops)  \
+  _(3, fb_t,    "fb",       1, &fb_ops)     \
+  _(4, tty_t,   "tty1",     1, &tty_ops)    \
+  _(5, tty_t,   "tty2",     2, &tty_ops)    \
+  _(6, tty_t,   "tty3",     3, &tty_ops)    \
+  _(7, tty_t,   "tty4",     4, &tty_ops)    \
+  _(8, void,    "null",     1, &null_ops)
+
+#define OPS_DECLARE(id,device_type,dev_name,dev_id,dev_ops) \
+    extern devops_t dev_ops;
+
+DEVICES(OPS_DECLARE);
 
 #define DEV_CNT(...) + 1
 device_t *devices[0 DEVICES(DEV_CNT)];
