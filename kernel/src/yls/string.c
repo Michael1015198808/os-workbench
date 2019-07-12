@@ -43,6 +43,7 @@ int block_read (device_t* dev,uint32_t off,uint32_t shift,char* s,size_t nbyte){
         s+=f_len;
         rest-=f_len;
         dev->ops->read(dev,off+0x40-4,&off,f_len);
+        if(!off)return f_len;
     }
     for(;
             rest>0x40-4;
@@ -66,6 +67,7 @@ int block_write(device_t* dev,uint32_t off,uint32_t shift,const char* s,size_t n
         s+=f_len;
         rest-=f_len;
         dev->ops->read(dev,off+0x40-4,&off,f_len);
+        if(!off)return f_len;
     }
     for(;
             rest>0x40-4;
