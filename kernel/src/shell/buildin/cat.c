@@ -13,11 +13,14 @@ static inline void cat_from_stdin(char buf[0x200],int* err){
 }
 
 int mysh_cat(void *args[]){
+    const char* pwd=get_pwd();
     char buf[0x200];
     int err=0;
     if(args[1]){
         for(int i=1;args[i];++i){
             if(strcmp(args[i],"-")){
+                char dir[0x100];
+                to_abosolute(dir,pwd,args[i]);
                 int fd=vfs->open(args[i],7),nread=0;
                 do{
                     nread=vfs->read(fd,buf,sizeof(buf));

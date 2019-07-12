@@ -62,6 +62,11 @@ static inline void dir_cat_real(char* dest,const char* src){
         src+=(next+1);
     }
 }
+
+inline const char* get_pwd(void){
+    return get_cur()->pwd;
+}
+
 void dir_cat(char* dest,const char* src){
     Assert(src[0]!='/',"Relative location shouldn't start with /");
     int len=-1;
@@ -87,7 +92,7 @@ void to_absolute(char* dest,const char* pwd,const char* rela){
     }else{
         //Relative
         strcpy(dest,pwd);
-        dir_cat(dest,rela);
+        strcat(dest,rela);
     }
 }
 
