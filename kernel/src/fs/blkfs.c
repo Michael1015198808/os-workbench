@@ -47,11 +47,12 @@ static fsops_t blkfs_ops={
     .close =blkfs_close,
 };
 
-ssize_t blkfs_iread(vfile_t* file,char* buf,size_t size){
+ssize_t inline blkfs_iread_real(vfile_t* file,char* buf,size_t size){
     ssize_t ret=0;
 
-    filesystem* fs= file->inode->fs;
-    yls_node* node= file->inode->ptr;
+    filesystem* fs  =file->inode->fs;
+    uint64_t offset =file->offset;
+    yls_node* node  =file->inode->ptr;
 
     switch(node->type){
         case YLS_DIR:
@@ -59,21 +60,17 @@ ssize_t blkfs_iread(vfile_t* file,char* buf,size_t size){
                 //Read a directory, you'll get
                 //names of directorys in it
                 //(So readdir is not needed)
-                uint32_t off,nread;
-                if(fs->dev->ops->read(fs->dev,node->info,&off,4)!=4)return -1;
-                if(off==0)return 0;
-                if(node->cnt==OFFS_PER_MEM){
-                    node->cnt=0;
-                    node->info=0;
-                    TODO();
-                }else{
-                    ++node->cnt;
-                    node->info+=4;
+                const uint32_t sz=0x40-4;//Size of information per block
+                uint32_t off=node->info;
+                for(offset =file->offset;offset>sz;offset-=sz)
+                    if(fs->dev->ops->read(fs->dev,node->info+sz,&off,4)!=4)return 0;
                 }
-                off+=8;//To name
-                fs->dev->ops->read(fs->dev,off,&off,4);
-                nread=fs->dev->ops->read(fs->dev,off,buf,0x40-4);
+                if(fs->dev->ops->read(fs->dev,off+offset,&off,4)!=4)return 0;
+                if(off==0)return 0;
+                fs->dev->ops->read(fs->dev,off+8,&off,4);
+                nread=fs->dev->ops->read(fs->dev,off,buf,sz);
                 ret+=nread;
+                file->offset+=4;
                 return ret;
             }
         case YLS_FILE:
@@ -82,6 +79,10 @@ ssize_t blkfs_iread(vfile_t* file,char* buf,size_t size){
     }
     Assert(0,"Should not reach here!\n");
     return 0;
+}
+ssize_t inline blkfs_iread(vfile_t* file,char* buf,size_t size){
+    ssize_t ret=blkfs_iread_real(file,buf,size);
+    return ret;
 }
 ssize_t blkfs_iwrite(vfile_t* file,const char* buf,size_t size){
     filesystem* fs= file->inode->fs;
