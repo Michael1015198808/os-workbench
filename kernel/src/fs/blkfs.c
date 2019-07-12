@@ -66,7 +66,7 @@ ssize_t inline blkfs_iread_real(vfile_t* file,char* buf,size_t size){
                 if(fs->dev->ops->read(fs->dev,off+fd_off,&off,4)!=4)return 0;
                 if(off==0)return 0;//Reach end of file
                 fs->dev->ops->read(fs->dev,off+8,&off,4);
-                ssize_t nread=info_read(fs->dev,off,buf,size);
+                ssize_t nread=block_read(fs->dev,off,buf,size);
                 ret+=nread;
                 file->offset+=4;
                 return ret;
@@ -118,7 +118,7 @@ ssize_t blkfs_iwrite(vfile_t* file,const char* buf,size_t size){
         case YLS_FILE:
             {
                 find_block(fs->dev,off,&fd_off);
-                ssize_t nwrite=info_cpy(fs->dev,off,buf,size);
+                ssize_t nwrite=block_write(fs->dev,off,buf,size);
                 file->offset+=nwrite;
                 return nwrite;
             }
