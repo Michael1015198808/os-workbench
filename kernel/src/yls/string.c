@@ -35,8 +35,15 @@ int string_cmp(device_t* dev,uint32_t off,const char* s){
 }
 
 
-int block_read (device_t* dev,uint32_t off,char* s,size_t nbyte){
+int block_read (device_t* dev,uint32_t off,uint32_t shift,char* s,size_t nbyte){
     size_t rest=nbyte;
+    {
+        uint32_t f_len=0x40-4-shift;
+        dev->ops->read(dev,off+shift,s,f_len);
+        s+=f_len;
+        rest-=f_len;
+        dev->ops->read(dev,off+0x40-4,&off,f_len);
+    }
     for(;
             off&&(rest>0x40-4);
             rest-=0x40-4,s+=0x40-4){
@@ -51,8 +58,15 @@ int block_read (device_t* dev,uint32_t off,char* s,size_t nbyte){
     return nbyte;
 }
 
-int block_write(device_t* dev,uint32_t off,const char* s,size_t nbyte){
+int block_write(device_t* dev,uint32_t off,uint32_t shift,const char* s,size_t nbyte){
     size_t rest=nbyte;
+    {
+        uint32_t f_len=0x40-4-shift;
+        dev->ops->write(dev,off+shift,s,f_len);
+        s+=f_len;
+        rest-=f_len;
+        dev->ops->read(dev,off+0x40-4,&off,f_len);
+    }
     for(;
             rest>0x40-4;
             rest-=0x40-4,s+=0x40-4){
