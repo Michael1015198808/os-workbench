@@ -34,48 +34,39 @@ int string_cmp(device_t* dev,uint32_t off,const char* s){
     Assert(0,"Should not reach here");
 }
 
-int string_read(device_t* dev,uint32_t off,char* s){
-}
 
-int block_read (device_t* dev,uint32_t off,char* s,size_t to_cpy){
-    size_t rest=to_cpy;
+int block_read (device_t* dev,uint32_t off,char* s,size_t nbyte){
+    size_t rest=nbyte;
     for(;
             rest>0x40-4;
             rest-=0x40-4,s+=0x40-4){
         if(dev->ops->read(dev,off,s,0x40-4)<0){
-            return to_cpy-rest;
+            return nbyte-rest;
         }
         uint32_t new_off=off+0x40;
         dev->ops->read(dev,off+0x40-4,&new_off,4);
     }
     if(dev->ops->read(dev,off,s,rest)<0){
-        return to_cpy-rest;
+        return nbyte-rest;
     }
-    return to_cpy;
+    return nbyte;
 }
 
-int string_write(device_t* dev,uint32_t off,const char* s){
-    int to_cpy=strlen(s);
-
-    int block_write(device_t* dev,uint32_t off,const char* s,size_t to_cpy);
-    return block_write(dev,off,s,to_cpy);
-}
-
-int block_write(device_t* dev,uint32_t off,const char* s,size_t to_cpy){
-    size_t rest=to_cpy;
+int block_write(device_t* dev,uint32_t off,const char* s,size_t nbyte){
+    size_t rest=nbyte;
     for(;
             rest>0x40-4;
             rest-=0x40-4,s+=0x40-4){
         if(dev->ops->write(dev,off,s,0x40-4)<0){
-            return to_cpy-rest;
+            return nbyte-rest;
         }
         uint32_t new_off=off+0x40;
         dev->ops->read(dev,off+0x40-4,&new_off,4);
     }
     if(dev->ops->write(dev,off,s,rest)<0){
-        return to_cpy-rest;
+        return nbyte-rest;
     }
-    return to_cpy;
+    return nbyte;
 }
 
 uint32_t new_block(device_t* dev,uint32_t size){

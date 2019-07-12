@@ -8,8 +8,6 @@ typedef struct info info;
 
 int file_cmp        (device_t* dev,uint32_t off,const char* s   );
 int string_cmp      (device_t* dev,uint32_t off,const char* s   );
-int string_write    (device_t* dev,uint32_t off,const char* s   );
-int string_read     (device_t* dev,uint32_t off,char* s         );
 int block_write     (device_t* dev,uint32_t off,const char* s   ,size_t size);
 int block_read      (device_t* dev,uint32_t off,char* s         ,size_t size);
 uint32_t new_block  (device_t* dev,uint32_t size                );
