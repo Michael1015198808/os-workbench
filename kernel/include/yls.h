@@ -12,7 +12,7 @@ int string_cpy      (device_t* dev,uint32_t off,const char* s   );
 int info_cpy        (device_t* dev,uint32_t off,const char* s   ,size_t size);
 uint32_t new_block  (device_t* dev,uint32_t size                );
 uint32_t find_end   (device_t* dev,uint32_t off                 );
-uint32_t find_block (device_t* dev,uint32_t off,uint64_t fd_off );
+uint32_t find_block (device_t* dev,uint32_t off,uint64_t* fd_off);
 
 int find_path   (device_t* dev,inode_t* cur,const char* s);
 
