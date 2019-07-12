@@ -15,8 +15,8 @@ static void devfs_init(filesystem* fs,const char* name,device_t *dev){
 static inode_t* devfs_lookup(filesystem* fs,const char* path,int flags){
     inode_t* ret=pmm->alloc(sizeof(inode_t));
     ret->ptr=dev_lookup(path);
-    ret->fs=&devfs;
-    ret->ops=&devfs_iops;
+    ret->fs=fs;
+    ret->ops=fs->inodeops;
     return ret;
 }
 

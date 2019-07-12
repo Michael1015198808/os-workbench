@@ -33,6 +33,8 @@ void vfs_init(void){
 int vfs_access(const char *path, int mode){
     TODO();
 }
+//Path should not end with /
+//Except "/"
 int vfs_mount(const char *path, filesystem *fs){
     pthread_mutex_lock(&mount_table_lk);
     mount_table[mount_table_cnt].path=path;
