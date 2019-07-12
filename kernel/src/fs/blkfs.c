@@ -2,6 +2,7 @@
 #include <devices.h>
 #include <vfs.h>
 #include <yls.h>
+#include <dir.h>
 
 static void blkfs_init(filesystem* fs,const char* name,device_t* dev){
     fs->name=name;
