@@ -134,10 +134,10 @@ static ssize_t inline blkfs_ireaddir_real(vfile_t* file,char* buf,size_t size){
             }
             break;
         case YLS_FILE:
-            barrier();
+            BARRIER();
             break;
     }
-    barrier();
+    BARRIER();
     return 0;
 }
 static ssize_t blkfs_ireaddir(vfile_t* file,char* buf,size_t size){
