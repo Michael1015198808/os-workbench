@@ -57,7 +57,7 @@ ssize_t std_write(void *buf);
 //Read from it always returns 0(Work as EOF)
 //Write to it always returns nbyte
 struct vfile{
-    uint64_t offset;
+    uint32_t offset;
     inode_t* inode;
     int refcnt;
     pthread_mutex_t lk;
