@@ -90,10 +90,10 @@ static int blkfs_iclose(vfile_t* file){
 }
 
 static ssize_t inline blkfs_iread_real(vfile_t* file,char* buf,size_t size){
-    filesystem* fs  =file->inode->fs;
-    uint64_t fd_off =file->offset;
-    yls_node* node  =file->inode->ptr;
-    uint32_t off=node->info;
+    filesystem* fs  = file->inode->fs;
+    uint64_t fd_off = file->offset;
+    yls_node* node  = file->inode->ptr;
+    uint32_t off    = node->info;
 
     switch(node->type){
         case YLS_DIR:
@@ -101,7 +101,7 @@ static ssize_t inline blkfs_iread_real(vfile_t* file,char* buf,size_t size){
             break;
         case YLS_FILE:
             {
-                find_block(fs->dev,off,&fd_off);
+                find_block(fs->dev,&off,&fd_off);
                 return block_read(fs->dev,off,fd_off,buf,size);
             }
             break;
