@@ -20,9 +20,9 @@ int mysh_cat(void *args[]){
     if(args[1]){
         for(int i=1;args[i];++i){
             if(strcmp(args[i],"-")){
-                char dir[0x100];
-                to_absolute(dir,pwd,args[i]);
-                int fd=vfs->open(dir,7),nread=0;
+                char file[0x100];
+                to_absolute(file,pwd,args[i]);
+                int fd=vfs->open(file,7),nread=0;
                 do{
                     nread=vfs->read(fd,buf,sizeof(buf));
                     vfs->write(STDOUT,buf,nread);

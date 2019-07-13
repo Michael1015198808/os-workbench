@@ -18,7 +18,7 @@ static inline void single_ls(const char* path,int* err){
     if(nread<0){
         *err=-1;
     }
-    //vfs->close(fd);
+    vfs->close(fd);
     std_write("\n");
 }
 
