@@ -14,7 +14,7 @@ static void blkfs_init(filesystem* fs,const char* name,device_t* dev){
     fs->dev=dev;
     log("blkfs initialization started");
     fs->inodes=pmm->alloc(sizeof(inode_t)*(0x100-0x40)/0x8);
-    for(int i=0;40+(i<<3);++i){
+    for(int i=0;40+(i<<3)<0x100;++i){
         fs->inodes[i].ptr=pmm->alloc(16);
         fs->dev->ops->read(fs->dev,40+(i<<3),fs->inodes[i].ptr,16);
         fs->inodes[i].fs=fs;
