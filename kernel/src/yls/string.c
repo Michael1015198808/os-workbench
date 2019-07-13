@@ -25,7 +25,7 @@ int block_read (device_t* dev,uint32_t off,uint32_t shift,char* s,size_t nbyte){
     find_block(dev,&shift,&off);
     off+=shift;
     while(rest>0){
-        int to_read=(~off)&BLK_SZ;
+        int to_read=(-off)&BLK_SZ;
         if(read(dev,off,s,to_read)<0||!off){
             return nbyte-rest;
         }
