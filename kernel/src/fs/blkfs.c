@@ -45,7 +45,7 @@ static inode_t* blkfs_lookup(filesystem* fs,const char* path,int flags){
             strncpy(layer,path,layer_len);
             uint32_t blk_off;
             if(read(fs->dev,offset,&blk_off,4)!=4||!blk_off){
-                sprintf(layer,"cannot access '%s': No such file or directory ",ori_path);
+                sprintf(layer,"cannot access '%s': No such file or directory",ori_path);
                 warning(layer);
             };
             if(block_cmp(fs->dev,blk_off,layer)){
@@ -60,6 +60,11 @@ static inode_t* blkfs_lookup(filesystem* fs,const char* path,int flags){
                 break;
             }
         }
+    }
+    if((flags&O_DIRECTORY)&&(fs->inodes[id].type!=YLS_DIR)){
+        char warn[0x100];
+        sprintf(warn,"%s: Not a directory",ori_path);
+        warning(warn);
     }
     return fs->inodes+id;
 }

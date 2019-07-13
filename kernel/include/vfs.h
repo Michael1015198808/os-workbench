@@ -8,9 +8,10 @@
 #define STDOUT 1
 #define STDERR 2
 
-#define O_RDONLY 1
-#define O_WRONLY 2
-#define O_CREATE 4
+#define O_RDONLY    1
+#define O_WRONLY    2
+#define O_CREATE    4
+#define O_DIRECTORY 8
 
 #define SEEK_SET 0
 #define SEEK_CUR 1
