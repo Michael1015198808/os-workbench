@@ -176,6 +176,7 @@ int vfs_close(int fd){
     }
     Assert(this_fd->refcnt>=0,"fd with refcnt <0!\n");
     pthread_mutex_unlock(&this_fd->lk);
+    return 0;
 }
 
 MODULE_DEF(vfs){
