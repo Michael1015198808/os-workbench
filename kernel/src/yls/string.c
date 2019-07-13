@@ -25,13 +25,15 @@ int block_read (device_t* dev,uint32_t off,uint32_t shift,char* s,size_t nbyte){
     find_block(dev,&shift,&off);
     off+=shift;
     while(rest>0){
-        int to_read=(-off)&BLK_SZ;
-        if(read(dev,off,s,to_read)<0||!off){
+        int to_read=min((-off)&BLK_SZ,rest);
+        if(read(dev,off,s,to_read)!=to_read){
             return nbyte-rest;
         }
         s+=to_read;
-        read(dev,off+BLK_MEM,&off,4);
         rest-=to_read;
+        if(read(dev,off+BLK_MEM,&off,4)!=4||!off){
+            return nbyte-rest;
+        };
     }
     return nbyte;
 }

@@ -36,4 +36,6 @@
 
 #define TASK_FENCE
 
+#define min(a,b) ((a)>(b)?(b):(a))
+
 #endif//__MACROS_H__
