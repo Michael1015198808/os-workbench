@@ -101,8 +101,7 @@ static ssize_t inline blkfs_iread_real(vfile_t* file,char* buf,size_t size){
             break;
         case YLS_FILE:
             {
-                TODO();
-                //find_block(fs->dev,off,&fd_off);
+                find_block(fs->dev,off,&fd_off);
                 return block_read(fs->dev,off,fd_off,buf,size);
             }
             break;
@@ -135,14 +134,10 @@ static ssize_t inline blkfs_ireaddir_real(vfile_t* file,char* buf,size_t size){
             }
             break;
         case YLS_FILE:
-            {
-                TODO();
-                //find_block(fs->dev,off,&fd_off);
-                return block_read(fs->dev,off,fd_off,buf,size);
-            }
+            barrier();
             break;
     }
-    Assert(0,"Should not reach here!\n");
+    barrier();
     return 0;
 }
 static ssize_t blkfs_ireaddir(vfile_t* file,char* buf,size_t size){
