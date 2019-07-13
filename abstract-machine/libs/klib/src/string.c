@@ -68,6 +68,8 @@ int strcmp(const char* s1, const char* s2) {
 
 int strncmp(const char* s1, const char* s2, size_t n) {
     if(n==0){return 0;}
+    size_t len=strlen(s1);
+    if(len<n)n=len;
     while(n>1&&*s1==*s2){
         ++s1;
         ++s2;
