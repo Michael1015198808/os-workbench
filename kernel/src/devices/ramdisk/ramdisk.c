@@ -32,6 +32,3 @@ devops_t rd_ops = {
   .read = rd_read,
   .write = rd_write,
 };
-
-
-
