@@ -29,11 +29,31 @@ static void blkfs_init(filesystem* fs,const char* name,device_t* dev){
 static inode_t* blkfs_lookup(filesystem* fs,const char* path,int flags){
     Assert(path[0]=='/',"Absolute path should start with /\n");
     ++path;
-    //ssize_t(*const read)(device_t*,off_t,void*,size_t)=fs->dev->ops->read;
 
-    Assert(path[0]=='\0');
-    inode_t* ret =fs->inodes;
-    return ret;
+    ssize_t(*const read)(device_t*,off_t,void*,size_t)=fs->dev->ops->read;
+
+    uint32_t id=0;//id of inode
+
+    while(path){
+        inode_t* cur =fs->inodes+id;
+        yls_node* node=cur->ptr;
+        uint32_t offset=node->info;
+        while(offset){
+            if(file_cmp(fs->dev,node->info,s)){
+                offset+=4;
+                if(offset%BLK_SZ==BLK_MEM){
+                    read(fs->dev,offset,&offset,4);
+                }
+            }else{
+                report_if(1);
+                path+=block_len(fs->dev,offset);
+                read(fs->dev,offset,&id,4);
+                break;
+            }
+        }
+        //no such file or directory:
+    }
+    return fs->inodes+id;
 }
 
 static int blkfs_close(inode_t* inode){
