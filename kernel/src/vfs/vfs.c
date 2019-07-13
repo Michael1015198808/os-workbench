@@ -140,6 +140,17 @@ static ssize_t vfs_read(int fd,void *buf,size_t nbyte){
     return ret;
 }
 
+static inline ssize_t vfs_readdir_real(int fd, void* buf,size_t nbyte){
+    task_t* current=get_cur();
+    ssize_t nread=this_fd->inode->ops->readdir(this_fd,buf,nbyte);
+    return nread;
+}
+
+static ssize_t vfs_readdir(int fd,void *buf,size_t nbyte){
+    ssize_t ret=vfs_readdir_real(fd,buf,nbyte);
+    return ret;
+}
+
 static inline ssize_t vfs_write_real(int fd,void *buf,size_t nbyte){
     task_t* current=get_cur();
     return this_fd->inode->ops->write(this_fd,buf,nbyte);
