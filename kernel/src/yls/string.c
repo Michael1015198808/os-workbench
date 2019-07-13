@@ -16,26 +16,6 @@ int file_cmp(device_t* dev,uint32_t off,const char* s){
 //Compare string blocks and char*
 int string_cmp(device_t* dev,uint32_t off,const char* s){
     TODO();
-    info string;
-    int to_cmp=get_first_layer(s);
-    for(;
-            to_cmp>0;
-            to_cmp-=0x40-4,s+=0x40-4){
-        dev->ops->read(dev,off,&string,sizeof(info));
-        if(to_cmp>0x40-4){
-            int ret=strncmp(string.mem,s,0x40-4);
-            if(ret){
-                return ret;
-            }else if(string.next){
-                dev->ops->read(dev,string.next,&string,sizeof(info));
-            }else{
-                return 1;
-            }
-        }else{
-            return strncmp(string.mem,s,to_cmp);
-        }
-    }
-    Assert(0,"Should not reach here");
 }
 
 
