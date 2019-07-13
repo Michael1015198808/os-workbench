@@ -10,7 +10,7 @@ int block_write     (device_t* dev,uint32_t off,uint32_t shift,const char* s   ,
 int block_read      (device_t* dev,uint32_t off,uint32_t shift,char* s         ,size_t size);
 uint32_t new_block  (device_t* dev,uint32_t size                );
 uint32_t find_end   (device_t* dev,uint32_t off                 );
-int   find_block    (device_t* dev,uint32_t*off,uint32_t* fd_off);
+int   find_block    (device_t* dev,uint32_t*fd_off,uint32_t* off);
 uint32_t block_len  (device_t* dev,uint32_t off);
 
 int find_path   (device_t* dev,inode_t* cur,const char* s);
