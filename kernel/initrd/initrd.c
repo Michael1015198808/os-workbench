@@ -58,9 +58,7 @@ struct pair{
     {0x680,0x34333231},// "/txt"'s info
 };
 int main(){
-    for(uint32_t i=0;i<0x40;++i){
-    }
-    for(uint32_t i=0x40,j=0;i<0x10000;i+=4){
+    for(uint32_t i=0,j=0;i<0x10000;i+=4){
 #ifdef READABLE
         if(!(i&0xf)){printf("\n %03x: ",i);}
 #endif
