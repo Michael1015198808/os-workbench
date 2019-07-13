@@ -102,7 +102,9 @@ static ssize_t inline blkfs_iread_real(vfile_t* file,char* buf,size_t size){
         case YLS_FILE:
             {
                 find_block(fs->dev,&fd_off,&off);
-                return block_read(fs->dev,off,fd_off,buf,size);
+                ssize_t nread=block_read(fs->dev,off,fd_off,buf,size);
+                file->offset+=nread;
+                return nread;
             }
             break;
     }
