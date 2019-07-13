@@ -34,7 +34,7 @@ static inode_t* blkfs_lookup(filesystem* fs,const char* path,int flags){
 
     uint32_t id=0;//id of inode
 
-    while(path){
+    while(*path){
         inode_t* cur =fs->inodes+id;
         yls_node* node=cur->ptr;
         uint32_t offset=node->info;
