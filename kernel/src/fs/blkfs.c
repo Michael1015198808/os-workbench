@@ -52,7 +52,7 @@ static inode_t* blkfs_lookup(filesystem* fs,const char* path,int flags){
             }else{
                 report_if(1);
                 path+=layer_len;
-                read(fs->dev,offset,&id,4);
+                read(fs->dev,blk_off,&id,4);
                 break;
             }
         }
