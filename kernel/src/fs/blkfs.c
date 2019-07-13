@@ -12,7 +12,7 @@
 static void blkfs_init(filesystem* fs,const char* name,device_t* dev){
     fs->name=name;
     fs->dev=dev;
-    Log("blkfs initialization started");
+    log("blkfs initialization started");
     fs->inodes=pmm->alloc(sizeof(inode_t)*(0x100-0x40)/0x8);
     for(int i=0;40+(i<<3);++i){
         fs->inodes[i].ptr=pmm->alloc(16);
@@ -20,7 +20,7 @@ static void blkfs_init(filesystem* fs,const char* name,device_t* dev){
         fs->inodes[i].fs=fs;
         fs->inodes[i].ops=fs->inodeops;
     }
-    Log("blkfs initialization finished");
+    log("blkfs initialization finished");
 }
 
 static inode_t* blkfs_lookup(filesystem* fs,const char* path,int flags){
@@ -80,7 +80,7 @@ static ssize_t inline blkfs_iread_real(vfile_t* file,char* buf,size_t size){
                 //Read a directory, you'll get
                 //names of directorys in it
                 //(So readdir is not needed)
-                if(block_read(fs->dev,off,fd_off,&off,4)!=4)return 0;
+                if(block_read(fs->dev,off,fd_off,(void*)&off,4)!=4)return 0;
                 if(off==0)return 0;//find_block failed or reached the end
 
                 ssize_t nread=block_read(fs->dev,off,4,buf,size);
@@ -115,24 +115,6 @@ static ssize_t blkfs_iwrite(vfile_t* file,const char* buf,size_t size){
                 TODO();
                 //Write to a dir will create
                 //a file in it with name $buf
-                uint32_t parent_info=node->info;
-                uint32_t type=((uint32_t*)buf)[0];
-                const char* path=((void**)buf)[1];
-                while(*path){
-                    uint32_t next=new_block(fs->dev,0x10);
-                    yls_node new_node;
-                    new_node.type=type;
-                    new_node.info=new_block(fs->dev,0x40);
-                    new_node.name=new_block(fs->dev,0x40);
-                    int pos=get_first_layer(path);
-
-                    fs->dev->ops->write(fs->dev,find_end(fs->dev,parent_info),&next,12);//Parent's info
-                    fs->dev->ops->write(fs->dev,next,&new_node,12);//Son's tab
-                    fs->dev->ops->write(fs->dev,new_node.name,path,pos);//Son's name
-                    path+=pos;
-                    if(*path=='/')++path;
-                    parent_info=new_node.info;
-                }
                 return size;
             }
             break;
