@@ -99,18 +99,7 @@ static ssize_t inline blkfs_iread_real(vfile_t* file,char* buf,size_t size){
 
     switch(node->type){
         case YLS_DIR:
-            {
-                //Read a directory, you'll get
-                //names of directorys in it
-                //(So readdir is not needed)
-                if(block_read(fs->dev,off,fd_off,(void*)&off,4)!=4)return 0;
-                if(off==0)return 0;//find_block failed or reached the end
-
-                ssize_t nread=block_read(fs->dev,off,4,buf,size);
-                ret+=nread;
-                file->offset+=4;
-                return ret;
-            }
+            warn("%s: Is a directory",file->name);
             break;
         case YLS_FILE:
             {
