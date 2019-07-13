@@ -61,7 +61,7 @@ struct vfile{
     inode_t* inode;
     int refcnt;
     pthread_mutex_t lk;
-    const char* name;
+    char* name;
 };
 
 struct filesystem{
