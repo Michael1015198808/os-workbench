@@ -87,7 +87,7 @@ int find_block(device_t* dev,uint32_t* fd_off,uint32_t* off){
 uint32_t block_len(device_t* dev,uint32_t off){
     char buf[BLK_SZ];
     dev->ops->read(dev,off,buf,BLK_MEM-4);
-    uint32_t ret=strnlen(off,BLK_MEM-4);
+    uint32_t ret=strnlen(buf,BLK_MEM-4);
     if(ret==BLK_MEM-4){
         TODO();
     }
