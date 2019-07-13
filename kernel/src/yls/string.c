@@ -26,11 +26,11 @@ int block_read (device_t* dev,uint32_t off,uint32_t shift,char* s,size_t nbyte){
     off+=shift;
     while(rest>0){
         int to_read=off^BLK_SZ;
-        if(dev->ops->read(dev,off,s,to_read)<0||!off){
+        if(read(dev,off,s,to_read)<0||!off){
             return nbyte-rest;
         }
         s+=to_read;
-        dev->ops->read(dev,off+BLK_MEM,&off,4);
+        read(dev,off+BLK_MEM,&off,4);
         rest-=to_read;
     }
     return nbyte;
