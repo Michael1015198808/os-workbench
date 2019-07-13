@@ -22,9 +22,10 @@ int string_cmp(device_t* dev,uint32_t off,const char* s){
 int block_read (device_t* dev,uint32_t off,uint32_t shift,char* s,size_t nbyte){
     ssize_t (*const read)(device_t* dev,off_t offset,void* buf,size_t count)=dev->ops->read;
     size_t rest=nbyte;
-    printf("read from %x,%x\n",off,shift);
     find_block(dev,&shift,&off);
+    printf("read from %x,%x ",off,shift);
     off+=shift;
+    printf("%x\n",off);
     while(rest>0){
         int to_read=min((-off)&BLK_SZ,rest);
         if(read(dev,off,s,to_read)!=to_read){
