@@ -123,27 +123,33 @@ static inline int vfs_open_real(const char *path,int flags){
     this_fd->refcnt=1;
     return fd;
 }
+
 static int vfs_open(const char *path, int flags){
     int ret=vfs_open_real(path,flags);
     return ret;
 }
+
 static inline ssize_t vfs_read_real(int fd, void* buf,size_t nbyte){
     task_t* current=get_cur();
     ssize_t nread=this_fd->inode->ops->read(this_fd,buf,nbyte);
     return nread;
 }
+
 static ssize_t vfs_read(int fd,void *buf,size_t nbyte){
     ssize_t ret=vfs_read_real(fd,buf,nbyte);
     return ret;
 }
+
 static inline ssize_t vfs_write_real(int fd,void *buf,size_t nbyte){
     task_t* current=get_cur();
     return this_fd->inode->ops->write(this_fd,buf,nbyte);
 }
+
 static ssize_t vfs_write(int fd,void* buf,size_t nbyte){
     ssize_t ret=vfs_write_real(fd,buf,nbyte);
     return ret;
 }
+
 static int vfs_exec(const char* file,void *args[]){
     int ret,is_buildin;
     ret=exec_buildin(file,args,&is_buildin);
@@ -154,9 +160,11 @@ static int vfs_exec(const char* file,void *args[]){
         return -1;
     }
 }
+
 off_t vfs_lseek(int fd,off_t offset, int whence){
     TODO();
 }
+
 int vfs_close(int fd){
     TODO();
 }
