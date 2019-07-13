@@ -26,6 +26,7 @@ int block_read (device_t* dev,uint32_t off,uint32_t shift,char* s,size_t nbyte){
     printf("read from %x,%x ",off,shift);
     off+=shift;
     printf("%x\n",off);
+    printf("%x,%x\n",(-off)&BLK_SZ,rest);
     while(rest>0){
         int to_read=min((-off)&BLK_SZ,rest);
         if(read(dev,off,s,to_read)!=to_read){
