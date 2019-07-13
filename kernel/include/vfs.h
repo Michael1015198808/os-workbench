@@ -37,6 +37,7 @@ typedef struct {
   int (*unlink)(const char *path);
   int (*open)(const char *path, int flags);
   ssize_t (*read)(int fd, void *buf, size_t nbyte);
+  ssize_t (*readdir)(int fd, void *buf, size_t nbyte);
   ssize_t (*write)(int fd, void *buf, size_t nbyte);
   int (*exec)(const char* file,void *args[]);
   off_t (*lseek)(int fd, off_t offset, int whence);
@@ -87,6 +88,7 @@ struct inodeops {
   int (*open)(vfile_t *file, int flags);
   int (*close)(vfile_t *file);
   ssize_t (*read)(vfile_t *file, char *buf, size_t size);
+  ssize_t (*readdir)(vfile_t *file, char *buf, size_t size);
   ssize_t (*write)(vfile_t *file, const char *buf, size_t size);
   off_t (*lseek)(vfile_t *file, off_t offset, int whence);
   int (*mkdir)(const char *name);

@@ -100,6 +100,35 @@ static ssize_t inline blkfs_iread_real(vfile_t* file,char* buf,size_t size){
     switch(node->type){
         case YLS_DIR:
             {
+                TODO();
+            }
+            break;
+        case YLS_FILE:
+            {
+                TODO();
+                //find_block(fs->dev,off,&fd_off);
+                return block_read(fs->dev,off,fd_off,buf,size);
+            }
+            break;
+    }
+    Assert(0,"Should not reach here!\n");
+    return 0;
+}
+static ssize_t blkfs_iread(vfile_t* file,char* buf,size_t size){
+    ssize_t ret=blkfs_iread_real(file,buf,size);
+    return ret;
+}
+static ssize_t inline blkfs_ireaddir_real(vfile_t* file,char* buf,size_t size){
+    ssize_t ret=0;
+
+    filesystem* fs  =file->inode->fs;
+    uint64_t fd_off =file->offset;
+    yls_node* node  =file->inode->ptr;
+    uint32_t off=node->info;
+
+    switch(node->type){
+        case YLS_DIR:
+            {
                 //Read a directory, you'll get
                 //names of directorys in it
                 //(So readdir is not needed)
@@ -123,8 +152,8 @@ static ssize_t inline blkfs_iread_real(vfile_t* file,char* buf,size_t size){
     Assert(0,"Should not reach here!\n");
     return 0;
 }
-static ssize_t blkfs_iread(vfile_t* file,char* buf,size_t size){
-    ssize_t ret=blkfs_iread_real(file,buf,size);
+static ssize_t blkfs_ireaddir(vfile_t* file,char* buf,size_t size){
+    ssize_t ret=blkfs_ireaddir_real(file,buf,size);
     return ret;
 }
 static ssize_t blkfs_iwrite(vfile_t* file,const char* buf,size_t size){
@@ -171,16 +200,17 @@ static off_t blkfs_ilseek(vfile_t* file,off_t offset,int whence){
 
 static inodeops_t blkfs_iops={
     /*
-    .open  =blkfs_iopen,
+    .open   =blkfs_iopen,
     */
-    .close =blkfs_iclose,
-    .read  =blkfs_iread,
-    .write =blkfs_iwrite,
-    .lseek =blkfs_ilseek,
+    .close  =blkfs_iclose,
+    .read   =blkfs_iread,
+    .readdir=blkfs_ireaddir,
+    .write  =blkfs_iwrite,
+    .lseek  =blkfs_ilseek,
     /*
-    .mkdir =blkfs_imkdir,
-    .rmdir =blkfs_rmdir,
-    .link  =blkfs_ilink,
+    .mkdir  =blkfs_imkdir,
+    .rmdir  =blkfs_rmdir,
+    .link   =blkfs_ilink,
     .unlink=blkfs_iunlink,
     */
 };

@@ -190,6 +190,7 @@ MODULE_DEF(vfs){
   .unlink   =vfs_unlink,
   .open     =vfs_open,
   .read     =vfs_read,
+  .readdir  =vfs_readdir,
   .write    =vfs_write,
   .exec     =vfs_exec,
   .lseek    =vfs_lseek,
