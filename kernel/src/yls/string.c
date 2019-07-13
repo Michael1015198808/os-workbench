@@ -44,7 +44,7 @@ int block_write(device_t* dev,uint32_t off,uint32_t shift,const char* s,size_t n
 }
 
 uint32_t new_block(device_t* dev,uint32_t size){
-    uint8_t avail[0x40]
+    uint8_t avail[0x40];
     dev->ops->read(dev,0,avail,0x40);
     for(int i=0;i<0x40;++i){
         for(int j=0;j<8;++j){
