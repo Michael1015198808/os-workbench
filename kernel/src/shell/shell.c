@@ -25,7 +25,7 @@ void mysh(void *name) {
         printf("%s\n",input);
         if(strncmp("cd",input,2)){
             task_t* son=pmm->alloc(sizeof(task_t));
-            kmt->create(son,"fork-and-run",fork_and_run,input);
+            kmt->create(son,"mysh",fork_and_run,input);
             kmt->teardown(son);
         }else{
             void* cd_args[]={cur->pwd,input};
