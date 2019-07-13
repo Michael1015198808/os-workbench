@@ -11,10 +11,7 @@ static void single_cat(int fd,char buf[0x200],int* err){
         buf[nread]='\0';
         std_write(buf);
     }
-    if(nread==EISDIR){
-        warn("%s: Is a directory",args[i]);
-    }
-    if(nread<0)*err=-1;
+    if(nread<0)*err=EISDIR;
 }
 
 int mysh_cat(void *args[]){
@@ -26,8 +23,12 @@ int mysh_cat(void *args[]){
             if(strcmp(args[i],"-")){
                 char file[0x100];
                 to_absolute(file,pwd,args[i]);
-                int fd=vfs->open(file,O_RDONLY),nread=0;
+                int fd=vfs->open(file,O_RDONLY);
                 single_cat(fd,buf,&err);
+                if(err==EISDIR){
+                    warn("%s: Is a directory",args[i]);
+                    err=0;
+                }
             }else{
                 single_cat(0,buf,&err);
             }
