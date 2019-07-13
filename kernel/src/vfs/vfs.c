@@ -166,7 +166,7 @@ off_t vfs_lseek(int fd,off_t offset, int whence){
 }
 
 int vfs_close(int fd){
-    task_t* cur=get_cur();
+    task_t* current=get_cur();
     pthread_mutex_lock(&this_fd->lk);
     --this_fd->refcnt;
     if(this_fd->refcnt==0){
