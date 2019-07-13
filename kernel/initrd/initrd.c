@@ -55,7 +55,7 @@ struct pair{
     {0x580,0x00000000},// "/test"'s info
     /* /txt */
     {0x600,0x00000002},// "/txt"'s inode
-    {0x680,0x00747874},// "/txt"'s name
+    {0x604,0x00747874},// "/txt"'s name
     {0x680,0x34333231},// "/txt"'s info
 };
 int main(){
