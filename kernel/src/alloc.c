@@ -89,8 +89,10 @@ static void *kalloc_real(size_t size) {
 }
 
 static void *kalloc(size_t size){
+    intr_close();
     header* p=kalloc_real(size);
     p->fence=0x13579ace;
+    intr_open();
     memset(&p->space,0,size);
     //printf("Return %x,%p\n",size,p);
     return &p->space;

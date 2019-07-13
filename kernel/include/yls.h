@@ -2,9 +2,7 @@
 #define __YLS_H
 
 typedef union yls_node yls_node;
-typedef struct yls_dir yls_dir;
-typedef struct yls_file yls_file;
-typedef struct info info;
+typedef struct block block;
 
 int file_cmp        (device_t* dev,uint32_t off,const char* s   );
 int string_cmp      (device_t* dev,uint32_t off,const char* s   );
@@ -24,18 +22,21 @@ int find_path   (device_t* dev,inode_t* cur,const char* s);
 
 union yls_node{
     struct{
-        uint32_t type;
+        uint32_t refcnt;
         uint32_t info;
-        uint32_t name;
-        uint32_t cnt;
+        uint32_t size;
+        uint32_t type;
     };
     uint8_t align[0x10];
 };
 
-struct info{
-    char mem[0x40-4];
+#define BLK_MEM (0x80-4)
+struct block{
+    char mem[BLK_MEM];
     uint32_t next;
 };
+#define BLK_SZ sizeof(info)
+
 #define OFFS_PER_MEM (sizeof(((info*)0)->mem)/4)
 
 #endif//__YLS_H

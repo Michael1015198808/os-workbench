@@ -5,13 +5,17 @@
 
 //Compare filename and char*
 int file_cmp(device_t* dev,uint32_t off,const char* s){
-    dev->ops->read(dev,off+8,&off,4);
-    //Transfer yls_node's offset into yls_node's name's offset
+    char buf[0x80];
+    dev->ops->read(dev,off+4,&buf,80);
+    int ret=strncmp(buf,s,0x80-8);
+    if(ret)return ret;
+    TODO();//File name longer than 0x78
     return string_cmp(dev,off,s);
 }
 
 //Compare string blocks and char*
 int string_cmp(device_t* dev,uint32_t off,const char* s){
+    TODO();
     info string;
     int to_cmp=get_first_layer(s);
     for(;
@@ -36,65 +40,44 @@ int string_cmp(device_t* dev,uint32_t off,const char* s){
 
 
 int block_read (device_t* dev,uint32_t off,uint32_t shift,char* s,size_t nbyte){
+    ssize_t (*const read)(device_t* dev,off_t offset,void* buf,size_t count)=dev->ops->read;
     size_t rest=nbyte;
-    {
-        uint32_t f_len=0x40-4-shift;
-        dev->ops->read(dev,off+shift,s,f_len);
-        s+=f_len;
-        rest-=f_len;
-        dev->ops->read(dev,off+0x40-4,&off,f_len);
-        if(!off)return f_len;
+    while(shift>=BLK_MEM){
+        shift-=BLK_MEM;
+        read(dev,off+BLK_MEM,&off,4);
     }
-    for(;
-            rest>0x40-4;
-            rest-=0x40-4,s+=0x40-4){
-        if(dev->ops->read(dev,off,s,0x40-4)<0||!off){
+    off+=shift;
+    while(rest>0){
+        int to_read=off^BLK_SZ;
+        if(dev->ops->read(dev,off,s,to_read)<0||!off){
             return nbyte-rest;
         }
-        dev->ops->read(dev,off+0x40-4,&off,4);
-    }
-    if(dev->ops->read(dev,off,s,rest)<0){
-        return nbyte-rest;
+        s+=to_read;
+        dev->ops->read(dev,off+BLK_MEM,&off,4);
+        rest-=to_read;
     }
     return nbyte;
 }
 
 int block_write(device_t* dev,uint32_t off,uint32_t shift,const char* s,size_t nbyte){
-    size_t rest=nbyte;
-    {
-        uint32_t f_len=0x40-4-shift;
-        dev->ops->write(dev,off+shift,s,f_len);
-        s+=f_len;
-        rest-=f_len;
-        dev->ops->read(dev,off+0x40-4,&off,f_len);
-        if(!off)return f_len;
-    }
-    for(;
-            rest>0x40-4;
-            rest-=0x40-4,s+=0x40-4){
-        if(dev->ops->write(dev,off,s,0x40-4)<0||!off){
-            return nbyte-rest;
-        }
-        dev->ops->read(dev,off+0x40-4,&off,4);
-        if(!off){
-            TODO();
-        }
-    }
-    if(dev->ops->write(dev,off,s,rest)<0){
-        return nbyte-rest;
-    }
-    return nbyte;
+    TODO();
 }
 
 uint32_t new_block(device_t* dev,uint32_t size){
-    uint32_t ret;
-    dev->ops->read(dev,0,&ret,4);
-    uint32_t new_sz=ret+size;
-    dev->ops->write(dev,0,&new_sz,4);
-    return ret;
+    uint8_t avail[0x40]
+    dev->ops->read(dev,0,avail,0x40);
+    for(int i=0;i<0x40;++i){
+        for(int j=0;j<8;++j){
+            if(avail[i]&(1<<j)){
+                return (8*i+j)*0x80;
+            }
+        }
+    }
+    return 0;
 }
 //Find end of info
 uint32_t find_end(device_t* dev,uint32_t off){
+    TODO();
     uint32_t read;
     while(1){
         for(int i=0;i<OFFS_PER_MEM;++i,off+=4){
@@ -113,6 +96,7 @@ uint32_t find_end(device_t* dev,uint32_t off){
 }
 
 uint32_t find_block(device_t* dev,uint32_t off,uint64_t* fd_off){
+    TODO();
     const uint32_t sz=0x40-4;//Size of information per block
     for(;*fd_off>sz;*fd_off-=sz){
         if(dev->ops->read(dev,off+sz,&off,4)!=4)return 0;

@@ -294,11 +294,18 @@ void kmt_sem_signal(sem_t *sem){
     kmt_sem_signal_real(sem);
 }
 
+void inline exit_real(task_t* cur){
+    set_flag(cur,TASK_ZOMBIE);
+    _yield();
+}
+void warnning(const char*){
+    task_t* cur=get_cur();
+    fprintf(2,"%s: ",cur->name);
+}
 void exit(void){
     intr_close();
-    int cpu_id=_cpu();
-    set_flag(current,TASK_ZOMBIE);
-    _yield();
+    task_t* cur=get_cur();
+    exit_real(cur);
 }
 
 MODULE_DEF(kmt) {

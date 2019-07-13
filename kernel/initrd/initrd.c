@@ -23,38 +23,49 @@ cdef
 struct pair{
     uint32_t off,info;
 }pairs[]={
-    {0x000,0x00000210},
-    {0x100,0x00000000},//"/"
-    {0x104,0x00000110},//"/"'s info's offset
-    {0x108,0x02100150},//"/"'s name's offset
-    {0x10c,CHECK_CODE},
-    {0x110,0x00000190},//"/"'s node
-    {0x114,0x00000220},//"/txt"'s node
-    {0x150,       '/'},//"/"'s name'
-    {0x190,0x00000000},//"/test"
-    {0x194,0x000001a0},//"/test"'s info's offset
-    {0x198,0x000001e0},//"/test"'s name's offset
-    {0x19c,CHECK_CODE},
-    {0x1e0,0x74736574},//"/test"'s name 
-    {0x220,0x00000001},//"/txt"
-    {0x224,0x00000230},//"/txt"'s info's offset
-    {0x228,0x00000270},//"/txt"'s name's offset
-    {0x22c,CHECK_CODE},
-    {0x230,0x34333231},//"/txt"'s info
-    {0x270,0x00747874},//"/txt"'s name
+    {0x000,0x00000000},
+    {0x004,0x00000000},
+
+/* inodes */
+    /* / */
+    {0x040,0x00000001},// refcnt
+    {0x044,0x00000180},// info
+
+    /* /test */
+    {0x048,0x00000001},// refcnt
+    {0x04c,0x00000280},// info
+
+    /* /txt */
+    {0x050,0x00000001},// refcnt
+    {0x054,0x00000380},// info
+
+/* information */
+    /* / */
+    {0x100,0x00000000},// "/"'s inode
+    {0x104,       '/'},// "/"'s name
+    {0x180,0x00000200},// "/"'s info
+
+    /* /test */
+    {0x200,0x00000001},// "/"'s inode
+    {0x204,0x74736574},// "/test"'s name
+    {0x280,0x00000000},// "/test"'s info
+    /* /txt */
+    {0x300,0x00000002},// "/txt"'s inode
+    {0x380,0x00747874},// "/txt"'s name
+    {0x380,0x34333231},// "/txt"'s info
 };
 int main(){
-    for(uint32_t i=0,j=0;i<0x1000;){
+    for(uint32_t i=0;i<0x40;++i){
+    }
+    for(uint32_t i=0x40,j=0;i<0x10000;i+=4){
 #ifdef READABLE
         if(!(i&0xf)){printf("\n %03x: ",i);}
 #endif
         if(i==pairs[j].off){
             write_xxd(pairs[j].info);
-            i+=4;
             ++j;
         }else{
-            printf(FMT,0x00);
-            i+=1;
+            write_xxd(0);
         }
     }
     return 0;

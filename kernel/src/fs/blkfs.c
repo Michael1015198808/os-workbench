@@ -12,6 +12,15 @@
 static void blkfs_init(filesystem* fs,const char* name,device_t* dev){
     fs->name=name;
     fs->dev=dev;
+    Log("blkfs initialization started");
+    fs->inodes=pmm->alloc(sizeof(inode_t)*(0x100-0x40)/0x8);
+    for(int i=0;40+(i<<3);++i){
+        fs->inodes[i].ptr=pmm->alloc(16);
+        fs->dev->ops->read(fs->dev,40+(i<<3),fs->inodes[i].ptr,16);
+        fs->inodes[i].fs=fs;
+        fs->inodes[i].ops=fs->inodeops;
+    }
+    Log("blkfs initialization finished");
 }
 
 static inode_t* blkfs_lookup(filesystem* fs,const char* path,int flags){
@@ -71,12 +80,10 @@ static ssize_t inline blkfs_iread_real(vfile_t* file,char* buf,size_t size){
                 //Read a directory, you'll get
                 //names of directorys in it
                 //(So readdir is not needed)
-                find_block(fs->dev,off,&fd_off);
-                if(off==0)return 0;//find_block fails
-                if(fs->dev->ops->read(fs->dev,off+fd_off,&off,4)!=4)return 0;
-                if(off==0)return 0;//Reach end of file
-                fs->dev->ops->read(fs->dev,off+8,&off,4);
-                ssize_t nread=block_read(fs->dev,off,0,buf,size);
+                if(block_read(fs->dev,off,fd_off,&off,4)!=4)return 0;
+                if(off==0)return 0;//find_block failed or reached the end
+
+                ssize_t nread=block_read(fs->dev,off,4,buf,size);
                 ret+=nread;
                 file->offset+=4;
                 return ret;

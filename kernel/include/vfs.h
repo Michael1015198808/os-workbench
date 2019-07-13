@@ -23,6 +23,7 @@ typedef struct vfile vfile_t;
 typedef struct fsops fsops_t;
 typedef struct inode inode_t;
 typedef struct inodeops inodeops_t;
+typedef struct path_pair path_pair;
 
 typedef struct {
   void (*init)();
@@ -64,7 +65,14 @@ struct filesystem{
     fsops_t *ops;
     //Call devops by fsops
     device_t *dev;
+    inode_t* inodes;
     inodeops_t* inodeops;
+};
+
+struct path_pair{
+    const char* path;
+    char* pwd;
+    int idx;
 };
 
 struct fsops {

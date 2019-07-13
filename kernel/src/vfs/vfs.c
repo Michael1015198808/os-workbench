@@ -24,10 +24,11 @@ static int new_fd_num(task_t* current){
 
 void vfs_init(void){
     blkfs[0].ops->init  (blkfs+0    ,"ramdisk0" ,dev_lookup("ramdisk0") );
-    blkfs[1].ops->init  (blkfs+1    ,"ramdisk1" ,dev_lookup("ramdisk1") );
+  //blkfs[1].ops->init  (blkfs+1    ,"ramdisk1" ,dev_lookup("ramdisk1") );
     devfs.ops->init     (&devfs     ,"devfs"    ,NULL                   );
-  //procfs.ops->init    (           ,           ,                       );
+  //procfs.ops->init    (           ,"procfs"   ,NULL                   );
 }
+
 int vfs_access(const char *path, int mode){
     TODO();
 }
