@@ -28,21 +28,8 @@ static inode_t* blkfs_lookup(filesystem* fs,const char* path,int flags){
     ++path;
     ssize_t(*const read)(device_t*,off_t,void*,size_t)=fs->dev->ops->read;
 
-    yls_node *cur=pmm->alloc(sizeof(yls_node));
-    inode_t* ret =pmm->alloc(sizeof(inode_t));
-    ret->ptr     =cur;
-    ret->fs      =fs;
-    ret->ops     =fs->inodeops;
-    read(fs->dev,HEADER_LEN,cur,12);
-
-    int pos=find_path(fs->dev,ret,path);
-
-    if(path[pos]!='\0'){//Look up failed at middle
-        task_t* current=get_cur();
-        fprintf(2,"%s: %s: No such file or directory\n",current->name,path);
-        exit();
-    }
-
+    Assert(path[0]=='\0');
+    inode_t* ret =fs->inodes[0];
     return ret;
 }
 
