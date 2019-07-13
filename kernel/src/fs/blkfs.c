@@ -44,7 +44,7 @@ static inode_t* blkfs_lookup(filesystem* fs,const char* path,int flags){
             strncpy(layer,path,layer_len);
             uint32_t blk_off;
             read(fs->dev,offset,&blk_off,4);
-            if(file_cmp(fs->dev,blk_off,layer)){
+            if(block_cmp(fs->dev,blk_off,layer)){
                 offset+=4;
                 if(offset%BLK_SZ==BLK_MEM){
                     read(fs->dev,offset,&offset,4);

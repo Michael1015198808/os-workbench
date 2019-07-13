@@ -4,7 +4,7 @@
 #include <yls.h>
 
 //Compare filename and char*
-int file_cmp(device_t* dev,uint32_t off,const char* s){
+int block_cmp(device_t* dev,uint32_t off,const char* s){
     char buf[0x80];
     dev->ops->read(dev,off+4,&buf,80);
     int ret=strncmp(buf,s,0x80-8);

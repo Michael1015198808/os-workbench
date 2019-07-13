@@ -4,7 +4,7 @@
 typedef union yls_node yls_node;
 typedef struct block block;
 
-int file_cmp        (device_t* dev,uint32_t off,const char* s   );
+int block_cmp       (device_t* dev,uint32_t off,const char* s   );
 int string_cmp      (device_t* dev,uint32_t off,const char* s   );
 int block_write     (device_t* dev,uint32_t off,uint32_t shift,const char* s   ,size_t size);
 int block_read      (device_t* dev,uint32_t off,uint32_t shift,char* s         ,size_t size);
