@@ -23,11 +23,7 @@ int block_cmp(device_t* dev,uint32_t off,const char* s){
 
 //Compare string blocks and char*
 int string_cmp(device_t* dev,uint32_t off,const char* s){
-    char buf[0x80];
-    while(off){
-        strncmp()
-    }
-    return 0;
+    TODO();
 }
 
 
