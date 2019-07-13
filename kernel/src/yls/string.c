@@ -22,10 +22,7 @@ int string_cmp(device_t* dev,uint32_t off,const char* s){
 int block_read (device_t* dev,uint32_t off,uint32_t shift,char* s,size_t nbyte){
     ssize_t (*const read)(device_t* dev,off_t offset,void* buf,size_t count)=dev->ops->read;
     size_t rest=nbyte;
-    while(shift>=BLK_MEM){
-        shift-=BLK_MEM;
-        read(dev,off+BLK_MEM,&off,4);
-    }
+    find_block(dev,&shift,&off);
     off+=shift;
     while(rest>0){
         int to_read=off^BLK_SZ;
@@ -75,11 +72,9 @@ uint32_t find_end(device_t* dev,uint32_t off){
     }
 }
 
-uint32_t find_block(device_t* dev,uint32_t off,uint64_t* fd_off){
-    TODO();
-    const uint32_t sz=0x40-4;//Size of information per block
-    for(;*fd_off>sz;*fd_off-=sz){
-        if(dev->ops->read(dev,off+sz,&off,4)!=4)return 0;
+int find_block(device_t* dev,uint32_t* fd_off,uint32_t* off){
+    for(;*fd_off>BLK_MEM;*fd_off-=sz){
+        if(dev->ops->read(dev,*off+BLK_MEM,off,4)!=4)return -1;
     }
-    return off;
+    return 0;
 }
