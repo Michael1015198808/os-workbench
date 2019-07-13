@@ -25,6 +25,7 @@ typedef void(*task_fun)(void*);
 task_t* get_cur(void);
 
 int fprintf(int fd, const char *fmt, ...);
+void warning(const char*);
 void exit(void);
 
 #define TASK_RUNABLE    0
