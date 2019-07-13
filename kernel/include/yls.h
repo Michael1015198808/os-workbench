@@ -35,8 +35,8 @@ struct block{
     char mem[BLK_MEM];
     uint32_t next;
 };
-#define BLK_SZ sizeof(info)
+#define BLK_SZ sizeof(block)
 
-#define OFFS_PER_MEM (sizeof(((info*)0)->mem)/4)
+#define OFFS_PER_MEM (BLK_MEM/4)
 
 #endif//__YLS_H
