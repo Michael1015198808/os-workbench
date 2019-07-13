@@ -91,7 +91,7 @@ static int blkfs_iclose(vfile_t* file){
 
 static ssize_t inline blkfs_iread_real(vfile_t* file,char* buf,size_t size){
     filesystem* fs  = file->inode->fs;
-    uint64_t fd_off = file->offset;
+    uint32_t fd_off = file->offset;
     yls_node* node  = file->inode->ptr;
     uint32_t off    = node->info;
 
