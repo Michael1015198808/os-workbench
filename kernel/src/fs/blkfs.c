@@ -44,7 +44,7 @@ static inode_t* blkfs_lookup(filesystem* fs,const char* path,int flags){
             int layer_len=get_first_layer(path);
             strncpy(layer,path,layer_len);
             uint32_t blk_off;
-            if(read(fs->dev,offset,&blk_off,4)!=4||blk_off){
+            if(read(fs->dev,offset,&blk_off,4)!=4||!blk_off){
                 sprintf(layer,"cannot access '%s': No such file or directory ",ori_path);
                 warning(layer);
             };

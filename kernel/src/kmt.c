@@ -301,6 +301,7 @@ void inline exit_real(task_t* cur){
 void warning(const char* warn){
     task_t* cur=get_cur();
     fprintf(2,"%s: %s\n",cur->name,warn);
+    exit_real(cur);
 }
 void exit(void){
     intr_close();
