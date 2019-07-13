@@ -15,6 +15,8 @@ int   find_block    (device_t* dev,uint32_t*off,uint32_t* fd_off);
 int find_path   (device_t* dev,inode_t* cur,const char* s);
 
 #define HEADER_OFF 0x40
+#define INODE_START 0x40
+#define INODE_END 0x400
 
 #define YLS_DIR  0
 #define YLS_FILE 1
