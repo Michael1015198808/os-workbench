@@ -39,14 +39,17 @@ static inode_t* blkfs_lookup(filesystem* fs,const char* path,int flags){
         yls_node* node=cur->ptr;
         uint32_t offset=node->info;
         while(offset){
-            if(file_cmp(fs->dev,node->info,s)){
+            char layer[0x100];
+            int layer_len=get_first_layer(path);
+            strncpy(layer,path,layer_len);
+            if(file_cmp(fs->dev,node->info,layer)){
                 offset+=4;
                 if(offset%BLK_SZ==BLK_MEM){
                     read(fs->dev,offset,&offset,4);
                 }
             }else{
                 report_if(1);
-                path+=block_len(fs->dev,offset);
+                path+=layer_len;
                 read(fs->dev,offset,&id,4);
                 break;
             }
