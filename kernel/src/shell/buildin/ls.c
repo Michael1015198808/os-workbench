@@ -3,7 +3,7 @@
 #include <devices.h>
 
 static inline void single_ls(const char* path,int* err){
-    int fd=vfs->open(path,O_RDONLY),nread=0;
+    int fd=vfs->open(path,O_RDONLY | O_DIRECTORY),nread=0;
     int cnt=0;
     char buf[200];
 
