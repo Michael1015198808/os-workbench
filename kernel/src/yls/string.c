@@ -73,7 +73,7 @@ uint32_t find_end(device_t* dev,uint32_t off){
 }
 
 int find_block(device_t* dev,uint32_t* fd_off,uint32_t* off){
-    for(;*fd_off>BLK_MEM;*fd_off-=sz){
+    for(;*fd_off>BLK_MEM;*fd_off-=BLK_MEM){
         if(dev->ops->read(dev,*off+BLK_MEM,off,4)!=4)return -1;
     }
     return 0;
