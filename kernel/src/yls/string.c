@@ -6,16 +6,28 @@
 //Compare filename and char*
 int block_cmp(device_t* dev,uint32_t off,const char* s){
     char buf[0x80];
-    dev->ops->read(dev,off+4,&buf,80);
-    int ret=strncmp(buf,s,0x80-8);
+    ssize_t (*const read)(device_t* dev,off_t offset,void* buf,size_t count)=dev->ops->read;
+
+    read(dev,off+4,&buf,80);
+    int ret=strncmp(buf,s,BLK_SZ-8);
     if(ret)return ret;
-    TODO();//File name longer than 0x78
-    return string_cmp(dev,off,s);
+
+    read(dev,off+BLK_MEM,&off,4);
+    while(off){
+        read(dev,off,buf,BLK_MEM);
+        strncmp(buf,s,BLK_MEM);
+        read(dev,off+BLK_MEM,&off,4);
+    }
+    return 0;
 }
 
 //Compare string blocks and char*
 int string_cmp(device_t* dev,uint32_t off,const char* s){
-    TODO();
+    char buf[0x80];
+    while(off){
+        strncmp()
+    }
+    return 0;
 }
 
 
