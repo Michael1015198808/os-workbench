@@ -19,6 +19,8 @@ int find_path   (device_t* dev,inode_t* cur,const char* s);
 #define INODE_START 0x40
 #define INODE_END 0x400
 
+#define EISDIR -1
+
 #define YLS_DIR  0
 #define YLS_FILE 1
 #define YLS_MNT  2

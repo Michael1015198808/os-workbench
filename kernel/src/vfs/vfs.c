@@ -119,12 +119,6 @@ static inline int vfs_open_real(const char *path,int flags){
     }else{
         this_fd->inode=devfs.ops->lookup(&devfs,path+5,flags);
     }
-    printf("path %s\n",path);
-int get_last_slash (const char* const path);
-    path+=get_last_slash(path);
-    printf("path %s\n",path);
-    this_fd->name=pmm->alloc(strlen(path)+1);
-    strcpy(this_fd->name,path);
     this_fd->offset=0;
     this_fd->refcnt=1;
     return fd;

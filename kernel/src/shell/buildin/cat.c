@@ -6,7 +6,6 @@ const char *warn="Haven't realized!\n";
 static inline void cat_from_stdin(char buf[0x200],int* err){
     int nread=0;
     while((nread=vfs->read(STDIN,buf,0x200-1))>0){
-        printf("cat read %d bytes\n",nread);
         buf[nread]='\0';
         std_write(buf);
     }
@@ -22,11 +21,14 @@ int mysh_cat(void *args[]){
             if(strcmp(args[i],"-")){
                 char file[0x100];
                 to_absolute(file,pwd,args[i]);
-                int fd=vfs->open(file,7),nread=0;
+                int fd=vfs->open(file,O_RDONLY),nread=0;
                 do{
                     nread=vfs->read(fd,buf,sizeof(buf));
                     vfs->write(STDOUT,buf,nread);
                 }while(nread>0);
+                if(nread==EISDIR){
+                    warn("%s: Is a directory",args[i]);
+                }
             }else{
                 cat_from_stdin(buf,&err);
             }

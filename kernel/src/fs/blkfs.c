@@ -97,7 +97,7 @@ static ssize_t inline blkfs_iread_real(vfile_t* file,char* buf,size_t size){
 
     switch(node->type){
         case YLS_DIR:
-            warn("%s: Is a directory",file->name);
+            return EISDIR;
             break;
         case YLS_FILE:
             {
