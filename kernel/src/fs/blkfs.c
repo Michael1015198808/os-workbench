@@ -29,7 +29,7 @@ static inode_t* blkfs_lookup(filesystem* fs,const char* path,int flags){
     ssize_t(*const read)(device_t*,off_t,void*,size_t)=fs->dev->ops->read;
 
     Assert(path[0]=='\0');
-    inode_t* ret =fs->inodes[0];
+    inode_t* ret =fs->inodes;
     return ret;
 }
 
