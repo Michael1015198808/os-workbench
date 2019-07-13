@@ -61,7 +61,7 @@ static inode_t* blkfs_lookup(filesystem* fs,const char* path,int flags){
             }
         }
     }
-    if((flags&O_DIRECTORY)&&(((yls_node*)fs->inodes[id]ptr)->type!=YLS_DIR)){
+    if((flags&O_DIRECTORY)&&(((yls_node*)fs->inodes[id].ptr)->type!=YLS_DIR)){
         char warn[0x100];
         sprintf(warn,"%s: Not a directory",ori_path);
         warning(warn);
