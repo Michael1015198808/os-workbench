@@ -166,7 +166,16 @@ off_t vfs_lseek(int fd,off_t offset, int whence){
 }
 
 int vfs_close(int fd){
-    TODO();
+    task_t* cur=get_cur();
+    pthread_mutex_lock(&this_fd->lk);
+    --this_fd->refcnt;
+    if(this_fd->refcnt==0){
+        //pmm->free(this_fd->inode);
+        //pmm->free(this_fd);
+        //return 0;
+    }
+    Assert(this_fd->refcnt>=0,"fd with refcnt <0!\n");
+    pthread_mutex_unlock(&this_fd->lk);
 }
 
 MODULE_DEF(vfs){
