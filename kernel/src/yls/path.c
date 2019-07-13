@@ -20,7 +20,7 @@ int find_path(device_t* dev,inode_t* inode,const char* path){
                 //Get next's yls_node from off
                 read(dev,off,&next_off,4);
                 TODO();
-                if(!file_cmp(dev,next_off,path)){
+                if(!block_cmp(dev,next_off,path)){
                     int len=get_first_slash(path);
                     read(dev,next_off,cur,12);
                     if(len==-1){
