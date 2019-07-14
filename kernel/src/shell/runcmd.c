@@ -4,6 +4,7 @@
 void panic(char*);
 int runcmd(struct cmd *cmd);
 static inline int run_pipe_cmd(struct cmd *cmd);
+static inline int run_back_cmd(struct cmd *cmd);
 inline void backup_fd(vfile_t *backup[3],task_t* current);
 inline void restore_fd(vfile_t *backup[3],task_t* current);
 
@@ -84,7 +85,7 @@ static inline int run_pipe_cmd(struct cmd *cmd){
     */
 }
 static inline int run_back_cmd(struct cmd* cmd){
-    bcmd = (struct backcmd*)cmd;
+    struct backcmd* bcmd = (struct backcmd*)cmd;
     kmt->create(pmm->alloc(sizeof(task_t),NULL,runcmd,bcmd->cmd);
     break;
 }
