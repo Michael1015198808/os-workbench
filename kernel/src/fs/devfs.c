@@ -10,17 +10,12 @@
 extern device_t *devices[];
 extern size_t devices_cnt;
 
-static fsops_t devfs_ops;
-static inodeops_t devfs_iops;
-
 static inode_t devfs_root;//definition is at the end
 
 static void devfs_init(filesystem* fs,const char* name,device_t *dev){
     fs->name=name;
     fs->dev=dev;
     fs->inodes=pmm->alloc(sizeof(inode_t)*devices_cnt);
-    fs->ops=&devfs_ops;
-    fs->inodeops=&devfs_iops;
 
     for(int i=0;i<devices_cnt;++i){
         fs->inodes[i].ptr=devices[i];
@@ -149,13 +144,20 @@ static inodeops_t devfs_iops={
     .unlink =devfs_iunlink,
 };
 
-filesystem devfs;
+filesystem devfs={
+    .ops     =&devfs_ops,
+    .dev     =NULL,
+    .inodeops=&devfs_iops,
+};
 
 static inode_t devfs_root={
+    .name  =NULL,
+    .mount =NULL,
     .ptr   =NULL,
     .fs    =&devfs,
     .ops   =&devfs_iops,
 };
+
 
 int isatty(int fd){
     task_t* cur=get_cur();
