@@ -24,6 +24,7 @@ int runcmd(struct cmd *cmd){
             if(ecmd->argv[0] == 0)
                 exit();
             vfs->exec(ecmd->argv[0], (void**)(ecmd->argv));
+            break;
 
         case REDIR:
             TODO();
