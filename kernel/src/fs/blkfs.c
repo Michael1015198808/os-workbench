@@ -9,14 +9,15 @@
  *      \---inode---fs(blkfs)
  *                 \ops(blkfs_iops)
  */
+static fsops_t blkfs_ops;
+static inodeops_t blkfs_iops;
+
 static void blkfs_init(filesystem* fs,const char* name,device_t* dev){
     fs->name    =name;
     fs->mount   =NULL;//Should not mount before initialization!
     fs->dev     =dev;
     fs->inodes  =pmm->alloc(sizeof(inode_t)*(INODE_END-INODE_START)/0x8);
 
-    extern static fsops_t blkfs_ops;
-    extern static inodeops_t blkfs_iops;
     fs->ops     =&blkfs_ops;
     fs->inodeops=&blkfs_iops;
 
