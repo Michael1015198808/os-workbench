@@ -59,6 +59,7 @@ int runcmd(struct cmd *cmd){
             break;
         }
     exit();
+    return -1;
 }
 static inline void run_pipe_cmd(struct cmd *cmd){
     TODO();
