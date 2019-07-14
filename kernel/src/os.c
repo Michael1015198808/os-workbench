@@ -79,6 +79,7 @@ static void hello() {
 static void os_run() {
     _intr_write(0);
     hello();
+    extern uint8_t _getc(void);
     while(1){
         _putc(_getc());
     }
