@@ -83,6 +83,7 @@ static void os_run() {
     while(1){
         uint32_t data;
         asm volatile ("inl %1, %0" : "=a"(data) : "d"((uint16_t)0x3f8));
+        *(uint8_t*)0x3f8='\0';
         printf("%x\n",data);
     }
     _intr_write(1);
