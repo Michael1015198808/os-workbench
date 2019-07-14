@@ -26,5 +26,6 @@ int mysh_sleep(void *args[]){
         fprintf(2,"Usage: sleep NUMBER");
         exit();
     }
+    return 0;
 }
 
