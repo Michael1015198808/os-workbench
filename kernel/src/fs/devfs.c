@@ -7,17 +7,28 @@
  * devfs_close
  */
 
+extern device_t *devices[];
+extern size_t devices_cnt;
+
 static inodeops_t devfs_iops;
 static void devfs_init(filesystem* fs,const char* name,device_t *dev){
-    vfs->mount("/dev",fs);
+    fs->name=name;
+    fs->dev=dev;
+    fs->inodes=pmm->alloc(sizeof(inode_t)*devices_cnt);
+
+    for(int i=0;i<devices_cnt;++i){
+        fs->inodes[i]->ptr=devices[i];
+        fs->inodes[i]->fs=fs;
+        fs->inodes[i]->ops=fs->inodeops;
+    }
 }
 
 static inode_t* devfs_lookup(filesystem* fs,const char* path,int flags){
-    inode_t* ret=pmm->alloc(sizeof(inode_t));
-    ret->ptr=dev_lookup(path);
-    ret->fs=fs;
-    ret->ops=fs->inodeops;
-    return ret;
+    for (int i = 0; i < LENGTH(devices); i++) 
+        if (strcmp(devices[i]->name, name) == 0)
+            return fs->inodes[i];
+    panic("lookup device failed.");
+    return NULL;
 }
 
 static int devfs_close(inode_t* inode){

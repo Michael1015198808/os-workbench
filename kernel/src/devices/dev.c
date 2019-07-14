@@ -21,6 +21,7 @@ DEVICES(OPS_DECLARE);
 
 #define DEV_CNT(...) + 1
 device_t *devices[0 DEVICES(DEV_CNT)];
+const size_t devices_cnt=DEVICES(DEV_CNT);
 
 device_t *dev_lookup(const char *name) {
   for (int i = 0; i < LENGTH(devices); i++) 

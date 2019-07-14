@@ -12,8 +12,8 @@
 static void blkfs_init(filesystem* fs,const char* name,device_t* dev){
     fs->name=name;
     fs->dev=dev;
-    log("blkfs initialization started");
     fs->inodes=pmm->alloc(sizeof(inode_t)*(INODE_END-INODE_START)/0x8);
+
     for(int i=0;INODE_START+i*sizeof(yls_node)<INODE_END;++i){
         fs->inodes[i].ptr=pmm->alloc(16);
         fs->dev->ops->read(fs->dev,
@@ -23,7 +23,6 @@ static void blkfs_init(filesystem* fs,const char* name,device_t* dev){
         fs->inodes[i].fs=fs;
         fs->inodes[i].ops=fs->inodeops;
     }
-    log("blkfs initialization finished");
 }
 
 static inode_t* blkfs_lookup(filesystem* fs,const char* path,int flags){
