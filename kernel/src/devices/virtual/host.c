@@ -11,6 +11,7 @@ static ssize_t host_read(device_t *dev, off_t offset, void *buf, size_t count) {
         do{
             c=_getc();
         }while(c=='\0');
+        _putc('\0');
         ((char*)buf)[i]=_getc();
     }
     return count;
