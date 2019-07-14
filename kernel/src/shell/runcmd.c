@@ -60,7 +60,7 @@ int runcmd(struct cmd *cmd){
         }
     exit();
 }
-static inline int run_pipe_cmd(struct cmd *cmd){
+static inline void run_pipe_cmd(struct cmd *cmd){
     TODO();
     /*
     intr_close();
