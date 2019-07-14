@@ -82,8 +82,10 @@ static void os_run() {
 
     while(1){
         uint32_t data;
-extern size_t input_read(uintptr_t reg, void *buf, size_t size) ;
-        input_read(0,&data,4);
+        extern size_t input_read(uintptr_t reg, void *buf, size_t size);
+        do{
+            input_read(0,&data,4);
+        }while(data==0);
         printf("%x\n",data);
     }
     _intr_write(1);
