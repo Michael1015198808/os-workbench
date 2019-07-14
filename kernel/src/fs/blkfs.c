@@ -84,6 +84,7 @@ static int blkfs_iopen(vfile_t* file,int flags){
     file->flags=flags;
     file->refcnt=1;
     file->lk=PTHREAD_MUTEX_INITIALIZER;
+    return 0;
 }
 
 static int blkfs_iclose(vfile_t* file){
