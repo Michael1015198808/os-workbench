@@ -12,7 +12,7 @@ extern size_t devices_cnt;
 
 static inodeops_t devfs_iops;
 
-const static inode_t devfs_root;//definition is at the end
+static inode_t devfs_root;//definition is at the end
 
 static void devfs_init(filesystem* fs,const char* name,device_t *dev){
     fs->name=name;
