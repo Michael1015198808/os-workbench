@@ -8,8 +8,7 @@ const char *warn="Haven't realized!\n";
 static void single_cat(int fd,char buf[0x200],int* err){
     int nread=0;
     while((nread=vfs->read(fd,buf,0x200-1))>0){
-        buf[nread]='\0';
-        std_write(buf);
+        vfs->write(STDOUT,buf,nread);
     }
     if(nread==EISDIR)*err=EISDIR;
     else std_write("\n");
