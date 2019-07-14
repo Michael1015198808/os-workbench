@@ -27,9 +27,9 @@ void vfs_init(void){
   //blkfs[1].ops->init  (blkfs+1    ,"ramdisk1" ,dev_lookup("ramdisk1") );
     devfs.ops->init     (&devfs     ,"devfs"    ,NULL                   );
   //procfs.ops->init    (           ,"procfs"   ,NULL                   );
-    vfs->mount("/",blkfs[0]);
-    vfs->mount("/mnt",blkfs[1]);
-    vfs->mount("/dev",fs);
+    vfs->mount("/"      ,&blkfs[0]);
+    vfs->mount("/mnt"   ,&blkfs[1]);
+    vfs->mount("/dev"   ,&devfs);
 }
 
 int vfs_access(const char *path, int mode){
