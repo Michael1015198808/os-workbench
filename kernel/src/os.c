@@ -84,7 +84,7 @@ static void os_run() {
         uint32_t data;
         asm volatile ("inl %1, %0" : "=a"(data) : "d"((uint16_t)0x3f8));
         for(int i=0;i<4;++i){
-            *(uint8_t*)0x3f8+i='\0';
+            *(uint8_t*)(0x3f8+i)='\0';
         }
         printf("%x\n",data);
     }
