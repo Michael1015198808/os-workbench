@@ -78,12 +78,26 @@ static ssize_t devfs_ireaddir(vfile_t* file,char* buf,size_t size){
     TODO();
     return 0;
 }
+
 static ssize_t devfs_iwrite(vfile_t* file,const char* buf,size_t size){
     device_t* dev=get_dev(file);
     ssize_t ret  =dev->ops->write(dev,file->offset,buf,size);
     //file->offset+=ret;
     return ret;
 }
+
+static ssize_t devfs_ilseek(vfile_t* file,const char* buf,size_t size){
+    switch(whence){
+        case SEEK_SET:
+            return file->offset=offset;
+        case SEEK_CUR:
+            return file->offset+=offset;
+        case SEEK_END:
+            TODO();
+    }
+    BARRIER();
+}
+
 //.func_name=dev_ifunc_name
 //i for inode
 static inodeops_t devfs_iops={
