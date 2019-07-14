@@ -3,8 +3,6 @@
 #include <yls.h>
 #include <dir.h>
 
-const char *warn="Haven't realized!\n";
-
 static void single_cat(int fd,char buf[0x208],int* err){
     int nread=0;
     while((nread=vfs->read(fd,buf,0x200))>0){
