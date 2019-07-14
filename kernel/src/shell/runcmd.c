@@ -23,7 +23,7 @@ int runcmd(struct cmd *cmd){
             if(ecmd->argv[0] == 0)
                 exit();
             vfs->exec(ecmd->argv[0], (void**)(ecmd->argv));
-            exit();
+            panic("exec failed!");
 
         case REDIR:
             TODO();
@@ -54,15 +54,8 @@ int runcmd(struct cmd *cmd){
             break;
 
         case BACK:
-            TODO();
-            /*
-            bcmd = (struct backcmd*)cmd;
-            if(fork1() == 0)
-            runcmd(bcmd->cmd);
-            break;
-            */
+            run_back_cmd(cmd);
         }
-    Assert(0,"Should not reach here!\n");
     exit();
 }
 static inline int run_pipe_cmd(struct cmd *cmd){
@@ -89,6 +82,11 @@ static inline int run_pipe_cmd(struct cmd *cmd){
 
     return runcmd(pcmd->right);
     */
+}
+static inline int run_back_cmd(struct cmd* cmd){
+    bcmd = (struct backcmd*)cmd;
+    kmt->create(pmm->alloc(sizeof(task_t),NULL,runcmd,bcmd->cmd);
+    break;
 }
 inline void backup_fd(vfile_t *backup[3],task_t* current){
     for(int i=0;i<3;++i){

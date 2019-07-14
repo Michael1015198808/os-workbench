@@ -13,7 +13,7 @@
   _(6, tty_t,   "tty3",     3, tty_ops)    \
   _(7, tty_t,   "tty4",     4, tty_ops)    \
   _(8, void,    "null",     1, null_ops)   \
-  _(9, void,    "host",     1, host_ops)
+  _(9, void,    "zero",     1, zero_ops)   \
 
 #define OPS_DECLARE(id,device_type,dev_name,dev_id,dev_ops) \
     extern devops_t dev_ops;

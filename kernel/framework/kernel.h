@@ -39,6 +39,7 @@ typedef struct {
   void (*sem_init)(sem_t *sem, const char *name, int value);
   void (*sem_wait)(sem_t *sem);
   void (*sem_signal)(sem_t *sem);
+  void (*wait)(task_t* task);
 } MODULE(kmt);
 
 typedef struct device device_t;
