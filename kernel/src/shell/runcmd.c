@@ -56,6 +56,7 @@ int runcmd(struct cmd *cmd){
 
         case BACK:
             run_back_cmd(cmd);
+            break;
         }
     exit();
 }
@@ -87,7 +88,6 @@ static inline int run_pipe_cmd(struct cmd *cmd){
 static inline int run_back_cmd(struct cmd* cmd){
     struct backcmd* bcmd = (struct backcmd*)cmd;
     kmt->create(pmm->alloc(sizeof(task_t)),NULL,runcmd,bcmd->cmd);
-    break;
 }
 inline void backup_fd(vfile_t *backup[3],task_t* current){
     for(int i=0;i<3;++i){
