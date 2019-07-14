@@ -56,7 +56,11 @@ static device_t* get_dev(vfile_t* file){
 }
 
 static int devfs_iopen(vfile_t* file,int flags){
-    TODO();
+    file->offset=0;
+    file->flags=flags;
+    file->refcnt=1;
+    file->lk=PTHREAD_MUTEX_INITIALIZER;
+    return 0;
 }
 
 static int devfs_iclose(vfile_t* file){
@@ -66,23 +70,29 @@ static int devfs_iclose(vfile_t* file){
 static ssize_t devfs_iread(vfile_t* file,char* buf,size_t size){
     device_t* dev=get_dev(file);
     ssize_t ret  =dev->ops->read(dev,file->offset,buf,size);
-    file->offset+=ret;
+    //file->offset+=ret;
     return ret;
 }
 
+static ssize_t devfs_ireaddir(vfile_t* file,char* buf,size_t size){
+    TODO();
+    return 0;
+}
 static ssize_t devfs_iwrite(vfile_t* file,const char* buf,size_t size){
     device_t* dev=get_dev(file);
     ssize_t ret  =dev->ops->write(dev,file->offset,buf,size);
-    file->offset+=ret;
+    //file->offset+=ret;
     return ret;
 }
 //.func_name=dev_ifunc_name
 //i for inode
 static inodeops_t devfs_iops={
-    .open  =devfs_iopen,
-    .close =devfs_iclose,
-    .read  =devfs_iread,
-    .write =devfs_iwrite,
+    .open   =devfs_iopen,
+    .close  =devfs_iclose,
+    .read   =devfs_iread,
+    .readdir=devfs_ireaddir,
+    .write  =devfs_iwrite,
+    .lseek  =devfs_ilseek,
 };
 
 filesystem devfs={
