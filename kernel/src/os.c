@@ -80,10 +80,9 @@ static void os_run() {
     _intr_write(0);
     hello();
 
-    extern inline uint32_t inl(int);
     while(1){
         uint32_t data;
-        asm volatile ("inl %1, %0" : "=a"(data) : "d"((uint16_t)port));
+        asm volatile ("inl %1, %0" : "=a"(data) : "d"((uint16_t)0x3f8));
         printf("%x\n",data);
     }
     _intr_write(1);
