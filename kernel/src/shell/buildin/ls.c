@@ -11,8 +11,8 @@ static inline void single_ls(const char* path,int* err){
     while((nread=vfs->readdir(fd,buf,sizeof(buf)))>0){
         if(cnt+strlen(buf)>40){
             std_write("\n");
+            cnt=0;
         }
-        printf("ls:read %d\n",nread);
         cnt+=fprintf(STDOUT,"%s  ",buf);
     }
     if(nread<0){
