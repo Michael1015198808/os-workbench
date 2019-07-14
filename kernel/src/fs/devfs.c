@@ -17,9 +17,9 @@ static void devfs_init(filesystem* fs,const char* name,device_t *dev){
     fs->inodes=pmm->alloc(sizeof(inode_t)*devices_cnt);
 
     for(int i=0;i<devices_cnt;++i){
-        fs->inodes[i]->ptr=devices[i];
-        fs->inodes[i]->fs=fs;
-        fs->inodes[i]->ops=fs->inodeops;
+        fs->inodes[i].ptr=devices[i];
+        fs->inodes[i].fs=fs;
+        fs->inodes[i].ops=fs->inodeops;
     }
 }
 
