@@ -122,7 +122,7 @@ static inline int vfs_open_real(const char *path,int flags){
     filesystem* target=NULL;
     size_t len=0;
     for(int i=0;i<mount_table_cnt;++i){
-        if(!strncmp(mount_table[i].path,path,strlen(mount_table[i]))){
+        if(!strncmp(mount_table[i].path,path,strlen(mount_table[i].path))){
             if(strlen(mount_table[i])>len){
                 len=strlen(mount_table[i]);
                 target=mount_table[i].fs;
