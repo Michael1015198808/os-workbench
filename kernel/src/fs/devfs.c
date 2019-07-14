@@ -86,7 +86,7 @@ static ssize_t devfs_iwrite(vfile_t* file,const char* buf,size_t size){
     return ret;
 }
 
-static ssize_t devfs_ilseek(vfile_t* file,const char* buf,size_t size){
+static ssize_t devfs_ilseek(vfile_t* file,off_t offset,int whence){
     switch(whence){
         case SEEK_SET:
             return file->offset=offset;
