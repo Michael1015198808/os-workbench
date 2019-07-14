@@ -9,7 +9,7 @@ static void single_sleep(void* arg){
     uint32_t begin=uptime();
     uint32_t to_sleep=0;
     const char* num=arg;
-    while(num){
+    while(*num){
         to_sleep*=10;
         to_sleep+=*num-'0';
         ++num;
