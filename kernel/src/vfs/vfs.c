@@ -34,7 +34,7 @@ void vfs_init(void){
 }
 
 int vfs_access(const char *path, int mode){
-    TODO();
+    return 0;
 }
 //Path should not end with /
 //Except "/"
