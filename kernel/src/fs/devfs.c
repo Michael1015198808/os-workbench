@@ -160,5 +160,6 @@ static inode_t devfs_root={
 int isatty(int fd){
     task_t* cur=get_cur();
     device_t*  dev=get_dev(cur->fd[fd]);
+    extern devops_t tty_ops;
     return dev->ops==&tty_ops;
 }
