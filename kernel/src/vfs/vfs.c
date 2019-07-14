@@ -131,7 +131,7 @@ static inline int vfs_open_real(const char *path,int flags){
         }
     }
     //pthread_mutex_unlock(&mount_table_lk);
-    this_fd->inode=target->ops->lookup(target,path,flags);
+    this_fd->inode=target->ops->lookup(target,path+max_len,flags);
     this_fd->inode->ops->open(this_fd,flags);
     return fd;
 }
