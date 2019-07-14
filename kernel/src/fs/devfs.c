@@ -19,8 +19,8 @@ static void devfs_init(filesystem* fs,const char* name,device_t *dev){
     fs->name=name;
     fs->dev=dev;
     fs->inodes=pmm->alloc(sizeof(inode_t)*devices_cnt);
-    fs->ops=&devfs_ops,
-    fs->inodeops=&devfs_iops,
+    fs->ops=&devfs_ops;
+    fs->inodeops=&devfs_iops;
 
     for(int i=0;i<devices_cnt;++i){
         fs->inodes[i].ptr=devices[i];
@@ -159,6 +159,6 @@ static inode_t devfs_root={
 
 int isatty(int fd){
     task_t* cur=get_cur();
-    dev_t*  dev=get_dev(cur->fd[fd]);
+    device_t*  dev=get_dev(cur->fd[fd]);
     return dev->ops==&tty_ops;
 }
