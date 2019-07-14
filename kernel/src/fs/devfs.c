@@ -151,8 +151,6 @@ filesystem devfs={
 };
 
 static inode_t devfs_root={
-    .name  =NULL,
-    .mount =NULL,
     .ptr   =NULL,
     .fs    =&devfs,
     .ops   =&devfs_iops,
