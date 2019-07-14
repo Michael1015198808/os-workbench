@@ -11,7 +11,8 @@ static void single_cat(int fd,char buf[0x200],int* err){
         buf[nread]='\0';
         std_write(buf);
     }
-    if(nread<0)*err=EISDIR;
+    if(nread==EISDIR)*err=EISDIR;
+    else std_write("\n");
 }
 
 int mysh_cat(void *args[]){

@@ -36,6 +36,7 @@ static inode_t* blkfs_lookup(filesystem* fs,const char* path,int flags){
     uint32_t id=0;//id of inode
 
     while(*path){
+        //TODO: handle . and ..
         inode_t* cur =fs->inodes+id;
         yls_node* node=cur->ptr;
         uint32_t offset=node->info;
@@ -70,8 +71,6 @@ static inode_t* blkfs_lookup(filesystem* fs,const char* path,int flags){
 }
 
 static int blkfs_close(inode_t* inode){
-    pmm->free(inode->ptr);
-    pmm->free(inode);
     return 0;
 }
 
@@ -81,6 +80,13 @@ static fsops_t blkfs_ops={
     .close =blkfs_close,
 };
 
+static int blkfs_iopen(vfile_t* file,int flags){
+    file->offset=0;
+    file->flags=flags;
+    file->refcnt=1;
+    file->lk=PTHREAD_MUTEX_INITIALIZER;
+}
+
 static int blkfs_iclose(vfile_t* file){
     --file->refcnt;
     if(file->refcnt==0){
@@ -89,7 +95,7 @@ static int blkfs_iclose(vfile_t* file){
     return 0;
 }
 
-static ssize_t inline blkfs_iread_real(vfile_t* file,char* buf,size_t size){
+static ssize_t inline blkfs_iread(vfile_t* file,char* buf,size_t size){
     filesystem* fs  = file->inode->fs;
     uint32_t fd_off = file->offset;
     yls_node* node  = file->inode->ptr;
@@ -108,14 +114,11 @@ static ssize_t inline blkfs_iread_real(vfile_t* file,char* buf,size_t size){
             }
             break;
     }
-    Assert(0,"Should not reach here!\n");
+    BARRIER();
     return 0;
 }
-static ssize_t blkfs_iread(vfile_t* file,char* buf,size_t size){
-    ssize_t ret=blkfs_iread_real(file,buf,size);
-    return ret;
-}
-static ssize_t inline blkfs_ireaddir_real(vfile_t* file,char* buf,size_t size){
+
+static ssize_t inline blkfs_ireaddir(vfile_t* file,char* buf,size_t size){
     ssize_t ret=0;
 
     filesystem* fs  =file->inode->fs;
@@ -142,24 +145,16 @@ static ssize_t inline blkfs_ireaddir_real(vfile_t* file,char* buf,size_t size){
     BARRIER();
     return 0;
 }
-static ssize_t blkfs_ireaddir(vfile_t* file,char* buf,size_t size){
-    ssize_t ret=blkfs_ireaddir_real(file,buf,size);
-    return ret;
-}
+
 static ssize_t blkfs_iwrite(vfile_t* file,const char* buf,size_t size){
-    filesystem* fs= file->inode->fs;
-    uint32_t fd_off =file->offset;
-    yls_node* node= file->inode->ptr;
-    uint32_t off=node->info;
+    filesystem* fs  = file->inode->fs;
+    uint32_t fd_off = file->offset;
+    yls_node* node  = file->inode->ptr;
+    uint32_t off    = node->info;
 
     switch(node->type){
         case YLS_DIR:
-            {
-                TODO();
-                //Write to a dir will create
-                //a file in it with name $buf
-                return size;
-            }
+            return EISDIR;
             break;
         case YLS_FILE:
             {
@@ -189,9 +184,7 @@ static off_t blkfs_ilseek(vfile_t* file,off_t offset,int whence){
 }
 
 static inodeops_t blkfs_iops={
-    /*
     .open   =blkfs_iopen,
-    */
     .close  =blkfs_iclose,
     .read   =blkfs_iread,
     .readdir=blkfs_ireaddir,
@@ -201,7 +194,7 @@ static inodeops_t blkfs_iops={
     .mkdir  =blkfs_imkdir,
     .rmdir  =blkfs_rmdir,
     .link   =blkfs_ilink,
-    .unlink=blkfs_iunlink,
+    .unlink =blkfs_iunlink,
     */
 };
 

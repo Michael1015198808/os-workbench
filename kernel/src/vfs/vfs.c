@@ -119,8 +119,7 @@ static inline int vfs_open_real(const char *path,int flags){
     }else{
         this_fd->inode=devfs.ops->lookup(&devfs,path+5,flags);
     }
-    this_fd->offset=0;
-    this_fd->refcnt=1;
+    this_fd->inode->ops->open(this_fd,flags);
     return fd;
 }
 

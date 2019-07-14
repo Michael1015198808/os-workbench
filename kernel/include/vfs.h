@@ -13,10 +13,11 @@
 #define O_CREATE    4
 #define O_DIRECTORY 8
 
+#define O_RDWR (O_RDONLY | O_WRONLY)
+
 #define SEEK_SET 0
 #define SEEK_CUR 1
 #define SEEK_END 2
-#define O_RDWR (O_RDONLY | O_WRONLY)
 
 struct filesystem;
 typedef struct filesystem filesystem;
@@ -59,7 +60,7 @@ ssize_t std_write(void *buf);
 struct vfile{
     uint32_t offset;
     inode_t* inode;
-    int refcnt;
+    int refcnt,flags;
     pthread_mutex_t lk;
 };
 
