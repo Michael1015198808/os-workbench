@@ -149,7 +149,7 @@ filesystem devfs={
     .inodeops=&devfs_iops,
 };
 
-const static inode_t devfs_root={
+static inode_t devfs_root={
     .ptr=NULL,
     .fs =&devfs,
     .ops=&devfs_iops,
