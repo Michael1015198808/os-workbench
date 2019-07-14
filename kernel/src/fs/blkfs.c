@@ -27,8 +27,6 @@ static void blkfs_init(filesystem* fs,const char* name,device_t* dev){
 
 static inode_t* blkfs_lookup(filesystem* fs,const char* path,int flags){
     const char* const ori_path=path;
-    Assert(path[0]=='/',"Absolute path should start with /\n");
-    ++path;
 
     ssize_t(*const read)(device_t*,off_t,void*,size_t)=fs->dev->ops->read;
 
