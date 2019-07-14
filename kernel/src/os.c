@@ -82,10 +82,8 @@ static void os_run() {
 
     while(1){
         uint32_t data;
-        asm volatile ("inl %1, %0" : "=a"(data) : "d"((uint16_t)0x3f8));
-        for(int i=0;i<4;++i){
-            *(uint8_t*)(0x3f8+i)='\0';
-        }
+extern size_t input_read(uintptr_t reg, void *buf, size_t size) ;
+        input_read(0,&data,4);
         printf("%x\n",data);
     }
     _intr_write(1);
