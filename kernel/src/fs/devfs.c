@@ -85,7 +85,9 @@ static ssize_t devfs_ireaddir(vfile_t* file,char* buf,size_t size){
     if(file->inode!=&devfs_root){
         warn("%s: Not a directory",get_dev(file)->name);
     }
+    if(file->offset==devices_cnt)return 0;
     strcpy(buf,devices[file->offset]->name);
+    ++file->offset;
     ssize_t nread=strlen(buf);
     return nread;
 }
