@@ -15,10 +15,10 @@ static void blkfs_init(filesystem* fs,const char* name,device_t* dev){
     fs->dev     =dev;
     fs->inodes  =pmm->alloc(sizeof(inode_t)*(INODE_END-INODE_START)/0x8);
 
-    extern fsops_t blkfs_ops;
-    extern inodeops_t blkfs_iops;
-    fs->ops     =&blkfs_ops,
-    fs->inodeops=&blkfs_iops,
+    extern static fsops_t blkfs_ops;
+    extern static inodeops_t blkfs_iops;
+    fs->ops     =&blkfs_ops;
+    fs->inodeops=&blkfs_iops;
 
     for(int i=0;INODE_START+i*sizeof(yls_node)<INODE_END;++i){
         fs->inodes[i].ptr=pmm->alloc(16);
