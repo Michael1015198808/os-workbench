@@ -10,9 +10,12 @@
  *                 \ops(blkfs_iops)
  */
 static void blkfs_init(filesystem* fs,const char* name,device_t* dev){
-    fs->name=name;
-    fs->dev=dev;
-    fs->inodes=pmm->alloc(sizeof(inode_t)*(INODE_END-INODE_START)/0x8);
+    fs->name    =name;
+    fs->mount   =mount;//Should not mount before initialization!
+    fs->dev     =dev;
+    fs->inodes  =pmm->alloc(sizeof(inode_t)*(INODE_END-INODE_START)/0x8);
+    fs->ops     =&blkfs_ops,
+    fs->inodeops=&blkfs_iops,
 
     for(int i=0;INODE_START+i*sizeof(yls_node)<INODE_END;++i){
         fs->inodes[i].ptr=pmm->alloc(16);
@@ -196,13 +199,4 @@ static inodeops_t blkfs_iops={
     */
 };
 
-filesystem blkfs[2]={
-    {
-        .ops     =&blkfs_ops,
-        .inodeops=&blkfs_iops,
-    },
-    {
-        .ops     =&blkfs_ops,
-        .inodeops=&blkfs_iops,
-    },
-};
+filesystem blkfs[2];

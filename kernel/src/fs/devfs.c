@@ -153,7 +153,15 @@ filesystem devfs={
 };
 
 static inode_t devfs_root={
-    .ptr=NULL,
-    .fs =&devfs,
-    .ops=&devfs_iops,
+    .name  =NULL,
+    .mount =NULL,
+    .ptr   =NULL,
+    .fs    =&devfs,
+    .ops   =&devfs_iops,
 };
+
+int isatty(int fd){
+    task_t* cur=get_cur();
+    dev_t*  dev=get_dev(cur->fd[fd]);
+    return dev->ops==&tty_ops;
+}
