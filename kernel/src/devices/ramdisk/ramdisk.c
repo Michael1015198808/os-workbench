@@ -15,13 +15,22 @@ int rd_init(device_t *dev) {
   return 0;
 }
 
+size_t boundary_check(device_t* dev,off_t offset){
+    return 
+        ((rd_t*)dev->ptr)->end-
+        ((rd_t*)dev->ptr)->start-
+        offset;
+}
+
 ssize_t rd_read(device_t *dev, off_t offset, void *buf, size_t count) {
+  if(count>boundary_check(dev,offset))count=boundary_check(dev,offset);
   rd_t *rd = dev->ptr;
   memcpy(buf, ((char *)rd->start) + offset, count);
   return count;
 }
 
 ssize_t rd_write(device_t *dev, off_t offset, const void *buf, size_t count) {
+  if(count>boundary_check(dev,offset))count=boundary_check(dev,offset);
   rd_t *rd = dev->ptr;
   memcpy(((char *)rd->start) + offset, buf, count);
   return count;

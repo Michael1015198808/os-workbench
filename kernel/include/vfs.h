@@ -96,7 +96,6 @@ struct inodeops {
   int (*rmdir)(const char *name);
   int (*link)(const char *name, inode_t *inode);
   int (*unlink)(const char *name);
-  // 你可以自己设计readdir的功能
 };
 
 struct inode {

@@ -98,6 +98,22 @@ static ssize_t devfs_ilseek(vfile_t* file,off_t offset,int whence){
     BARRIER();
 }
 
+static ssize_t devfs_imkdir(const char* name){
+    fprintf(STDERR,"cannot create directory ‘%s’: Read-only filesystem\n",name);
+}
+
+static ssize_t devfs_irmdir(const char* name){
+    fprintf(STDERR,"cannot remove directory ‘%s’: Read-only filesystem\n",name);
+}
+
+static ssize_t devfs_ilink(const char* name, inode_t* inode){
+    fprintf(STDERR,"cannot create file ‘%s’: Read-only filesystem\n",name);
+}
+
+static ssize_t devfs_iunlink(const char* name){
+    fprintf(STDERR,"cannot remove file ‘%s’: Read-only filesystem\n",name);
+}
+
 //.func_name=dev_ifunc_name
 //i for inode
 static inodeops_t devfs_iops={
@@ -107,6 +123,10 @@ static inodeops_t devfs_iops={
     .readdir=devfs_ireaddir,
     .write  =devfs_iwrite,
     .lseek  =devfs_ilseek,
+    .mkdir  =devfs_imkdir,
+    .rmdir  =devfs_irmdir,
+    .link   =devfs_ilink,
+    .unlink =devfs_iunlink,
 };
 
 filesystem devfs={
