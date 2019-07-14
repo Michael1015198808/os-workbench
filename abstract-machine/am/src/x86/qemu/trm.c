@@ -19,6 +19,10 @@ void _putc(char ch) { // only works for x86-qemu
   outb(COM1, ch); // first -serial device
 }
 
+uint8_t _getc(void) { // only works for x86-qemu
+  return inb(COM1); // first -serial device
+}
+
 void _halt(int code) {
   cli();
   othercpu_halt();
