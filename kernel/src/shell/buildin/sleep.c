@@ -12,8 +12,11 @@ static void single_sleep(void* arg){
     while(num){
         to_sleep*=10;
         to_sleep+=*num-'0';
+        ++num;
     }
-    while(uptime()-begin<to_sleep*1000)_yield();
+    printf("sleep for %x seconds\n",to_sleep);
+    to_sleep*=1000;
+    while(uptime()-begin<to_sleep)_yield();
 }
 
 int mysh_sleep(void *args[]){
