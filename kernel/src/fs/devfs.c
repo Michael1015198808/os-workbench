@@ -10,7 +10,7 @@
 extern device_t *devices[];
 extern size_t devices_cnt;
 
-static fsops devfs_ops;
+static fsops_t devfs_ops;
 static inodeops_t devfs_iops;
 
 static inode_t devfs_root;//definition is at the end
