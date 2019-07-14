@@ -120,11 +120,12 @@ static inline int vfs_open_real(const char *path,int flags){
 
     //pthread_mutex_lock(&mount_table_lk);
     filesystem* target=NULL;
-    size_t len=0;
+    size_t max_len=0;
     for(int i=0;i<mount_table_cnt;++i){
-        if(!strncmp(mount_table[i].path,path,strlen(mount_table[i].path))){
-            if(strlen(mount_table[i])>len){
-                len=strlen(mount_table[i]);
+        size_t len=strlen(mount_table[i].path);//Avoid multi-calls
+        if(!strncmp(mount_table[i].path,path,len)){
+            if(len>max_len)
+                max_len=strlen(mount_table[i].path);
                 target=mount_table[i].fs;
             }
         }
