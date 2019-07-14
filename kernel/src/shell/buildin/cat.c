@@ -5,9 +5,9 @@
 
 const char *warn="Haven't realized!\n";
 
-static void single_cat(int fd,char buf[0x200],int* err){
+static void single_cat(int fd,char buf[0x208],int* err){
     int nread=0;
-    while((nread=vfs->read(fd,buf,0x200-1))>0){
+    while((nread=vfs->read(fd,buf,0x200))>0){
         vfs->write(STDOUT,buf,nread);
     }
     if(nread==EISDIR)*err=EISDIR;
@@ -16,7 +16,7 @@ static void single_cat(int fd,char buf[0x200],int* err){
 
 int mysh_cat(void *args[]){
     const char* pwd=get_pwd();
-    char buf[0x200];
+    char buf[0x208];
     int err=0;
     if(args[1]){
         for(int i=1;args[i];++i){

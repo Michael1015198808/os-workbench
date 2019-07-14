@@ -118,11 +118,19 @@ static inline int vfs_open_real(const char *path,int flags){
 
     this_fd=pmm->alloc(sizeof(vfile_t));
 
-    if(strncmp(path,"/dev/",5)){//Temporarily
-        this_fd->inode=blkfs[0].ops->lookup(&blkfs[0],path,flags);
-    }else{
-        this_fd->inode=devfs.ops->lookup(&devfs,path+5,flags);
+    //pthread_mutex_lock(&mount_table_lk);
+    filesystem* target=NULL;
+    size_t len=0;
+    for(int i=0;i<mount_table_cnt;++i){
+        if(!strncmp(mount_table[i].path,path,strlen(mount_table[i]))){
+            if(strlen(mount_table[i])>len){
+                len=strlen(mount_table[i]);
+                target=mount_table[i].fs;
+            }
+        }
     }
+    //pthread_mutex_unlock(&mount_table_lk);
+    this_fd->inode=target->ops->lookup(target,path,flags);
     this_fd->inode->ops->open(this_fd,flags);
     return fd;
 }
