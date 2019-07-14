@@ -19,6 +19,9 @@
 #define SEEK_CUR 1
 #define SEEK_END 2
 
+#define EISDIR -1
+#define ENOENT -1
+
 struct filesystem;
 typedef struct filesystem filesystem;
 typedef struct vfile vfile_t;

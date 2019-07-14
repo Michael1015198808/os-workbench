@@ -11,6 +11,9 @@ extern device_t *devices[];
 extern size_t devices_cnt;
 
 static inodeops_t devfs_iops;
+
+const static inode_t devfs_root;//definition is at the end
+
 static void devfs_init(filesystem* fs,const char* name,device_t *dev){
     fs->name=name;
     fs->dev=dev;
@@ -25,13 +28,13 @@ static void devfs_init(filesystem* fs,const char* name,device_t *dev){
 
 static inode_t* devfs_lookup(filesystem* fs,const char* path,int flags){
     if((!path[0])||(path[0]=='\\'&&path[1]=='\0')){
-        TODO();//return inode of devfs's root
+        return &devfs_root;
     }
     ++path;
     for (int i = 0; i < devices_cnt; i++) 
         if (strcmp(devices[i]->name, path) == 0)
             return fs->inodes+i;
-    panic("lookup device failed.");
+    fprintf(2,"%s: No such a file or directory",path);
     return NULL;
 }
 
@@ -79,8 +82,11 @@ static ssize_t devfs_iread(vfile_t* file,char* buf,size_t size){
 }
 
 static ssize_t devfs_ireaddir(vfile_t* file,char* buf,size_t size){
-    TODO();
-    return 0;
+    if(file->inode!=&devfs_root){
+        warn("%s: Not a directory",get_dev(file)->name);
+    }
+    ssize_t nread=strcpy(buf,devices[file->offset]);
+    return nread;
 }
 
 static ssize_t devfs_iwrite(vfile_t* file,const char* buf,size_t size){
@@ -141,4 +147,10 @@ filesystem devfs={
     .ops=&devfs_ops,
     .dev=NULL,
     .inodeops=&devfs_iops,
+};
+
+const static inode_t devfs_root={
+    .ptr=NULL,
+    .fs =&devfs,
+    .ops=&devfs_iops,
 };
