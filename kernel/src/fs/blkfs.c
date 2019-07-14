@@ -11,9 +11,12 @@
  */
 static void blkfs_init(filesystem* fs,const char* name,device_t* dev){
     fs->name    =name;
-    fs->mount   =mount;//Should not mount before initialization!
+    fs->mount   =NULL;//Should not mount before initialization!
     fs->dev     =dev;
     fs->inodes  =pmm->alloc(sizeof(inode_t)*(INODE_END-INODE_START)/0x8);
+
+    extern fsops_t blkfs_ops;
+    extern inodeops_t blkfs_iops;
     fs->ops     =&blkfs_ops,
     fs->inodeops=&blkfs_iops,
 
