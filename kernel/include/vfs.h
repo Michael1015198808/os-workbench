@@ -68,7 +68,7 @@ struct vfile{
 };
 
 struct filesystem{
-    const char* name,mount;
+    const char *name,*mount;
     fsops_t *ops;
     //Call devops by fsops
     device_t *dev;
