@@ -80,12 +80,13 @@ static void os_run() {
     _intr_write(0);
     hello();
 
+    uint32_t old=0;
     while(1){
         uint32_t data;
-        int read_key(void);
         do{
-            data=read_key();
-        }while(data==0);
+            asm volatile ("inl %1, %0" : "=a"(data) : "d"((uint16_t)0x3f8));
+        }while(data==old);
+        old=data;
         printf("%x\n",data);
     }
     _intr_write(1);
