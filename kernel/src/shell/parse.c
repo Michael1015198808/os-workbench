@@ -145,7 +145,6 @@ struct cmd *nulterminate(struct cmd*);
 struct cmd*
 parsecmd(char *s)
 {
-    printf("%d\n",_intr_read());
   char *es;
   struct cmd *cmd;
 

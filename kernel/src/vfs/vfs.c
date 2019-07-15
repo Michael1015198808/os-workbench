@@ -176,6 +176,7 @@ static ssize_t vfs_write(int fd,void* buf,size_t nbyte){
 }
 
 static int vfs_exec(const char* file,void *args[]){
+    log("%d\n",_intr_read());
     int ret,is_buildin;
     ret=exec_buildin(file,args,&is_buildin);
     if(is_buildin){
