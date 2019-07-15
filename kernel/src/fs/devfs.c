@@ -75,6 +75,7 @@ static int devfs_iclose(vfile_t* file){
         return file->inode->fs->ops->close(file->inode);
     }
     pthread_mutex_unlock(&file->lk);
+    return 0;
 }
 
 static ssize_t devfs_iread(vfile_t* file,char* buf,size_t size){
