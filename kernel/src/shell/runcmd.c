@@ -79,7 +79,7 @@ static inline void run_pipe_cmd(struct cmd *cmd){
 
     restore_fd(backup,current);
 
-    return runcmd(pcmd->right);
+    runcmd(pcmd->right);
 }
 inline void backup_fd(vfile_t *backup[3],task_t* current){
     for(int i=0;i<3;++i){
