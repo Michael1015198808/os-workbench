@@ -61,13 +61,9 @@ int runcmd(struct cmd *cmd){
     exit();
     return -1;
 }
+
 static inline void run_pipe_cmd(struct cmd *cmd){
-    TODO();
-    /*
-    intr_close();
-    int cpu_id=_cpu();
-    task_t* current=currents[cpu_id];
-    intr_open();
+    task_t* current=get_cur();
 
     struct pipecmd* pcmd = (struct pipecmd*)cmd;
 
@@ -79,16 +75,11 @@ static inline void run_pipe_cmd(struct cmd *cmd){
 
     task_t* son=pmm->alloc(sizeof(task_t));
     kmt->create(son,"fork-and-run",(task_fun)runcmd,pcmd->left);
-    kmt->teardown(son);
+    kmt->wait(son);
 
     restore_fd(backup,current);
 
     return runcmd(pcmd->right);
-    */
-}
-static inline void run_back_cmd(struct cmd* cmd){
-    struct backcmd* bcmd = (struct backcmd*)cmd;
-    kmt->create(pmm->alloc(sizeof(task_t)),NULL,(task_fun)runcmd,bcmd->cmd);
 }
 inline void backup_fd(vfile_t *backup[3],task_t* current){
     for(int i=0;i<3;++i){
@@ -101,4 +92,9 @@ inline void restore_fd(vfile_t *backup[3],task_t* current){
         pmm->free(current->fd[i]);
         current->fd[i]=backup[i];
     }
+}
+
+static inline void run_back_cmd(struct cmd* cmd){
+    struct backcmd* bcmd = (struct backcmd*)cmd;
+    kmt->create(pmm->alloc(sizeof(task_t)),NULL,(task_fun)runcmd,bcmd->cmd);
 }

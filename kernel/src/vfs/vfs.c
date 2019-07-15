@@ -13,7 +13,7 @@ struct{
 int mount_table_cnt=0;
 pthread_mutex_t mount_table_lk=PTHREAD_MUTEX_INITIALIZER;
 
-static int new_fd_num(task_t* current){
+int new_fd_num(task_t* current){
     for(int i=0;i<FD_NUM;++i){
         if(!(current->fd[i])){
             return i;
