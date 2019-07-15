@@ -58,7 +58,7 @@ int runcmd(struct cmd *cmd){
     return -1;
 }
 static inline void run_redir_cmd(struct cmd* cmd){
-    rcmd = (struct redircmd*)cmd;
+    struct redircmd* rcmd = (struct redircmd*)cmd;
     close(rcmd->fd);
     if(vfs->open(rcmd->file, rcmd->mode) < 0){
         fprintf(2, "open %s failed\n", rcmd->file);
