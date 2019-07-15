@@ -33,11 +33,12 @@ int exec_buildin(const char* file,void* args[],int *is_buildin){
     for(int i=0;i!=LEN(buildin);++i){
         if(!strcmp(file,buildin[i].name)){
             *is_buildin=1;
+    log("%d\n",_intr_read());
             task_t* cur=get_cur();
+    log("%d\n",_intr_read());
             pmm->free(cur->name);
             cur->name=pmm->alloc(strlen(buildin[i].name)+1);
             strcpy(cur->name,buildin[i].name);
-    log("%d\n",_intr_read());
             return buildin[i].binary(args);
         }
     }

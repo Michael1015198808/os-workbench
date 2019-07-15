@@ -4,8 +4,9 @@
 task_t* get_cur(void){
     _intr_close();
     int cpu_id=_cpu();
-    return currents[cpu_id];
+    task_t* ret=currents[cpu_id];
     _intr_open();
+    return ret;
 }
 
 void _putc(char);
