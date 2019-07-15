@@ -2,8 +2,7 @@
 #include <devices.h>
 
 int mysh_reboot(void *args[]){
-    int main();
-    main();
+    asm volatile("jmp 0x0");
     Assert(0,"Should not reach here!");
 }
 
