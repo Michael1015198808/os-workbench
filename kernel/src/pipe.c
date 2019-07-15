@@ -96,7 +96,7 @@ static ssize_t pipe_write(pipe_t* p, const void *buf, size_t count) {
     }
     return nwrite;
 }
-static ssize_t pipe_iclose(vfile_t* file,char* buf,size_t size){
+static int pipe_iclose(vfile_t* file){
     pipe_t* p=file->inode->ptr;
     return p->open=0;
 }
