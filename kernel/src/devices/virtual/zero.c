@@ -6,7 +6,7 @@ static int zero_init(device_t *dev) {
 
 static ssize_t zero_read(device_t *dev, off_t offset, void *buf, size_t count) {
     memset(buf,0x00,count);
-    return 0;
+    return count;
 }
 
 static ssize_t zero_write(device_t *dev, off_t offset, const void *buf, size_t count) {

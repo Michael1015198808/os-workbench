@@ -11,3 +11,4 @@ help(wc)="Print newline, word, and byte counts for each FILE, and a total line i
 help(ls)="List information about the FILEs (the current directory by default).";
 help(mkdir)="Create the DIRECTORY(ies), if they do not already exist.";
 help(sleep)="Pause for NUMBER seconds.";
+help(reboot)="Reboot the system.";
