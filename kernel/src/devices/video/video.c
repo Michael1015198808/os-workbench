@@ -18,9 +18,9 @@ static void texture_fill(struct texture *tx, int top, uint8_t *bits, uint32_t fg
 static void font_load(fb_t *fb, uint8_t *font) {
   for (int ch = 0; ch < 256; ch++) {
     texture_fill(&fb->textures[ch * 2 + 1], 0, &font[16 * ch], 0xffffff,
-            (48<<6)+(10<<4)+(36<<2));
+            (36<<6)+(10<<4)+(48<<2));
     texture_fill(&fb->textures[ch * 2 + 2], 1, &font[16 * ch], 0xffffff,
-            (255<<6)+(0<<4)+(0<<2));
+            (36<<6)+(10<<4)+(48<<2));
   }
 }
 
