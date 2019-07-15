@@ -81,7 +81,12 @@ static fsops_t blkfs_ops={
 };
 
 static int blkfs_iopen(vfile_t* file,int flags){
-    file->offset=0;
+    if((yls_node*)file->inode->ptr->type==YLS_DIR){
+        //First 4 bytes indicates the parent directory in my file system
+        file->offset=4;
+    }else{
+        file->offset=0;
+    }
     file->flags=flags;
     file->refcnt=1;
     file->lk=PTHREAD_MUTEX_INITIALIZER;
@@ -103,6 +108,7 @@ static ssize_t inline blkfs_iread(vfile_t* file,char* buf,size_t size){
     uint32_t fd_off = file->offset;
     yls_node* node  = file->inode->ptr;
     uint32_t off    = node->info;
+    uint32_t fsize  = node->size;
 
     switch(node->type){
         case YLS_DIR:
@@ -110,6 +116,11 @@ static ssize_t inline blkfs_iread(vfile_t* file,char* buf,size_t size){
             break;
         case YLS_FILE:
             {
+                if(fd_off>size){
+                    return 0;
+                }else if(fsize+fd_off>size){
+                    size=fsize-fd_off;
+                }
                 find_block(fs->dev,&fd_off,&off);
                 ssize_t nread=block_read(fs->dev,off,fd_off,buf,size);
                 file->offset+=nread;

@@ -61,15 +61,16 @@ struct pair{
     /* / */
     {0x400,0x00000000},// "/"'s inode
     {0x404,       '/'},// "/"'s name
-    {0x480,0x00000500},// "/"'s info: test
-    {0x484,0x00000600},// "/"'s info: txt
-    {0x488,0x00000700},// "/"'s info: mnt
-    {0x48c,0x00000800},// "/"'s info: dev
+    {0x480,0x00000400},// "/"'s info: /
+    {0x484,0x00000500},// "/"'s info: test
+    {0x488,0x00000600},// "/"'s info: txt
+    {0x48c,0x00000700},// "/"'s info: mnt
+    {0x490,0x00000800},// "/"'s info: dev
 
     /* /test */
     {0x500,0x00000001},// "/"'s inode
     {0x504,0x74736574},// "/test"'s name
-    {0x580,0x00000000},// "/test"'s info
+    {0x580,0x00000400},// "/test"'s info
     /* /txt */
     {0x600,0x00000002},// "/txt"'s inode
     {0x604,0x00747874},// "/txt"'s name
@@ -77,11 +78,11 @@ struct pair{
     /* /mnt */
     {0x700,0x00000003},// "/txt"'s inode
     {0x704,0x00746e6d},// "/txt"'s name
-    {0x780,0x00000000},// "/txt"'s info
+    {0x780,0x00000400},// "/txt"'s info
     /* /dev */
     {0x800,0x00000002},// "/txt"'s inode
     {0x804,0x00766564},// "/txt"'s name
-    {0x880,0x00000000},// "/txt"'s info
+    {0x880,0x00000400},// "/txt"'s info
 };
 int main(){
     for(int i=1;i<sizeof(pairs)/sizeof(pairs[0]);++i){
