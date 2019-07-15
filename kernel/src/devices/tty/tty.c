@@ -225,6 +225,17 @@ devops_t tty_ops = {
   .write = tty_write,
 };
 
+void tty_get_color(device_t* dev,uint32_t* fg,uint32_t* bg){
+    tty_t* tty= dev->ptr;
+    *fg=tty->fg;
+    *bg=tty->bg;
+}
+void tty_set_color(device_t* dev,uint32_t fg,uint32_t bg){
+    tty_t* tty= dev->ptr;
+    tty->fg   = fg;
+    tty->bg   = bg;
+}
+
 void tty_task(void *arg) {
   device_t *in = dev_lookup("input");
   device_t *ttydev = dev_lookup("tty1");
