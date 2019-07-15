@@ -112,5 +112,6 @@ extern char keymap[], keymap_shift[];
 
 void tty_get_color(device_t* dev,uint32_t* fg,uint32_t* bg);
 void tty_set_color(device_t* dev,uint32_t  fg,uint32_t bg );
+int isatty(int fd);
 
 #endif
