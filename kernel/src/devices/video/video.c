@@ -95,7 +95,7 @@ ssize_t fb_write(device_t *dev, off_t offset, const void *buf, size_t count) {
         ctl.y = sp->y;
         if(fb->info->fg!=fb->textures[sp->texture].fg ||
            fb->info->bg!=fb->textures[sp->texture].bg){
-            reload_color(fb->textures[sp->texture],fb->info->fg,fb->info->bg);
+            reload_color(&fb->textures[sp->texture],fb->info->fg,fb->info->bg);
         }
         ctl.pixels = fb->textures[sp->texture].pixels;
         _io_write(_DEV_VIDEO, _DEVREG_VIDEO_FBCTL, &ctl, sizeof(ctl));
