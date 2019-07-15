@@ -30,7 +30,6 @@ static struct Command{
 };
 
 int exec_buildin(const char* file,void* args[],int *is_buildin){
-    log("%d\n",_intr_read());
     for(int i=0;i!=LEN(buildin);++i){
         if(!strcmp(file,buildin[i].name)){
             *is_buildin=1;
@@ -38,6 +37,7 @@ int exec_buildin(const char* file,void* args[],int *is_buildin){
             pmm->free(cur->name);
             cur->name=pmm->alloc(strlen(buildin[i].name)+1);
             strcpy(cur->name,buildin[i].name);
+    log("%d\n",_intr_read());
             return buildin[i].binary(args);
         }
     }
