@@ -118,7 +118,7 @@ static ssize_t inline blkfs_iread(vfile_t* file,char* buf,size_t size){
             {
                 if(fd_off>size){
                     return 0;
-                }else if(fsize+fd_off>size){
+                }else if(size+fd_off>fsize){
                     size=fsize-fd_off;
                 }
                 find_block(fs->dev,&fd_off,&off);
