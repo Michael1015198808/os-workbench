@@ -9,7 +9,7 @@ static inline void single_ls(const char* path,int* err){
 
     cnt+=fprintf(STDOUT,".  ..  ");
     while((nread=vfs->readdir(fd,buf,sizeof(buf)))>0){
-        if(cnt+strlen(buf)>40){
+        if(cnt+strlen(buf)>60){
             std_write("\n");
             cnt=0;
         }
