@@ -81,7 +81,7 @@ static fsops_t blkfs_ops={
 };
 
 static int blkfs_iopen(vfile_t* file,int flags){
-    if((yls_node*)file->inode->ptr->type==YLS_DIR){
+    if(((yls_node*)file->inode->ptr)->type==YLS_DIR){
         //First 4 bytes indicates the parent directory in my file system
         file->offset=4;
     }else{
