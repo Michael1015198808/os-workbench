@@ -182,6 +182,8 @@ int tty_init(device_t *dev) {
   q->end = q->buf + TTY_COOK_BUF_SZ;
   kmt->sem_init(&tty->lock, "tty lock", 1);
   kmt->sem_init(&tty->cooked, "tty cooked lines", 0);
+  tty->fg = 0xffffff;
+  tty->bg = 0x300A24;
   return 0;
 }
 
@@ -246,6 +248,8 @@ void tty_task(void *arg) {
 
           struct display_info info = {
             .current = tty->display,
+            .fg = tty->fg,
+            .bg = tty->bg,
           };
           tty_mark_all(tty);
           fb->ops->write(fb, 0, &info, sizeof(struct display_info));

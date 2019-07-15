@@ -40,6 +40,8 @@ int fb_init(device_t *dev) {
     .num_textures = NTEXTURE,
     .num_sprites = NSPRITE,
     .current = 0,
+    .fg = 0xffffff,
+    .bg = 0x300A24,
   };
   kmt->sem_init(&fb_sem, dev->name, 1);
   font_load(fb, TERM_FONT);
@@ -54,6 +56,21 @@ ssize_t fb_read(device_t *dev, off_t offset, void *buf, size_t count) {
   return 0;
 }
 
+void reload_color(struct texture* tx,uint32_t fg,uint32_t bg){
+  uint32_t ori_fg=tx->fg;
+  uint32_t ori_bg=tx->bg;
+  uint32_t *px = tx->pixels;
+
+  for (int y = 0; y < TEXTURE_H; y++)
+    for (int x = 0; x < TEXTURE_W; x++) {
+        if(*px==ori_fg)*px=fg;
+        else if(*px==ori_bg)*px=bg;
+        ++px;
+    }
+  tx->fg=fg;
+  tx->bg=bg;
+}
+
 ssize_t fb_write(device_t *dev, off_t offset, const void *buf, size_t count) {
   fb_t *fb = dev->ptr;
   kmt->sem_wait(&fb_sem);
@@ -62,6 +79,8 @@ ssize_t fb_write(device_t *dev, off_t offset, const void *buf, size_t count) {
     if (fb->info->current != info->current) {
       fb->info->current = info->current;
     }
+    fb->info->fg = info->fg;
+    fb->info->bg = info->bg;
   } else if (offset < SPRITE_BRK) {
     memcpy(((uint8_t *)fb->textures) + offset, buf, count);
   } else {
@@ -76,7 +95,7 @@ ssize_t fb_write(device_t *dev, off_t offset, const void *buf, size_t count) {
         ctl.y = sp->y;
         if(fb->info->fg!=fb->textures[sp->texture].fg ||
            fb->info->bg!=fb->textures[sp->texture].bg){
-            //TODO: change color
+            reload_color(fb->textures[sp->texture],fb->info->fg,fb->ino->bg);
         }
         ctl.pixels = fb->textures[sp->texture].pixels;
         _io_write(_DEV_VIDEO, _DEVREG_VIDEO_FBCTL, &ctl, sizeof(ctl));

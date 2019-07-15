@@ -103,6 +103,7 @@ typedef struct {
   struct character *buf, *end, *cursor;
   struct tty_queue queue;
   uint8_t *dirty;
+  uint32_t fg,bg;
 } tty_t;
 
 extern char keymap[], keymap_shift[];
