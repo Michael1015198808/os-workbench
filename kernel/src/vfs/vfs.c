@@ -190,15 +190,8 @@ off_t vfs_lseek(int fd,off_t offset, int whence){
 
 int vfs_close(int fd){
     task_t* current=get_cur();
-    pthread_mutex_lock(&this_fd->lk);
-    --this_fd->refcnt;
-    if(this_fd->refcnt==0){
-        this_fd->inode->ops->close(this_fd);
-        //pmm->free(this_fd);
-        //return 0;
-    }
+    this_fd->inode->ops->close(this_fd);
     Assert(this_fd->refcnt>=0,"fd with refcnt <0!\n");
-    pthread_mutex_unlock(&this_fd->lk);
     return 0;
 }
 

@@ -86,10 +86,12 @@ static int blkfs_iopen(vfile_t* file,int flags){
 }
 
 static int blkfs_iclose(vfile_t* file){
+    pthread_mutex_lock(&file->lk);
     --file->refcnt;
     if(file->refcnt==0){
         return file->inode->fs->ops->close(file->inode);
     }
+    pthread_mutex_unlock(&file->lk);
     return 0;
 }
 
