@@ -4,14 +4,11 @@
 
 static inline void single_ls(const char* path,int* err){
     int fd=vfs->open(path,O_RDONLY | O_DIRECTORY),nread=0;
-    int cnt=0,istty=isatty(STDOUT);
+    int cnt=0;
     task_t* cur=get_cur();
     char buf[200];
 
-    if(istty){
-        tty_set_color(cur->fd[STDOUT]->inode->ptr,0x000000,0xffffff);
-    }
-    cnt+=fprintf(STDOUT,".  ..  ");
+    //cnt+=fprintf(STDOUT,".  ..  ");
     while((nread=vfs->readdir(fd,buf,sizeof(buf)))>0){
         if(cnt+strlen(buf)>60){
             std_write("\n");
@@ -23,7 +20,8 @@ static inline void single_ls(const char* path,int* err){
         *err=-1;
     }
     vfs->close(fd);
-    std_write("\n");
+    if(cnt)
+        std_write("\n");
 }
 
 //path here may be relative or absolute
