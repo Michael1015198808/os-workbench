@@ -303,7 +303,7 @@ void kmt_sem_signal(sem_t *sem){
 void inline exit_real(task_t* cur){
     set_flag(cur,TASK_ZOMBIE);
     for(int i=0;i<FD_NUM;++i){
-        if(task->fd[i]){
+        if(cur->fd[i]){
             vfs->close(i);
         }
     }
