@@ -67,6 +67,7 @@ struct display_info {
 };
 
 struct texture {
+  uint32_t color;
   uint32_t pixels[TEXTURE_W * TEXTURE_H];
 } __attribute__((packed));
 

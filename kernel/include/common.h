@@ -49,6 +49,7 @@ typedef struct task{
 #endif
     vfile_t* fd[FD_NUM];
     char pwd[0x100];
+    inode_t* cur;
 }task_t;
 extern task_t* currents[MAX_CPU];
 
