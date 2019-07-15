@@ -154,10 +154,12 @@ int kmt_create(task_t *task, const char *name, void (*entry)(void*), void *arg){
     task_t* cur=get_cur();
     if(cur){
         for(int i=0;i<FD_NUM;++i){
-            task->fd[i]=cur->fd[i];
-            pthread_mutex_lock(&cur->fd[i]->lk);
-            ++cur->fd[i]->refcnt;
-            pthread_mutex_unlock(&cur->fd[i]->lk);
+            if(cur->fd[i]){
+                task->fd[i]=cur->fd[i];
+                pthread_mutex_lock(&cur->fd[i]->lk);
+                ++cur->fd[i]->refcnt;
+                pthread_mutex_unlock(&cur->fd[i]->lk);
+            }
         }
         strcpy(task->pwd,cur->pwd);
     }else{
