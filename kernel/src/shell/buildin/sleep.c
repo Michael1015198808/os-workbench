@@ -15,7 +15,10 @@ static void single_sleep(void* arg){
         ++num;
     }
     to_sleep*=1000;
-    while(uptime()-begin<to_sleep)_yield();
+    while(uptime()-begin<to_sleep){
+        for(volatile int i=0;i<1000;++i);
+        _yield();
+    }
 }
 
 int mysh_sleep(void *args[]){
