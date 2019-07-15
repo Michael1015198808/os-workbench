@@ -21,17 +21,19 @@ int pipe(int pipefd[2]) {
     inode->fs =NULL;
     inode->ops=&pipe_iops;
 
-    vfile_t* file=pmm->alloc(sizeof(vfile_t));
-    file->offset=0;
-    file->inode =inode;
-    file->refcnt=0;
-    file->flags =0777;
-    file->lk    =0;
 
     task_t* cur=get_cur();
     for(int i=0;i<2;++i){
         int new_fd_num(task_t*);
         pipefd[i]=new_fd_num(cur);
+
+        vfile_t* file=pmm->alloc(sizeof(vfile_t));
+        file->offset=0;
+        file->inode =inode;
+        file->refcnt=0;
+        file->flags =0777;
+        file->lk    =0;
+
         cur->fd[pipefd[i]]=file;
     }
     return 0;
