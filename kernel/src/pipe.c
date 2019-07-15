@@ -9,7 +9,7 @@ typedef struct{
 }pipe_t;
 
 static inodeops_t pipe_iops;
-static int pipe(int pipefd[2]) {
+int pipe(int pipefd[2]) {
     pipe_t* p=pmm->alloc(sizeof(pipe_t));
     p->head =0;
     p->tail =0;
