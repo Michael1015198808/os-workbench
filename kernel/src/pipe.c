@@ -105,4 +105,4 @@ static ssize_t pipe_iwrite(vfile_t* file,const char* buf,size_t size){
 static inodeops_t pipe_iops={
     .read   =pipe_iread,
     .write  =pipe_iwrite,
-}
+};
