@@ -64,6 +64,7 @@ struct display_info {
   uint32_t num_displays;
   uint32_t current;
   uint32_t num_textures, num_sprites;
+  uint32_t fg,bg;
 };
 
 struct texture {
