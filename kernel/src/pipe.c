@@ -30,7 +30,7 @@ int pipe(int pipefd[2]) {
         vfile_t* file=pmm->alloc(sizeof(vfile_t));
         file->offset=0;
         file->inode =inode;
-        file->refcnt=0;
+        file->refcnt=1;
         file->flags =0777;
         file->lk    =0;
 
