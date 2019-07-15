@@ -6,11 +6,11 @@
 typedef struct{
     volatile int head,tail;
     void* mem;
-}pipe;
+}pipe_t;
 
 static inodeops_t pipe_iops;
 static int pipe(int pipefd[2]) {
-    pipe* p=pmm->alloc(sizeof(pipe));
+    pipe_t* p=pmm->alloc(sizeof(pipe_t));
     p->head =0;
     p->tail =0;
     p->mem  =pmm->alloc(0x100);
@@ -35,18 +35,18 @@ static int pipe(int pipefd[2]) {
     return 0;
 }
 
-static inline size_t get_size(pipe* p){
+static inline size_t get_size(pipe_t* p){
     return (p->tail-p->head)&0xff;
 }
-static inline int is_full(pipe* p){
+static inline int is_full(pipe_t* p){
     return get_size(p)=0xff;
 }
-static inline int is_empty(pipe* p){
+static inline int is_empty(pipe_t* p){
     return get_size(p)==0;
 }
 
 
-static ssize_t pipe_read(pipe* p,void *buf, size_t count) {
+static ssize_t pipe_read(pipe_t* p,void *buf, size_t count) {
     size_t nread=0;
 
     size_t size=0;
