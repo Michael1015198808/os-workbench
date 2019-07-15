@@ -46,16 +46,16 @@ struct pair{
     {0x06c,0x00000001},// type
 
     /* /mnt */
-    {0x060,0x00000001},// refcnt
-    {0x064,0x00000780},// info
-    {0x068,0x00000000},// size
-    {0x06c,0x00000000},// type
+    {0x070,0x00000001},// refcnt
+    {0x074,0x00000780},// info
+    {0x078,0x00000000},// size
+    {0x07c,0x00000000},// type
 
     /* /dev */
-    {0x060,0x00000001},// refcnt
-    {0x064,0x00000880},// info
-    {0x068,0x00000000},// size
-    {0x06c,0x00000000},// type
+    {0x080,0x00000001},// refcnt
+    {0x084,0x00000880},// info
+    {0x088,0x00000000},// size
+    {0x08c,0x00000000},// type
 
 /* information */
     /* / */
@@ -84,6 +84,12 @@ struct pair{
     {0x880,0x00000000},// "/txt"'s info
 };
 int main(){
+    for(int i=1;i<sizeof(pairs)/sizeof(pairs[0]);++i){
+        if(pairs[i].off<=pairs[i-1].off){
+            printf("%d\n",i);
+            return 1;
+        }
+    }
     for(uint32_t i=0,j=0;i<0x10000;i+=4){
 #ifdef READABLE
         if(!(i&0xf)){printf("\n %03x: ",i);}
