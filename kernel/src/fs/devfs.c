@@ -69,7 +69,12 @@ static int devfs_iopen(vfile_t* file,int flags){
 }
 
 static int devfs_iclose(vfile_t* file){
-    TODO();
+    pthread_mutex_lock(&file->lk);
+    --file->refcnt;
+    if(file->refcnt==0){
+        return file->inode->fs->ops->close(file->inode);
+    }
+    pthread_mutex_unlock(&file->lk);
 }
 
 static ssize_t devfs_iread(vfile_t* file,char* buf,size_t size){
