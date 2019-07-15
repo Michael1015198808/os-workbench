@@ -14,7 +14,6 @@ static void single_sleep(void* arg){
         to_sleep+=*num-'0';
         ++num;
     }
-    printf("sleep for %x seconds\n",to_sleep);
     to_sleep*=1000;
     while(uptime()-begin<to_sleep)_yield();
 }
