@@ -63,8 +63,8 @@ static ssize_t pipe_read(pipe_t* p,void *buf, size_t count) {
         nread   +=pipe_read(p,buf,remain);
         nread   +=pipe_read(p,buf+remain,count-remain);
     }else{
-        memcpy(buf,p->mem,count);
-        p->tail +=count;
+        memcpy(buf,p->mem+p->head,count);
+        p->head +=count;
         nread   +=count;
     }
 
@@ -88,7 +88,7 @@ static ssize_t pipe_write(pipe_t* p, const void *buf, size_t count) {
         nwrite  +=pipe_write(p,buf,remain);
         nwrite  +=pipe_write(p,buf+remain,count-remain);
     }else{
-        memcpy(p->mem,buf,count);
+        memcpy(p->mem+p->tail,buf,count);
         p->tail +=count;
         nwrite  +=count;
     }
