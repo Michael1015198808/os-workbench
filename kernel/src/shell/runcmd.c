@@ -5,6 +5,7 @@
 
 void panic(char*);
 int runcmd(struct cmd *cmd);
+static inline void run_redir_cmd(cmd);
 static inline void run_pipe_cmd(struct cmd *cmd);
 static inline void run_back_cmd(struct cmd *cmd);
 /*
@@ -31,17 +32,8 @@ int runcmd(struct cmd *cmd){
             break;
 
         case REDIR:
-            TODO();
-            /*
-            rcmd = (struct redircmd*)cmd;
-            close(rcmd->fd);
-            if(open(rcmd->file, rcmd->mode) < 0){
-                fprintf(2, "open %s failed\n", rcmd->file);
-                exit();
-            }
-            runcmd(rcmd->cmd);
+            run_redir_cmd(cmd);
             break;
-            */
 
         case LIST:
             TODO();
@@ -64,6 +56,15 @@ int runcmd(struct cmd *cmd){
         }
     exit();
     return -1;
+}
+static inline void run_redir_cmd(struct cmd* cmd){
+    rcmd = (struct redircmd*)cmd;
+    close(rcmd->fd);
+    if(vfs->open(rcmd->file, rcmd->mode) < 0){
+        fprintf(2, "open %s failed\n", rcmd->file);
+        exit();
+    }
+    runcmd(rcmd->cmd);
 }
 
 static inline void run_pipe_cmd(struct cmd *cmd){
