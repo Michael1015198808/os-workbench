@@ -67,31 +67,21 @@ static inline void run_pipe_cmd(struct cmd *cmd){
 
     struct pipecmd* pcmd = (struct pipecmd*)cmd;
 
-    vfile_t *backup[3];
+    vfile_t *backup;
     int pipefd[2];
     extern void pipe(int pipefd[2]);
     pipe(pipefd);
-    backup_fd(backup,current);
 
+    backup        =current->fd[1];
+    current->fd[1]=pipefd[1];
     task_t* son=pmm->alloc(sizeof(task_t));
     kmt->create(son,"fork-and-run",(task_fun)runcmd,pcmd->left);
+    current->fd[1]=backup;
     kmt->wait(son);
 
-    restore_fd(backup,current);
+    current->fd[0]=pipefd[0];
 
     runcmd(pcmd->right);
-}
-inline void backup_fd(vfile_t *backup[3],task_t* current){
-    for(int i=0;i<3;++i){
-        backup[i]=current->fd[i];
-        current->fd[i]=NULL;
-    }
-}
-inline void restore_fd(vfile_t *backup[3],task_t* current){
-    for(int i=0;i<3;++i){
-        pmm->free(current->fd[i]);
-        current->fd[i]=backup[i];
-    }
 }
 
 static inline void run_back_cmd(struct cmd* cmd){
