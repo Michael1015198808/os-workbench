@@ -193,11 +193,6 @@ void kmt_teardown(task_t *task){
         }
     }
     pmm->free(task->name);
-    for(int i=0;i<FD_NUM;++i){
-        if(task->fd[i]){
-            vfs->close(i);
-        }
-    }
     pmm->free(task);
     return;
 }
@@ -307,6 +302,11 @@ void kmt_sem_signal(sem_t *sem){
 
 void inline exit_real(task_t* cur){
     set_flag(cur,TASK_ZOMBIE);
+    for(int i=0;i<FD_NUM;++i){
+        if(task->fd[i]){
+            vfs->close(i);
+        }
+    }
     _yield();
 }
 void warning(const char* warn){
