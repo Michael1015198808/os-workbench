@@ -20,17 +20,18 @@ static int pipe(int pipefd[2]) {
     inode->fs =NULL;
     inode->ops=&pipe_iops;
 
-    vfile_t* vfile=pmm->alloc(sizeof(vfile_t));
-    vfile->offset=0;
-    vfile->inode =inode;
-    vfile->refcnt=0;
-    vfile->flag  =0777;
-    vfile->lk    =0;
+    vfile_t* file=pmm->alloc(sizeof(file_t));
+    file->offset=0;
+    file->inode =inode;
+    file->refcnt=0;
+    file->flags =0777;
+    file->lk    =0;
 
     task_t* cur=get_cur();
     for(int i=0;i<2;++i){
+        int new_fd_num(task_t*);
         pipefd[i]=new_fd_num(cur);
-        cur->fd[pipefd[i]]=vfile;
+        cur->fd[pipefd[i]]=file;
     }
     return 0;
 }
@@ -95,10 +96,10 @@ static ssize_t pipe_write(pipe_t* p, const void *buf, size_t count) {
 }
 
 static ssize_t pipe_iread(vfile_t* file,char* buf,size_t size){
-    return pipe_read(vfile->inode->ptr,buf,size);
+    return pipe_read(file->inode->ptr,buf,size);
 }
 static ssize_t pipe_iwrite(vfile_t* file,const char* buf,size_t size){
-    return pipe_write(vfile->inode->ptr,buf,size);
+    return pipe_write(file->inode->ptr,buf,size);
 }
 
 static inodeops_t pipe_iops={
