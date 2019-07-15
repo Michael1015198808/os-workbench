@@ -8,6 +8,7 @@ static void single_cat(int fd,char buf[0x208],int* err){
     while((nread=vfs->read(fd,buf,0x200))>0){
         vfs->write(STDOUT,buf,nread);
     }
+    std_write("\n");
     if(nread==EISDIR)*err=EISDIR;
 }
 
