@@ -155,6 +155,9 @@ int kmt_create(task_t *task, const char *name, void (*entry)(void*), void *arg){
     if(cur){
         for(int i=0;i<FD_NUM;++i){
             task->fd[i]=cur->fd[i];
+            pthread_mutex_lock(&cur->fd[i]->lk);
+            ++cur->fd[i]->refcnt;
+            pthread_mutex_unlock(&cur->fd[i]->lk);
         }
         strcpy(task->pwd,cur->pwd);
     }else{
@@ -188,6 +191,11 @@ void kmt_teardown(task_t *task){
         }
     }
     pmm->free(task->name);
+    for(int i=0;i<FD_NUM;++i){
+        if(task->fd[i]){
+            vfs->close(i);
+        }
+    }
     pmm->free(task);
     return;
 }

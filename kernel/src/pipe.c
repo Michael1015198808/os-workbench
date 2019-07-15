@@ -96,6 +96,10 @@ static ssize_t pipe_write(pipe_t* p, const void *buf, size_t count) {
     }
     return nwrite;
 }
+static ssize_t pipe_iclose(vfile_t* file,char* buf,size_t size){
+    pipe_t* p=file->inode->ptr;
+    return p->open=0;
+}
 
 static ssize_t pipe_iread(vfile_t* file,char* buf,size_t size){
     return pipe_read(file->inode->ptr,buf,size);
@@ -105,6 +109,7 @@ static ssize_t pipe_iwrite(vfile_t* file,const char* buf,size_t size){
 }
 
 static inodeops_t pipe_iops={
+    .close  =pipe_iclose,
     .read   =pipe_iread,
     .write  =pipe_iwrite,
 };

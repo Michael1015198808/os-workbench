@@ -193,7 +193,7 @@ int vfs_close(int fd){
     pthread_mutex_lock(&this_fd->lk);
     --this_fd->refcnt;
     if(this_fd->refcnt==0){
-        //pmm->free(this_fd->inode);
+        this_fd->inode->ops->close(this_fd);
         //pmm->free(this_fd);
         //return 0;
     }
