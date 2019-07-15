@@ -196,8 +196,8 @@ int vfs_close(int fd){
     Assert(this_fd->refcnt>=0,"fd with refcnt <0!\n");
     if(this_fd->refcnt==0){
         pmm->free(this_fd);
-        this_fd=NULL;
     }
+    this_fd=NULL;
     return 0;
 }
 
