@@ -37,7 +37,7 @@ static inode_t* devfs_lookup(filesystem* fs,const char* path,int flags){
 }
 
 static int devfs_close(inode_t* inode){
-    TODO();
+    return 0;
 }
 
 static fsops_t devfs_ops={
