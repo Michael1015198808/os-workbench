@@ -2,6 +2,7 @@
 
 #include <common.h>
 #include <parse.h>
+#include <dir.h>
 
 void panic(char*);
 int runcmd(struct cmd *cmd);
