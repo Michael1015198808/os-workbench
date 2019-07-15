@@ -11,6 +11,7 @@ handler(wc);
 handler(ls);
 handler(mkdir);
 handler(sleep);
+handler(reboot);
 
 int exec_buildin(const char* file,void* args[],int *is_buildin);
 
