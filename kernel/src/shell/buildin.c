@@ -30,11 +30,7 @@ static struct Command{
 };
 
 int exec_buildin(const char* file,void* args[],int *is_buildin){
-    for(int i=0;;++i){
-        if(i==LEN(buildin)){
-            *is_buildin=0;
-            return 0;
-        }else
+    for(int i=0;i!=LEN(buildin);++i){
         if(!strcmp(file,buildin[i].name)){
             *is_buildin=1;
             task_t* cur=get_cur();
@@ -44,6 +40,8 @@ int exec_buildin(const char* file,void* args[],int *is_buildin){
             return buildin[i].binary(args);
         }
     }
+    *is_buildin=0;
+    return 0;
 }
 const char* const buildin_help(void* arg){
     for(int i=0;;++i){
