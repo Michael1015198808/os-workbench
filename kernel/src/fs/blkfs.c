@@ -60,7 +60,7 @@ static inode_t* blkfs_lookup(filesystem* fs,const char* path,int flags){
         }
     }
     if(
-        ((flags&O_DIRECTORY)||path[0]=='\')&&
+        ((flags&O_DIRECTORY)||path[0]=='/')&&
         (((yls_node*)fs->inodes[id].ptr)->type!=YLS_DIR)
     ){
         char warn[0x100];
