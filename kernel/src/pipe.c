@@ -20,7 +20,7 @@ static int pipe(int pipefd[2]) {
     inode->fs =NULL;
     inode->ops=&pipe_iops;
 
-    vfile_t* file=pmm->alloc(sizeof(file_t));
+    vfile_t* file=pmm->alloc(sizeof(vfile_t));
     file->offset=0;
     file->inode =inode;
     file->refcnt=0;
@@ -51,7 +51,7 @@ static ssize_t pipe_read(pipe_t* p,void *buf, size_t count) {
     size_t nread=0;
 
     size_t size=0;
-    while((size=get_size(p))=0)_yield();
+    while((size=get_size(p))==0)_yield();
 
     if(count>size){
         //not enough
@@ -75,7 +75,7 @@ static ssize_t pipe_write(pipe_t* p, const void *buf, size_t count) {
     size_t nwrite=0;
 
     size_t size;
-    while((size=get_size(p))=0xff)_yield();
+    while((size=get_size(p))==0xff)_yield();
 
     if(count+size>0x100){
         //full
@@ -103,8 +103,6 @@ static ssize_t pipe_iwrite(vfile_t* file,const char* buf,size_t size){
 }
 
 static inodeops_t pipe_iops={
-    .open   =pipe_iopen,
-    .close  =pipe_iclose,
     .read   =pipe_iread,
     .write  =pipe_iwrite,
 }
