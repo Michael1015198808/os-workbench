@@ -309,11 +309,12 @@ void inline exit_real(task_t* cur){
     set_flag(cur,TASK_ZOMBIE);
     _yield();
 }
+
 void warning(const char* warn){
     task_t* cur=get_cur();
     fprintf(2,"%s: %s\n",cur->name,warn);
-    exit_real(cur);
 }
+
 void exit(void){
     intr_close();
     task_t* cur=get_cur();
