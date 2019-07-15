@@ -192,6 +192,10 @@ int vfs_close(int fd){
     task_t* current=get_cur();
     this_fd->inode->ops->close(this_fd);
     Assert(this_fd->refcnt>=0,"fd with refcnt <0!\n");
+    if(this_fd->refcnt==0){
+        pmm->free(this_fd);
+        this_fd=NULL;
+    }
     return 0;
 }
 
