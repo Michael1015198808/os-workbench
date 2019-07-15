@@ -4,8 +4,7 @@
 
 static inline void single_ls(const char* path,int* err){
     int fd=vfs->open(path,O_RDONLY | O_DIRECTORY),nread=0;
-    int cnt=0;
-    int istty=isatty(STDOUT);
+    int cnt=0,istty=isatty(STDOUT);
     task_t* cur=get_cur();
     char buf[200];
 
