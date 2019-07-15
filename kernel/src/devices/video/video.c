@@ -20,8 +20,9 @@ static void font_load(fb_t *fb, uint8_t *font) {
     texture_fill(&fb->textures[ch * 2 + 1], 0, &font[16 * ch],
             0xffffff,
             0x300A24);
-    texture_fill(&fb->textures[ch * 2 + 2], 1, &font[16 * ch], 0xffffff,
-            (36<<6)+(10<<4)+(48<<2));
+    texture_fill(&fb->textures[ch * 2 + 2], 1, &font[16 * ch],
+            0xffffff,
+            0x300A24);
   }
 }
 
