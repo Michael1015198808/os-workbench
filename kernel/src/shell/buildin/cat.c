@@ -9,7 +9,6 @@ static void single_cat(int fd,char buf[0x208],int* err){
         vfs->write(STDOUT,buf,nread);
     }
     if(nread==EISDIR)*err=EISDIR;
-    else std_write("\n");
 }
 
 int mysh_cat(void *args[]){
