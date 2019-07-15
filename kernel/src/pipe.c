@@ -4,7 +4,7 @@
 #include <dir.h>
 
 typedef struct{
-    volatile int head,tail;
+    volatile int head,tail,open;
     void* mem;
 }pipe_t;
 
@@ -13,6 +13,7 @@ int pipe(int pipefd[2]) {
     pipe_t* p=pmm->alloc(sizeof(pipe_t));
     p->head =0;
     p->tail =0;
+    p->open =1;
     p->mem  =pmm->alloc(0x100);
 
     inode_t* inode=pmm->alloc(sizeof(inode_t));
@@ -51,7 +52,10 @@ static ssize_t pipe_read(pipe_t* p,void *buf, size_t count) {
     size_t nread=0;
 
     size_t size=0;
-    while((size=get_size(p))==0)_yield();
+    while((size=get_size(p))==0){
+        if(!p->open){return 0;}
+        _yield();
+    }
 
     if(count>size){
         //not enough
