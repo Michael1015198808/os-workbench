@@ -55,13 +55,11 @@ static ssize_t pipe_read(pipe_t* p,void *buf, size_t count) {
 
     if(count>size){
         //not enough
-        nread   +=pipe_read(p,buf,size);
-        nread   +=pipe_read(p,buf+size,count-size);
+        return pipe_read(p,buf,size);
     }else if(count+p->head>0x100){
         //circular
         int remain=0x100-p->head;
-        nread   +=pipe_read(p,buf,remain);
-        nread   +=pipe_read(p,buf+remain,count-remain);
+        return pipe_read(p,buf,remain);
     }else{
         memcpy(buf,p->mem+p->head,count);
         p->head +=count;
