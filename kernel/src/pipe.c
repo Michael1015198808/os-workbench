@@ -40,7 +40,7 @@ static inline size_t get_size(pipe_t* p){
     return (p->tail-p->head)&0xff;
 }
 static inline int is_full(pipe_t* p){
-    return get_size(p)=0xff;
+    return get_size(p)==0xff;
 }
 static inline int is_empty(pipe_t* p){
     return get_size(p)==0;
@@ -55,13 +55,13 @@ static ssize_t pipe_read(pipe_t* p,void *buf, size_t count) {
 
     if(count>size){
         //not enough
-        nread   +=pipe_read(s,buf,size);
-        nread   +=pipe_read(s,buf+size,count-size);
+        nread   +=pipe_read(p,buf,size);
+        nread   +=pipe_read(p,buf+size,count-size);
     }else if(count+p->head>0x100){
         //circular
         int remain=0x100-p->head;
-        nread   +=pipe_read(s,buf,remain);
-        nread   +=pipe_read(s,buf+remain,count-remain);
+        nread   +=pipe_read(p,buf,remain);
+        nread   +=pipe_read(p,buf+remain,count-remain);
     }else{
         memcpy(buf,p->mem,count);
         p->tail +=count;
@@ -80,13 +80,13 @@ static ssize_t pipe_write(pipe_t* p, const void *buf, size_t count) {
     if(count+size>0x100){
         //full
         int remain=0x100-size;
-        nwrite  +=pipe_write(s,buf,remain);
-        nwrite  +=pipe_write(s,buf+remain,count-remain);
+        nwrite  +=pipe_write(p,buf,remain);
+        nwrite  +=pipe_write(p,buf+remain,count-remain);
     }else if(count+p->tail>0x100){
         //circular
         int remain=0x100-p->tail;
-        nwrite  +=pipe_write(s,buf,remain);
-        nwrite  +=pipe_write(s,buf+remain,count-remain);
+        nwrite  +=pipe_write(p,buf,remain);
+        nwrite  +=pipe_write(p,buf+remain,count-remain);
     }else{
         memcpy(p->mem,buf,count);
         p->tail +=count;
