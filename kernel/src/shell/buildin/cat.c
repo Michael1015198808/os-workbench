@@ -4,11 +4,13 @@
 #include <dir.h>
 
 static void single_cat(int fd,char buf[0x208],char* file){
-    int nread=0;
+    int nread=0,flag=0;
     while((nread=vfs->read(fd,buf,0x200))>0){
         vfs->write(STDOUT,buf,nread);
+        flag=1;
     }
-    std_write("\n");
+    if(flag)//file is not empty
+        std_write("\n");
     if(nread==EISDIR){
         warn("%s: Is a directory",file);
     }
