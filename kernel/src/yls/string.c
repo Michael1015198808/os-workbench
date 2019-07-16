@@ -52,8 +52,16 @@ int block_write(device_t* dev,uint32_t off,uint32_t shift,const char* s,size_t n
     size_t rest=nbyte;
     find_block(dev,&shift,&off);
     off+=shift;
-    while(rest>0){
+    {
         int to_write=min(BLK_MEM-(off)%BLK_SZ,rest);
+        if(write(dev,off,s,to_write)!=to_write){
+            return nbyte-rest;
+        }
+        s+=to_write;
+        rest-=to_write;
+    }
+    while(rest>0){
+        int to_write=min(BLK_MEM,rest);
         if(write(dev,off,s,to_write)!=to_write){
             return nbyte-rest;
         }
