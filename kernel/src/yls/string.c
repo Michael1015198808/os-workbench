@@ -47,7 +47,23 @@ int block_read (device_t* dev,uint32_t off,uint32_t shift,char* s,size_t nbyte){
 }
 
 int block_write(device_t* dev,uint32_t off,uint32_t shift,const char* s,size_t nbyte){
-    TODO();
+    ssize_t (*const write)(device_t* dev,off_t offset,void* buf,size_t count)=dev->ops->write;
+    size_t rest=nbyte;
+    find_block(dev,&shift,&off);
+    off+=shift;
+    while(rest>0){
+        int to_write=min(BLK_MEM-(off)%BLK_SZ,rest);
+        if(write(dev,off,s,to_write)!=to_write){
+            return nbyte-rest;
+        }
+        s+=to_write;
+        rest-=to_write;
+        if(read(dev,off+BLK_MEM,&off,4)!=4||!off){
+            TODO();
+            return nbyte-rest;
+        };
+    }
+    return nbyte;
 }
 
 uint32_t new_block(device_t* dev,uint32_t size){

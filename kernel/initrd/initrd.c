@@ -23,7 +23,7 @@ cdef
 struct pair{
     uint32_t off,info;
 }pairs[]={
-    {0x000,0x00000000},
+    {0x000,0x00001fff},
     {0x004,0x00000000},
 
 /* inodes */
@@ -76,13 +76,13 @@ struct pair{
     {0x604,0x00747874},// "/txt"'s name
     {0x680,0x34333231},// "/txt"'s info
     /* /mnt */
-    {0x700,0x00000003},// "/txt"'s inode
-    {0x704,0x00746e6d},// "/txt"'s name
-    {0x780,0x00000400},// "/txt"'s info
+    {0x700,0x00000003},// "/mnt"'s inode
+    {0x704,0x00746e6d},// "/mnt"'s name
+    {0x780,0x00000400},// "/mnt"'s info
     /* /dev */
-    {0x800,0x00000002},// "/txt"'s inode
-    {0x804,0x00766564},// "/txt"'s name
-    {0x880,0x00000400},// "/txt"'s info
+    {0x800,0x00000002},// "/dev"'s inode
+    {0x804,0x00766564},// "/dev"'s name
+    {0x880,0x00000400},// "/dev"'s info
 };
 int main(){
     for(int i=1;i<sizeof(pairs)/sizeof(pairs[0]);++i){

@@ -121,7 +121,6 @@ static ssize_t inline blkfs_iread(vfile_t* file,char* buf,size_t size){
                 }else if(size+fd_off>fsize){
                     size=fsize-fd_off;
                 }
-                find_block(fs->dev,&fd_off,&off);
                 ssize_t nread=block_read(fs->dev,off,fd_off,buf,size);
                 file->offset+=nread;
                 return nread;
@@ -165,6 +164,7 @@ static ssize_t blkfs_iwrite(vfile_t* file,const char* buf,size_t size){
     uint32_t fd_off = file->offset;
     yls_node* node  = file->inode->ptr;
     uint32_t off    = node->info;
+    uint32_t fsize  = node->size;
 
     switch(node->type){
         case YLS_DIR:
@@ -172,10 +172,11 @@ static ssize_t blkfs_iwrite(vfile_t* file,const char* buf,size_t size){
             break;
         case YLS_FILE:
             {
-                TODO();
-                //find_block(fs->dev,off,&fd_off);
                 ssize_t nwrite=block_write(fs->dev,off,fd_off,buf,size);
                 file->offset+=nwrite;
+                if(file->offset>fsize){
+                    node->size=file->offset;
+                }
                 return nwrite;
             }
             break;
