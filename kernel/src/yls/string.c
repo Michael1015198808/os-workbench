@@ -95,11 +95,13 @@ uint32_t new_block(device_t* dev){
 
 uint32_t new_inode(device_t* dev){
     uint32_t off;
-    uint32_t buf[1]={1};
-    for(off=INODE_START;*buf;off+=0x10){
-        dev->ops->read(dev,off,buf,0x4);
+    uint32_t buf;
+    for(off=INODE_START;;off+=0x10){
+        dev->ops->read(dev,off,&buf,0x4);
+        if(buf==0){
+            return off;
+        }
     }
-    return off;
 }
 //Find end of info
 uint32_t find_end(device_t* dev,uint32_t off){
