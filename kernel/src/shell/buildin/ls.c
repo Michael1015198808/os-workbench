@@ -9,7 +9,7 @@ static inline void single_ls(const char* path,int* err){
     char buf[200];
 
     while((nread=vfs->readdir(fd,buf,sizeof(buf)))>0){
-        if(cnt+strlen(buf)>60){
+        if(cnt+strlen(buf)>80){
             std_write("\n");
             cnt=0;
         }

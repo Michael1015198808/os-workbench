@@ -75,13 +75,17 @@ int block_write(device_t* dev,uint32_t off,uint32_t shift,const char* s,size_t n
     return nbyte;
 }
 
-uint32_t new_block(device_t* dev,uint32_t size){
+uint32_t new_block(device_t* dev){
     uint8_t avail[0x40];
     dev->ops->read(dev,0,avail,0x40);
     for(int i=0;i<0x40;++i){
+        if(avail[i]==0xff)continue;
         for(int j=0;j<8;++j){
             if(avail[i]&(1<<j)){
-                return (8*i+j)*0x80;
+                uint32_t ret=(8*i+j)*0x80;
+                avail[i]|=1<<j;
+                dev->ops->write(dev,i,avail+i,1);
+                return ret;
             }
         }
     }
