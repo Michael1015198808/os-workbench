@@ -27,7 +27,7 @@ static void devfs_init(filesystem* fs,const char* name,device_t *dev){
 static inode_t* devfs_lookup(filesystem* fs,const char* path,int flags){
     if((!path[0])||(path[0]=='/'&&path[1]=='\0')){
         if(flags&O_WRONLY){
-            warn("%s%s: Is a dictionary",mount,path);
+            warn("%s%s: Is a dictionary",fs->mount,path);
         }else{
             return &devfs_root;
         }
