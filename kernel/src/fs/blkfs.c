@@ -23,10 +23,6 @@ static void blkfs_init(filesystem* fs,const char* name,device_t* dev){
         fs->inodes[i].fs=fs;
         fs->inodes[i].ops=fs->inodeops;
     }
-    log("%x\n",new_block(fs->dev));
-    log("%x\n",new_block(fs->dev));
-    log("%x\n",new_block(fs->dev));
-    log("%x\n",new_block(fs->dev));
 }
 
 static inode_t* blkfs_lookup(filesystem* fs,const char* path,int flags){
@@ -59,6 +55,7 @@ static inode_t* blkfs_lookup(filesystem* fs,const char* path,int flags){
                     };
                     fs->dev->ops->write(fs->dev,off,&id,4);
                     fs->dev->ops->write(fs->dev,off+4,path,strlen(path));
+                    return fs->inodes+id;
                 }else{
                     warn("cannot access '%s': No such file or directory",ori_path);
                     return NULL;
