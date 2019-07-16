@@ -82,11 +82,12 @@ uint32_t new_block(device_t* dev){
         if(avail[i]==0xff)continue;
         for(int j=0;j<8;++j){
             if(avail[i]&(1<<j)){
-                uint32_t ret=(8*i+j)*0x80;
-                avail[i]|=1<<j;
-                dev->ops->write(dev,i,avail+i,1);
-                return ret;
+                continue;
             }
+            uint32_t ret=(8*i+j)*0x80;
+            avail[i]|=1<<j;
+            dev->ops->write(dev,i,avail+i,1);
+            return ret;
         }
     }
     return 0;

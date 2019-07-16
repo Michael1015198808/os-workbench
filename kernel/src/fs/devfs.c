@@ -28,6 +28,7 @@ static inode_t* devfs_lookup(filesystem* fs,const char* path,int flags){
     if((!path[0])||(path[0]=='/'&&path[1]=='\0')){
         if(flags&O_WRONLY){
             warn("%s%s: Is a dictionary",fs->mount,path);
+            return NULL;
         }else{
             return &devfs_root;
         }
