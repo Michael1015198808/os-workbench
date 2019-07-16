@@ -23,6 +23,10 @@ static void blkfs_init(filesystem* fs,const char* name,device_t* dev){
         fs->inodes[i].fs=fs;
         fs->inodes[i].ops=fs->inodeops;
     }
+    log("%x\n",new_block(fs->dev));
+    log("%x\n",new_block(fs->dev));
+    log("%x\n",new_block(fs->dev));
+    log("%x\n",new_block(fs->dev));
 }
 
 static inode_t* blkfs_lookup(filesystem* fs,const char* path,int flags){
@@ -44,11 +48,17 @@ static inode_t* blkfs_lookup(filesystem* fs,const char* path,int flags){
             uint32_t blk_off;
             if(read(fs->dev,offset,&blk_off,4)!=4||!blk_off){
                 if(flags&O_CREATE){
-                    log("%x\n",new_block(fs->dev));
-                    log("%x\n",new_block(fs->dev));
-                    log("%x\n",new_block(fs->dev));
-                    log("%x\n",new_block(fs->dev));
-                    TODO();
+                    uint32_t off=new_block(fs->dev),inode=new_inode(fs->dev);
+                    log("  off:%x\ninode:%x\n",off,inode);
+                    id=(inode-INODE_START)/0x10;
+                    *(yls_node*)fs->inodes[id].ptr=(yls_node){
+                        .refcnt=1,
+                        .info  =0,
+                        .size  =0,
+                        .type  =YLS_FILE,
+                    };
+                    fs->dev->ops->write(fs->dev,off,&id,4);
+                    fs->dev->ops->write(fs->dev,off+4,path,strlen(path));
                 }else{
                     warn("cannot access '%s': No such file or directory",ori_path);
                     return NULL;
@@ -174,6 +184,9 @@ static ssize_t blkfs_iwrite(vfile_t* file,const char* buf,size_t size){
     uint32_t off    = node->info;
     uint32_t fsize  = node->size;
 
+    if(off==0&&fsize==0){
+        node->info=off=new_block(fs->dev);
+    }
     switch(node->type){
         case YLS_DIR:
             return EISDIR;

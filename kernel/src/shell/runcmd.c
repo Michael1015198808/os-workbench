@@ -63,8 +63,7 @@ static inline void run_redir_cmd(struct cmd* cmd){
     vfs->close(rcmd->fd);
     char dest[0x100];
     to_absolute(dest,get_pwd(),rcmd->file);
-    if(vfs->open(dest, rcmd->mode) < 0){
-        fprintf(2, "open %s failed\n", rcmd->file);
+    if(vfs->open(dest, rcmd->mode) != rcmd->fd){
         exit();
     }
     runcmd(rcmd->cmd);

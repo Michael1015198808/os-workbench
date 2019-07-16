@@ -23,7 +23,7 @@ cdef
 struct pair{
     uint32_t off,info;
 }pairs[]={
-    {0x000,0x00001fff},
+    {0x000,0x0001ffff},
     {0x004,0x00000000},
 
 /* inodes */

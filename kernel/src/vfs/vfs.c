@@ -117,7 +117,7 @@ static inline int vfs_open_real(const char *path,int flags){
     int fd=new_fd_num(current);
     Assert(fd!=-1,"No more file descripter!");//Or return -1;
 
-    //pthread_mutex_lock(&mount_table_lk);
+    pthread_mutex_lock(&mount_table_lk);
     filesystem* target=NULL;
     size_t max_len=0;
     for(int i=0;i<mount_table_cnt;++i){
@@ -129,7 +129,7 @@ static inline int vfs_open_real(const char *path,int flags){
             }
         }
     }
-    //pthread_mutex_unlock(&mount_table_lk);
+    pthread_mutex_unlock(&mount_table_lk);
     inode_t* inode=target->ops->lookup(target,path+max_len,flags);
     if(!inode)return -1;
     this_fd=pmm->alloc(sizeof(vfile_t));
