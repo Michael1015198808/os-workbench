@@ -47,7 +47,8 @@ int block_read (device_t* dev,uint32_t off,uint32_t shift,char* s,size_t nbyte){
 }
 
 int block_write(device_t* dev,uint32_t off,uint32_t shift,const char* s,size_t nbyte){
-    ssize_t (*const write)(device_t* dev,off_t offset,void* buf,size_t count)=dev->ops->write;
+    ssize_t (*const read)(device_t* dev,off_t offset,void* buf,size_t count)=dev->ops->read;
+    ssize_t (*const write)(device_t* dev,off_t offset,const void* buf,size_t count)=dev->ops->write;
     size_t rest=nbyte;
     find_block(dev,&shift,&off);
     off+=shift;
