@@ -40,6 +40,7 @@ int vfs_access(const char *path, int mode){
 //Except "/"
 int vfs_mount(const char *path, filesystem *fs){
     pthread_mutex_lock(&mount_table_lk);
+    fs->mount=path;
     mount_table[mount_table_cnt].path=path;
     mount_table[mount_table_cnt].fs=fs;
     ++mount_table_cnt;

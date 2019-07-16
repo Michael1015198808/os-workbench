@@ -26,7 +26,11 @@ static void devfs_init(filesystem* fs,const char* name,device_t *dev){
 
 static inode_t* devfs_lookup(filesystem* fs,const char* path,int flags){
     if((!path[0])||(path[0]=='/'&&path[1]=='\0')){
-        return &devfs_root;
+        if(flags&O_WRONLY){
+            warn("%s%s: Is a dictionary",mount,path);
+        }else{
+            return &devfs_root;
+        }
     }
     ++path;
     for (int i = 0; i < devices_cnt; i++) 

@@ -43,7 +43,7 @@ static inode_t* blkfs_lookup(filesystem* fs,const char* path,int flags){
             strncpy(layer,path,layer_len);
             uint32_t blk_off;
             if(read(fs->dev,offset,&blk_off,4)!=4||!blk_off){
-                if(flags&O_CREAT){
+                if(flags&O_CREATE){
                     log("%x\n",new_block(fs->dev));
                     log("%x\n",new_block(fs->dev));
                     log("%x\n",new_block(fs->dev));
