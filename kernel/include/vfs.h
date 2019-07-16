@@ -15,6 +15,8 @@
 
 #define O_RDWR (O_RDONLY | O_WRONLY)
 
+#define O_CREAT    O_CREATE
+
 #define SEEK_SET 0
 #define SEEK_CUR 1
 #define SEEK_END 2
