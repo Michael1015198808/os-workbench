@@ -97,7 +97,7 @@ uint32_t new_inode(device_t* dev){
     uint32_t off;
     uint32_t buf[1]={1};
     for(off=INODE_START;*buf;off+=0x10){
-        dev->ops->read(dev,0,buf,0x4);
+        dev->ops->read(dev,off,buf,0x4);
     }
     return off;
 }
