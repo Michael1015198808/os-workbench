@@ -104,7 +104,6 @@ uint32_t find_end(device_t* dev,uint32_t off){
         }
         dev->ops->read(dev,off,&read,4);
         if(read==0){
-            read=new_block(dev,0x40);
             dev->ops->write(dev,off,&read,4);
             return read;
         }
