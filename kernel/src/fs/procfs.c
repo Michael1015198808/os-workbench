@@ -14,7 +14,7 @@ extern task_t *tasks[0x40];
 #define PROC_PWD  1
 #define PROC_NAME 2
 const char* proc_info[]={
-    NULL,
+    "",
     "pwd",
     "name",
 };
@@ -61,14 +61,10 @@ static inode_t* procfs_lookup(filesystem* fs,const char* path,int flags){
         int id=atoi(num);
         if(tasks[id]){
             id*=3;
-            if(path){
-                for(int i=0;i<3;++i){
-                    if(!strcmp(path,proc_info[i])){
-                        return procfs.inodes+id+i;
-                    }
+            for(int i=0;i<3;++i){
+                if(!strcmp(path,proc_info[i])){
+                    return procfs.inodes+id+i;
                 }
-            }else{
-                return procfs.inodes+id;
             }
         }
     }
