@@ -166,10 +166,7 @@ static ssize_t procfs_ireaddir(vfile_t* file,char* buf,size_t size){
 }
 
 static ssize_t procfs_iwrite(vfile_t* file,const char* buf,size_t size){
-    device_t* dev=get_dev(file);
-    ssize_t ret  =dev->ops->write(dev,file->offset,buf,size);
-    file->offset+=ret;
-    return ret;
+    error("Read only filesystem");
 }
 
 static ssize_t procfs_ilseek(vfile_t* file,off_t offset,int whence){
