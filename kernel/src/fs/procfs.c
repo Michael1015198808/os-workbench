@@ -136,6 +136,7 @@ static ssize_t procfs_ireaddir(vfile_t* file,char* buf,size_t size){
             return 0;
         }
     }else{
+        nread=0;
         TODO();
         return 0;
         uint8_t* p=file->inode->ptr;
