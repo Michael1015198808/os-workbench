@@ -93,11 +93,11 @@ struct pair{
     {0x880,0x00000400},// "/dev"'s info
     /* /proc */
     {0x900,0x00000002},// "/proc"'s inode
-    {0x904,0x6f716e63},// "/proc"'s name
+    {0x904,0x636f7270},// "/proc"'s name
     {0x980,0x00000400},// "/proc"'s info
     /* /home */
     {0xa00,0x00000002},// "/home"'s inode
-    {0xa04,0x656e6c68},// "/home"'s name
+    {0xa04,0x656d6f68},// "/home"'s name
     {0xa80,0x00000400},// "/home"'s info
 
 };
