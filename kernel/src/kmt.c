@@ -28,10 +28,10 @@ int tasks_idx=0;
 static inline int add_task_real(task_t *task){
     static int pid=0;
 
-    while(tasks[pid]){
+    do{
         ++pid;
         pid&=0x3f;
-    }
+    }while(tasks[pid]);
     tasks[pid]=task;
     task->pid=pid;
     return 0;
