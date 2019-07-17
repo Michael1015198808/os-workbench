@@ -63,6 +63,12 @@ struct pair{
     {0x098,0x00000000},// size
     {0x09c,0x00000000},// type
 
+    /* /home */
+    {0x0a0,0x00000001},// refcnt
+    {0x0a4,0x00000980},// info
+    {0x0a8,0x00000000},// size
+    {0x0ac,0x00000000},// type
+
 /* information */
     /* / */
     {0x400,0x00000000},// "/"'s inode

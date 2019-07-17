@@ -169,7 +169,7 @@ static ssize_t inline blkfs_ireaddir(vfile_t* file,char* buf,size_t size){
             }
             break;
         case YLS_FILE:
-            BARRIER();
+            error("%s: Dot a directory");
             break;
     }
     BARRIER();
