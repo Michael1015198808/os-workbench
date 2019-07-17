@@ -59,7 +59,7 @@ void yield_test(void *dummy){
     while(1);
 }
 static void os_init() {
-#define test(str) printf(str "%d\n", atoi(str))
+#define test(str) printf(str " %d\n", atoi(str))
     test("0");
     test("2");
     test("12");
