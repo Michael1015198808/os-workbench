@@ -137,6 +137,7 @@ static ssize_t procfs_ireaddir(vfile_t* file,char* buf,size_t size){
         }
     }else{
         TODO();
+        return 0;
         uint8_t* p=file->inode->ptr;
         if(p[1]){
             warn("%s/%d/%s: Not a directory",procfs.mount,p[0],proc_info[p[1]]);
