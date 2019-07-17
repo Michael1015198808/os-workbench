@@ -26,6 +26,7 @@ static void procfs_init(filesystem* fs,const char* name,device_t *dev){
 
     for(int i=0;i<0x40;++i){
         for(int j=0;j<3;++j){
+            //3 inodes per process
             int idx=i*3+j;
             fs->inodes[idx].ptr=pmm->alloc(sizeof(uint8_t)*2);
             uint8_t *p=fs->inodes[idx].ptr;
@@ -92,10 +93,6 @@ static fsops_t procfs_ops={
  * procfs_ilink
  * procfs_unlink
  */
-static device_t* get_dev(vfile_t* file){
-    return (device_t*)file->inode->ptr;
-}
-
 static int procfs_iopen(vfile_t* file,int flags){
     file->offset=0;
     file->flags=flags;
@@ -115,10 +112,28 @@ static int procfs_iclose(vfile_t* file){
 }
 
 static ssize_t procfs_iread(vfile_t* file,char* buf,size_t size){
-    device_t* dev=get_dev(file);
-    ssize_t ret  =dev->ops->read(dev,file->offset,buf,size);
-    file->offset+=ret;
-    return ret;
+    ssize_t nread=0;
+    uint8_t* p=file->inode->ptr;
+    task_t* task=tasks[p[0]];
+    if(task){
+        switch(p[1]){
+            case PROC_DIR:
+                warn(":Is a dicrectory");
+                break;
+            case PROC_PWD:
+                file->offset+=
+                    (nread+=snprintf(buf,size,task->pwd+file->offset));
+                break;
+            case PROC_NAME:
+                file->offset+=
+                    (nread+=snprintf(buf,size,task->name+file->offset));
+                break;
+            default:
+                warn(":Unknown file type");
+                break;
+        }
+    }
+    return nread;
 }
 
 static ssize_t procfs_ireaddir(vfile_t* file,char* buf,size_t size){
@@ -210,8 +225,9 @@ filesystem procfs={
     .inodeops=&procfs_iops,
 };
 
+static uint8_t num[2]={0,0};
 static inode_t procfs_root={
-    .ptr   =NULL,
+    .ptr   =num,
     .fs    =&procfs,
     .ops   =&procfs_iops,
 };
