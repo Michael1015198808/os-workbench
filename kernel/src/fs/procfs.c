@@ -276,6 +276,7 @@ static ssize_t devices_read(vfile_t* file,char* buf,size_t size){
     if(file->offset<devices_cnt){
         //Assume that buf can contains one whole line
         nread=snprintf(buf,size,"%2d %s\n",file->offset,devices[file->offset]->name);
+        ++file->offset;
     }
     return nread;
 }
