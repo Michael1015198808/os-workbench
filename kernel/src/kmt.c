@@ -5,17 +5,17 @@
     (dest=pmm->alloc(strlen(src)+1), \
     strcpy(dest,src) )
 
-task_t *tasks[40]={},*currents[MAX_CPU]={},*lasts[MAX_CPU],idles[MAX_CPU];
+task_t *tasks[0x40]={},*currents[MAX_CPU]={},*lasts[MAX_CPU],idles[MAX_CPU];
 static pthread_mutex_t tasks_lk,free_task_lk=PTHREAD_MUTEX_INITIALIZER;
 char tasks_log[66000];
-int tasks_idx=0,tasks_cnt=0;
+int tasks_idx=0;
 #define trace_pthread_mutex_lock(_lk) \
     pthread_mutex_lock(_lk);
 
 #define trace_pthread_mutex_unlock(_lk) \
     pthread_mutex_unlock(_lk);
 
-/* tasks, tasks_cnt
+/* tasks,
  * shared by
  *   add_task
  *   remove_task
@@ -25,29 +25,22 @@ int tasks_idx=0,tasks_cnt=0;
 #define current currents[cpu_id]
 #define last lasts[cpu_id]
 
-void show_sem_list(sem_t *sem){
-    int p;
-    for(p=sem->head;p!=sem->tail;++p){
-        printf("%s->",sem->pool[p]->name);
-    }
-    printf("%s->",sem->pool[p]->name);
-    printf("\n");
-}
-
-void show(){
-    printf("%s",tasks[0]->name);
-    for(int i=1;i<tasks_cnt;++i){
-        printf("->%s",tasks[i]->name);
-    }
-    printf("\n");
-}
-
 static int add_task(task_t *task){
+    static int pid=0;
+
+    while(tasks[pid]){
+        ++pid;
+        pid&=0x3f;
+    }
+    tasks[pid]=task;
+    task->pid=pid;
+    return 0;
+}
+static int add_task(task_t* task){
     pthread_mutex_lock(&tasks_lk);
-    int ret=tasks_cnt;
-    tasks[tasks_cnt++]=task;
+    add_task_real(task);
     pthread_mutex_unlock(&tasks_lk);
-    return ret;
+    return 0;
 }
 
 #define set_flag(A,B) \
@@ -87,10 +80,8 @@ static inline _Context* kmt_context_switch_real(_Event ev, _Context *c){
     int cnt=10000;
 
     do{
-        //current=rand()%tasks_cnt;
-        new=rand()%tasks_cnt;
+        new=rand()%0x40;
         --cnt;
-        if(new>=tasks_cnt){new=0;}
         if(cnt==0){
             Assert(_intr_read()==0,"%d",cpu_id);
             current=NULL;
@@ -136,24 +127,21 @@ void kmt_init(void){
 }
 
 int kmt_create(task_t *task, const char *name, void (*entry)(void*), void *arg){
-    static int ignore_num=0,pid=0;
-    pid&=0xff;
+    static int ignore_num=0;
     if(ignore_num>0){
         --ignore_num;
         return 0;
     }
-    //task->id=tasks_cnt;
-    local_log("create (%d)%s\n",tasks_cnt,name);
     *task=(task_t){
         .attr   =TASK_SLEEP,
         .ncli   =0,
         .intena =0,
-        .pid    =pid++,
+        .pid    =0,//Handle later
         .name   =NULL,//Handle later
         .running=0,
     };
     int task_idx=add_task(task);
-    Assert(tasks_cnt<LEN(tasks),"%d\n",tasks_cnt);
+    local_log("create (%d)%s\n",task->pid,name);
     copy_name(task->name,name);
     task_t* cur=get_cur();
 
@@ -192,7 +180,7 @@ int kmt_create(task_t *task, const char *name, void (*entry)(void*), void *arg){
     }
 #endif
     task->attr=TASK_RUNABLE;
-    return task_idx;
+    return 0;
 }
 
 //All security check should be done by caller
@@ -200,10 +188,7 @@ int kmt_create(task_t *task, const char *name, void (*entry)(void*), void *arg){
 void kmt_teardown(task_t *task){
     for(int i=0;i<40;++i){
         if(tasks[i]==task){
-            pthread_mutex_lock(&tasks_lk);
-            --tasks_cnt;
-            tasks[i]=tasks[tasks_cnt];
-            pthread_mutex_unlock(&tasks_lk);
+            tasks[i]=NULL;
         }
     }
     pmm->free(task->name);

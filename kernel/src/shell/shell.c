@@ -26,7 +26,7 @@ void mysh(void *name) {
         }while(nread==0);
         input[nread-1]='\0';
         printf("%s\n",input);
-        if(strncmp("cd ",input,3)){
+        if(strncmp("cd",input,2)||(input[2]!='\0'||input[2]!=' ')){
             task_t* son=pmm->alloc(sizeof(task_t));
             kmt->create(son,"mysh",fork_and_run,input);
             kmt->wait(son);

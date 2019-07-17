@@ -7,11 +7,6 @@
  * dprocs_close
  */
 
-extern const device_t *devices[];
-extern const size_t devices_cnt;
-
-static inode_t procfs_root;//definition is at the end
-
 static void procfs_init(filesystem* fs,const char* name,device_t *dev){
     fs->name=name;
     fs->dev=dev;

@@ -112,6 +112,7 @@ struct inode {
 
 extern filesystem
     blkfs[2],//Ramdisk
-    devfs;
+    devfs,
+    procfs;
 
 #endif//__VFS_H

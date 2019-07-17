@@ -6,6 +6,6 @@ int mysh_cd(void* args[]){
     char* input=args[1]+2;
     (void)pwd;
     (void)input;
-    TODO();
+    fprintf(2,"Sorry, cd haven't been realized!");
     return -1;
 }

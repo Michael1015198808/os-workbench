@@ -87,7 +87,7 @@ struct pair{
     {0x498,0x00000a00},// "/"'s info: home
 
     /* /test */
-    {0x500,0x00000001},// "/"'s inode
+    {0x500,0x00000001},// "/test"'s inode
     {0x504,0x74736574},// "/test"'s name
     {0x580,0x00000400},// "/test"'s info
     /* /txt */
@@ -100,15 +100,15 @@ struct pair{
     {0x704,0x00746e6d},// "/mnt"'s name
     {0x780,0x00000400},// "/mnt"'s info
     /* /dev */
-    {0x800,0x00000002},// "/dev"'s inode
+    {0x800,0x00000004},// "/dev"'s inode
     {0x804,0x00766564},// "/dev"'s name
     {0x880,0x00000400},// "/dev"'s info
     /* /proc */
-    {0x900,0x00000002},// "/proc"'s inode
+    {0x900,0x00000005},// "/proc"'s inode
     {0x904,0x636f7270},// "/proc"'s name
     {0x980,0x00000400},// "/proc"'s info
     /* /home */
-    {0xa00,0x00000002},// "/home"'s inode
+    {0xa00,0x00000006},// "/home"'s inode
     {0xa04,0x656d6f68},// "/home"'s name
     {0xa80,0x00000400},// "/home"'s info
 

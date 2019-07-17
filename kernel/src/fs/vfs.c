@@ -26,11 +26,12 @@ void vfs_init(void){
     blkfs[0].ops->init  (blkfs+0    ,"ramdisk0" ,dev_lookup("ramdisk0") );
   //blkfs[1].ops->init  (blkfs+1    ,"ramdisk1" ,dev_lookup("ramdisk1") );
     devfs.ops->init     (&devfs     ,"devfs"    ,NULL                   );
-  //procfs.ops->init    (           ,"procfs"   ,NULL                   );
+    procfs.ops->init    (&procfs    ,"procfs"   ,NULL                   );
 
     vfs->mount("/"      ,&blkfs[0]);
     vfs->mount("/mnt"   ,&blkfs[1]);
     vfs->mount("/dev"   ,&devfs);
+    vfs->mount("/proc"  ,&procfs);
 }
 
 int vfs_access(const char *path, int mode){
