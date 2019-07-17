@@ -167,6 +167,7 @@ static ssize_t procfs_ireaddir(vfile_t* file,char* buf,size_t size){
 
 static ssize_t procfs_iwrite(vfile_t* file,const char* buf,size_t size){
     error("Read only filesystem");
+    return 0;
 }
 
 static ssize_t procfs_ilseek(vfile_t* file,off_t offset,int whence){
