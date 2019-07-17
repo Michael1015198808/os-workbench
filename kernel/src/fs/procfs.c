@@ -259,10 +259,10 @@ static ssize_t uptime_read(vfile_t* file,char* buf,size_t size);
 
 void other_info_init(filesystem* fs){
     for(int i=0;i<LEN(other_info);++i){
-        fs->inodes[0x40*3].ptr=NULL;
-        fs->inodes[0x40*3].fs=fs;
-        fs->inodes[0x40*3].ops=pmm->alloc(sizeof(inodeops_t));
-        *fs->inodes[0x40*3].ops=procfs_iops;
+        fs->inodes[0x40*3+i].ptr=NULL;
+        fs->inodes[0x40*3+i].fs=fs;
+        fs->inodes[0x40*3+i].ops=pmm->alloc(sizeof(inodeops_t));
+        *fs->inodes[0x40*3+i].ops=procfs_iops;
     }
     fs->inodes[0x40*3].ops->read=devices_read;
     fs->inodes[0x40*3+1].ops->read=meminfo_read;
