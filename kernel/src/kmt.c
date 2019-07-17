@@ -25,7 +25,7 @@ int tasks_idx=0;
 #define current currents[cpu_id]
 #define last lasts[cpu_id]
 
-static int add_task(task_t *task){
+static inline int add_task_real(task_t *task){
     static int pid=0;
 
     while(tasks[pid]){
