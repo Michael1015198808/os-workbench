@@ -130,6 +130,7 @@ static ssize_t procfs_ireaddir(vfile_t* file,char* buf,size_t size){
         }
         if(file->offset<0x40){
             nread=sprintf(buf,"%d",file->offset);
+            ++file->offset;
         }
     }else{
         nread=0;
