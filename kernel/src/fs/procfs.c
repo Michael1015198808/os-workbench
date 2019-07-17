@@ -63,11 +63,11 @@ static inode_t* procfs_lookup(filesystem* fs,const char* path,int flags){
             if(path){
                 for(int i=0;i<3;++i){
                     if(!strcmp(path,proc_info[i])){
-                        return procfs->inode+id+i;
+                        return procfs.inodes+id+i;
                     }
                 }
             }else{
-                return procfs->inode+id;
+                return procfs.inodes+id;
             }
         }
     }
