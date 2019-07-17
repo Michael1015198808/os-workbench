@@ -13,20 +13,29 @@ extern task_t *tasks[0x40];
 #define PROC_DIR  0
 #define PROC_PWD  1
 #define PROC_NAME 2
-const char* proc_info[]={
+
+static const char* other_info[]={
+    "devices",
+    "meminfo",
+    "uptime",
+};
+const char* per_task_info[]={
     "",
     "pwd",
     "name",
 };
 
+void other_info_init(filesystem* fs);
 static void procfs_init(filesystem* fs,const char* name,device_t *dev){
     fs->name=name;
     fs->dev=dev;
-    fs->inodes=pmm->alloc(sizeof(inode_t)*0x40*3);
+    fs->inodes=pmm->alloc(
+            (sizeof(inode_t)*0x40*3)+
+            //3 inodes per process
+            (LEN(other_info)) );
 
     for(int i=0;i<0x40;++i){
         for(int j=0;j<3;++j){
-            //3 inodes per process
             int idx=i*3+j;
             fs->inodes[idx].ptr=pmm->alloc(sizeof(uint8_t)*2);
             uint8_t *p=fs->inodes[idx].ptr;
@@ -35,6 +44,7 @@ static void procfs_init(filesystem* fs,const char* name,device_t *dev){
             fs->inodes[idx].ops=fs->inodeops;
         }
     }
+    other_info_init(fs);
 }
 
 static inode_t* procfs_lookup(filesystem* fs,const char* path,int flags){
@@ -59,12 +69,20 @@ static inode_t* procfs_lookup(filesystem* fs,const char* path,int flags){
         }
     }
     while(*path=='/')++path;
-    if(i<3){
+    if(i==0){
+        //A word
+        for(int i=0;i<LEN(other_info);++i){
+            if(!strcmp(path,other_info[i])){
+                return fs->inodes+(0x40*3+i);
+            }
+        }
+    }else if(i<3){
+        //A proper pid
         int id=atoi(num);
         if(tasks[id]){
             id*=3;
             for(int i=0;i<3;++i){
-                if(!strcmp(path,proc_info[i])){
+                if(!strcmp(path,per_task_info[i])){
                     return procfs.inodes+id+i;
                 }
             }
@@ -152,14 +170,14 @@ static ssize_t procfs_ireaddir(vfile_t* file,char* buf,size_t size){
         nread=0;
         uint8_t* p=file->inode->ptr;
         if(p[1]){
-            warn("%s/%d/%s: Not a directory",procfs.mount,p[0],proc_info[p[1]]);
+            warn("%s/%d/%s: Not a directory",procfs.mount,p[0],per_task_info[p[1]]);
         }else{
             if(file->offset<3){
                 file->offset+=
-                    (nread=snprintf(buf,size,proc_info[1]+file->offset));
+                    (nread=snprintf(buf,size,per_task_info[1]+file->offset));
             }else if(file->offset<7){
                 file->offset+=
-                    (nread=snprintf(buf,size,proc_info[2]+(file->offset-3)));
+                    (nread=snprintf(buf,size,per_task_info[2]+(file->offset-3)));
             }
         }
     }
@@ -232,3 +250,44 @@ static inode_t procfs_root={
 };
 
 
+static ssize_t devices_read(vfile_t* file,char* buf,size_t size);
+static ssize_t meminfo_read(vfile_t* file,char* buf,size_t size);
+static ssize_t uptime_read(vfile_t* file,char* buf,size_t size);
+
+void other_info_init(filesystem* fs){
+    for(int i=0;i<LEN(other_info);++i){
+        fs->inodes[0x40*3].ptr=NULL;
+        fs->inodes[0x40*3].fs=fs;
+        fs->inodes[0x40*3].ops=pmm->alloc(sizeof(inodeops_t));
+        *fs->inodes[0x40*3].ops=procfs_iops;
+    }
+    fs->inodes[0x40*3].ops->read=devices_read;
+    fs->inodes[0x40*3+1].ops->read=meminfo_read;
+}
+static ssize_t devices_read(vfile_t* file,char* buf,size_t size){
+    extern const device_t *devices[];
+    extern const size_t devices_cnt;
+
+    ssize_t nread=0;
+
+    if(file->offset<devices_cnt){
+        //Assume that buf can contains one whole line
+        nread=snprintf(buf,size,"%2d %s\n",file->offset,devices[file->offset].name);
+    }
+    return nread;
+}
+static ssize_t meminfo_read(vfile_t* file,char* buf,size_t size){
+    char info[0x20];
+    uint32_t num[3];
+    ssize_t nread=0;
+
+    void mem_query(uint32_t num[3]);
+    mem_query(num);
+    sprintf(info,"MemTotal: %10d kB\nMemFree:  %10d kB",num[0],num[1]);
+    file->offset+=
+        (nread=snprintf(buf,size,buf+file->offset));
+    return nread;
+}
+static ssize_t uptime_read(vfile_t* file,char* buf,size_t size){
+    return snprintf(buf,size,"%d\n",uptime());
+}

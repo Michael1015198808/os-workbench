@@ -88,11 +88,13 @@ static void *kalloc_real(size_t size) {
     Assert(0,"Should not reach here");
 }
 
+static uint32_t alloc_cnt=0;
 static void *kalloc(size_t size){
     intr_close();
     header* p=kalloc_real(size);
     p->fence=0x13579ace;
     intr_open();
+    alloc_cnt+=p->size;
     memset(&p->space,0,size);
     //printf("Return %x,%p\n",size,p);
     return &p->space;
@@ -134,31 +136,12 @@ static inline void kfree_real(void *ptr) {
     }
 }
 
+static uint32_t free_cnt=0;
 static void kfree(void *ptr){
     if(ptr==NULL)return;
+    free_cnt+=
+        ((header*)(ptr-sizeof(header)))->size;
     kfree_real(ptr);
-}
-
-void show_free_list(void){
-    int cpu_id=_cpu();
-    header *p=&free_list[cpu_id];
-    printf("Free list of CPU:#%d:\n",cpu_id);
-    do{
-        printf("[%p,%p):%x\n",p,((void*)p)+p->size,p->size);
-        p=p->next;
-    }while(p!=&free_list[cpu_id]);
-    printf("\n");
-}
-
-uintptr_t cnt_free_list(void){
-    int cpu_id=_cpu();
-    uintptr_t ret=0;
-    header *p=&free_list[cpu_id];
-    do{
-        ret+=p->size;
-        p=p->next;
-    }while(p!=&free_list[cpu_id]);
-    return ret;
 }
 
 MODULE_DEF(pmm) {
@@ -166,3 +149,8 @@ MODULE_DEF(pmm) {
   .alloc = kalloc,
   .free = kfree,
 };
+
+void mem_query(uint32_t num[3]){
+    num[0]=pm_end-pm_start;
+    num[1]=alloc_cnt-free_cnt;
+}
