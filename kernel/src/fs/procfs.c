@@ -29,10 +29,10 @@ void other_info_init(filesystem* fs);
 static void procfs_init(filesystem* fs,const char* name,device_t *dev){
     fs->name=name;
     fs->dev=dev;
-    fs->inodes=pmm->alloc(
-            (sizeof(inode_t)*0x40*3)+
+    fs->inodes=pmm->alloc(sizeof(inode_t)*
+            ((0x40*3)+
             //3 inodes per process
-            (LEN(other_info)) );
+            (LEN(other_info))) );
 
     for(int i=0;i<0x40;++i){
         for(int j=0;j<3;++j){
@@ -259,10 +259,10 @@ static ssize_t uptime_read(vfile_t* file,char* buf,size_t size);
 
 void other_info_init(filesystem* fs){
     for(int i=0;i<LEN(other_info);++i){
-        fs->inodes[0x40*3].ptr=NULL;
-        fs->inodes[0x40*3].fs=fs;
-        fs->inodes[0x40*3].ops=pmm->alloc(sizeof(inodeops_t));
-        *fs->inodes[0x40*3].ops=procfs_iops;
+        fs->inodes[0x40*3+i].ptr=NULL;
+        fs->inodes[0x40*3+i].fs=fs;
+        fs->inodes[0x40*3+i].ops=pmm->alloc(sizeof(inodeops_t));
+        *fs->inodes[0x40*3+i].ops=procfs_iops;
     }
     fs->inodes[0x40*3].ops->read=devices_read;
     fs->inodes[0x40*3+1].ops->read=meminfo_read;
