@@ -9,8 +9,6 @@ static void single_cat(int fd,char buf[0x208],char* file){
         vfs->write(STDOUT,buf,nread);
         flag=1;
     }
-    if(flag)//file is not empty
-        std_write("\n");
     if(nread==EISDIR){
         warn("%s: Is a directory",file);
     }

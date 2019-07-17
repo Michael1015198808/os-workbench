@@ -57,6 +57,12 @@ struct pair{
     {0x088,0x00000000},// size
     {0x08c,0x00000000},// type
 
+    /* /proc */
+    {0x090,0x00000001},// refcnt
+    {0x094,0x00000980},// info
+    {0x098,0x00000000},// size
+    {0x09c,0x00000000},// type
+
 /* information */
     /* / */
     {0x400,0x00000000},// "/"'s inode
@@ -66,6 +72,8 @@ struct pair{
     {0x488,0x00000600},// "/"'s info: txt
     {0x48c,0x00000700},// "/"'s info: mnt
     {0x490,0x00000800},// "/"'s info: dev
+    {0x494,0x00000900},// "/"'s info: proc
+    {0x498,0x00000a00},// "/"'s info: home
 
     /* /test */
     {0x500,0x00000001},// "/"'s inode
@@ -83,6 +91,15 @@ struct pair{
     {0x800,0x00000002},// "/dev"'s inode
     {0x804,0x00766564},// "/dev"'s name
     {0x880,0x00000400},// "/dev"'s info
+    /* /proc */
+    {0x900,0x00000002},// "/proc"'s inode
+    {0x904,0x6f716e63},// "/proc"'s name
+    {0x980,0x00000400},// "/proc"'s info
+    /* /home */
+    {0x900,0x00000002},// "/home"'s inode
+    {0x904,0x656e6c68},// "/home"'s name
+    {0x980,0x00000400},// "/home"'s info
+
 };
 int main(){
     for(int i=1;i<sizeof(pairs)/sizeof(pairs[0]);++i){
