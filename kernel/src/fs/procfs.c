@@ -282,7 +282,7 @@ static ssize_t devices_read(vfile_t* file,char* buf,size_t size){
     return nread;
 }
 static ssize_t meminfo_read(vfile_t* file,char* buf,size_t size){
-    char info[0x20];
+    char info[0x40];
     uint32_t num[3];
     ssize_t nread=0;
 
@@ -290,7 +290,7 @@ static ssize_t meminfo_read(vfile_t* file,char* buf,size_t size){
     mem_query(num);
     sprintf(info,"MemTotal: %10d kB\nMemFree:  %10d kB",num[0],num[1]);
     file->offset+=
-        (nread=snprintf(buf,size,buf+file->offset));
+        (nread=snprintf(buf,size,info+file->offset));
     return nread;
 }
 static ssize_t uptime_read(vfile_t* file,char* buf,size_t size){
