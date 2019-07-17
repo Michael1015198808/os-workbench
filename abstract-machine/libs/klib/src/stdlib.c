@@ -21,7 +21,6 @@ static inline int atoi8(const char* nptr){
 
 static inline int atoi10(const char* nptr){
     int ret=0;
-    ++nptr;
     for(nptr+=0;*nptr;++nptr){
         ret*=10;
         ret+=*nptr-'0';
