@@ -66,7 +66,7 @@ static void os_init() {
     TEST_REQUIREMENT();
 #undef CURRENT_TEST
 #define CURRENT_TEST semaphore_test
-    TEST_REQUITREMENT();
+    TEST_REQUIREMENT();
 
     kmt->create(pmm->alloc(sizeof(task_t)),"shell1",mysh,"/dev/tty1");
     kmt->create(pmm->alloc(sizeof(task_t)),"shell2",mysh,"/dev/tty2");
