@@ -58,6 +58,7 @@ static inode_t* procfs_lookup(filesystem* fs,const char* path,int flags){
             break;
         }
     }
+    while(*path=='/')++path;
     if(i<3){
         int id=atoi(num);
         if(tasks[id]){
