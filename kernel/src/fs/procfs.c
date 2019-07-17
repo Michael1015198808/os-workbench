@@ -45,6 +45,7 @@ static inode_t* procfs_lookup(filesystem* fs,const char* path,int flags){
             return &procfs_root;
         }
     }
+    while(*path=='/')++path;
     int i;
     char num[3];
     for(i=0;i<3;++i){
