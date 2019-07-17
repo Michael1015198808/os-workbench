@@ -140,7 +140,7 @@ int kmt_create(task_t *task, const char *name, void (*entry)(void*), void *arg){
         .name   =NULL,//Handle later
         .running=0,
     };
-    int task_idx=add_task(task);
+    Assert(add_task(task)==0,"Create task %s failed!\n",name);
     local_log("create (%d)%s\n",task->pid,name);
     copy_name(task->name,name);
     task_t* cur=get_cur();
