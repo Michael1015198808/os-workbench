@@ -125,21 +125,25 @@ static ssize_t procfs_ireaddir(vfile_t* file,char* buf,size_t size){
     ssize_t nread;
     if(file->inode==&procfs_root){
         nread=0;
-        if(file->offset<0x40){
-            if(tasks[file->offset]){
-                nread=sprintf(buf,"%d",file->offset);
-            }
+        while(file->offset<0x40&&!tasks[file->offset]){
             ++file->offset;
-        }else{
-            nread=0;
+        }
+        if(file->offset<0x40){
+            nread=sprintf(buf,"%d",file->offset);
         }
     }else{
         nread=0;
-        TODO();
-        return 0;
         uint8_t* p=file->inode->ptr;
         if(p[1]){
             warn("%s/%d/%s: Not a directory",procfs.mount,p[0],proc_info[p[1]]);
+        }else{
+            if(file->offset<3){
+                file->offset+=
+                    (nread=snprintf(buf,proc_info[0]+file->offset));
+            }else if(file->offset<7){
+                file->offset+=
+                    (nread=snprintf(buf,proc_info[1]+file->offset)-3);
+            }
         }
     }
     return nread;
