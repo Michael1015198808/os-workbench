@@ -7,6 +7,8 @@
  * dprocs_close
  */
 
+static inode_t procfs_root;
+
 static void procfs_init(filesystem* fs,const char* name,device_t *dev){
     fs->name=name;
     fs->dev=dev;
