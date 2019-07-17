@@ -127,6 +127,7 @@ static ssize_t procfs_iread(vfile_t* file,char* buf,size_t size){
 static ssize_t procfs_ireaddir(vfile_t* file,char* buf,size_t size){
     ssize_t nread;
     if(file->inode==&procfs_root){
+        nread=0;
         if(file->offset<0x40){
             if(tasks[file->offset]){
                 nread=sprintf(buf,"%d",file->offset);
