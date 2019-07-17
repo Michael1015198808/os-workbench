@@ -133,7 +133,7 @@ static ssize_t procfs_ireaddir(vfile_t* file,char* buf,size_t size){
             }
             ++file->offset;
         }else{
-            return 0;
+            nread=0;
         }
     }else{
         nread=0;
