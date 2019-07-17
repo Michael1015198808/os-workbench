@@ -10,15 +10,29 @@
 static inode_t procfs_root;
 extern task_t *tasks[0x40];
 
+#define PROC_DIR  0
+#define PROC_PWD  1
+#define PROC_NAME 2
+const char* proc_info[]={
+    NULL,
+    "pwd",
+    "name",
+};
+
 static void procfs_init(filesystem* fs,const char* name,device_t *dev){
     fs->name=name;
     fs->dev=dev;
-    fs->inodes=pmm->alloc(sizeof(inode_t)*0x40);
+    fs->inodes=pmm->alloc(sizeof(inode_t)*0x40*3);
 
     for(int i=0;i<0x40;++i){
-        fs->inodes[i].ptr=tasks[i];
-        fs->inodes[i].fs=fs;
-        fs->inodes[i].ops=fs->inodeops;
+        for(int j=0;j<3;++j){
+            int idx=i*3+j;
+            fs->inodes[idx].ptr=pmm->alloc(sizeof(uint8_t)*2);
+            uint8_t *p=fs->inodes[idx].ptr;
+            p[0]=i;p[1]=j;
+            fs->inodes[idx].fs=fs;
+            fs->inodes[idx].ops=fs->inodeops;
+        }
     }
 }
 
@@ -31,7 +45,32 @@ static inode_t* procfs_lookup(filesystem* fs,const char* path,int flags){
             return &procfs_root;
         }
     }
-    ++path;
+    int i;
+    char num[3];
+    for(i=0;i<3;++i){
+        if(*path>='0'&&*path<='9'){
+            num[i]=*path;
+            ++path;
+        }else{
+            num[i]='\0';
+            break;
+        }
+    }
+    if(i<3){
+        int id=atoi(num);
+        if(tasks[id]){
+            id*=3;
+            if(path){
+                for(int i=0;i<3;++i){
+                    if(!strcmp(path,proc_info[i])){
+                        return procfs->inode+id+i;
+                    }
+                }
+            }else{
+                return procfs->inode+id;
+            }
+        }
+    }
     fprintf(2,"%s: No such a file or directory",path);
     return NULL;
 }
@@ -86,11 +125,22 @@ static ssize_t procfs_iread(vfile_t* file,char* buf,size_t size){
 }
 
 static ssize_t procfs_ireaddir(vfile_t* file,char* buf,size_t size){
-    if(file->inode!=&procfs_root){
-        warn("%s: Not a directory",get_dev(file)->name);
+    ssize_t nread;
+    if(file->inode==&procfs_root){
+        if(file->offset<0x40){
+            if(tasks[file->offset]){
+                nread=sprintf(buf,"%d",file->offset);
+            }
+            ++file->offset;
+        }else{
+            return 0;
+        }
+    }else{
+        uint8_t* p=file->inode->ptr;
+        if(p[1]){
+            warn("%s/%d/%s: Not a directory",procfs.mount,p[0],proc_info[p[1]]);
+        }
     }
-    ++file->offset;
-    ssize_t nread=strlen(buf);
     return nread;
 }
 
