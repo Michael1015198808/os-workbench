@@ -294,5 +294,7 @@ static ssize_t meminfo_read(vfile_t* file,char* buf,size_t size){
     return nread;
 }
 static ssize_t uptime_read(vfile_t* file,char* buf,size_t size){
+    if(file->offset)return 0;
+    else ++file->offset;
     return snprintf(buf,size,"%d\n",uptime());
 }
