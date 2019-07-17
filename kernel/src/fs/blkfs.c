@@ -76,13 +76,19 @@ static inode_t* blkfs_lookup(filesystem* fs,const char* path,int flags){
             }
         }
     }
-    if(
-        ((flags&O_DIRECTORY)||path[0]=='/')&&
-        (((yls_node*)fs->inodes[id].ptr)->type!=YLS_DIR)
-    ){
-        char warn[0x100];
-        sprintf(warn,"%s: Not a directory",ori_path);
-        warning(warn);
+    if((((yls_node*)fs->inodes[id].ptr)->type!=YLS_DIR)){
+        //Not a directory
+        if(((flags&O_DIRECTORY)||path[0]=='/')){
+            //./file/ can be opened iff file is a directory
+            char warn[0x100];
+            sprintf(warn,"%s: Not a directory",ori_path);
+            warning(warn);
+        }
+    }else{
+        if(flags&O_WRONLY){
+            //Not a directory
+            warn("%s: Is a directory",ori_path);
+        }
     }
     return fs->inodes+id;
 }

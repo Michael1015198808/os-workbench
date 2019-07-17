@@ -8,12 +8,18 @@
  */
 
 static inode_t procfs_root;
+extern task_t *tasks[0x40];
 
 static void procfs_init(filesystem* fs,const char* name,device_t *dev){
     fs->name=name;
     fs->dev=dev;
-    fs->inodes=pmm->alloc(sizeof(inode_t)*0);
+    fs->inodes=pmm->alloc(sizeof(inode_t)*0x40);
 
+    for(int i=0;i<0x40;++i){
+        fs->inodes[i].ptr=tasks[i];
+        fs->inodes[i].fs=fs;
+        fs->inodes[i].ops=fs->inodeops;
+    }
 }
 
 static inode_t* procfs_lookup(filesystem* fs,const char* path,int flags){

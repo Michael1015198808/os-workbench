@@ -59,14 +59,17 @@ void yield_test(void *dummy){
     while(1);
 }
 static void os_init() {
+#define test(str) printf(str "%d\n", atoi(str))
+    test("0");
+    test("2");
+    test("12");
+    test("012");
+    test("0x10");
+    while(1);
     pmm->init();
     kmt->init();
     dev->init();
     vfs->init();
-    TEST_REQUIREMENT();
-#undef CURRENT_TEST
-#define CURRENT_TEST semaphore_test
-    TEST_REQUIREMENT();
 
     kmt->create(pmm->alloc(sizeof(task_t)),"shell1",mysh,"/dev/tty1");
     kmt->create(pmm->alloc(sizeof(task_t)),"shell2",mysh,"/dev/tty2");

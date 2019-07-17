@@ -63,6 +63,7 @@ char* strchr    (const char *s   ,char c);
 // stdlib.h
 void srand(unsigned int seed);
 int rand();
+int atoi(const char*);
 
 // stdio.h
 int printf(const char* fmt, ...);
