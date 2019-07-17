@@ -266,6 +266,7 @@ void other_info_init(filesystem* fs){
     }
     fs->inodes[0x40*3].ops->read=devices_read;
     fs->inodes[0x40*3+1].ops->read=meminfo_read;
+    fs->inodes[0x40*3+2].ops->read=uptime_read;
 }
 static ssize_t devices_read(vfile_t* file,char* buf,size_t size){
     extern const device_t *devices[];
