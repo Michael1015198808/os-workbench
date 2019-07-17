@@ -10,13 +10,8 @@
 static void procfs_init(filesystem* fs,const char* name,device_t *dev){
     fs->name=name;
     fs->dev=dev;
-    fs->inodes=pmm->alloc(sizeof(inode_t)*devices_cnt);
+    fs->inodes=pmm->alloc(sizeof(inode_t)*0);
 
-    for(int i=0;i<devices_cnt;++i){
-        fs->inodes[i].ptr=(void*)devices[i];
-        fs->inodes[i].fs=fs;
-        fs->inodes[i].ops=fs->inodeops;
-    }
 }
 
 static inode_t* procfs_lookup(filesystem* fs,const char* path,int flags){
@@ -29,9 +24,6 @@ static inode_t* procfs_lookup(filesystem* fs,const char* path,int flags){
         }
     }
     ++path;
-    for (int i = 0; i < devices_cnt; i++) 
-        if (strcmp(devices[i]->name, path) == 0)
-            return fs->inodes+i;
     fprintf(2,"%s: No such a file or directory",path);
     return NULL;
 }
@@ -89,8 +81,6 @@ static ssize_t procfs_ireaddir(vfile_t* file,char* buf,size_t size){
     if(file->inode!=&procfs_root){
         warn("%s: Not a directory",get_dev(file)->name);
     }
-    if(file->offset==devices_cnt)return 0;
-    strcpy(buf,devices[file->offset]->name);
     ++file->offset;
     ssize_t nread=strlen(buf);
     return nread;
