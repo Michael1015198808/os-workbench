@@ -7,6 +7,11 @@ const char* const FMT="%02x ";
 const char* const FMT="%c";
 #endif
 
+#define hex(A,B,C,D) \
+  ( ((D)<<6)+ \
+    ((C)<<4)+ \
+    ((B)<<2)+ \
+    ((A)<<0) )
 #define CHECK_CODE 0x0a736c79
 void write_xxd(uint32_t info){
     uint8_t *c=(void*)&info;
@@ -89,6 +94,7 @@ struct pair{
     {0x600,0x00000002},// "/txt"'s inode
     {0x604,0x00747874},// "/txt"'s name
     {0x680,0x34333231},// "/txt"'s info
+    {0x684,0x0000000a},// "/txt"'s info
     /* /mnt */
     {0x700,0x00000003},// "/mnt"'s inode
     {0x704,0x00746e6d},// "/mnt"'s name
