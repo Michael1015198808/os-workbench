@@ -45,5 +45,12 @@
         warning(warn_str); \
     }while(0)
     
+#define error(fmt,...) \
+    do { \
+        char warn_str[0x100]; \
+        sprintf(warn_str,fmt, ##__VA_ARGS__); \
+        warning(warn_str); \
+        exit(); \
+    }while(0)
 
 #endif//__MACROS_H__

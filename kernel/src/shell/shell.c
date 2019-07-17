@@ -19,16 +19,20 @@ void mysh(void *name) {
     while (1) {
         char input[0x100], prompt[0x100];
         sprintf(prompt, "(%s) [%s] $ ", name,cur->pwd);
-        std_write(prompt);
-        int nread=std_read(input);
+        int nread;
+        do{
+            std_write(prompt);
+            nread=std_read(input);
+        }while(nread==0);
         input[nread-1]='\0';
         printf("%s\n",input);
-        if(strncmp("cd",input,2)){
+        if(strncmp("cd ",input,3)){
             task_t* son=pmm->alloc(sizeof(task_t));
             kmt->create(son,"mysh",fork_and_run,input);
             kmt->wait(son);
         }else{
-            void* cd_args[]={cur->pwd,input};
+            input[2]='\0';
+            void* cd_args[]={input,input+3};
             mysh_cd(cd_args);
         }
     }

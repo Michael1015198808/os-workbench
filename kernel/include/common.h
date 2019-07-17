@@ -35,7 +35,7 @@ void exit(void);
 #define FD_NUM 16
 typedef struct task{
     //int32_t id;
-    volatile uint32_t attr,ncli,intena,cpu;
+    volatile uint32_t attr,ncli,intena,pid;
     pthread_mutex_t running;
     char* name;
     _Context context;

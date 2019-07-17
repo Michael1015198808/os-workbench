@@ -67,7 +67,6 @@ static _Context* kmt_context_save(_Event ev, _Context *c){
     pthread_mutex_unlock(&tasks_lk);//Similar to rw-lock
     int cpu_id=_cpu();
     if(last&&current!=last){
-        last->cpu=-1;
         pthread_mutex_unlock(&last->running);
     }
     last=current;
@@ -101,7 +100,6 @@ static inline _Context* kmt_context_switch_real(_Event ev, _Context *c){
            pthread_mutex_trylock(&tasks[new]->running));
 
     current=tasks[new];
-    current->cpu=cpu_id;
 
     for(int i=0;i<4;++i){
         if(current->fence1[i]!=0x13579ace||current->fence2[i]!=0xeca97531){
@@ -138,20 +136,27 @@ void kmt_init(void){
 }
 
 int kmt_create(task_t *task, const char *name, void (*entry)(void*), void *arg){
-    static int ignore_num=0;
+    static int ignore_num=0,pid=0;
+    pid&=0xff;
     if(ignore_num>0){
         --ignore_num;
         return 0;
     }
     //task->id=tasks_cnt;
     local_log("create (%d)%s\n",tasks_cnt,name);
-    task->attr=TASK_SLEEP;
+    *task=(task_t){
+        .attr   =TASK_SLEEP,
+        .ncli   =0,
+        .intena =0,
+        .pid    =pid++,
+        .name   =NULL,//Handle later
+        .running=0,
+    };
     int task_idx=add_task(task);
     Assert(tasks_cnt<LEN(tasks),"%d\n",tasks_cnt);
-    task->running=0;
-    task->ncli=0;
     copy_name(task->name,name);
     task_t* cur=get_cur();
+
     if(cur){
         for(int i=0;i<FD_NUM;++i){
             if(cur->fd[i]){
@@ -162,8 +167,17 @@ int kmt_create(task_t *task, const char *name, void (*entry)(void*), void *arg){
             }
         }
         strcpy(task->pwd,cur->pwd);
+        task->cur=cur->cur;
     }else{
         strcpy(task->pwd,"/");
+        /*
+        int tempfd=vfs->open(task->pwd,O_RDONLY);
+        if(tempfd<0){
+            error("Can't open / for working directory.");
+        }
+        task->cur=task->fd[tempfd]->inode;
+        vfs->close(tempfd);
+        */
     }
 
     task->context = *_kcontext(
