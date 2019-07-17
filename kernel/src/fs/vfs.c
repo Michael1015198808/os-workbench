@@ -31,7 +31,7 @@ void vfs_init(void){
     vfs->mount("/"      ,&blkfs[0]);
     vfs->mount("/mnt"   ,&blkfs[1]);
     vfs->mount("/dev"   ,&devfs);
-    //vfs->mount("/proc"  ,&procfs);
+    vfs->mount("/proc"  ,&procfs);
 }
 
 int vfs_access(const char *path, int mode){
