@@ -256,7 +256,7 @@ filesystem procfs={
         .ptr   =num,
         .fs    =&procfs,
         .ops   =&procfs_iops,
-    };
+    },
 };
 
 
