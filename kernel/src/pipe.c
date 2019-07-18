@@ -83,9 +83,9 @@ static ssize_t pipe_write(pipe_t* p, const void *buf, size_t count) {
     size_t size;
     while((size=get_size(p))==0xff)_yield();
 
-    if(count+size>=0x100){
+    if(count+size>0xff){
         //full
-        int remain=0x100-size;
+        int remain=0xff-size;
         nwrite  +=pipe_write(p,buf,remain);
         nwrite  +=pipe_write(p,buf+remain,count-remain);
     }else if(count+p->tail>0x100){
