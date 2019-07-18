@@ -91,8 +91,8 @@ static inline void run_pipe_cmd(struct cmd *cmd){
     current->fd[pipefd[0]]=NULL;
     kmt->create(sons+1,"fork-and-run",(task_fun)runcmd,pcmd->right);
 
-    kmt->wait(son[0]);
-    kmt->wait(son[1]);
+    kmt->wait(sons+0);
+    kmt->wait(sons+1);
 }
 
 static inline void run_back_cmd(struct cmd* cmd){
