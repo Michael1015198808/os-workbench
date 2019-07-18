@@ -146,7 +146,7 @@ static inode_t* devfs_ifind(const inode_t* cur,const char* path){
         }else{
             for(int i=0;i<devices_cnt;++i){
                 if(strcmp(devices[i]->name, path)==0){
-                    next=fs->inodes+i;
+                    next=devfs.inodes+i;
                     path+=strlen(devices[i]->name);
                 }
             }
