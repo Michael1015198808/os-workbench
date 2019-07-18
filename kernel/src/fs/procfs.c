@@ -172,7 +172,6 @@ static ssize_t procfs_ireaddir(vfile_t* file,char* buf,size_t size){
         nread=0;
         uint8_t* p=file->inode->ptr;
         if(p==NULL){
-            int idx=file->inode-procfs.inodes;
             warn("Not a directory");
         }else if(p[1]){
             if(p[0]<0x40){
