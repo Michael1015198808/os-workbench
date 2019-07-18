@@ -115,7 +115,7 @@ int vfs_unlink(const char *path){
 static inline inode_t* vfs_lookup(const char* path,int flags){
     pthread_mutex_lock(&mount_table_lk);
     filesystem* target=NULL;
-    size_t max_len=0;
+    int max_len=-1;
     for(int i=0;i<mount_table_cnt;++i){
         size_t len=strlen(mount_table[i].path)-1;//Avoid multi-calls
         if( !strncmp(mount_table[i].path,path,len) &&
