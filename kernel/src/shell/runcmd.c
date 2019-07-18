@@ -83,7 +83,7 @@ static inline void run_pipe_cmd(struct cmd *cmd){
     current->fd[1]=current->fd[pipefd[1]];
     current->fd[pipefd[1]]=NULL;
 
-    task_t sons[2];
+    task_t sons=pmm->alloc(sizeof(task_t)*2);
     kmt->create(sons+0,"fork-and-run",(task_fun)runcmd,pcmd->left);
     current->fd[1]=backup;
 
