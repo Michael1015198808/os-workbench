@@ -155,7 +155,7 @@ int kmt_create(task_t *task, const char *name, void (*entry)(void*), void *arg){
             }
         }
         strcpy(task->pwd,cur->pwd);
-        task->cur=cur->cur;
+        task->cur_dir=cur->cur_dir;
     }else{
         strcpy(task->pwd,"/");
         /*
