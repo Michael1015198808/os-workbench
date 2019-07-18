@@ -156,8 +156,9 @@ static inode_t* devfs_ifind(const inode_t* cur,const char* path){
             warn("Not a directory");
         }
     }
-    warn("No such a file or directory");
-    return next->ops->find(next,path+1);
+    if(!next)
+        warn("No such a file or directory");
+    return next->ops->find(next,path);
 }
 //.func_name=dev_ifunc_name
 //i for inode
