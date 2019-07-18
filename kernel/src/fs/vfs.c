@@ -31,6 +31,7 @@ void vfs_init(void){
     vfs->mount("/"      ,&blkfs[0]);
     vfs->mount("/mnt/"   ,&blkfs[1]);
     vfs->mount("/dev/"   ,&devfs);
+    devfs.root_parent=vfs_lookup("/");
     vfs->mount("/proc/"  ,&procfs);
 }
 
@@ -127,7 +128,6 @@ static inline inode_t* vfs_lookup(const char* path,int flags){
         }
     }
     pthread_mutex_unlock(&mount_table_lk);
-    printf("%s\n%s\n",path,path+max_len);
     return target->ops->lookup(target,path+max_len,flags);
 }
 static inline int vfs_open_real(const char *path,int flags){

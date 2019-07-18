@@ -10,14 +10,13 @@
 extern const device_t *devices[];
 extern const size_t devices_cnt;
 
-static inode_t devfs_root;//definition is at the end
 
 static void devfs_init(filesystem* fs,const char* name,device_t *dev){
     fs->name=name;
     fs->dev=dev;
     fs->inodes=pmm->alloc(sizeof(inode_t)*devices_cnt);
 
-    devfs_root.ptr=dev_lookup("null");
+    devfs.root.ptr=dev_lookup("null");
     for(int i=0;i<devices_cnt;++i){
         fs->inodes[i].ptr=(void*)devices[i];
         fs->inodes[i].fs=fs;
@@ -26,20 +25,8 @@ static void devfs_init(filesystem* fs,const char* name,device_t *dev){
 }
 
 static inode_t* devfs_lookup(filesystem* fs,const char* path,int flags){
-    if((!path[0])||(path[0]=='/'&&path[1]=='\0')){
-        if(flags&O_WRONLY){
-            warn("%s%s: Is a dictionary",fs->mount,path);
-            return NULL;
-        }else{
-            return &devfs_root;
-        }
-    }
-    ++path;
-    for (int i = 0; i < devices_cnt; i++) 
-        if (strcmp(devices[i]->name, path) == 0)
-            return fs->inodes+i;
-    fprintf(2,"%s: No such a file or directory",path);
-    return NULL;
+    if((!path[0]))reutrn &devfs.root;
+    return devfs.root.ops.find(&devfs.root,path+1);
 }
 
 static int devfs_close(inode_t* inode){
@@ -92,7 +79,7 @@ static ssize_t devfs_iread(vfile_t* file,char* buf,size_t size){
 }
 
 static ssize_t devfs_ireaddir(vfile_t* file,char* buf,size_t size){
-    if(file->inode!=&devfs_root){
+    if(file->inode!=&devfs.root){
         warn("%s: Not a directory",get_dev(file)->name);
     }
     if(file->offset==devices_cnt)return 0;
@@ -141,6 +128,37 @@ static ssize_t devfs_iunlink(const char* name){
     return -1;
 }
 
+static inode_t* devfs_ifind(const inode_t* cur,const char* path){
+    while(*path=='/')++path;
+    if(!*path)return cur;
+    const inode_t* next=NULL;
+    if(cur==&devfs.root){
+        if(path[0]=='.'){
+            if(path[1]=='.'){
+                //.. for parent
+                next=devfs.root_parent;
+                path+=2;
+            }else{
+                //. for current
+                next=cur;
+                ++path;
+            }
+        }else{
+            for(int i=0;i<devices_cnt;++i){
+                if(strcmp(devices[i]->name, path)==0){
+                    next=fs->inodes+i;
+                    path+=strlen(devices[i]->name);
+                }
+            }
+        }
+    }else{
+        if(*path=='/'){
+            warn("Not a directory");
+        }
+    }
+    warn("No such a file or directory");
+    return next->ops->find(next,path+1);
+}
 //.func_name=dev_ifunc_name
 //i for inode
 static inodeops_t devfs_iops={
@@ -154,18 +172,18 @@ static inodeops_t devfs_iops={
     .rmdir  =devfs_irmdir,
     .link   =devfs_ilink,
     .unlink =devfs_iunlink,
+    .find   =devfs_ifind,
 };
 
 filesystem devfs={
     .ops     =&devfs_ops,
     .dev     =NULL,
     .inodeops=&devfs_iops,
-};
-
-static inode_t devfs_root={
-    .ptr   =NULL,
-    .fs    =&devfs,
-    .ops   =&devfs_iops,
+    .root    =(inode_t){
+            .ptr=NULL,
+            .fs =&devfs,
+            .ops=&devfs_iops,
+    },
 };
 
 

@@ -77,11 +77,11 @@ struct inode {
 };
 
 struct filesystem{
-    const char *name,*mount;
+    const char *name;
     fsops_t *ops;
     //Call devops by fsops
     device_t *dev;
-    inode_t* inodes;
+    inode_t* inodes,*root_parent;
     inodeops_t* inodeops;
     inode_t root;
 };
@@ -109,6 +109,7 @@ struct inodeops {
   int (*rmdir)(const char *name);
   int (*link)(const char *name, inode_t *inode);
   int (*unlink)(const char *name);
+  inode_t* (*find)(const inode_t* cur,const char* name);
 };
 
 extern filesystem
