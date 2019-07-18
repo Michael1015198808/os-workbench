@@ -30,6 +30,7 @@ void mysh(void *name) {
             task_t* son=pmm->alloc(sizeof(task_t));
             kmt->create(son,"mysh",fork_and_run,input);
             kmt->wait(son);
+            kmt->teardown(son);
         }else{
             input[2]='\0';
             void* cd_args[]={input,input+3};

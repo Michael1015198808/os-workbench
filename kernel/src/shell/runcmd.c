@@ -92,7 +92,10 @@ static inline void run_pipe_cmd(struct cmd *cmd){
     kmt->create(sons+1,"fork-and-run",(task_fun)runcmd,pcmd->right);
 
     kmt->wait(sons+0);
+    kmt->teardown(sons+0);
     kmt->wait(sons+1);
+    kmt->teardown(sons+1);
+    pmm->free(sons);
 }
 
 static inline void run_back_cmd(struct cmd* cmd){

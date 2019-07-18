@@ -192,7 +192,6 @@ void kmt_teardown(task_t *task){
         }
     }
     pmm->free(task->name);
-    pmm->free(task);
     return;
 }
 
@@ -322,7 +321,6 @@ void exit(void){
 
 void kmt_wait(task_t *task){
     while(!(task->attr&TASK_ZOMBIE))_yield();
-    kmt_teardown(task);
 }
 
 MODULE_DEF(kmt) {
