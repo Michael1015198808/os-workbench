@@ -31,7 +31,8 @@ void vfs_init(void){
     vfs->mount("/"      ,&blkfs[0]);
     vfs->mount("/mnt/"   ,&blkfs[1]);
     vfs->mount("/dev/"   ,&devfs);
-    devfs.root_parent=vfs_lookup("/");
+static inline inode_t* vfs_lookup(const char* path,int flags);
+    devfs.root_parent=vfs_lookup("/",O_RDONLY|O_DIRECTORY);
     vfs->mount("/proc/"  ,&procfs);
 }
 
