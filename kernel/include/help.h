@@ -16,3 +16,4 @@ help(mkdir)="Create the DIRECTORY(ies), if they do not already exist.";
 help(sleep)="Pause for NUMBER seconds.";
 help(reboot)="Reboot the system.";
 help(touch)="Update the access and modification times of each FILE to the current time.";
+help(test)="A test command. Now is used to test pipe";
