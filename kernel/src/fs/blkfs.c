@@ -224,6 +224,11 @@ static off_t blkfs_ilseek(vfile_t* file,off_t offset,int whence){
     BARRIER();
 }
 
+static inode_t* blkfs_ifind(cosnt inode_t* cur,const char* path){
+    while(*path=='/')++path;
+    if(!*path)return (inode_t*)cur;
+    TODO();
+}
 static inodeops_t blkfs_iops={
     .open   =blkfs_iopen,
     .close  =blkfs_iclose,
@@ -237,6 +242,7 @@ static inodeops_t blkfs_iops={
     .link   =blkfs_ilink,
     .unlink =blkfs_iunlink,
     */
+    .find   =blkfs_ifind,
 };
 
 filesystem blkfs[2]={
