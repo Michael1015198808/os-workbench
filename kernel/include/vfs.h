@@ -25,6 +25,7 @@
 #define ENOENT -1
 
 struct filesystem;
+struct inode;
 typedef struct filesystem filesystem;
 typedef struct vfile vfile_t;
 typedef struct fsops fsops_t;
