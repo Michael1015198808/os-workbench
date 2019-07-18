@@ -25,7 +25,6 @@
 #define ENOENT -1
 
 struct filesystem;
-struct inode;
 typedef struct filesystem filesystem;
 typedef struct vfile vfile_t;
 typedef struct fsops fsops_t;
@@ -70,6 +69,13 @@ struct vfile{
     pthread_mutex_t lk;
 };
 
+struct inode {
+  void *ptr;       // private data
+  filesystem *fs;
+  inodeops_t *ops; // 在inode被创建时，由文件系统的实现赋值
+                   // inode ops也是文件系统的一部分
+};
+
 struct filesystem{
     const char *name,*mount;
     fsops_t *ops;
@@ -103,13 +109,6 @@ struct inodeops {
   int (*rmdir)(const char *name);
   int (*link)(const char *name, inode_t *inode);
   int (*unlink)(const char *name);
-};
-
-struct inode {
-  void *ptr;       // private data
-  filesystem *fs;
-  inodeops_t *ops; // 在inode被创建时，由文件系统的实现赋值
-                   // inode ops也是文件系统的一部分
 };
 
 extern filesystem
