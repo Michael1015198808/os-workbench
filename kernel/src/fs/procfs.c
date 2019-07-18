@@ -172,13 +172,14 @@ static ssize_t procfs_ireaddir(vfile_t* file,char* buf,size_t size){
     }else{
         nread=0;
         uint8_t* p=file->inode->ptr;
-        if(p[1]){
+        if(p==NULL){
+            int idx=file->inode-procfs.inodes;
+            warn("%s/%s: Not a directory",
+                    procfs.mount, other_info[idx-0x40*3]);
+        }else if(p[1]){
             if(p[0]<0x40){
                 warn("%s/%d/%s: Not a directory",
                         procfs.mount, p[0], per_task_info[p[1]]);
-            }else if(p[0]<0x40+LEN(other_info)){
-                warn("%s/%s/%s: Not a directory",
-                        procfs.mount, other_info[p[0]-0x40], per_task_info[p[1]]);
             }else{
                 warn("Can't recognize this file!");
             }
