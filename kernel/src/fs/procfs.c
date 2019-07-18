@@ -49,7 +49,7 @@ static void procfs_init(filesystem* fs,const char* name,device_t *dev){
 static inode_t* procfs_lookup(filesystem* fs,const char* path,int flags){
     if((!path[0])||(path[0]=='/'&&path[1]=='\0')){
         if(flags&O_WRONLY){
-            warn("%s%s: Is a dictionary",fs->mount,path);
+            warn("Is a dictionary");
             return NULL;
         }else{
             return &fs->root;
@@ -173,12 +173,10 @@ static ssize_t procfs_ireaddir(vfile_t* file,char* buf,size_t size){
         uint8_t* p=file->inode->ptr;
         if(p==NULL){
             int idx=file->inode-procfs.inodes;
-            warn("%s/%s: Not a directory",
-                    procfs.mount, other_info[idx-0x40*3]);
+            warn("Not a directory");
         }else if(p[1]){
             if(p[0]<0x40){
-                warn("%s/%d/%s: Not a directory",
-                        procfs.mount, p[0], per_task_info[p[1]]);
+                warn("Not a directory");
             }else{
                 warn("Can't recognize this file!");
             }
