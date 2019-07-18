@@ -117,8 +117,9 @@ static inline inode_t* vfs_lookup(const char* path,int flags){
     filesystem* target=NULL;
     size_t max_len=0;
     for(int i=0;i<mount_table_cnt;++i){
-        size_t len=strlen(mount_table[i].path);//Avoid multi-calls
-        if(!strncmp(mount_table[i].path,path,len)){
+        size_t len=strlen(mount_table[i].path)-1;//Avoid multi-calls
+        if( !strncmp(mount_table[i].path,path,len) &&
+             (path[len]=='/'||path[len]=='\0')   ){
             if(len>max_len){
                 max_len=strlen(mount_table[i].path);
                 target=mount_table[i].fs;
@@ -126,7 +127,7 @@ static inline inode_t* vfs_lookup(const char* path,int flags){
         }
     }
     pthread_mutex_unlock(&mount_table_lk);
-    return target->ops->lookup(target,path+max_len-1,flags);
+    return target->ops->lookup(target,path+max_len,flags);
 }
 static inline int vfs_open_real(const char *path,int flags){
     task_t* current=get_cur();
