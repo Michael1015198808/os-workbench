@@ -126,7 +126,7 @@ static inline inode_t* vfs_lookup(const char* path,int flags){
         }
     }
     pthread_mutex_unlock(&mount_table_lk);
-    target->ops->lookup(target,path+max_len,flags);
+    return target->ops->lookup(target,path+max_len,flags);
 }
 static inline int vfs_open_real(const char *path,int flags){
     task_t* current=get_cur();
