@@ -242,13 +242,11 @@ static inodeops_t blkfs_iops={
 filesystem blkfs[2]={
     {
         .name    =NULL,
-        .mount   =NULL,
         .ops     =&blkfs_ops,
         .inodeops=&blkfs_iops,
     },
     {
         .name    =NULL,
-        .mount   =NULL,
         .ops     =&blkfs_ops,
         .inodeops=&blkfs_iops,
     },
