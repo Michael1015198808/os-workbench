@@ -117,7 +117,7 @@ static inline inode_t* vfs_lookup(const char* path,int flags){
     filesystem* target=NULL;
     int max_len=-1;
     for(int i=0;i<mount_table_cnt;++i){
-        size_t len=strlen(mount_table[i].path)-1;//Avoid multi-calls
+        int len=strlen(mount_table[i].path)-1;//Avoid multi-calls
         if( !strncmp(mount_table[i].path,path,len) &&
              (path[len]=='/'||path[len]=='\0')   ){
             if(len>max_len){
