@@ -22,6 +22,7 @@ int new_fd_num(task_t* current){
     return -1;//No more file descripter (number)!
 }
 
+static inline inode_t* vfs_lookup(const char* path,int flags);
 void vfs_init(void){
     blkfs[0].ops->init  (blkfs+0    ,"ramdisk0" ,dev_lookup("ramdisk0") );
   //blkfs[1].ops->init  (blkfs+1    ,"ramdisk1" ,dev_lookup("ramdisk1") );
@@ -31,7 +32,6 @@ void vfs_init(void){
     vfs->mount("/"      ,&blkfs[0]);
     vfs->mount("/mnt/"   ,&blkfs[1]);
     vfs->mount("/dev/"   ,&devfs);
-static inline inode_t* vfs_lookup(const char* path,int flags);
     devfs.root_parent=vfs_lookup("/",O_RDONLY|O_DIRECTORY);
     vfs->mount("/proc/"  ,&procfs);
 }
