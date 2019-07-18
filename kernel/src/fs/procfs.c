@@ -7,7 +7,6 @@
  * dprocs_close
  */
 
-static inode_t procfs_root;
 extern task_t *tasks[0x40];
 
 #define PROC_DIR  0
@@ -53,7 +52,7 @@ static inode_t* procfs_lookup(filesystem* fs,const char* path,int flags){
             warn("%s%s: Is a dictionary",fs->mount,path);
             return NULL;
         }else{
-            return &procfs_root;
+            return &fs->root;
         }
     }
     while(*path=='/')++path;
@@ -157,7 +156,7 @@ static ssize_t procfs_iread(vfile_t* file,char* buf,size_t size){
 
 static ssize_t procfs_ireaddir(vfile_t* file,char* buf,size_t size){
     ssize_t nread;
-    if(file->inode==&procfs_root){
+    if(file->inode==&fs->root){
         nread=0;
         while(file->offset<0x40&&!tasks[file->offset]){
             ++file->offset;
@@ -252,15 +251,14 @@ filesystem procfs={
     .ops     =&procfs_ops,
     .dev     =NULL,
     .inodeops=&procfs_iops,
+    .root    =(inode_t){
+        .ptr   =num,
+        .fs    =&procfs,
+        .ops   =&procfs_iops,
+    };
 };
 
 static uint8_t num[2]={0,0};
-static inode_t procfs_root={
-    .ptr   =num,
-    .fs    =&procfs,
-    .ops   =&procfs_iops,
-};
-
 
 static ssize_t devices_read(vfile_t* file,char* buf,size_t size);
 static ssize_t meminfo_read(vfile_t* file,char* buf,size_t size);

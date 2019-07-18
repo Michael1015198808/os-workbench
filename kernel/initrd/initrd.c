@@ -28,7 +28,7 @@ cdef
 struct pair{
     uint32_t off,info;
 }pairs[]={
-    {0x000,0x0003ffff},
+    {0x000,0x003fffff},
     {0x004,0x00000000},
 
 /* inodes */
@@ -47,7 +47,7 @@ struct pair{
     /* /txt */
     {0x060,0x00000001},// refcnt
     {0x064,0x00000680},// info
-    {0x068,0x00000004},// size
+    {0x068,0x00000005},// size
     {0x06c,0x00000001},// type
 
     /* /mnt */
@@ -73,6 +73,12 @@ struct pair{
     {0x0a4,0x00000980},// info
     {0x0a8,0x00000000},// size
     {0x0ac,0x00000000},// type
+
+    /* /michael */
+    {0x0b0,0x00000001},// refcnt
+    {0x0b4,0x00000a80},// info
+    {0x0b8,0x00000000},// size
+    {0x0bc,0x00000000},// type
 
 /* information */
     /* / */
@@ -111,6 +117,13 @@ struct pair{
     {0xa00,0x00000006},// "/home"'s inode
     {0xa04,0x656d6f68},// "/home"'s name
     {0xa80,0x00000400},// "/home"'s info
+    // /home/
+    /* michael */
+    {0xb00,0x00000007},// "michael"'s inode
+    {0xb04,0x6863696c},// "michael"'s name
+    {0xb08,0x006c6561},// "michael"'s name
+    {0xb80,0x00000400},// "michael"'s info
+
 
 };
 int main(){

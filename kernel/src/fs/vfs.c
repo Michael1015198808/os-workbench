@@ -29,16 +29,16 @@ void vfs_init(void){
     procfs.ops->init    (&procfs    ,"procfs"   ,NULL                   );
 
     vfs->mount("/"      ,&blkfs[0]);
-    vfs->mount("/mnt"   ,&blkfs[1]);
-    vfs->mount("/dev"   ,&devfs);
-    vfs->mount("/proc"  ,&procfs);
+    vfs->mount("/mnt/"   ,&blkfs[1]);
+    vfs->mount("/dev/"   ,&devfs);
+    vfs->mount("/proc/"  ,&procfs);
 }
 
 int vfs_access(const char *path, int mode){
     return 0;
 }
-//Path should not end with /
-//Except "/"
+//Path SHOULD all end with /
+//"/dev/ramdisk0" will be transformed into "/ramdisk0"
 int vfs_mount(const char *path, filesystem *fs){
     pthread_mutex_lock(&mount_table_lk);
     fs->mount=path;
@@ -126,7 +126,7 @@ static inline inode_t* vfs_lookup(const char* path,int flags){
         }
     }
     pthread_mutex_unlock(&mount_table_lk);
-    return target->ops->lookup(target,path+max_len,flags);
+    return target->ops->lookup(target,path+max_len-1,flags);
 }
 static inline int vfs_open_real(const char *path,int flags){
     task_t* current=get_cur();

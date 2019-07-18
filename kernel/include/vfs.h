@@ -76,6 +76,7 @@ struct filesystem{
     device_t *dev;
     inode_t* inodes;
     inodeops_t* inodeops;
+    inode_t root;
 };
 
 struct path_pair{
