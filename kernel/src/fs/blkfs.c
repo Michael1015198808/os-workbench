@@ -224,7 +224,7 @@ static off_t blkfs_ilseek(vfile_t* file,off_t offset,int whence){
     BARRIER();
 }
 
-static inode_t* blkfs_ifind(cosnt inode_t* cur,const char* path){
+static inode_t* blkfs_ifind(const inode_t* cur,const char* path){
     while(*path=='/')++path;
     if(!*path)return (inode_t*)cur;
     TODO();
