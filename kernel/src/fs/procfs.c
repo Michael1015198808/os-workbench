@@ -176,10 +176,11 @@ static ssize_t procfs_ireaddir(vfile_t* file,char* buf,size_t size){
             if(p[0]<0x40){
                 warn("%s/%d/%s: Not a directory",
                         procfs.mount, p[0], per_task_info[p[1]]);
-            }else{
+            }else if(p[0]<0x40+LEN(other_info)){
                 warn("%s/%s/%s: Not a directory",
                         procfs.mount, other_info[p[0]-0x40], per_task_info[p[1]]);
             }else{
+                warn("Can't recognize this file!");
             }
         }else{
             if(file->offset<3){
