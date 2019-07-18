@@ -156,7 +156,7 @@ static ssize_t procfs_iread(vfile_t* file,char* buf,size_t size){
 
 static ssize_t procfs_ireaddir(vfile_t* file,char* buf,size_t size){
     ssize_t nread;
-    if(file->inode==&fs->root){
+    if(file->inode==&procfs.root){
         nread=0;
         while(file->offset<0x40&&!tasks[file->offset]){
             ++file->offset;
@@ -247,6 +247,7 @@ static inodeops_t procfs_iops={
     .unlink =procfs_iunlink,
 };
 
+static uint8_t num[2]={0,0};
 filesystem procfs={
     .ops     =&procfs_ops,
     .dev     =NULL,
@@ -258,7 +259,6 @@ filesystem procfs={
     };
 };
 
-static uint8_t num[2]={0,0};
 
 static ssize_t devices_read(vfile_t* file,char* buf,size_t size);
 static ssize_t meminfo_read(vfile_t* file,char* buf,size_t size);
