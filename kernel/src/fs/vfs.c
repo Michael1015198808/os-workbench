@@ -222,8 +222,8 @@ inline inode_t* vfs_find(inode_t* inode,const char* path){
     if(!inode)
         warn("No such a file or directory");
     while(*path=='/')++path;
-    if(!*path)return (inode_t*)cur;
-    return inode->ops->find(inode,path);
+    if(!*path)return (inode_t*)inode;
+    inode->ops->find(inode,path);
 }
 MODULE_DEF(vfs){
   .init     =vfs_init,
