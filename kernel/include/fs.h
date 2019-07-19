@@ -17,7 +17,6 @@ static int is_dir(inode_t*);
             } \
         } \
         if(!*path)return (inode_t*)inode; \
-        return 0; \
     }while(0);
 
 #endif//__FS_H
