@@ -50,6 +50,8 @@ typedef struct {
   int (*close)(int fd);
 } MODULE(vfs);
 
+inline inode_t* vfs_find(inode_t* inode,const char* path);
+
 ssize_t std_read(void *buf);
 ssize_t std_write(void *buf);
 
