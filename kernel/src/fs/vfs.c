@@ -36,7 +36,6 @@ void vfs_init(void){
     vfs->mount("/"      ,&blkfs[0]);
     vfs->mount("/mnt/"   ,&blkfs[1]);
     vfs->mount("/dev/"   ,&devfs);
-    devfs.root_parent=vfs_lookup("/",O_RDONLY|O_DIRECTORY);
     vfs->mount("/proc/"  ,&procfs);
 }
 
@@ -61,8 +60,13 @@ int vfs_mount(const char *path, filesystem *fs){
         fs->root=origin;
         ++mount_table_cnt;
         pthread_mutex_unlock(&mount_table_lk);
+
+        char root_parent[0x100];
+        strcpy(root_parent,path);
+        dir_cat(root_parent,"..");
+        fs->root_parent=vfs_lookup(root_parent,O_RDONLY|O_DIRECTORY);
     }else{
-        //Temp
+        fs->root_parent=fs->root;
     }
     return 0;
 }
