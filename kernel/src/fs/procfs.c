@@ -207,7 +207,7 @@ int is_dir(inode_t* inode){
 
 static inode_t* procfs_ifind(inode_t* cur,const char* path,int flags){
     inode_t* next=NULL;
-    check(cur,path);
+    check(cur,path,flags);
 
     const filesystem* fs=cur->fs;
 
