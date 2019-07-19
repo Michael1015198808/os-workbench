@@ -27,7 +27,7 @@ static void blkfs_init(filesystem* fs,const char* name,device_t* dev){
 
 static inode_t* blkfs_lookup(filesystem* fs,const char* path,int flags){
     if((!path[0]))return &blkfs.root;
-    return vfs_find(&blkfs.root,path);
+    return vfs->find(&blkfs.root,path);
 }
 
 static int blkfs_close(inode_t* inode){
@@ -250,7 +250,7 @@ static inode_t* blkfs_ifind(const inode_t* cur,const char* path){
         }
     }
 
-    return vfs_find(next,path);
+    return vfs->find(next,path);
 }
 static inodeops_t blkfs_iops={
     .open   =blkfs_iopen,
