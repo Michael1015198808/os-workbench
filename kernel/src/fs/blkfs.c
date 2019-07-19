@@ -163,6 +163,27 @@ static off_t blkfs_ilseek(vfile_t* file,off_t offset,int whence){
     BARRIER();
 }
 
+static inline inode_t* new_file(const inode_t* inode,uint32_t offset,const char* path,int flags){
+    const filesystem* fs=cur->fs;
+    device_t* dev=fs->dev;
+    yls_node* node=cur->ptr;
+
+    uint32_t off=new_block(dev),inode=new_inode(dev);
+    write(dev,offset,&off,4);
+    log("  off:%x\ninode:%x\n",off,inode);
+    id=(inode-INODE_START)/0x10;
+    *(yls_node*)fs->inodes[id].ptr=(yls_node){
+        .refcnt=1,
+        .info  =0,
+        .size  =0,
+        .type  =YLS_FILE,
+    };
+    write(dev,off,&id,4);
+    write(dev,off+4,path,strlen(path));
+    return fs->inodes+id;
+}
+
+
 int is_dir(inode_t* inode){
     //temp
     return 1;
@@ -207,19 +228,7 @@ static inode_t* blkfs_ifind(inode_t* cur,const char* path,int flags){
             if(read(fs->dev,offset,&blk_off,4)!=4||!blk_off){
                 //No more file in this directory
                 if( (flags&O_CREATE) && (path[layer_len]=='\0')){
-                    uint32_t off=new_block(fs->dev),inode=new_inode(fs->dev);
-                    write(fs->dev,offset,&off,4);
-                    log("  off:%x\ninode:%x\n",off,inode);
-                    id=(inode-INODE_START)/0x10;
-                    *(yls_node*)fs->inodes[id].ptr=(yls_node){
-                        .refcnt=1,
-                        .info  =0,
-                        .size  =0,
-                        .type  =YLS_FILE,
-                    };
-                    write(fs->dev,off,&id,4);
-                    write(fs->dev,off+4,path,strlen(path));
-                    return fs->inodes+id;
+                    return new_file(cur,offset,path,flags);
                 }else{
                     warn("No such file or directory");
                     return NULL;
