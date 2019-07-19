@@ -244,7 +244,7 @@ static inode_t* blkfs_ifind(inode_t* cur,const char* path,int flags){
         }else{
             if(flags&O_WRONLY){
                 //Not a directory
-                warn("%s: Is a directory",ori_path);
+                warn("Is a directory");
             }
         }
     }
