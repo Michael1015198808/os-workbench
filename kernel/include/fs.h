@@ -3,7 +3,7 @@
 //Only specific filesystem should include this header file
 
 static int is_dir(inode_t*);
-static inline inode_t* check(inode_t* inode,const char** ori_path){
+static inline void check(inode_t* inode,const char** ori_path){
     if(!inode){
         warn("No such a file or directory");
         return NULL;
