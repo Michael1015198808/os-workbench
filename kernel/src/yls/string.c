@@ -61,12 +61,6 @@ int block_write(device_t* dev,uint32_t off,uint32_t shift,const char* s,size_t n
         rest-=to_write;
     }
     while(rest>0){
-        int to_write=min(BLK_MEM,rest);
-        if(write(dev,off,s,to_write)!=to_write){
-            return nbyte-rest;
-        }
-        s+=to_write;
-        rest-=to_write;
         if(read(dev,off+BLK_MEM,&off,4)!=4||!off){
             off=new_block(dev);
             write(dev,off+BLK_MEM,&off,4);
@@ -74,7 +68,13 @@ int block_write(device_t* dev,uint32_t off,uint32_t shift,const char* s,size_t n
                 fprintf(2,"No more space on this disk!\n");
                 return nbyte-rest;
             }
-        };
+        }
+        int to_write=min(BLK_MEM,rest);
+        if(write(dev,off,s,to_write)!=to_write){
+            return nbyte-rest;
+        }
+        s+=to_write;
+        rest-=to_write;
     }
     return nbyte;
 }
