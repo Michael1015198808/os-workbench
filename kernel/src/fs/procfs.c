@@ -25,6 +25,7 @@ const char* per_task_info[]={
 };
 
 void other_info_init(filesystem* fs);
+static inodeops_t procfs_iops;
 static void procfs_init(filesystem* fs,const char* name,device_t *dev){
     fs->name=name;
     fs->dev=dev;
@@ -33,6 +34,12 @@ static void procfs_init(filesystem* fs,const char* name,device_t *dev){
             //3 inodes per process
             (LEN(other_info))) );
 
+    fs->root  =pmm->alloc(sizeof(inode_t));
+    *fs->root =(inode_t){
+            .ptr   =num,
+            .fs    =fs,
+            .ops   =&procfs_iops,
+        },
     for(int i=0;i<0x40;++i){
         for(int j=0;j<3;++j){
             int idx=i*3+j;
@@ -52,7 +59,7 @@ static inode_t* procfs_lookup(filesystem* fs,const char* path,int flags){
             warn("Is a dictionary");
             return NULL;
         }else{
-            return &fs->root;
+            return fs->root;
         }
     }
     while(*path=='/')++path;
@@ -156,7 +163,7 @@ static ssize_t procfs_iread(vfile_t* file,char* buf,size_t size){
 
 static ssize_t procfs_ireaddir(vfile_t* file,char* buf,size_t size){
     ssize_t nread;
-    if(file->inode==&procfs.root){
+    if(file->inode==procfs.root){
         nread=0;
         while(file->offset<0x40&&!tasks[file->offset]){
             ++file->offset;
@@ -249,11 +256,6 @@ filesystem procfs={
     .ops     =&procfs_ops,
     .dev     =NULL,
     .inodeops=&procfs_iops,
-    .root    =(inode_t){
-        .ptr   =num,
-        .fs    =&procfs,
-        .ops   =&procfs_iops,
-    },
 };
 
 
