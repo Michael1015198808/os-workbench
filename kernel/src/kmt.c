@@ -1,5 +1,6 @@
 #include <common.h>
 #include <klib.h>
+#include <vfs.h>
 
 #define copy_name(dest,src) \
     (dest=pmm->alloc(strlen(src)+1), \
