@@ -3,7 +3,9 @@
 //Only specific filesystem should include this header file
 
 static int is_dir(inode_t*);
-#define check(inode,path) \
+
+//check may call return, so I prefer write it as a macro
+#define check(inode,path,flags) \
     do{ \
         if(!inode){ \
             warn("No such a file or directory"); \
@@ -16,7 +18,11 @@ static int is_dir(inode_t*);
                 return NULL; \
             } \
         } \
-        if(!*path)return (inode_t*)inode; \
+        if(!*path){ \
+            if((flags & O_DIRECTORY) && !is_dir(inode)) \
+                return NULL; \
+            else return (inode_t*)inode; \
+        } \
     }while(0);
 
 #endif//__FS_H

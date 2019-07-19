@@ -139,6 +139,7 @@ static ssize_t devfs_iunlink(const char* name){
 static int is_dir(inode_t* cur){
     return cur==devfs.root;
 }
+
 static inode_t* devfs_ifind(inode_t* cur,const char* path,int flags){
     inode_t* next=NULL;
     check(cur,path);
