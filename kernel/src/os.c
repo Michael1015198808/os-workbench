@@ -1,6 +1,7 @@
 #include <common.h>
 #include <amtrace.h>
 #include <klib.h>
+#include <vfs.h>
 #include <devices.h>
 
 typedef struct irq{
