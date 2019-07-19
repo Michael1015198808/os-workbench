@@ -19,8 +19,10 @@ static int is_dir(inode_t*);
             } \
         } \
         if(!*path){ \
-            if((flags & O_DIRECTORY) && !is_dir(inode)) \
+            if((flags & O_DIRECTORY) && !is_dir(inode)){ \
+                warn("Not a directory"); \
                 return NULL; \
+            } \
             else return (inode_t*)inode; \
         } \
     }while(0);
