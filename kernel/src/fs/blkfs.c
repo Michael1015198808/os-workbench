@@ -214,7 +214,7 @@ static inode_t* blkfs_ifind(inode_t* cur,const char* path,int flags){
                     write(fs->dev,off+4,path,strlen(path));
                     return fs->inodes+id;
                 }else{
-                    warn("cannot access '%s': No such file or directory",ori_path);
+                    warn("No such file or directory");
                     return NULL;
                 }
             };
