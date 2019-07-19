@@ -6,7 +6,7 @@ const char space[]=" \r\t\n\v";
 static inline void single_wc(int fd, char *name,int total[3]){
     char buf[0x200];
     int i,n;
-    int cnt[3],inword=0;
+    int cnt[3]={},inword=0;
     //cnt[3]:=(l,w,c)
     //line, word, character
 
