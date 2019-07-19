@@ -231,14 +231,14 @@ int vfs_chdir(const char* path){
     inode_t* next=NULL;
     if(path[0]=='/'){
         //Absolute path
-        next=vfs_lookup(input,O_RDONLY|O_DIRECTORY);
+        next=vfs_lookup(path,O_RDONLY|O_DIRECTORY);
     }else{
         //Relative path
         next=vfs->find(cur,path,O_RDONLY|O_DIRECTORY);
     }
     if(next){
         cur->cur_dir=next;
-        dir_cat(cur->pwd,input);
+        dir_cat(cur->pwd,path);
         return 0;
     }
     return -1;
