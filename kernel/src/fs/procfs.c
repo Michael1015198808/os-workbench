@@ -200,6 +200,8 @@ static ssize_t procfs_iunlink(const char* name){
 }
 static inode_t* procfs_ifind(inode_t* cur,const char* path,int flags){
     inode_t* next=NULL;
+    const filesystem* fs=cur->fs;
+
     if(cur==procfs.root){
         int i;
         char num[3];
