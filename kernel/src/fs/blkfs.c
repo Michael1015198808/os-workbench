@@ -235,6 +235,7 @@ static inode_t* blkfs_ifind(inode_t* cur,const char* path,int flags){
             }
         }
     }
+    /*
     if(id!=-1){
         if((((yls_node*)fs->inodes[id].ptr)->type!=YLS_DIR)){
             //Not a directory
@@ -249,6 +250,7 @@ static inode_t* blkfs_ifind(inode_t* cur,const char* path,int flags){
             }
         }
     }
+    */
 
     return vfs->find(next,path,flags);
 }
