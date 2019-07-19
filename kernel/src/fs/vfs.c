@@ -9,9 +9,12 @@
 
 struct{
     const char* path;
-    filesystem* fs;
+    inode_t* backup;
 }mount_table[20];
+#define mtt mount_table
+
 int mount_table_cnt=0;
+#define mtt_tab mtt[mount_table_cnt]
 pthread_mutex_t mount_table_lk=PTHREAD_MUTEX_INITIALIZER;
 
 int new_fd_num(task_t* current){
@@ -43,11 +46,23 @@ int vfs_access(const char *path, int mode){
 //Path SHOULD all end with /
 //"/dev/ramdisk0" will be transformed into "/ramdisk0"
 int vfs_mount(const char *path, filesystem *fs){
-    pthread_mutex_lock(&mount_table_lk);
-    mount_table[mount_table_cnt].path=path;
-    mount_table[mount_table_cnt].fs=fs;
-    ++mount_table_cnt;
-    pthread_mutex_unlock(&mount_table_lk);
+    if(strcmp(path,"/")){
+        pthread_mutex_lock(&mount_table_lk);
+        inode_t* origin=*vfs->lookup(path);
+        //Replace origin inode at path
+        mtt_tab={
+            .path=path,
+            .backup=*origin,
+        };
+        if(mtt_tab.backup==NULL){
+            TODO();
+        }
+        *origin=*fs->lookup("/");
+        ++mount_table_cnt;
+        pthread_mutex_unlock(&mount_table_lk);
+    }else{
+        //Temp
+    }
     return 0;
 }
 int vfs_unmount_real(const char *path){
