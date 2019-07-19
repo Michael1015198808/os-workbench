@@ -50,13 +50,13 @@ int vfs_mount(const char *path, filesystem *fs){
         pthread_mutex_lock(&mount_table_lk);
         inode_t* origin=vfs_lookup(path,O_RDONLY|O_DIRECTORY);
         //Replace origin inode at path
+        if(origin==NULL){
+            TODO();
+        }
         mtt_tab=( typeof(mtt_tab) ){
             .path=path,
             .backup=*origin,
         };
-        if(mtt_tab.backup==NULL){
-            TODO();
-        }
         *origin=* ( fs->ops->lookup(fs,"/",O_RDONLY|O_DIRECTORY) );
         ++mount_table_cnt;
         pthread_mutex_unlock(&mount_table_lk);
