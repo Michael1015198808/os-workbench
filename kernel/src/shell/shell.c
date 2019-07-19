@@ -5,8 +5,11 @@
 #include <shell.h>
 
 static void fork_and_run(void *input){
-        runcmd(parsecmd((char*)input));
+    //Wrapper
+    runcmd(parsecmd((char*)input));
 }
+inode_t* vfs_lookup(const char* path,int flags);
+
 void mysh(void *name) {
     task_t* cur=get_cur();
     {
@@ -16,6 +19,7 @@ void mysh(void *name) {
             Assert(temp==i,"fd of %s should be %d, instead of %d!\n",std_name[i],i,temp);
         }
     }
+    get_cur()->cur_dir=vfs_lookup("/",O_RDONLY|O_DIRECTORY);
     while (1) {
         char input[0x100], prompt[0x100];
         sprintf(prompt, "(%s) [%s] $ ", name,cur->pwd);

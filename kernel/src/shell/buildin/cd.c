@@ -1,11 +1,20 @@
 #include <klib.h>
 #include <devices.h>
 
+inode_t* vfs_lookup(const char* path,int flags);
+
 int mysh_cd(void* args[]){
-    char* pwd=args[0];
     char* input=args[1]+2;
-    (void)pwd;
-    (void)input;
-    fprintf(2,"Sorry, cd haven't been realized!\n");
+    if(input[0]=='/'){
+        inode_t* next=vfs_lookup(input);
+        if(next){
+            task_t* cur=get_cur();
+            cur->cur_dir=next;
+            strcpy(cur->pwd,input);
+            return 0;
+        }
+    }else{
+        TODO();
+    }
     return -1;
 }

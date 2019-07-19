@@ -22,7 +22,7 @@ int new_fd_num(task_t* current){
     return -1;//No more file descripter (number)!
 }
 
-static inline inode_t* vfs_lookup(const char* path,int flags);
+inode_t* vfs_lookup(const char* path,int flags);
 void vfs_init(void){
     blkfs[0].ops->init  (blkfs+0    ,"ramdisk0" ,dev_lookup("ramdisk0") );
   //blkfs[1].ops->init  (blkfs+1    ,"ramdisk1" ,dev_lookup("ramdisk1") );
@@ -113,7 +113,7 @@ int vfs_link(const char *oldpath, const char *newpath){
 int vfs_unlink(const char *path){
     TODO();
 }
-static inline inode_t* vfs_lookup(const char* path,int flags){
+inode_t* vfs_lookup(const char* path,int flags){
     pthread_mutex_lock(&mount_table_lk);
     filesystem* target=NULL;
     int max_len=-1;
@@ -225,6 +225,7 @@ static inode_t* vfs_find(inode_t* inode,const char* path,int flags){
     if(!*path)return (inode_t*)inode;
     return inode->ops->find(inode,path,flags);
 }
+
 MODULE_DEF(vfs){
   .init     =vfs_init,
   .access   =vfs_access,
