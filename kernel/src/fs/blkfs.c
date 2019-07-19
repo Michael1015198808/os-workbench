@@ -10,9 +10,10 @@
  *                 \ops(blkfs_iops)
  */
 static void blkfs_init(filesystem* fs,const char* name,device_t* dev){
-    fs->name=name;
-    fs->dev=dev;
+    fs->name  =name;
+    fs->dev   =dev;
     fs->inodes=pmm->alloc(sizeof(inode_t)*(INODE_END-INODE_START)/0x8);
+    fs->root  =fs->inodes;
 
     for(int i=0;INODE_START+i*sizeof(yls_node)<INODE_END;++i){
         fs->inodes[i].ptr=pmm->alloc(16);
@@ -26,8 +27,8 @@ static void blkfs_init(filesystem* fs,const char* name,device_t* dev){
 }
 
 static inode_t* blkfs_lookup(filesystem* fs,const char* path,int flags){
-    if((!path[0]))return &fs->root;
-    return vfs->find(&fs->root,path,flags);
+    if((!path[0]))return fs->root;
+    return vfs->find(fs->root,path,flags);
 }
 
 static int blkfs_close(inode_t* inode){
@@ -177,7 +178,7 @@ static inode_t* blkfs_ifind(inode_t* cur,const char* path,int flags){
     if(path[0]=='.'){
         if(path[1]=='.'){
             //.. for parent
-            if(cur==&cur->fs->root){
+            if(cur==cur->fs->root){
                 next=cur->fs->root_parent;
             }else{
                 uint32_t off;

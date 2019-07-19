@@ -83,9 +83,8 @@ struct filesystem{
     fsops_t *ops;
     //Call devops by fsops
     device_t *dev;
-    inode_t* inodes,*root_parent;
+    inode_t* inodes,*root,*root_parent;
     inodeops_t* inodeops;
-    inode_t root;
 };
 
 struct path_pair{

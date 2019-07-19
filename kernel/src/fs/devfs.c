@@ -12,10 +12,16 @@ extern const size_t devices_cnt;
 
 
 static void devfs_init(filesystem* fs,const char* name,device_t *dev){
-    fs->name=name;
-    fs->dev=dev;
+    fs->name  =name;
+    fs->dev   =dev;
     fs->inodes=pmm->alloc(sizeof(inode_t)*devices_cnt);
 
+    fs->root  =pmm->alloc(sizeof(inode_t));
+    *fs->root =(inode_t){
+            .ptr=NULL,
+            .fs =&devfs,
+            .ops=&devfs_iops,
+        },
     devfs.root.ptr=dev_lookup("null");
     for(int i=0;i<devices_cnt;++i){
         fs->inodes[i].ptr=(void*)devices[i];
@@ -25,8 +31,8 @@ static void devfs_init(filesystem* fs,const char* name,device_t *dev){
 }
 
 static inode_t* devfs_lookup(filesystem* fs,const char* path,int flags){
-    if((!path[0]))return &devfs.root;
-    return vfs->find(&devfs.root,path,flags);
+    if((!path[0]))return devfs.root;
+    return vfs->find(devfs.root,path,flags);
 }
 
 static int devfs_close(inode_t* inode){
@@ -79,7 +85,7 @@ static ssize_t devfs_iread(vfile_t* file,char* buf,size_t size){
 }
 
 static ssize_t devfs_ireaddir(vfile_t* file,char* buf,size_t size){
-    if(file->inode!=&devfs.root){
+    if(file->inode!=devfs.root){
         warn("%s: Not a directory",get_dev(file)->name);
     }
     if(file->offset==devices_cnt)return 0;
@@ -130,7 +136,7 @@ static ssize_t devfs_iunlink(const char* name){
 
 static inode_t* devfs_ifind(inode_t* cur,const char* path,int flags){
     inode_t* next=NULL;
-    if(cur==&devfs.root){
+    if(cur==devfs.root){
         if(path[0]=='.'){
             if(path[1]=='.'){
                 //.. for parent
@@ -176,11 +182,6 @@ filesystem devfs={
     .ops     =&devfs_ops,
     .dev     =NULL,
     .inodeops=&devfs_iops,
-    .root    =(inode_t){
-            .ptr=NULL,
-            .fs =&devfs,
-            .ops=&devfs_iops,
-    },
 };
 
 
