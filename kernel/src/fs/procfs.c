@@ -229,7 +229,6 @@ static inode_t* procfs_ifind(inode_t* cur,const char* path,int flags){
         } 
     }while(0);
 
-#endif//__FS_H
     const filesystem* fs=cur->fs;
 
     if(cur==procfs.root){
