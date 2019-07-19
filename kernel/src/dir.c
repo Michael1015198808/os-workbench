@@ -68,17 +68,20 @@ const char* get_pwd(void){
 }
 
 void dir_cat(char* dest,const char* src){
-    Assert(src[0]!='/',"Relative location shouldn't start with /");
-    int len=-1;
-
-    //Add '/' to end
-    len=strlen(dest);
-    if(dest[len-1]!='/'){
-        dest[len]='/';
-        dest[len+1]='\0';
+    Assert(*dest=='/');
+    if(*src=='/'){
+        //Absolute
+        dest[1]='\0';
+    }else{
+        //Relative
+        int len=strlen(dest);
+        //Add '/' to end
+        if(dest[len-1]!='/'){
+            dest[len]='/';
+            dest[len+1]='\0';
+        }
     }
     dir_cat_real(dest,src);
-
 }
 void to_absolute(char* dest,const char* pwd,const char* rela){
     if(rela[0]=='/'){

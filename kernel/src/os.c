@@ -36,7 +36,7 @@ void sem_test(void *arg){
     }
 }
 
-#define CURRENT_TEST multithread_test
+#define CURRENT_TEST dir_test
 #define TEST_NAME(idx) TO_STRING(CURRENT_TEST) TO_STRING(idx)
 #define TEST_REQUIREMENT() \
     void MACRO_CONCAT(MACRO_SELF(CURRENT_TEST),_init)(void); \
@@ -64,6 +64,7 @@ static void os_init() {
     dev->init();
     vfs->init();
 
+    TEST_REQUIREMENT();
     kmt->create(pmm->alloc(sizeof(task_t)),"shell1",mysh,"/dev/tty1");
     //kmt->create(pmm->alloc(sizeof(task_t)),"shell2",mysh,"/dev/tty2");
     //kmt->create(pmm->alloc(sizeof(task_t)),"shell3",mysh,"/dev/tty3");
