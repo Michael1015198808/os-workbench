@@ -159,6 +159,8 @@ static inode_t* devfs_ifind(inode_t* cur,const char* path,int flags){
     }else{
         if(*path=='/'){
             warn("Not a directory");
+        }else{
+            BARRIER();
         }
     }
     return vfs->find(next,path,flags);

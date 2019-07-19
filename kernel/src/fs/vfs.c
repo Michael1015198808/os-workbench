@@ -57,7 +57,8 @@ int vfs_mount(const char *path, filesystem *fs){
             .path=path,
             .backup=*origin,
         };
-        *origin=* ( fs->ops->lookup(fs,"/",O_RDONLY|O_DIRECTORY) );
+        *origin =*fs->root;
+        fs->root=origin;
         ++mount_table_cnt;
         pthread_mutex_unlock(&mount_table_lk);
     }else{
