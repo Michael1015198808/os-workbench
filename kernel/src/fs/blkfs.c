@@ -164,20 +164,20 @@ static off_t blkfs_ilseek(vfile_t* file,off_t offset,int whence){
 static inode_t* blkfs_ifind(inode_t* cur,const char* path){
     inode_t* next=NULL;
 
-    ssize_t(*const read )(device_t*,off_t,      void*,size_t)=fs->dev->ops->read;
-    ssize_t(*const write)(device_t*,off_t,const void*,size_t)=fs->dev->ops->write;
-
     const filesystem* fs=cur->fs;
     const device_t* dev=fs->dev;
     yls_node* node=cur->ptr;
     uint32_t offset=node->info;
+
+    ssize_t(*const read )(device_t*,off_t,      void*,size_t)=fs->dev->ops->read;
+    ssize_t(*const write)(device_t*,off_t,const void*,size_t)=fs->dev->ops->write;
 
     uint32_t id=-1;//id of inode
 
     if(path[0]=='.'){
         if(path[1]=='.'){
             //.. for parent
-            if(cur==cur->fs->root){
+            if(cur==&cur->fs->root){
                 next=cur->fs->root_parent;
             }else{
                 uint32_t off;
