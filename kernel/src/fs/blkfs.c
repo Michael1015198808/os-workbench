@@ -164,9 +164,9 @@ static off_t blkfs_ilseek(vfile_t* file,off_t offset,int whence){
 }
 
 static inline inode_t* new_file(const inode_t* inode,uint32_t offset,const char* path,int flags){
-    const filesystem* fs=cur->fs;
+    const filesystem* fs=inode->fs;
     device_t* dev=fs->dev;
-    yls_node* node=cur->ptr;
+    yls_node* node=inode->ptr;
 
     uint32_t off=new_block(dev),inode=new_inode(dev);
     write(dev,offset,&off,4);
