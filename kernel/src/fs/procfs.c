@@ -200,7 +200,7 @@ static ssize_t procfs_iunlink(const char* name){
     return -1;
 }
 
-int is_dir(inode_t*){
+int is_dir(inode_t* inode){
     //temp
     return 1;
 }

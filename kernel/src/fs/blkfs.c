@@ -163,7 +163,7 @@ static off_t blkfs_ilseek(vfile_t* file,off_t offset,int whence){
     BARRIER();
 }
 
-int is_dir(inode_t*){
+int is_dir(inode_t* inode){
     //temp
     return 1;
 }
