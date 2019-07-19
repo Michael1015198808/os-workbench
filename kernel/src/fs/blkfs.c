@@ -186,8 +186,8 @@ static inline inode_t* new_file(const inode_t* cur,uint32_t offset,const char* p
 
 
 int is_dir(inode_t* inode){
-    //temp
-    return 1;
+    yls_node* node=inode->ptr;
+    return node->type==YLS_DIR;
 }
 static inode_t* blkfs_ifind(inode_t* cur,const char* path,int flags){
     inode_t* next=NULL;
@@ -250,22 +250,6 @@ static inode_t* blkfs_ifind(inode_t* cur,const char* path,int flags){
             }
         }
     }
-    /*
-    if(id!=-1){
-        if((((yls_node*)fs->inodes[id].ptr)->type!=YLS_DIR)){
-            //Not a directory
-            if(((flags&O_DIRECTORY)||path[0]=='/')){
-                //./file/ can be opened iff file is a directory
-                warn("Not a directory");
-            }
-        }else{
-            if(flags&O_WRONLY){
-                //Not a directory
-                warn("Is a directory");
-            }
-        }
-    }
-    */
 
     return next->ops->find(next,path,flags);
 }

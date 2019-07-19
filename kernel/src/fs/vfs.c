@@ -26,6 +26,8 @@ int new_fd_num(task_t* current){
     return -1;//No more file descripter (number)!
 }
 
+static inode_t* vfs_root=NULL;
+
 inode_t* vfs_lookup(const char* path,int flags);
 void vfs_init(void){
     blkfs[0].ops->init  (blkfs+0    ,"ramdisk0" ,dev_lookup("ramdisk0") );
@@ -66,7 +68,7 @@ int vfs_mount(const char *path, filesystem *fs){
         dir_cat(root_parent,"..");
         fs->root_parent=vfs_lookup(root_parent,O_RDONLY|O_DIRECTORY);
     }else{
-        fs->root_parent=fs->root;
+        vfs_root=fs->root_parent=fs->root;
     }
     return 0;
 }
@@ -134,8 +136,7 @@ int vfs_unlink(const char *path){
     TODO();
 }
 inode_t* vfs_lookup(const char* path,int flags){
-    //temp
-    return blkfs[0].ops->lookup(&blkfs[0],path,flags);
+    return vfs_root->lookup(vfs_root,path,flags);
 }
 static inline int vfs_open_real(const char *path,int flags){
     task_t* current=get_cur();
