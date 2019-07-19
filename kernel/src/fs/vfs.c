@@ -223,7 +223,7 @@ static inode_t* vfs_find(inode_t* inode,const char* path){
         warn("No such a file or directory");
     while(*path=='/')++path;
     if(!*path)return (inode_t*)inode;
-    inode->ops->find(inode,path);
+    return inode->ops->find(inode,path);
 }
 MODULE_DEF(vfs){
   .init     =vfs_init,
