@@ -226,6 +226,23 @@ static inode_t* vfs_find(inode_t* inode,const char* path,int flags){
     return inode->ops->find(inode,path,flags);
 }
 
+int vfs_chdir(const char* path){
+    task_t* cur=get_cur();
+    inode_t* next=NULL;
+    if(path[0]=='/'){
+        //Absolute path
+        next=vfs_lookup(input,O_RDONLY|O_DIRECTORY);
+    }else{
+        //Relative path
+        next=vfs->find(cur,path,O_RDONLY|O_DIRECTORY);
+    }
+    if(next){
+        cur->cur_dir=next;
+        dir_cat(cur->pwd,input);
+        return 0;
+    }
+    return -1;
+}
 MODULE_DEF(vfs){
   .init     =vfs_init,
   .access   =vfs_access,
@@ -243,6 +260,7 @@ MODULE_DEF(vfs){
   .lseek    =vfs_lseek,
   .close    =vfs_close,
   .find     =vfs_find,
+  .chdir    =vfs_chdir,
 };
 
 ssize_t std_read(void *buf){
