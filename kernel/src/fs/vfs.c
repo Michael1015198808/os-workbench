@@ -225,14 +225,6 @@ int vfs_close(int fd){
     return 0;
 }
 
-static inode_t* vfs_find(inode_t* inode,const char* path,int flags){
-    if(!inode)
-        warn("No such a file or directory");
-    while(*path=='/')++path;
-    if(!*path)return (inode_t*)inode;
-    return inode->ops->find(inode,path,flags);
-}
-
 int vfs_chdir(const char* path){
     task_t* cur=get_cur();
     inode_t* next=NULL;

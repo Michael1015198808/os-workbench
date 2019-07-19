@@ -252,7 +252,7 @@ static inode_t* blkfs_ifind(inode_t* cur,const char* path,int flags){
     }
     */
 
-    return vfs->find(next,path,flags);
+    return next->ops->find(next,path,flags);
 }
 static inodeops_t blkfs_iops={
     .open   =blkfs_iopen,
