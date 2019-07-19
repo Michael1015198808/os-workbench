@@ -12,6 +12,7 @@ handler(ls);
 handler(mkdir);
 handler(sleep);
 handler(touch);
+handler(test);
 
 int exec_buildin(const char* file,void* args[],int *is_buildin);
 
