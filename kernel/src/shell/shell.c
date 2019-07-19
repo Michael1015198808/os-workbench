@@ -3,6 +3,7 @@
 #include <klib.h>
 #include <devices.h>
 #include <shell.h>
+#include <vfs.h>
 
 static void fork_and_run(void *input){
     //Wrapper
