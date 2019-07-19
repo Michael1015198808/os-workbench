@@ -25,7 +25,7 @@ volatile int ncli[MAX_CPU],intena[MAX_CPU];
     do{ \
         task_t* cur=get_cur(); \
         if(cur->err[0]){ \
-            fprintf(2,"%s: " FMT "%s\n",cur->name, __VA_ARGS__,cur->err) \
+            fprintf(2,"%s: " FMT "%s\n",cur->name, __VA_ARGS__,cur->err); \
             cur->err[0]='\0'; \
         } \
     }while(0)
