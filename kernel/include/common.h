@@ -35,6 +35,9 @@ int fprintf(int fd, const char *fmt, ...);
 void warning(const char*);
 void exit(void);
 
+typedef struct vfile vfile_t;
+typedef struct inode inode_t;
+
 #define TASK_RUNABLE    0
 #define TASK_SLEEP      1
 #define TASK_RUNNING    2
