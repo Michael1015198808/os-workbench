@@ -48,9 +48,9 @@ typedef struct {
   int (*exec)(const char* file,void *args[]);
   off_t (*lseek)(int fd, off_t offset, int whence);
   int (*close)(int fd);
+  inode_t* find(inode_t* inode,const char* path);
 } MODULE(vfs);
 
-inline inode_t* vfs_find(inode_t* inode,const char* path);
 
 ssize_t std_read(void *buf);
 ssize_t std_write(void *buf);

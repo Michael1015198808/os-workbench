@@ -218,7 +218,7 @@ int vfs_close(int fd){
     return 0;
 }
 
-inline inode_t* vfs_find(inode_t* inode,const char* path){
+static inode_t* vfs_find(inode_t* inode,const char* path){
     if(!inode)
         warn("No such a file or directory");
     while(*path=='/')++path;
@@ -240,7 +240,8 @@ MODULE_DEF(vfs){
   .write    =vfs_write,
   .exec     =vfs_exec,
   .lseek    =vfs_lseek,
-  .close    =vfs_close
+  .close    =vfs_close,
+  .find     =vfs_find,
 };
 
 ssize_t std_read(void *buf){
