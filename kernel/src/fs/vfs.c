@@ -48,7 +48,7 @@ int vfs_access(const char *path, int mode){
 int vfs_mount(const char *path, filesystem *fs){
     if(strcmp(path,"/")){
         pthread_mutex_lock(&mount_table_lk);
-        inode_t* origin=*vfs_lookup(path);
+        inode_t* origin=*vfs_lookup(path,O_RDONLY|O_DIRECTORY);
         //Replace origin inode at path
         mtt_tab={
             .path=path,
@@ -57,7 +57,7 @@ int vfs_mount(const char *path, filesystem *fs){
         if(mtt_tab.backup==NULL){
             TODO();
         }
-        *origin=*fs->lookup("/");
+        *origin=* ( fs->ops->lookup("/",O_RDONLY|O_DIRECTORY) );
         ++mount_table_cnt;
         pthread_mutex_unlock(&mount_table_lk);
     }else{
