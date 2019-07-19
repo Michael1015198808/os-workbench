@@ -82,6 +82,12 @@ void dir_cat(char* dest,const char* src){
         }
     }
     dir_cat_real(dest,src);
+    {
+        int len=strlen(dest);
+        if(dest[len-1]=='/'&&len>1){
+            dest[len-1]='\0';
+        }
+    }
 }
 void to_absolute(char* dest,const char* pwd,const char* rela){
     if(rela[0]=='/'){
