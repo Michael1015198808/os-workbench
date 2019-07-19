@@ -168,6 +168,8 @@ static inline inode_t* new_file(const inode_t* cur,uint32_t offset,const char* p
     device_t* dev=fs->dev;
     yls_node* node=cur->ptr;
 
+    ssize_t(*const write)(device_t*,off_t,const void*,size_t)=fs->dev->ops->write;
+
     uint32_t off=new_block(dev),inode=new_inode(dev);
     write(dev,offset,&off,4);
     log("  off:%x\ninode:%x\n",off,inode);
