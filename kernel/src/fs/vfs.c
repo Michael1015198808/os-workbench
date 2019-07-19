@@ -9,7 +9,7 @@
 
 struct{
     const char* path;
-    inode_t* backup;
+    inode_t backup;
 }mount_table[20];
 #define mtt mount_table
 
@@ -69,8 +69,7 @@ int vfs_unmount_real(const char *path){
     for(int i=0;i<mount_table_cnt;++i){
         if(!strcmp(path,mount_table[i].path)){
             --mount_table_cnt;
-            mount_table[i].path=mount_table[mount_table_cnt].path;
-            mount_table[i].fs  =mount_table[mount_table_cnt].fs  ;
+            TODO();
             return 0;
         }
     }
