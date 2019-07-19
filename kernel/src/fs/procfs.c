@@ -57,48 +57,8 @@ static void procfs_init(filesystem* fs,const char* name,device_t *dev){
 }
 
 static inode_t* procfs_lookup(filesystem* fs,const char* path,int flags){
-    if((!path[0])||(path[0]=='/'&&path[1]=='\0')){
-        if(flags&O_WRONLY){
-            warn("Is a dictionary");
-            return NULL;
-        }else{
-            return fs->root;
-        }
-    }
-    while(*path=='/')++path;
-    int i;
-    char num[3];
-    for(i=0;i<3;++i){
-        if(*path>='0'&&*path<='9'){
-            num[i]=*path;
-            ++path;
-        }else{
-            num[i]='\0';
-            break;
-        }
-    }
-    while(*path=='/')++path;
-    if(i==0){
-        //A word
-        for(int i=0;i<LEN(other_info);++i){
-            if(!strcmp(path,other_info[i])){
-                return fs->inodes+(0x40*3+i);
-            }
-        }
-    }else if(i<3){
-        //A proper pid
-        int id=atoi(num);
-        if(tasks[id]){
-            id*=3;
-            for(int i=0;i<3;++i){
-                if(!strcmp(path,per_task_info[i])){
-                    return procfs.inodes+id+i;
-                }
-            }
-        }
-    }
-    fprintf(2,"%s: No such a file or directory",path);
-    return NULL;
+    if((!path[0]))return devfs.root;
+    return vfs->find(devfs.root,path,flags);
 }
 
 static int procfs_close(inode_t* inode){
@@ -238,6 +198,51 @@ static ssize_t procfs_iunlink(const char* name){
     fprintf(STDERR,"cannot remove file ‘%s’: Read-only filesystem\n",name);
     return -1;
 }
+static inode_t* procfs_ifind(inode_t* cur,const char* path,int flags){
+    inode_t* next=NULL;
+    if(cur==procfs.root){
+        int i;
+        char num[3];
+        for(i=0;i<3;++i){
+            if(*path>='0'&&*path<='9'){
+                num[i]=*path;
+                ++path;
+            }else{
+                num[i]='\0';
+                break;
+            }
+        }
+        if(i==0){
+            //A word
+            for(int i=0;i<LEN(other_info);++i){
+                if(!strcmp(path,other_info[i])){
+                    next=fs->inodes+(0x40*3+i);
+                }
+            }
+        }else if(i<3){
+            //A proper pid
+            int id=atoi(num);
+            if(tasks[id]){
+                id*=3;
+                next=procfs.inodes+id;
+            }
+        }
+        warn("No such a file or directory");
+    }else{
+        uint8_t *p=cur->ptr;
+        if(p[0]){
+            warn("No such a file or directory");
+        }else{
+            for(int i=0;i<3;++i){
+                if(!strcmp(path,per_task_info[i])){
+                    next=procfs.inodes+p[0]+i;
+                }
+            }
+        }
+    }
+    return vfs->find(next);
+}
+
 
 //.func_name=dev_ifunc_name
 //i for inode
@@ -252,6 +257,7 @@ static inodeops_t procfs_iops={
     .rmdir  =procfs_irmdir,
     .link   =procfs_ilink,
     .unlink =procfs_iunlink,
+    .find   =procfs_ifind,
 };
 
 filesystem procfs={
