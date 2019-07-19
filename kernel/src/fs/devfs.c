@@ -20,10 +20,10 @@ static void devfs_init(filesystem* fs,const char* name,device_t *dev){
     fs->root  =pmm->alloc(sizeof(inode_t));
     *fs->root =(inode_t){
             .ptr=NULL,
-            .fs =&devfs,
+            .fs =fs,
             .ops=&devfs_iops,
         };
-    devfs.root.ptr=dev_lookup("null");
+    fs->root->ptr=dev_lookup("null");
     for(int i=0;i<devices_cnt;++i){
         fs->inodes[i].ptr=(void*)devices[i];
         fs->inodes[i].fs=fs;
