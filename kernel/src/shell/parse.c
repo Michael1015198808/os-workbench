@@ -4,6 +4,7 @@
 
 #include <common.h>
 #include <parse.h>
+#include <vfs.h>
 
 
 void panic(char *s){
