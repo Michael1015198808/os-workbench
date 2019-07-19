@@ -258,7 +258,6 @@ MODULE_DEF(vfs){
   .exec     =vfs_exec,
   .lseek    =vfs_lseek,
   .close    =vfs_close,
-  .find     =vfs_find,
   .chdir    =vfs_chdir,
 };
 

@@ -48,7 +48,6 @@ typedef struct {
   int (*exec)(const char* file,void *args[]);
   off_t (*lseek)(int fd, off_t offset, int whence);
   int (*close)(int fd);
-  inode_t* (*find)(inode_t* inode,const char* path,int flags);
   int (*chdir)(const char*);
 } MODULE(vfs);
 
