@@ -173,7 +173,7 @@ static inline inode_t* new_file(const inode_t* cur,uint32_t offset,const char* p
     uint32_t off=new_block(dev),inode=new_inode(dev);
     write(dev,offset,&off,4);
     log("  off:%x\ninode:%x\n",off,inode);
-    id=(inode-INODE_START)/0x10;
+    int id=(inode-INODE_START)/0x10;
     *(yls_node*)fs->inodes[id].ptr=(yls_node){
         .refcnt=1,
         .info  =0,
