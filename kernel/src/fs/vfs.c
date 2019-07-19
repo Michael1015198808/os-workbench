@@ -129,21 +129,8 @@ int vfs_unlink(const char *path){
     TODO();
 }
 inode_t* vfs_lookup(const char* path,int flags){
-    pthread_mutex_lock(&mount_table_lk);
-    filesystem* target=NULL;
-    int max_len=-1;
-    for(int i=0;i<mount_table_cnt;++i){
-        int len=strlen(mount_table[i].path)-1;//Avoid multi-calls
-        if( !strncmp(mount_table[i].path,path,len) &&
-             (path[len]=='/'||path[len]=='\0')   ){
-            if(len>max_len){
-                max_len=len;
-                target=mount_table[i].fs;
-            }
-        }
-    }
-    pthread_mutex_unlock(&mount_table_lk);
-    return target->ops->lookup(target,path+max_len,flags);
+    //temp
+    return &blkfs[0].ops->lookup(&blkfs[0],path+max_len,flags);
 }
 static inline int vfs_open_real(const char *path,int flags){
     task_t* current=get_cur();
