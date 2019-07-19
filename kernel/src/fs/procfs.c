@@ -202,7 +202,7 @@ static ssize_t procfs_iunlink(const char* name){
 
 int is_dir(inode_t* inode){
     uint8_t *p=inode->ptr;
-    return inode!=procfs.root && !p[0];
+    return inode==procfs.root || p[0]==PROC_DIR;
 }
 
 static inode_t* procfs_ifind(inode_t* cur,const char* path,int flags){
