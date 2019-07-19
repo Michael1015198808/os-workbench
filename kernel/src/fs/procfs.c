@@ -240,12 +240,9 @@ static inode_t* procfs_ifind(inode_t* cur,const char* path,int flags){
                 next=procfs.inodes+id;
             }
         }
-        warn("No such a file or directory");
     }else{
         uint8_t *p=cur->ptr;
-        if(p[0]){
-            warn("No such a file or directory");
-        }else{
+        if(p[0]==PROC_DIR){
             for(int i=0;i<3;++i){
                 if(!strcmp(path,per_task_info[i])){
                     next=procfs.inodes+p[0]+i;
