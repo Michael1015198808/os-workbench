@@ -169,7 +169,6 @@ static inode_t* blkfs_ifind(inode_t* cur,const char* path){
 
     const filesystem* fs=cur->fs;
     const device_t* dev=fs->dev;
-    inode_t* cur =fs->inodes+id;
     yls_node* node=cur->ptr;
     uint32_t offset=node->info;
 
