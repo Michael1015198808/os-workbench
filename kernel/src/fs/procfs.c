@@ -221,6 +221,17 @@ static inode_t* procfs_ifind(inode_t* cur,const char* path,int flags){
                     next=fs->inodes+(0x40*3+i);
                 }
             }
+            if(path[0]=='.'){
+                if(path[1]=='.'){
+                    //.. for parent
+                    next=procfs.root_parent;
+                    path+=2;
+                }else{
+                    //. for current
+                    next=cur;
+                    ++path;
+                }
+            }
         }else if(i<3){
             //A proper pid
             int id=atoi(num);
