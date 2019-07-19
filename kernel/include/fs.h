@@ -9,7 +9,6 @@ static int is_dir(inode_t*);
             warn("No such a file or directory"); \
             return NULL; \
         } \
-        const char* path=*ori_path; \
         if(*path=='/'){ \
             while(*path=='/')++path; \
             if(!is_dir(inode)){ \
@@ -18,7 +17,6 @@ static int is_dir(inode_t*);
             } \
         } \
         if(!*path)return (inode_t*)inode; \
-        *ori_path=path; \
         return 0; \
     }while(0);
 
