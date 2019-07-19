@@ -6,7 +6,7 @@ inode_t* vfs_lookup(const char* path,int flags);
 int mysh_cd(void* args[]){
     char* input=args[1]+2;
     if(input[0]=='/'){
-        inode_t* next=vfs_lookup(input);
+        inode_t* next=vfs_lookup(input,O_RDONLY|O_DIRECTORY);
         if(next){
             task_t* cur=get_cur();
             cur->cur_dir=next;
