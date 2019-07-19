@@ -207,8 +207,29 @@ int is_dir(inode_t* inode){
 
 static inode_t* procfs_ifind(inode_t* cur,const char* path,int flags){
     inode_t* next=NULL;
-    check(cur,path,flags);
+    do{ 
+        inode_t* inode=cur;
+        if(!inode){ 
+            warn("No such a file or directory"); 
+            return NULL; 
+        } 
+        if(*path=='/'){ 
+            while(*path=='/')++path; 
+            if(!is_dir(inode)){ 
+                warn("Not a directory"); 
+                return NULL; 
+            } 
+        } 
+        if(!*path){ 
+            if((flags & O_DIRECTORY) && !is_dir(inode)){ 
+                warn("Not a directory"); 
+                return NULL; 
+            } 
+            else return (inode_t*)inode; 
+        } 
+    }while(0);
 
+#endif//__FS_H
     const filesystem* fs=cur->fs;
 
     if(cur==procfs.root){

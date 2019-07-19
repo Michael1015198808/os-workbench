@@ -15,7 +15,7 @@ int mysh_cd(void* args[]){
 
     if(vfs->chdir(dir)){
         //Error handle
-        error_print("cd: %s:",args[1]);
+        error_print("cd: %s: ",args[1]);
         return -1;
     }
     return 0;
