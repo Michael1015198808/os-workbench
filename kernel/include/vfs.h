@@ -118,4 +118,8 @@ extern filesystem
     devfs,
     procfs;
 
+static inline inode_t* vfs_find(inode_t* inode,const char* path,int flags){
+    return inode->ops->find(inode,path,flags);
+}
+
 #endif//__VFS_H

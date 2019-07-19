@@ -233,7 +233,7 @@ int vfs_chdir(const char* path){
         next=vfs_lookup(path,O_RDONLY|O_DIRECTORY);
     }else{
         //Relative path
-        next=cur->cur_dir->ops->find(cur->cur_dir,path,O_RDONLY|O_DIRECTORY);
+        next=vfs_find(cur->cur_dir,path,O_RDONLY|O_DIRECTORY);
     }
     if(next){
         cur->cur_dir=next;

@@ -34,7 +34,7 @@ static void devfs_init(filesystem* fs,const char* name,device_t *dev){
 
 static inode_t* devfs_lookup(filesystem* fs,const char* path,int flags){
     if((!path[0]))return devfs.root;
-    return vfs->find(devfs.root,path,flags);
+    return vfs_find(devfs.root,path,flags);
 }
 
 static int devfs_close(inode_t* inode){

@@ -59,7 +59,7 @@ static void procfs_init(filesystem* fs,const char* name,device_t *dev){
 
 static inode_t* procfs_lookup(filesystem* fs,const char* path,int flags){
     if((!path[0]))return procfs.root;
-    return vfs->find(procfs.root,path,flags);
+    return vfs_find(procfs.root,path,flags);
 }
 
 static int procfs_close(inode_t* inode){
