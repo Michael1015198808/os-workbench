@@ -3,6 +3,7 @@
 #include <shell.h>
 #include <vfs.h>
 #include <yls.h>
+#include <dir.h>
 
 #define this_fd current->fd[fd]
 
