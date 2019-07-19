@@ -141,7 +141,6 @@ static int is_dir(inode_t* cur){
 }
 static inode_t* devfs_ifind(inode_t* cur,const char* path,int flags){
     inode_t* next=NULL;
-
     check(cur,path);
 
     if(cur==devfs.root){
