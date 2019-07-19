@@ -5,7 +5,7 @@
 
 static inline void single_ls(const char* path,int* err){
     int fd=vfs->open(path,O_RDONLY | O_DIRECTORY),nread=0;
-    if(fd<0){return;}
+    if(fd<0){error_print("%s: ",path);return;}
     int cnt=0;
     char buf[200];
 
