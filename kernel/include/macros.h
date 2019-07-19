@@ -40,9 +40,7 @@
 
 #define warn(fmt,...) \
     do { \
-        char warn_str[0x100]; \
-        sprintf(warn_str,fmt, ##__VA_ARGS__); \
-        warning(warn_str); \
+        sprintf(get_cur()->err,fmt, ##__VA_ARGS__); \
     }while(0)
     
 #define error(fmt,...) \

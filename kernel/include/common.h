@@ -21,6 +21,9 @@
 #define STK_SZ ((1<<12)-64)
 volatile int ncli[MAX_CPU],intena[MAX_CPU];
 
+#define error_print(FMT, ...) \
+    vfs->write(2,"%s" FMT "%s",get_cur()->name, __VA_ARGS__,get_cur()->err)
+
 typedef void(*task_fun)(void*);
 task_t* get_cur(void);
 
@@ -48,8 +51,9 @@ typedef struct task{
     uint32_t fence2[4];
 #endif
     vfile_t* fd[FD_NUM];
-    char pwd[0x100];
     inode_t* cur_dir;
+    char pwd[0x100];
+    char err[0x100];
 }task_t;
 extern task_t* currents[MAX_CPU];
 

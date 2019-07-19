@@ -122,7 +122,7 @@ struct pair{
     // /home/
     /* michael */
     {0xb00,0x00000007},// "michael"'s inode
-    {0xb04,0x6863696c},// "michael"'s name
+    {0xb04,0x6863696d},// "michael"'s name
     {0xb08,0x006c6561},// "michael"'s name
     {0xb80,0x00000400},// "michael"'s info
 };

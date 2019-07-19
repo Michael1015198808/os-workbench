@@ -23,11 +23,12 @@ int mysh_cat(void *args[]){
                 char file[0x100];
                 to_absolute(file,pwd,args[i]);
 
-                if(vfs->access(file,O_RDONLY)==ENOENT){
-                    fprintf(2,"%s: No such file or directory",file);
-                }
                 int fd=vfs->open(file,O_RDONLY);
-                single_cat(fd,buf,file);
+                if(fd>0){
+                    single_cat(fd,buf,file);
+                }else{
+                    error_print("%s: ",args[i]);
+                }
             }else{
                 single_cat(0,buf,NULL);
             }
