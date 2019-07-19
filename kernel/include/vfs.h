@@ -111,7 +111,7 @@ struct inodeops {
   int (*rmdir)(const char *name);
   int (*link)(const char *name, inode_t *inode);
   int (*unlink)(const char *name);
-  inode_t* (*find)(const inode_t* cur,const char* name);
+  inode_t* (*find)(inode_t* cur,const char* name);
 };
 
 extern filesystem
