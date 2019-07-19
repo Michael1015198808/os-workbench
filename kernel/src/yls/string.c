@@ -69,6 +69,7 @@ int block_write(device_t* dev,uint32_t off,uint32_t shift,const char* s,size_t n
         rest-=to_write;
         if(read(dev,off+BLK_MEM,&off,4)!=4||!off){
             off=new_block(dev);
+            write(dev,off+BLK_MEM,&off,4);
             if(off==0){
                 fprintf(2,"No more space on this disk!\n");
                 return nbyte-rest;
