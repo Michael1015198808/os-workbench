@@ -130,7 +130,7 @@ int vfs_unlink(const char *path){
 }
 inode_t* vfs_lookup(const char* path,int flags){
     //temp
-    return &blkfs[0].ops->lookup(&blkfs[0],path+max_len,flags);
+    return &blkfs[0].ops->lookup(&blkfs[0],path,flags);
 }
 static inline int vfs_open_real(const char *path,int flags){
     task_t* current=get_cur();
