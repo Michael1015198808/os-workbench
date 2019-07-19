@@ -2,6 +2,7 @@
 #include <klib.h>
 #include <yls.h>
 #include <dir.h>
+#include <vfs.h>
 
 static void single_cat(int fd,char buf[0x208],char* file){
     int nread=0;

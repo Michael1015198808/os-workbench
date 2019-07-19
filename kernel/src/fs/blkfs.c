@@ -1,8 +1,9 @@
-#include <common.h>
 #include <devices.h>
+#include <common.h>
+#include <dir.h>
 #include <vfs.h>
 #include <yls.h>
-#include <dir.h>
+#include <fs.h>
 /* blkfs:
  * vfile----offset
  *      |---refcnt /ptr(yls_node)

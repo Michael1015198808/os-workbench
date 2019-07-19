@@ -1,6 +1,7 @@
 #include <devices.h>
-#include <vfs.h>
 #include <common.h>
+#include <vfs.h>
+#include <fs.h>
 /*
  * procfs_init
  * procfs_lookup
