@@ -37,8 +37,13 @@ void mysh(void *name) {
             kmt->wait(son);
             kmt->teardown(son);
         }else{
-            input[2]='\0';
-            void* cd_args[]={input,input+3};
+            void* cd_args[2]={input};
+            if(input[2]=='\0'){
+                cd_args[1]=NULL;
+            }else{
+                cd_args[1]=input+3;
+                input[2]='\0';
+            }
             mysh_cd(cd_args);
         }
     }
