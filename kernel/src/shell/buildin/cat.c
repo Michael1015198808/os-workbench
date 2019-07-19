@@ -8,9 +8,6 @@ static void single_cat(int fd,char buf[0x208],char* file){
     while((nread=vfs->read(fd,buf,0x200))>0){
         vfs->write(STDOUT,buf,nread);
     }
-    if(nread==EISDIR){
-        warn("%s: Is a directory",file);
-    }
 }
 
 int mysh_cat(void *args[]){
@@ -26,9 +23,8 @@ int mysh_cat(void *args[]){
                 int fd=vfs->open(file,O_RDONLY);
                 if(fd>0){
                     single_cat(fd,buf,file);
-                }else{
-                    error_print("%s: ",args[i]);
                 }
+                error_print("%s: ",args[i]);
             }else{
                 single_cat(0,buf,NULL);
             }

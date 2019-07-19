@@ -22,7 +22,13 @@
 volatile int ncli[MAX_CPU],intena[MAX_CPU];
 
 #define error_print(FMT, ...) \
-    fprintf(2,"%s" FMT "%s",get_cur()->name, __VA_ARGS__,get_cur()->err)
+    do{ \
+        if(cur->err[0]){ \
+            task_t* cur=get_cur(); \
+            fprintf(2,"%s: " FMT "%s\n",cur->name, __VA_ARGS__,cur->err) \
+            cur->err[0]='\0'; \
+        } \
+    }while(0)
 
 typedef void(*task_fun)(void*);
 task_t* get_cur(void);
