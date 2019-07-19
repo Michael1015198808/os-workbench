@@ -8,10 +8,6 @@
 #include <stdint.h>
 #include <macros.h>
 
-task_t* get_cur(void);
-
-#include <vfs.h>
-
 #ifndef MAX_CPU
     #define MAX_CPU 8
 #endif
@@ -33,6 +29,7 @@ volatile int ncli[MAX_CPU],intena[MAX_CPU];
     }while(0)
 
 typedef void(*task_fun)(void*);
+task_t* get_cur(void);
 
 int fprintf(int fd, const char *fmt, ...);
 void warning(const char*);
