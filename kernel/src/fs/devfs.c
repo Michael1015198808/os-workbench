@@ -128,8 +128,8 @@ static ssize_t devfs_iunlink(const char* name){
     return -1;
 }
 
-static inode_t* devfs_ifind(const inode_t* cur,const char* path){
-    const inode_t* next=NULL;
+static inode_t* devfs_ifind(inode_t* cur,const char* path){
+    inode_t* next=NULL;
     if(cur==&devfs.root){
         if(path[0]=='.'){
             if(path[1]=='.'){

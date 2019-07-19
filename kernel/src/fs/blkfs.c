@@ -161,8 +161,8 @@ static off_t blkfs_ilseek(vfile_t* file,off_t offset,int whence){
     BARRIER();
 }
 
-static inode_t* blkfs_ifind(const inode_t* cur,const char* path){
-    const inode_t* next=NULL;
+static inode_t* blkfs_ifind(inode_t* cur,const char* path){
+    inode_t* next=NULL;
 
     ssize_t(*const read )(device_t*,off_t,      void*,size_t)=fs->dev->ops->read;
     ssize_t(*const write)(device_t*,off_t,const void*,size_t)=fs->dev->ops->write;
