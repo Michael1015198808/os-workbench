@@ -119,6 +119,7 @@ extern filesystem
     devfs,
     procfs;
 
+static int is_dir(inode_t*);
 inline static inode_t* check(inode_t* inode,const char** ori_path){
     if(!inode){
         warn("No such a file or directory");
