@@ -199,6 +199,11 @@ static ssize_t procfs_iunlink(const char* name){
     fprintf(STDERR,"cannot remove file ‘%s’: Read-only filesystem\n",name);
     return -1;
 }
+
+int is_dir(inode_t*){
+    //temp
+    return 1;
+}
 static inode_t* procfs_ifind(inode_t* cur,const char* path,int flags){
     inode_t* next=NULL;
     check(cur,path);
