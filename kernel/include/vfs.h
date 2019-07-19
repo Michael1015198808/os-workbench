@@ -48,7 +48,7 @@ typedef struct {
   int (*exec)(const char* file,void *args[]);
   off_t (*lseek)(int fd, off_t offset, int whence);
   int (*close)(int fd);
-  inode_t* (*find)(inode_t* inode,const char* path);
+  inode_t* (*find)(inode_t* inode,const char* path,int flags);
 } MODULE(vfs);
 
 
@@ -111,7 +111,7 @@ struct inodeops {
   int (*rmdir)(const char *name);
   int (*link)(const char *name, inode_t *inode);
   int (*unlink)(const char *name);
-  inode_t* (*find)(inode_t* cur,const char* name);
+  inode_t* (*find)(inode_t* cur,const char* name,int flags);
 };
 
 extern filesystem

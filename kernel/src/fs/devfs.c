@@ -128,7 +128,7 @@ static ssize_t devfs_iunlink(const char* name){
     return -1;
 }
 
-static inode_t* devfs_ifind(inode_t* cur,const char* path){
+static inode_t* devfs_ifind(inode_t* cur,const char* path,int flags){
     inode_t* next=NULL;
     if(cur==&devfs.root){
         if(path[0]=='.'){
@@ -154,7 +154,7 @@ static inode_t* devfs_ifind(inode_t* cur,const char* path){
             warn("Not a directory");
         }
     }
-    return vfs->find(next,path);
+    return vfs->find(next,path,flags);
 }
 //.func_name=dev_ifunc_name
 //i for inode

@@ -161,11 +161,11 @@ static off_t blkfs_ilseek(vfile_t* file,off_t offset,int whence){
     BARRIER();
 }
 
-static inode_t* blkfs_ifind(inode_t* cur,const char* path){
+static inode_t* blkfs_ifind(inode_t* cur,const char* path,int flags){
     inode_t* next=NULL;
 
     const filesystem* fs=cur->fs;
-    const device_t* dev=fs->dev;
+    device_t* dev=fs->dev;
     yls_node* node=cur->ptr;
     uint32_t offset=node->info;
 
@@ -249,7 +249,7 @@ static inode_t* blkfs_ifind(inode_t* cur,const char* path){
         }
     }
 
-    return vfs->find(next,path);
+    return vfs->find(next,path,flags);
 }
 static inodeops_t blkfs_iops={
     .open   =blkfs_iopen,
