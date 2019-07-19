@@ -2,6 +2,7 @@
 #include <klib.h>
 #include <yls.h>
 #include <dir.h>
+#include <vfs.h>
 
 const char *warn="Haven't realized!\n";
 

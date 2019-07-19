@@ -1,5 +1,6 @@
 #include <klib.h>
 #include <devices.h>
+#include <vfs.h>
 
 const char space[]=" \r\t\n\v";
 static inline void single_wc(int fd, char *name,int total[3]){

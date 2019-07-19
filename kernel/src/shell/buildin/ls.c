@@ -1,6 +1,7 @@
 #include <dir.h>
 #include <klib.h>
 #include <devices.h>
+#include <vfs.h>
 
 static inline void single_ls(const char* path,int* err){
     int fd=vfs->open(path,O_RDONLY | O_DIRECTORY),nread=0;

@@ -1,5 +1,6 @@
 #include <klib.h>
 #include <devices.h>
+#include <vfs.h>
 
 int mysh_echo(void *args[]){
     int i=1;

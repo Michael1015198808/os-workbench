@@ -1,5 +1,6 @@
 #include <klib.h>
 #include <devices.h>
+#include <vfs.h>
 
 inode_t* vfs_lookup(const char* path,int flags);
 

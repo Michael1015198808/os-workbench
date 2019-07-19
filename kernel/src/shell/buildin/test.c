@@ -2,6 +2,7 @@
 #include <klib.h>
 #include <yls.h>
 #include <dir.h>
+#include <vfs.h>
 
 int mysh_test(void *args[]){
     uint32_t begin=uptime();

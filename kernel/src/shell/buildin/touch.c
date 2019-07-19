@@ -2,6 +2,7 @@
 #include <klib.h>
 #include <yls.h>
 #include <dir.h>
+#include <vfs.h>
 
 int mysh_touch(void *args[]){
     const char* pwd=get_pwd();
