@@ -4,9 +4,16 @@
 
 inode_t* vfs_lookup(const char* path,int flags);
 
+static inline const char* get_home(void){
+    //temp
+    return "/";
+}
+
 int mysh_cd(void* args[]){
-    char* input=args[1];
-    if(vfs->chdir(input)){
+    char* dir=args[1];
+    if(!*dir)dir=get_home();
+
+    if(vfs->chdir(dir)){
         //Error handle
         TODO();
         return -1;
