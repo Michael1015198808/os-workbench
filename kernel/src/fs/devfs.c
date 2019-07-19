@@ -22,7 +22,7 @@ static void devfs_init(filesystem* fs,const char* name,device_t *dev){
             .ptr=NULL,
             .fs =&devfs,
             .ops=&devfs_iops,
-        },
+        };
     devfs.root.ptr=dev_lookup("null");
     for(int i=0;i<devices_cnt;++i){
         fs->inodes[i].ptr=(void*)devices[i];
