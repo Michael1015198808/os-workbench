@@ -218,6 +218,13 @@ int vfs_close(int fd){
     return 0;
 }
 
+inline inode_t* vfs_find(inode_t* inode,const char* path){
+    if(!inode)
+        warn("No such a file or directory");
+    while(*path=='/')++path;
+    if(!*path)return (inode_t*)cur;
+    return inode->ops->find(inode,path);
+}
 MODULE_DEF(vfs){
   .init     =vfs_init,
   .access   =vfs_access,

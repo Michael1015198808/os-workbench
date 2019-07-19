@@ -26,7 +26,7 @@ static void devfs_init(filesystem* fs,const char* name,device_t *dev){
 
 static inode_t* devfs_lookup(filesystem* fs,const char* path,int flags){
     if((!path[0]))return &devfs.root;
-    return devfs.root.ops->find(&devfs.root,path+1);
+    return vfs_find(&devfs.root,path);
 }
 
 static int devfs_close(inode_t* inode){
@@ -129,8 +129,6 @@ static ssize_t devfs_iunlink(const char* name){
 }
 
 static inode_t* devfs_ifind(const inode_t* cur,const char* path){
-    while(*path=='/')++path;
-    if(!*path)return (inode_t*)cur;
     const inode_t* next=NULL;
     if(cur==&devfs.root){
         if(path[0]=='.'){
@@ -156,9 +154,7 @@ static inode_t* devfs_ifind(const inode_t* cur,const char* path){
             warn("Not a directory");
         }
     }
-    if(!next)
-        warn("No such a file or directory");
-    return next->ops->find(next,path);
+    return vfs_find(next,path);
 }
 //.func_name=dev_ifunc_name
 //i for inode

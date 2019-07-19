@@ -12,6 +12,7 @@ const char* const FMT="%c";
     ((C)<<4)+ \
     ((B)<<2)+ \
     ((A)<<0) )
+
 #define CHECK_CODE 0x0a736c79
 void write_xxd(uint32_t info){
     uint8_t *c=(void*)&info;

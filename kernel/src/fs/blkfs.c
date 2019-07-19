@@ -26,71 +26,8 @@ static void blkfs_init(filesystem* fs,const char* name,device_t* dev){
 }
 
 static inode_t* blkfs_lookup(filesystem* fs,const char* path,int flags){
-    const char* const ori_path=path;
-
-    ssize_t(*const read )(device_t*,off_t,void*,size_t)=fs->dev->ops->read;
-    ssize_t(*const write)(device_t*,off_t,const void*,size_t)=fs->dev->ops->write;
-
-    uint32_t id=0;//id of inode
-
-    while(path[0]&&path[1]){
-        //TODO: handle . and ..
-        inode_t* cur =fs->inodes+id;
-        yls_node* node=cur->ptr;
-        uint32_t offset=node->info;
-        while(offset){
-            char layer[0x100];
-            int layer_len=get_first_layer(path);
-            strncpy(layer,path,layer_len);
-            uint32_t blk_off;
-            if(read(fs->dev,offset,&blk_off,4)!=4||!blk_off){
-                if(flags&O_CREATE){
-                    uint32_t off=new_block(fs->dev),inode=new_inode(fs->dev);
-                    write(fs->dev,offset,&off,4);
-                    log("  off:%x\ninode:%x\n",off,inode);
-                    id=(inode-INODE_START)/0x10;
-                    *(yls_node*)fs->inodes[id].ptr=(yls_node){
-                        .refcnt=1,
-                        .info  =0,
-                        .size  =0,
-                        .type  =YLS_FILE,
-                    };
-                    write(fs->dev,off,&id,4);
-                    write(fs->dev,off+4,path,strlen(path));
-                    return fs->inodes+id;
-                }else{
-                    warn("cannot access '%s': No such file or directory",ori_path);
-                    return NULL;
-                }
-            };
-            if(block_cmp(fs->dev,blk_off,layer)){
-                offset+=4;
-                if(offset%BLK_SZ==BLK_MEM){
-                    read(fs->dev,offset,&offset,4);
-                }
-            }else{
-                report_if(1);
-                path+=layer_len;
-                read(fs->dev,blk_off,&id,4);
-                break;
-            }
-        }
-    }
-    if((((yls_node*)fs->inodes[id].ptr)->type!=YLS_DIR)){
-        //Not a directory
-        if(((flags&O_DIRECTORY)||path[0]=='/')){
-            //./file/ can be opened iff file is a directory
-            char warn[0x100];
-            sprintf(warn,"%s: Not a directory",ori_path);
-            warning(warn);
-        }
-    }else{
-        if(flags&O_WRONLY){
-            //Not a directory
-            warn("%s: Is a directory",ori_path);
-        }
-    }
-    return fs->inodes+id;
+    if((!path[0]))return &blkfs.root;
+    return vfs_find(&blkfs.root,path);
 }
 
 static int blkfs_close(inode_t* inode){
@@ -225,9 +162,95 @@ static off_t blkfs_ilseek(vfile_t* file,off_t offset,int whence){
 }
 
 static inode_t* blkfs_ifind(const inode_t* cur,const char* path){
-    while(*path=='/')++path;
-    if(!*path)return (inode_t*)cur;
-    TODO();
+    const inode_t* next=NULL;
+
+    ssize_t(*const read )(device_t*,off_t,      void*,size_t)=fs->dev->ops->read;
+    ssize_t(*const write)(device_t*,off_t,const void*,size_t)=fs->dev->ops->write;
+
+    const filesystem* fs=cur->fs;
+    const device_t* dev=fs->dev;
+    inode_t* cur =fs->inodes+id;
+    yls_node* node=cur->ptr;
+    uint32_t offset=node->info;
+
+    uint32_t id=-1;//id of inode
+
+    if(path[0]=='.'){
+        if(path[1]=='.'){
+            //.. for parent
+            if(cur==cur->fs->root){
+                next=cur->fs->root_parent;
+            }else{
+                uint32_t off;
+                read(dev,offset,&off,4);
+                read(dev,off,&id,4);
+                next=fs->inodes+id;
+            }
+            path+=2;
+        }else{
+            //. for current
+            next=cur;
+            ++path;
+        }
+    }else{
+        while(offset){
+            char layer[0x100];
+            int layer_len=get_first_layer(path);
+            strncpy(layer,path,layer_len);
+            uint32_t blk_off;
+            if(read(fs->dev,offset,&blk_off,4)!=4||!blk_off){
+                //No more file in this directory
+                if( (flags&O_CREATE) && (path[layer_len]=='\0')){
+                    uint32_t off=new_block(fs->dev),inode=new_inode(fs->dev);
+                    write(fs->dev,offset,&off,4);
+                    log("  off:%x\ninode:%x\n",off,inode);
+                    id=(inode-INODE_START)/0x10;
+                    *(yls_node*)fs->inodes[id].ptr=(yls_node){
+                        .refcnt=1,
+                        .info  =0,
+                        .size  =0,
+                        .type  =YLS_FILE,
+                    };
+                    write(fs->dev,off,&id,4);
+                    write(fs->dev,off+4,path,strlen(path));
+                    return fs->inodes+id;
+                }else{
+                    warn("cannot access '%s': No such file or directory",ori_path);
+                    return NULL;
+                }
+            };
+            if(block_cmp(fs->dev,blk_off,layer)){
+                //Mismatch
+                offset+=4;
+                if(offset%BLK_SZ==BLK_MEM){
+                    //Find next offset
+                    read(fs->dev,offset,&offset,4);
+                }
+            }else{
+                report_if(1);
+                path+=layer_len;
+                read(fs->dev,blk_off,&id,4);
+                next=fs->inodes+id;
+                break;
+            }
+        }
+    }
+    if(id!=-1){
+    if((((yls_node*)fs->inodes[id].ptr)->type!=YLS_DIR)){
+            //Not a directory
+            if(((flags&O_DIRECTORY)||path[0]=='/')){
+                //./file/ can be opened iff file is a directory
+                warn("Not a directory");
+            }
+        }else{
+            if(flags&O_WRONLY){
+                //Not a directory
+                warn("%s: Is a directory",ori_path);
+            }
+        }
+    }
+
+    return vfs_find(next,path);
 }
 static inodeops_t blkfs_iops={
     .open   =blkfs_iopen,
