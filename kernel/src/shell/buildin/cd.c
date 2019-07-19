@@ -10,7 +10,7 @@ static inline const char* get_home(void){
 }
 
 int mysh_cd(void* args[]){
-    char* dir=args[1];
+    const char* dir=args[1];
     if(!*dir)dir=get_home();
 
     if(vfs->chdir(dir)){
