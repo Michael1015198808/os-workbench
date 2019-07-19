@@ -164,7 +164,7 @@ static inode_t* devfs_ifind(inode_t* cur,const char* path,int flags){
             }
         }
     }
-    return next->ops->next(next,path,flags);
+    return vfs_find(next,path,flags);
 }
 //.func_name=dev_ifunc_name
 //i for inode
