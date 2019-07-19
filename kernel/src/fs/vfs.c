@@ -136,7 +136,7 @@ int vfs_unlink(const char *path){
     TODO();
 }
 inode_t* vfs_lookup(const char* path,int flags){
-    return vfs_root->lookup(vfs_root,path,flags);
+    return vfs_root->ops->find(vfs_root,path,flags);
 }
 static inline int vfs_open_real(const char *path,int flags){
     task_t* current=get_cur();
