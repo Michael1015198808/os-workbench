@@ -242,7 +242,7 @@ static inode_t* procfs_ifind(inode_t* cur,const char* path,int flags){
             }
         }
     }
-    return vfs->find(next);
+    return vfs->find(next,path,flags);
 }
 
 
