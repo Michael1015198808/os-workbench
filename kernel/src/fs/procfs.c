@@ -25,7 +25,10 @@ const char* per_task_info[]={
 };
 
 void other_info_init(filesystem* fs);
+
 static inodeops_t procfs_iops;
+static uint8_t num[2]={0,0};
+
 static void procfs_init(filesystem* fs,const char* name,device_t *dev){
     fs->name=name;
     fs->dev=dev;
@@ -39,7 +42,7 @@ static void procfs_init(filesystem* fs,const char* name,device_t *dev){
             .ptr   =num,
             .fs    =fs,
             .ops   =&procfs_iops,
-        },
+        };
     for(int i=0;i<0x40;++i){
         for(int j=0;j<3;++j){
             int idx=i*3+j;
@@ -251,7 +254,6 @@ static inodeops_t procfs_iops={
     .unlink =procfs_iunlink,
 };
 
-static uint8_t num[2]={0,0};
 filesystem procfs={
     .ops     =&procfs_ops,
     .dev     =NULL,
