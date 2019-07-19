@@ -20,6 +20,7 @@ struct{
     {"/"        ,".././a/..","/"            },
     {"/test/"   ,"/dev/a"   ,"/dev/a"       },
     {"/test/"   ,"/../../a" ,"/a"           },
+    {"/test/"   ,"///dev/..","/test"        },
 };
 void dir_test_init(void){
     char dest[0x100];

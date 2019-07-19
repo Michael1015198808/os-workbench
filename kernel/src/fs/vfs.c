@@ -240,10 +240,8 @@ int vfs_chdir(const char* path){
         next=vfs->find(cur->cur_dir,path,O_RDONLY|O_DIRECTORY);
     }
     if(next){
-        char new_pwd[0x100];
         cur->cur_dir=next;
-        to_absolute(new_pwd,cur->pwd,path);
-        strcpy(cur->pwd,new_pwd);
+        dir_cat(cur->pwd,path);
         return 0;
     }
     return -1;
