@@ -5,7 +5,12 @@
 #include <dir.h>
 #include <vfs.h>
 
-void panic(char*);
+#define panic(...) \
+    do{ \
+        fprintf(2,__VA_ARGS__); \
+        exit(); \
+    }while(0)
+
 int runcmd(struct cmd *cmd);
 static inline void run_redir_cmd(struct cmd* cmd);
 static inline void run_pipe_cmd (struct cmd* cmd);
