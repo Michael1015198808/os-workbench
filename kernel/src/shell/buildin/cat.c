@@ -15,18 +15,15 @@ static void single_cat(int fd,char buf[0x208],char* file){
 }
 
 int mysh_cat(void *args[]){
-    const char* pwd=get_pwd();
     char buf[0x208];
     int err=0;
     if(args[1]){
         for(int i=1;args[i];++i){
             if(strcmp(args[i],"-")){
-                char file[0x100];
-                to_absolute(file,pwd,args[i]);
 
-                int fd=vfs->open(file,O_RDONLY);
+                int fd=vfs->open(args[i],O_RDONLY);
                 if(fd>0){
-                    single_cat(fd,buf,file);
+                    single_cat(fd,buf,args[i]);
                 }
                 error_print("%s: ",args[i]);
             }else{

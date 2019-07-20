@@ -89,7 +89,11 @@ int vfs_unmount(const char* path){
     return ret;
 }
 inode_t* vfs_lookup(const char* path,int flags){
-    return vfs_root->ops->find(vfs_root,path,flags);
+    if(*path=='/'){
+        return vfs_root->ops->find(vfs_root,path,flags);
+    }else{
+        return get_cur()->cur_dir->ops->find(vfs_root,path,flags);
+    }
 }
 int vfs_mkdir(const char* path){
     return vfs_lookup(path,O_RDONLY|O_CREAT|O_DIRECTORY)!=NULL;
@@ -194,13 +198,7 @@ int vfs_close(int fd){
 int vfs_chdir(const char* path){
     task_t* cur=get_cur();
     inode_t* next=NULL;
-    if(path[0]=='/'){
-        //Absolute path
-        next=vfs_lookup(path,O_RDONLY|O_DIRECTORY);
-    }else{
-        //Relative path
-        next=vfs_find(cur->cur_dir,path,O_RDONLY|O_DIRECTORY);
-    }
+    next=vfs_lookup(path,O_RDONLY|O_DIRECTORY);
     if(next){
         cur->cur_dir=next;
         dir_cat(cur->pwd,path);
