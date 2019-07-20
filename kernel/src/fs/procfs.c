@@ -94,7 +94,9 @@ static ssize_t procfs_iread(vfile_t* file,char* buf,size_t size){
     ssize_t nread=0;
     uint8_t* p=file->inode->ptr;
     task_t* task=tasks[p[0]];
-    if(p){
+    if(file->inode==procfs.root){
+        nread=EISDIR;
+    }else{
         if(task){
             switch(p[1]){
                 case PROC_DIR:
@@ -113,8 +115,6 @@ static ssize_t procfs_iread(vfile_t* file,char* buf,size_t size){
                     break;
             }
         }
-    }else{
-        nread=EISDIR;
     }
     return nread;
 }

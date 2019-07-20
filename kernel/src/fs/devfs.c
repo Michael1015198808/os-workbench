@@ -24,7 +24,7 @@ static void devfs_init(filesystem* fs,const char* name,device_t *dev){
             .fs =fs,
             .ops=&devfs_iops,
         };
-    fs->root->ptr=dev_lookup("null");
+
     for(int i=0;i<devices_cnt;++i){
         fs->inodes[i].ptr=(void*)devices[i];
         fs->inodes[i].fs=fs;
@@ -93,7 +93,7 @@ static ssize_t devfs_iread(vfile_t* file,char* buf,size_t size){
 
 static ssize_t devfs_ireaddir(vfile_t* file,char* buf,size_t size){
     if(file->inode!=devfs.root){
-        warn("%s: Not a directory",get_dev(file)->name);
+        warn("Not a directory");
     }
     if(file->offset==devices_cnt)return 0;
     strcpy(buf,devices[file->offset]->name);
