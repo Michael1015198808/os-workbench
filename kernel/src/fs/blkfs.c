@@ -195,7 +195,7 @@ static inline inode_t* new_direc(
         .size  =0,
         .type  =YLS_DIR,
     };
-    write(dev,offset,&file,sizeof(file));
+    write(dev,offset,&off,4);
 
     int id=(inode-INODE_START)/0x10;
     *(yls_node*)fs->inodes[id].ptr=file;
@@ -219,7 +219,7 @@ static inline inode_t* new_file(
         .size  =0,
         .type  =YLS_FILE,
     };
-    write(dev,offset,&file,sizeof(file));
+    write(dev,offset,&off,4);
 
     int id=(inode-INODE_START)/0x10;
     *(yls_node*)fs->inodes[id].ptr=file;
@@ -276,7 +276,7 @@ static inode_t* blkfs_ifind(inode_t* cur,const char* path,int flags){
                     if(flags&O_DIRECTORY)//Only mkdir will gets here
                         return new_direc(cur,offset,path,flags);
                     else
-                        return new_file(cur,offset,path,flags);
+                        return new_file (cur,offset,path,flags);
                 }else{
                     warn("No such file or directory");
                     return NULL;
