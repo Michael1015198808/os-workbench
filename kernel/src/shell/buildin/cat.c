@@ -10,7 +10,7 @@ static void single_cat(int fd,char buf[0x208],char* file){
         vfs->write(STDOUT,buf,nread);
     }
     if(nread==EISDIR){
-        warn("%s: Is a directory",file);
+        warn("Is a directory");
     }
 }
 
