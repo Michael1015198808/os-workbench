@@ -191,7 +191,7 @@ static inline inode_t* new_direc(
     uint32_t off=new_block(dev),inode=new_inode(dev);
     yls_node file={
         .refcnt=1,
-        .info  =0,
+        .info  =new_block(dev),
         .size  =0,
         .type  =YLS_DIR,
     };
@@ -215,7 +215,7 @@ static inline inode_t* new_file(
     uint32_t off=new_block(dev),inode=new_inode(dev);
     yls_node file={
         .refcnt=1,
-        .info  =0,
+        .info  =new_block(dev),
         .size  =0,
         .type  =YLS_FILE,
     };
