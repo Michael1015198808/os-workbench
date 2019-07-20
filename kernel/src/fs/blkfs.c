@@ -181,6 +181,12 @@ static off_t blkfs_ilseek(vfile_t* file,off_t offset,int whence){
     BARRIER();
 }
 
+static inline uint32_t get_id(inode_t* cur){
+    const filesystem* fs=cur->fs;
+    uint32_t ret=cur-fs->inodes;
+    Assert(fs->inodes[ret]==cur,"get_id returns a wrong number");
+    return ret;
+}
 static inline inode_t* new_direc(
         const inode_t* cur,uint32_t offset,const char* filename,int flags){
     const filesystem* fs=cur->fs;
@@ -202,7 +208,8 @@ static inline inode_t* new_direc(
 
     write(dev,off,&id,4);
     write(dev,off+4,filename,strlen(filename));
-    write(dev,file->info,cur-fs->inodes,4);
+    uint32_t parent_id=get_id(cur);
+    write(dev,file.info,&parent_id,4);
     return fs->inodes+id;
 }
 
