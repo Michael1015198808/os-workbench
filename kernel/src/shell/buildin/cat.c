@@ -27,9 +27,8 @@ int mysh_cat(void *args[]){
                 int fd=vfs->open(file,O_RDONLY);
                 if(fd>0){
                     single_cat(fd,buf,file);
-                }else{
-                    error_print("%s: ",args[i]);
                 }
+                error_print("%s: ",args[i]);
             }else{
                 single_cat(0,buf,NULL);
             }
