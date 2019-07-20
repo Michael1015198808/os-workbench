@@ -196,10 +196,10 @@ int vfs_close(int fd){
 }
 
 int vfs_chdir(const char* path){
-    task_t* cur=get_cur();
     inode_t* next=NULL;
     next=vfs_lookup(path,O_RDONLY|O_DIRECTORY);
     if(next){
+        task_t* cur=get_cur();
         cur->cur_dir=next;
         dir_cat(cur->pwd,path);
         return 0;
