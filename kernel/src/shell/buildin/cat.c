@@ -1,5 +1,6 @@
 #include <devices.h>
 #include <klib.h>
+#include <vfs.h>
 #include <yls.h>
 #include <dir.h>
 
