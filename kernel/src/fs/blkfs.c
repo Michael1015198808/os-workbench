@@ -202,6 +202,7 @@ static inline inode_t* new_direc(
 
     write(dev,off,&id,4);
     write(dev,off+4,filename,strlen(filename));
+    write(dev,file->info,cur-fs->inodes,4);
     return fs->inodes+id;
 }
 
@@ -253,9 +254,7 @@ static inode_t* blkfs_ifind(inode_t* cur,const char* path,int flags){
             if(cur==cur->fs->root){
                 next=cur->fs->root_parent;
             }else{
-                uint32_t off;
-                read(dev,offset,&off,4);
-                read(dev,off,&id,4);
+                read(dev,offset,&id,4);
                 next=fs->inodes+id;
             }
             path+=2;

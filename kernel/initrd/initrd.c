@@ -85,7 +85,7 @@ struct pair{
     /* / */
     {0x400,0x00000000},// "/"'s inode
     {0x404,       '/'},// "/"'s name
-    {0x480,0x00000400},// "/"'s info: /
+    {0x480,0x00000000},// "/"'s info: /
     {0x484,0x00000500},// "/"'s info: test
     {0x488,0x00000600},// "/"'s info: txt
     {0x48c,0x00000700},// "/"'s info: mnt
@@ -96,7 +96,7 @@ struct pair{
     /* /test */
     {0x500,0x00000001},// "/test"'s inode
     {0x504,0x74736574},// "/test"'s name
-    {0x580,0x00000400},// "/test"'s info
+    {0x580,0x00000000},// "/test"'s info
     /* /txt */
     {0x600,0x00000002},// "/txt"'s inode
     {0x604,0x00747874},// "/txt"'s name
@@ -105,26 +105,26 @@ struct pair{
     /* /mnt */
     {0x700,0x00000003},// "/mnt"'s inode
     {0x704,0x00746e6d},// "/mnt"'s name
-    {0x780,0x00000400},// "/mnt"'s info
+    {0x780,0x00000000},// "/mnt"'s info
     /* /dev */
     {0x800,0x00000004},// "/dev"'s inode
     {0x804,0x00766564},// "/dev"'s name
-    {0x880,0x00000400},// "/dev"'s info
+    {0x880,0x00000000},// "/dev"'s info
     /* /proc */
     {0x900,0x00000005},// "/proc"'s inode
     {0x904,0x636f7270},// "/proc"'s name
-    {0x980,0x00000400},// "/proc"'s info
+    {0x980,0x00000000},// "/proc"'s info
     /* /home */
     {0xa00,0x00000006},// "/home"'s inode
     {0xa04,0x656d6f68},// "/home"'s name
-    {0xa80,0x00000400},// "/home"'s info
+    {0xa80,0x00000000},// "/home"'s info
     {0xa84,0x00000b00},// "/home"'s info
     // /home/
     /* michael */
     {0xb00,0x00000007},// "michael"'s inode
     {0xb04,0x6863696d},// "michael"'s name
     {0xb08,0x006c6561},// "michael"'s name
-    {0xb80,0x00000400},// "michael"'s info
+    {0xb80,0x00000006},// "michael"'s info
 };
 int main(){
     for(int i=1;i<sizeof(pairs)/sizeof(pairs[0]);++i){
