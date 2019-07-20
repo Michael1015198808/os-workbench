@@ -102,7 +102,7 @@ gettoken(char **ps, char *es, char **q, char **eq)
             s++;
         }while(*s!=match&&*s);
         if(!*s)
-            panic("syntax - missing %c",match);
+            panic("syntax - missing %c\n",match);
       }
       ++s;
       break;

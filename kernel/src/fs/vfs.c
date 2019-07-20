@@ -88,43 +88,11 @@ int vfs_unmount(const char* path){
     pthread_mutex_unlock(&mount_table_lk);
     return ret;
 }
+inode_t* vfs_lookup(const char* path,int flags){
+    return vfs_root->ops->find(vfs_root,path,flags);
+}
 int vfs_mkdir(const char* path){
-    TODO();
-    /*
-    extern inodeops_t yls_iops;
-    yls_node cur;
-
-    inode_t inode;
-    inode.ptr=&cur;
-    inode.fs=&rd[0];
-    inode.ops=&yls_iops;
-    inode.offset=0;
-
-    vfile_t vfile;
-    vfile.ptr   =&inode;
-    vfile.type  =VFILE_FILE;
-    //
-    extern inodeops_t yls_iops;
-    Assert(inode->ops==&yls_iops,
-            "Something wrong happens when try to open /");
-            //
-
-    struct{
-        uint32_t type;
-        const char* path;
-    }info;
-
-    extern ssize_t rd_read(device_t *dev, off_t offset, void *buf, size_t count);
-    extern device_t *devices[];
-    rd_read(devices[0],HEADER_LEN,&cur,12);
-    int pos=find_path(devices[0],&inode,path);
-
-    info.type=YLS_DIR;
-    info.path=path+pos;
-    printf("%s\n%s\n",path,info.path);
-
-    return inode.ops->write(&vfile,(void*)&info,strlen(path));
-    */
+    return vfs_lookup(path,O_RDONLY|O_CREAT|O_DIRECTORY)!=NULL;
 }
 int vfs_rmdir(const char *path){
     TODO();
@@ -134,9 +102,6 @@ int vfs_link(const char *oldpath, const char *newpath){
 }
 int vfs_unlink(const char *path){
     TODO();
-}
-inode_t* vfs_lookup(const char* path,int flags){
-    return vfs_root->ops->find(vfs_root,path,flags);
 }
 static inline int vfs_open_real(const char *path,int flags){
     task_t* current=get_cur();
