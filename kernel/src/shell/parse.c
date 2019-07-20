@@ -94,7 +94,7 @@ gettoken(char **ps, char *es, char **q, char **eq)
   switch(*s){
     case '\"':
     case '\'':
-      ret = 'a';
+      ret = '\"';
       {
         char match=*s;
         do{
@@ -261,10 +261,16 @@ parseexec(char **ps, char *es)
   while(!peek(ps, es, "|)&;")){
     if((tok=gettoken(ps, es, &q, &eq)) == 0)
       break;
-    if(tok != 'a')
-      panic("syntax");
-    cmd->argv[argc] = q;
-    cmd->eargv[argc] = eq;
+    switch(tok){
+      default:
+        panic("syntax");
+      case '\"':
+        ++q;
+        --eq;
+      case 'a':
+        cmd->argv[argc] = q;
+        cmd->eargv[argc] = eq;
+    }
     argc++;
     if(argc >= MAXARGS)
       panic("too many args");
