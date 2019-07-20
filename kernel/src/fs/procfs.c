@@ -71,17 +71,7 @@ static fsops_t procfs_ops={
     .lookup=procfs_lookup,
     .close =procfs_close,
 };
-/*
- * procfs_iopen
- * procfs_iclose
- * procfs_iread
- * procfs_iwrite
- * procfs_ilseek
- * procfs_imkdir
- * procfs_irmdir
- * procfs_ilink
- * procfs_unlink
- */
+
 static int procfs_iopen(vfile_t* file,int flags){
     file->offset=0;
     file->flags=flags;
@@ -107,6 +97,7 @@ static ssize_t procfs_iread(vfile_t* file,char* buf,size_t size){
     if(task){
         switch(p[1]){
             case PROC_DIR:
+                nread=EISDIR;
                 warn(":Is a dicrectory");
                 break;
             case PROC_PWD:

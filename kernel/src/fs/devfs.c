@@ -81,8 +81,13 @@ static int devfs_iclose(vfile_t* file){
 
 static ssize_t devfs_iread(vfile_t* file,char* buf,size_t size){
     device_t* dev=get_dev(file);
-    ssize_t ret  =dev->ops->read(dev,file->offset,buf,size);
-    file->offset+=ret;
+    ssize_t ret;
+    if(dev){
+        ret=dev->ops->read(dev,file->offset,buf,size);
+        file->offset+=ret;
+    }else{
+        return EISDIR;
+    }
     return ret;
 }
 
