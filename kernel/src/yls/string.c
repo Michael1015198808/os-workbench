@@ -108,7 +108,7 @@ uint32_t new_inode(device_t* dev){
         dev->ops->read(dev,off,&buf,0x4);
         if(buf==0){
             uint32_t one=1;
-            dev->ops->read(dev,off,&one,0x4);
+            dev->ops->write(dev,off,&one,0x4);
             return off;
         }
     }
