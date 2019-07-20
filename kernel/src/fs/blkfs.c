@@ -319,11 +319,9 @@ filesystem blkfs[2]={
     {
         .name    =NULL,
         .ops     =&blkfs_ops,
-        .inodeops=&blkfs_iops,
     },
     {
         .name    =NULL,
         .ops     =&blkfs_ops,
-        .inodeops=&blkfs_iops,
     },
 };

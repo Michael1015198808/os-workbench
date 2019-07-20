@@ -316,7 +316,6 @@ static inodeops_t procfs_iops={
 filesystem procfs={
     .ops     =&procfs_ops,
     .dev     =NULL,
-    .inodeops=&procfs_iops,
 };
 
 
