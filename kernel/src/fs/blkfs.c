@@ -52,7 +52,7 @@ static int blkfs_iopen(vfile_t* file,int flags){
         file->offset=0;
         if(  (flags & O_WRONLY)&&
             !(flags & O_RDONLY)&&
-            !(flags & O_APPEND) ){
+            /*!(flags & O_APPEND)*/ ){
             ((yls_node*)file->inode->ptr)->size=0;
         }
     }
