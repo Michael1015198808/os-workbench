@@ -5,7 +5,6 @@
 #include <vfs.h>
 
 int mysh_touch(void *args[]){
-    const char* pwd=get_pwd();
     if(args[1]){
         for(int i=1;args[i];++i){
             int fd=vfs->open(args[i],O_RDONLY|O_CREAT);
