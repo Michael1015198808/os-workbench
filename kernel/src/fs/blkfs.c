@@ -183,7 +183,6 @@ static off_t blkfs_ilseek(vfile_t* file,off_t offset,int whence){
 
 static inline inode_t* new_direc(
         const inode_t* cur,uint32_t offset,const char* filename,int flags){
-    TODO();
     const filesystem* fs=cur->fs;
     device_t* dev=fs->dev;
 
