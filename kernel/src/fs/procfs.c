@@ -94,24 +94,27 @@ static ssize_t procfs_iread(vfile_t* file,char* buf,size_t size){
     ssize_t nread=0;
     uint8_t* p=file->inode->ptr;
     task_t* task=tasks[p[0]];
-    if(task){
-        switch(p[1]){
-            case PROC_DIR:
-                nread=EISDIR;
-                warn(":Is a dicrectory");
-                break;
-            case PROC_PWD:
-                file->offset+=
-                    (nread+=snprintf(buf,size,task->pwd+file->offset));
-                break;
-            case PROC_NAME:
-                file->offset+=
-                    (nread+=snprintf(buf,size,task->name+file->offset));
-                break;
-            default:
-                warn(":Unknown file type");
-                break;
+    if(p){
+        if(task){
+            switch(p[1]){
+                case PROC_DIR:
+                    nread=EISDIR;
+                    break;
+                case PROC_PWD:
+                    file->offset+=
+                        (nread+=snprintf(buf,size,task->pwd+file->offset));
+                    break;
+                case PROC_NAME:
+                    file->offset+=
+                        (nread+=snprintf(buf,size,task->name+file->offset));
+                    break;
+                default:
+                    warn(":Unknown file type");
+                    break;
+            }
         }
+    }else{
+        nread=EISDIR;
     }
     return nread;
 }
