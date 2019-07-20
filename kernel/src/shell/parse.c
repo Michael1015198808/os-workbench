@@ -7,10 +7,11 @@
 #include <vfs.h>
 
 
-void panic(char *s){
-    vfs->write(2,s,strlen(s));
-    exit();
-}
+#define panic(...) \
+    do{ \
+        fprintf(2,__VA_ARGS__); \
+        exit(); \
+    }while(0)
 
 //PAGEBREAK!
 // Constructors
@@ -99,7 +100,9 @@ gettoken(char **ps, char *es, char **q, char **eq)
         char match=*s;
         do{
             s++;
-        }while(*s!=match);
+        }while(*s!=match&&*s);
+        if(!*s)
+            panic("syntax - missing %c",match);
       }
       ++s;
       break;
