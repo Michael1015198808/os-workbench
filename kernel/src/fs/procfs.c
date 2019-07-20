@@ -272,12 +272,24 @@ static inode_t* procfs_ifind(inode_t* cur,const char* path,int flags){
     }else{
         uint8_t *p=cur->ptr;
         if(p[0]==PROC_DIR){
-            for(int i=0;i<3;++i){
-                int len=strlen(per_task_info[i]);
-                if(!strncmp(path,per_task_info[i],len)){
-                    next=procfs.inodes+p[0]+i;
-                    path+=len;
-                    break;
+            if(path[0]=='.'){
+                if(path[1]=='.'){
+                    //.. for parent
+                    next=procfs.root;
+                    path+=2;
+                }else{
+                    //. for current
+                    next=cur;
+                    ++path;
+                }
+            }else{
+                for(int i=0;i<3;++i){
+                    int len=strlen(per_task_info[i]);
+                    if(!strncmp(path,per_task_info[i],len)){
+                        next=procfs.inodes+p[0]+i;
+                        path+=len;
+                        break;
+                    }
                 }
             }
         }

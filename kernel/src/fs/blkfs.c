@@ -43,15 +43,22 @@ static fsops_t blkfs_ops={
 };
 
 static int blkfs_iopen(vfile_t* file,int flags){
+    file->lk=PTHREAD_MUTEX_INITIALIZER;
+    pthread_mutex_lock(&file->lk);
     if(((yls_node*)file->inode->ptr)->type==YLS_DIR){
         //First 4 bytes indicates the parent directory in my file system
         file->offset=4;
     }else{
         file->offset=0;
+        if(  (flags & O_WRONLY)&&
+            !(flags & O_RDONLY)&&
+            !(flags & O_APPEND) ){
+            ((yls_node*)file->inode->ptr)->size=0;
+        }
     }
     file->flags=flags;
     file->refcnt=1;
-    file->lk=PTHREAD_MUTEX_INITIALIZER;
+    pthread_mutex_unlock(&file->lk);
     return 0;
 }
 
