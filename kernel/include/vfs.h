@@ -8,13 +8,14 @@
 #define STDOUT 1
 #define STDERR 2
 
-#define O_RDONLY    1
-#define O_WRONLY    2
-#define O_CREATE    4
-#define O_CREAT    O_CREATE
-#define O_DIRECTORY 8
+#define O_RDONLY    0x01
+#define O_WRONLY    0x02
+#define O_CREATE    0x04
+#define O_DIRECTORY 0x08
+#define O_APPEND    0x10
 
 #define O_RDWR (O_RDONLY | O_WRONLY)
+#define O_CREAT    O_CREATE
 
 
 #define SEEK_SET 0
