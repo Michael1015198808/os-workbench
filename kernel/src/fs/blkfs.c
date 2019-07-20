@@ -181,7 +181,7 @@ static off_t blkfs_ilseek(vfile_t* file,off_t offset,int whence){
     BARRIER();
 }
 
-static inline inode_t* new_dir(
+static inline inode_t* new_direc(
         const inode_t* cur,uint32_t offset,const char* filename,int flags){
     TODO();
     const filesystem* fs=cur->fs;
@@ -274,7 +274,10 @@ static inode_t* blkfs_ifind(inode_t* cur,const char* path,int flags){
             if(read(fs->dev,offset,&blk_off,4)!=4||!blk_off){
                 //No more file in this directory
                 if( (flags&O_CREATE) && (path[layer_len]=='\0')){
-                    return new_file(cur,offset,path,flags);
+                    if(flags&O_DIRECTORY)//Only mkdir will gets here
+                        return new_direc(cur,offset,path,flags);
+                    else
+                        return new_file(cur,offset,path,flags);
                 }else{
                     warn("No such file or directory");
                     return NULL;
