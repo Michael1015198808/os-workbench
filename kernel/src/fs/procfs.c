@@ -208,28 +208,6 @@ int is_dir(inode_t* inode){
 static inode_t* procfs_ifind(inode_t* cur,const char* path,int flags){
     inode_t* next=NULL;
 
-    do{ 
-        inode_t* inode=cur;
-        if(!inode){ 
-            warn("No such a file or directory"); 
-            return NULL; 
-        } 
-        if(*path=='/'){ 
-            while(*path=='/')++path; 
-            if(!is_dir(inode)){ 
-                warn("Not a directory"); 
-                return NULL; 
-            } 
-        } 
-        if(!*path){ 
-            if((flags & O_DIRECTORY) && !is_dir(inode)){ 
-                warn("Not a directory"); 
-                return NULL; 
-            } 
-            else return (inode_t*)inode; 
-        } 
-    }while(0);
-
     const filesystem* fs=cur->fs;
 
     if(cur==procfs.root){
@@ -249,6 +227,8 @@ static inode_t* procfs_ifind(inode_t* cur,const char* path,int flags){
             for(int i=0;i<LEN(other_info);++i){
                 if(!strcmp(path,other_info[i])){
                     next=fs->inodes+(0x40*3+i);
+                    path+=strlen(other_info[i]);
+                    break;
                 }
             }
             if(path[0]=='.'){
@@ -276,12 +256,35 @@ static inode_t* procfs_ifind(inode_t* cur,const char* path,int flags){
             for(int i=0;i<3;++i){
                 if(!strcmp(path,per_task_info[i])){
                     next=procfs.inodes+p[0]+i;
-                    path+=strlen(per_task_info[i]);
+                    path+=strlen(other_info[i]);
                     break;
                 }
             }
         }
     }
+
+    do{ 
+        inode_t* inode=cur;
+        if(!inode){ 
+            warn("No such a file or directory"); 
+            return NULL; 
+        } 
+        if(*path=='/'){ 
+            while(*path=='/')++path; 
+            if(!is_dir(inode)){ 
+                warn("Not a directory"); 
+                return NULL; 
+            } 
+        } 
+        if(!*path){ 
+            if((flags & O_DIRECTORY) && !is_dir(inode)){ 
+                warn("Not a directory"); 
+                return NULL; 
+            } 
+            else return (inode_t*)inode; 
+        } 
+    }while(0);
+
     return next->ops->find(next,path,flags);
 }
 
