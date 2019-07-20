@@ -207,6 +207,7 @@ int is_dir(inode_t* inode){
 
 static inode_t* procfs_ifind(inode_t* cur,const char* path,int flags){
     inode_t* next=NULL;
+
     do{ 
         inode_t* inode=cur;
         if(!inode){ 
@@ -275,6 +276,8 @@ static inode_t* procfs_ifind(inode_t* cur,const char* path,int flags){
             for(int i=0;i<3;++i){
                 if(!strcmp(path,per_task_info[i])){
                     next=procfs.inodes+p[0]+i;
+                    path+=strlen(per_task_info[i]);
+                    break;
                 }
             }
         }
