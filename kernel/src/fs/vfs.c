@@ -98,7 +98,12 @@ inode_t* vfs_lookup(const char* path,int flags){
     return start->ops->find(start,path,flags);
 }
 int vfs_mkdir(const char* path){
-    return vfs_lookup(path,O_RDONLY|O_CREAT|O_DIRECTORY)!=NULL;
+    if(vfs_lookup(path,O_RDONLY)){
+        warn("cannot create directory ‘%s’: File exists",path);
+        return -1;
+    }else{
+        return vfs_lookup(path,O_RDONLY|O_CREAT|O_DIRECTORY)!=NULL;
+    }
 }
 int vfs_rmdir(const char *path){
     TODO();
