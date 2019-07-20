@@ -132,7 +132,7 @@ static ssize_t blkfs_iwrite(vfile_t* file,const char* buf,size_t size){
     filesystem* fs  = file->inode->fs;
     uint32_t fd_off;
     if(file->flags&O_APPEND){
-        fd_off = file->inode->ops->seek(file,0,SEEK_END);
+        fd_off = file->inode->ops->lseek(file,0,SEEK_END);
     }else{
         fd_off = file->offset;
     }
