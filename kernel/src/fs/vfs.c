@@ -99,7 +99,7 @@ inode_t* vfs_lookup(const char* path,int flags){
 }
 int vfs_mkdir(const char* path){
     if(vfs_lookup(path,O_RDONLY)){
-        warn("cannot create directory ‘%s’: File exists",path);
+        warn("cannot create directory '%s': File exists",path);
         return -1;
     }else{
         return vfs_lookup(path,O_RDONLY|O_CREAT|O_DIRECTORY)!=NULL;
