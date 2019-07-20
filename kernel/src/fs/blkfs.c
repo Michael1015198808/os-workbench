@@ -184,7 +184,7 @@ static off_t blkfs_ilseek(vfile_t* file,off_t offset,int whence){
 static inline uint32_t get_id(inode_t* cur){
     const filesystem* fs=cur->fs;
     uint32_t ret=cur-fs->inodes;
-    Assert(fs->inodes[ret]==cur,"get_id returns a wrong number");
+    Assert(fs->inodes+ret==cur,"get_id returns a wrong number");
     return ret;
 }
 static inline inode_t* new_direc(
