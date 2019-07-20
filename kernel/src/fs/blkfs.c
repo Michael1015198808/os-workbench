@@ -130,7 +130,12 @@ static ssize_t inline blkfs_ireaddir(vfile_t* file,char* buf,size_t size){
 
 static ssize_t blkfs_iwrite(vfile_t* file,const char* buf,size_t size){
     filesystem* fs  = file->inode->fs;
-    uint32_t fd_off = file->offset;
+    uint32_t fd_off;
+    if(file->flags&O_APPEND){
+        fd_off = file->inode->ops->seek(file,0,SEEK_END);
+    }else{
+        fd_off = file->offset;
+    }
     yls_node* node  = file->inode->ptr;
     uint32_t off    = node->info;
     uint32_t fsize  = node->size;
@@ -165,37 +170,69 @@ static off_t blkfs_ilseek(vfile_t* file,off_t offset,int whence){
         case SEEK_CUR:
             return file->offset+=offset;
         case SEEK_END:
-            TODO();
+            {
+                yls_node* node  = file->inode->ptr;
+                uint32_t fsize  = node->size;
+                return file->offset=(offset+fsize);
+            }
     }
     BARRIER();
 }
 
-static inline inode_t* new_file(const inode_t* cur,uint32_t offset,const char* path,int flags){
+static inline inode_t* new_dir(
+        const inode_t* cur,uint32_t offset,const char* filename,int flags){
+    TODO();
     const filesystem* fs=cur->fs;
     device_t* dev=fs->dev;
 
     ssize_t(*const write)(device_t*,off_t,const void*,size_t)=fs->dev->ops->write;
 
     uint32_t off=new_block(dev),inode=new_inode(dev);
-    write(dev,offset,&off,4);
-    log("  off:%x\ninode:%x\n",off,inode);
+    yls_node file={
+        .refcnt=1,
+        .info  =off,
+        .size  =0,
+        .type  =YLS_DIR,
+    };
+    write(dev,offset,&file,sizeof(file));
+
     int id=(inode-INODE_START)/0x10;
-    *(yls_node*)fs->inodes[id].ptr=(yls_node){
+    *(yls_node*)fs->inodes[id].ptr=file;
+
+    write(dev,off,&id,4);
+    write(dev,off+4,filename,strlen(filename));
+    return fs->inodes+id;
+}
+
+static inline inode_t* new_file(
+        const inode_t* cur,uint32_t offset,const char* filename,int flags){
+    const filesystem* fs=cur->fs;
+    device_t* dev=fs->dev;
+
+    ssize_t(*const write)(device_t*,off_t,const void*,size_t)=fs->dev->ops->write;
+
+    uint32_t off=new_block(dev),inode=new_inode(dev);
+    yls_node file={
         .refcnt=1,
         .info  =0,
         .size  =0,
         .type  =YLS_FILE,
     };
+    write(dev,offset,&file,sizeof(file));
+
+    int id=(inode-INODE_START)/0x10;
+    *(yls_node*)fs->inodes[id].ptr=file;
+
     write(dev,off,&id,4);
-    write(dev,off+4,path,strlen(path));
+    write(dev,off+4,filename,strlen(filename));
     return fs->inodes+id;
 }
-
 
 int is_dir(inode_t* inode){
     yls_node* node=inode->ptr;
     return node->type==YLS_DIR;
 }
+
 static inode_t* blkfs_ifind(inode_t* cur,const char* path,int flags){
     inode_t* next=NULL;
     check(cur,path,flags);
