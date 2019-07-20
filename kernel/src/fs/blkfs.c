@@ -281,7 +281,7 @@ static inode_t* blkfs_ifind(inode_t* cur,const char* path,int flags){
                     warn("No such file or directory");
                     return NULL;
                 }
-            };
+            }
             if(block_cmp(fs->dev,blk_off,layer)){
                 //Mismatch
                 offset+=4;
