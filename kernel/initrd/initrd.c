@@ -129,7 +129,7 @@ struct pair{
 int main(){
     for(int i=1;i<sizeof(pairs)/sizeof(pairs[0]);++i){
         if(pairs[i].off<=pairs[i-1].off){
-            printf("%d\n",i);
+            fprintf(stderr,"%d\n",i);
             return 1;
         }
     }

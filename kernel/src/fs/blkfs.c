@@ -249,7 +249,7 @@ static inode_t* blkfs_ifind(inode_t* cur,const char* path,int flags){
     const filesystem* fs=cur->fs;
     device_t* dev=fs->dev;
     yls_node* node=cur->ptr;
-    uint32_t offset=node->info;
+    uint32_t offset=node->info+4;//Skip parent
 
     ssize_t(*const read )(device_t*,off_t,      void*,size_t)=fs->dev->ops->read;
 
