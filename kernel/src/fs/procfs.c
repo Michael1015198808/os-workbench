@@ -51,7 +51,7 @@ static void procfs_init(filesystem* fs,const char* name,device_t *dev){
             uint8_t *p=fs->inodes[idx].ptr;
             p[0]=i;p[1]=j;
             fs->inodes[idx].fs=fs;
-            fs->inodes[idx].ops=fs->inodeops;
+            fs->inodes[idx].ops=procfs_iops;
         }
     }
     other_info_init(fs);

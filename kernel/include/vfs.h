@@ -56,15 +56,6 @@ typedef struct {
 ssize_t std_read(void *buf);
 ssize_t std_write(void *buf);
 
-#define VFILE_FILE  1
-#define VFILE_DEV   2
-#define VFILE_PROC  3
-#define VFILE_MEM   4
-//Read/Write to memory directly
-//can be used for pipe
-#define VFILE_NULL  5
-//Read from it always returns 0(Work as EOF)
-//Write to it always returns nbyte
 struct vfile{
     uint32_t offset;
     inode_t* inode;
@@ -85,7 +76,6 @@ struct filesystem{
     //Call devops by fsops
     device_t *dev;
     inode_t* inodes,*root,*root_parent;
-    inodeops_t* inodeops;
 };
 
 struct path_pair{

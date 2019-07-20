@@ -92,6 +92,17 @@ gettoken(char **ps, char *es, char **q, char **eq)
     *q = s;
   ret = *s;
   switch(*s){
+    case '\"':
+    case '\'':
+      ret = 'a';
+      {
+        char match=*s;
+        do{
+            s++;
+        }while(*s!=match);
+      }
+      ++s;
+      break;
     case 0:
       break;
     case '|':

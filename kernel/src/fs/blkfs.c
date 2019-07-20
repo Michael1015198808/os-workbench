@@ -10,6 +10,8 @@
  *      \---inode---fs(blkfs)
  *                 \ops(blkfs_iops)
  */
+
+static inodeops_t blkfs_iops;
 static void blkfs_init(filesystem* fs,const char* name,device_t* dev){
     fs->name  =name;
     fs->dev   =dev;
@@ -23,7 +25,7 @@ static void blkfs_init(filesystem* fs,const char* name,device_t* dev){
                 fs->inodes[i].ptr,
                 sizeof(yls_node));
         fs->inodes[i].fs=fs;
-        fs->inodes[i].ops=fs->inodeops;
+        fs->inodes[i].ops=blkfs_iops;
     }
 }
 

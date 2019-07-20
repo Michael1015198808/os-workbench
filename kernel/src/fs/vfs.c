@@ -44,8 +44,8 @@ void vfs_init(void){
 int vfs_access(const char *path, int mode){
     return 0;
 }
-//Path SHOULD all end with /
-//"/dev/ramdisk0" will be transformed into "/ramdisk0"
+
+//Paths end up without / is also support
 int vfs_mount(const char *path, filesystem *fs){
     if(strcmp(path,"/")){
         pthread_mutex_lock(&mount_table_lk);
@@ -243,6 +243,7 @@ int vfs_chdir(const char* path){
     }
     return -1;
 }
+
 MODULE_DEF(vfs){
   .init     =vfs_init,
   .access   =vfs_access,
