@@ -13,7 +13,7 @@ include ../Makefile.lab
 
 .PHONY: initrd
 
-initrd: initrd/initrd.c
+initrd:
 	@echo ramdisk0 updated!
 	@gcc -o initrd/initrd initrd/initrd.c
 	@initrd/initrd > build/ramdisk.img
