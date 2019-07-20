@@ -89,11 +89,13 @@ int vfs_unmount(const char* path){
     return ret;
 }
 inode_t* vfs_lookup(const char* path,int flags){
+    inode_t* start=NULL;
     if(*path=='/'){
-        return vfs_root->ops->find(vfs_root,path,flags);
+        start=vfs_root;
     }else{
-        return get_cur()->cur_dir->ops->find(vfs_root,path,flags);
+        start=get_cur()->cur_dir;
     }
+    return start->ops->find(start,path,flags);
 }
 int vfs_mkdir(const char* path){
     return vfs_lookup(path,O_RDONLY|O_CREAT|O_DIRECTORY)!=NULL;
