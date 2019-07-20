@@ -24,28 +24,20 @@ static inline void single_ls(const char* path,int* err){
         std_write("\n");
 }
 
-//path here may be relative or absolute
-static inline void single_rela_ls(const char* path,int* err){
-    char tmp[0x100];
-    task_t* cur=get_cur();
-    to_absolute(tmp,cur->pwd,path);
-    single_ls(tmp,err);
-}
-
 int mysh_ls(void *args[]){
     int err=0,i=1;
     if(args[1]){
         if(args[2]){
             for(i=1;args[i];++i){
                 fprintf(STDOUT,"%s:\n",args[i]);
-                single_rela_ls(args[i],&err);
+                single_ls(args[i],&err);
                 if(args[i+1]){std_write("\n");}
             }
         }else{
-            single_rela_ls(args[1],&err);
+            single_ls(args[1],&err);
         }
     }else{
-        single_rela_ls(".",&err);
+        single_ls(".",&err);
     }
     return err;
 }
