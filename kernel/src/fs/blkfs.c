@@ -25,7 +25,7 @@ static void blkfs_init(filesystem* fs,const char* name,device_t* dev){
                 fs->inodes[i].ptr,
                 sizeof(yls_node));
         fs->inodes[i].fs=fs;
-        fs->inodes[i].ops=blkfs_iops;
+        fs->inodes[i].ops=&blkfs_iops;
     }
 }
 
