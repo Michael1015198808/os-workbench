@@ -208,6 +208,24 @@ int is_dir(inode_t* inode){
 static inode_t* procfs_ifind(inode_t* cur,const char* path,int flags){
     inode_t* next=NULL;
 
+    do{ 
+        inode_t* inode=cur;
+        if(*path=='/'){ 
+            while(*path=='/')++path; 
+            if(!is_dir(inode)){ 
+                warn("Not a directory"); 
+                return NULL; 
+            } 
+        } 
+        if(!*path){ 
+            if((flags & O_DIRECTORY) && !is_dir(inode)){ 
+                warn("Not a directory"); 
+                return NULL; 
+            } 
+            else return (inode_t*)inode; 
+        } 
+    }while(0);
+
     const filesystem* fs=cur->fs;
 
     if(cur==procfs.root){
@@ -263,28 +281,10 @@ static inode_t* procfs_ifind(inode_t* cur,const char* path,int flags){
         }
     }
 
-    do{ 
-        inode_t* inode=cur;
-        if(!inode){ 
-            warn("No such a file or directory"); 
-            return NULL; 
-        } 
-        if(*path=='/'){ 
-            while(*path=='/')++path; 
-            if(!is_dir(inode)){ 
-                warn("Not a directory"); 
-                return NULL; 
-            } 
-        } 
-        if(!*path){ 
-            if((flags & O_DIRECTORY) && !is_dir(inode)){ 
-                warn("Not a directory"); 
-                return NULL; 
-            } 
-            else return (inode_t*)inode; 
-        } 
-    }while(0);
-
+    if(!next){ 
+        warn("No such a file or directory"); 
+        return NULL; 
+    } 
     return next->ops->find(next,path,flags);
 }
 
