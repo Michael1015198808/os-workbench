@@ -50,7 +50,7 @@ int snprintf(char *out, size_t n, const char *fmt, ...) {
 //Added by Michael
 //Should work as an assistant.
 
-static line isalpha(char c){
+static inline int isalpha(char c){
     return (c>='a'&&c<='z')||
            (c>='A'&&c<='Z');
 }
@@ -150,9 +150,19 @@ inline static int vsnprintf_real(char *out, size_t n, const char *fmt, va_list a
                 case 'f':{
                     dval = va_arg(ap, double);
                     double d=1;
-                    while(dval>d)d*=10;
+                    if(dval>1){
+                        while(dval>d)d*=10;
+                        d/=10;
+                        while(d>0.9){
+                            int j = (int)(dval / d);
+                            output(j + '0');
+                            dval -= j * d;
+                            d /= 10;
+                        }
+                        output('.');
+                    }
                     while (d > 0.001) {
-                        int j = (int)( dval / d);
+                        int j = (int)(dval / d);
                         output(j + '0');
                         dval -= j * d;
                         d /= 10;
