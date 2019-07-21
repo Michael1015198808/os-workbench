@@ -1,4 +1,5 @@
 #include <devices.h>
+#include <shell.h>
 #include <klib.h>
 #include <vfs.h>
 #include <yls.h>
