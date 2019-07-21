@@ -5,7 +5,11 @@
 #include <dir.h>
 
 int mysh_unlink(void *args[]){
-    if(args[1]&&!args[2]){
+    if(args[1]){
+        if(args[2]){
+            fprintf(2,"To much operand\nUsage: unlink FILE\n");
+            return -1;
+        }
         int ret=vfs->unlink(args[1]);
         if(ret){
             printf("unlink failed!\n");

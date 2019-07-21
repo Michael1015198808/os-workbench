@@ -16,6 +16,8 @@ handler(test);
 handler(link);
 handler(unlink);
 handler(rm);
+handler(mv);
+handler(cp);
 
 int exec_buildin(const char* file,void* args[],int *is_buildin);
 

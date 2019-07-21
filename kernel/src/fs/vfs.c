@@ -42,7 +42,7 @@ void vfs_init(void){
 }
 
 int vfs_access(const char *path, int mode){
-    return 0;
+    return vfs_lookup(path,mode)==NULL;
 }
 
 //Paths end up without / is also support

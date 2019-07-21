@@ -30,6 +30,7 @@ static struct Command{
     pair(link   ,"Call the link function to create a link named FILE2 to an existing FILE1."),
     pair(unlink ,"Call the unlink function to remove the specified FILE."),
     pair(rm     ,"Remove (unlink) the FILE(s)."),
+    pair(mv     ,"Rename SOURCE to DEST, or move SOURCE(s) to DIRECTORY."),
 };
 
 int exec_buildin(const char* file,void* args[],int *is_buildin){
