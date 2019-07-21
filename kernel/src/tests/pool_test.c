@@ -26,10 +26,11 @@ void queue2(void *arg){
 }
 
 void pusher(void* arg){
-    for(int i=0;i<5;++i){
-        enqueue(p+2,arg+i);
+    while(1){
+        for(int i=0;i<5;++i){
+            enqueue(p+2,arg+i);
+        }
     }
-    while(1);
 }
 void receiver(void* arg){
     char* get;
