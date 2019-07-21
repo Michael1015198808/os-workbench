@@ -116,12 +116,12 @@ static inline inode_t* get_parent(const char**s){
     if(len==0){
         return get_cur()->cur_dir;
     }else{
+        char new_parent[0x100];
         strncpy(new_parent,path,len);
         return vfs_lookup(new_parent,O_RDONLY);
     }
 }
 int vfs_link(const char *oldpath, const char *newpath){
-    char new_parent[0x100];
     const char* const ori_newpath=newpath;
 
     inode_t* parent=get_parent(&newpath);
