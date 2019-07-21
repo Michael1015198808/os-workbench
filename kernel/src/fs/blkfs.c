@@ -340,7 +340,6 @@ static int blkfs_iunlink(inode_t* parent,const char* name){
     }else{
         offset+=4;
         while(offset){
-            int len=strlen(name);
             uint32_t blk_off;
             if(read(dev,offset,&blk_off,4)!=4||!blk_off){
                 //No more file in this directory
