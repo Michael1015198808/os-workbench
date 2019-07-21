@@ -317,7 +317,7 @@ static int blkfs_ilink(inode_t* parent,const char* name,inode_t* inode){
 
     uint32_t off=new_block(dev),id=get_id(inode);
 
-    uint32_t offset=find_end(dev,node->info+4);
+    uint32_t offset=new_end(dev,node->info+4);
     write(dev,offset,&off,4);
 
     write(dev,off,&id,4);

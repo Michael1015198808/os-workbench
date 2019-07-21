@@ -133,6 +133,18 @@ uint32_t find_end(device_t* dev,uint32_t off){
     }
 }
 
+uint32_t new_end(device_t* dev,uint32_t off){
+    uint32_t end=find_end(dev,off);
+    end+=4;
+    if(end%=BLK_SZ==BLK_MEM){
+        TODO();
+        uint32_t new_end=new_block(dev);
+        dev->ops->write(dev,end,&new_end,4);
+        end=new_end;
+    }
+    return end;
+}
+
 int find_block(device_t* dev,uint32_t* fd_off,uint32_t* off){
     for(;*fd_off>BLK_MEM;*fd_off-=BLK_MEM){
         if(dev->ops->read(dev,*off+BLK_MEM,off,4)!=4)return -1;
