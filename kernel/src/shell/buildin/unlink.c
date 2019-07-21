@@ -10,7 +10,7 @@ int mysh_unlink(void *args[]){
         if(ret){
             printf("unlink failed!\n");
         }
-        error_print(" cannot unlink '%s': ",args[i]);
+        error_print(" cannot unlink '%s': ",args[1]);
         return ret;
     }else{
         fprintf(2,"Missing operand\nUsage: unlink FILE\n");
