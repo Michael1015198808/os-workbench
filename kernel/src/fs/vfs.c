@@ -109,7 +109,7 @@ int vfs_rmdir(const char *path){
     TODO();
 }
 int vfs_link(const char *oldpath, const char *newpath){
-    const char new_parent[0x100];
+    char new_parent[0x100];
     int len=get_last_slash(newpath);
     strncpy(new_parent,newpath,len);
     inode_t* parent=vfs_lookup(new_parent,O_RDONLY);
