@@ -116,11 +116,11 @@ int vfs_link(const char *oldpath, const char *newpath){
     if(parent->ops->find(parent,newpath+len,O_RDONLY)){
         fprintf(2,"link: cannot create link '%s' to '%s': File exist\n",newpath,oldpath);
     }else{
-        inode_t* old=vfs_lookup(old_path,O_RDONLY);
+        inode_t* old=vfs_lookup(oldpath,O_RDONLY);
         if(parent->fs!=old->fs){
             fprintf(2,"link: %s and %s are not from the same filesystem\n",oldpath,newpath);
         }else{
-            return parent->link(parent,newpath+len,old);
+            return parent->ops->link(parent,newpath+len,old);
         }
     }
     return -1;
