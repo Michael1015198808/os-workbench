@@ -321,7 +321,7 @@ static int blkfs_ilink(inode_t* parent,const char* name,inode_t* inode){
     write(dev,offset,&off,4);
 
     write(dev,off,&id,4);
-    write(dev,off+4,filename,strlen(filename));
+    write(dev,off+4,name,strlen(name));
 
     return 0;
 }
