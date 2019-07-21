@@ -113,8 +113,10 @@ static ssize_t inline blkfs_ireaddir(vfile_t* file,char* buf,size_t size){
     switch(node->type){
         case YLS_DIR:
             {
-                if(block_read(fs->dev,off,fd_off,(void*)&off,4)!=4)return 0;
-                if(off==0)return 0;//find_block failed or reached the end
+                do{
+                    if(block_read(fs->dev,off,fd_off,(void*)&off,4)!=4)return 0;
+                    if(off==0)return 0;//find_block failed or reached the end
+                }while(off==YLS_WIPE);
 
                 ssize_t nread=block_read(fs->dev,off,4,buf,size);
                 ret+=nread;
