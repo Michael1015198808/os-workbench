@@ -33,6 +33,7 @@ typedef void(*task_fun)(void*);
 inline task_t* get_cur(void){
     _intr_close();
     int cpu_id=_cpu();
+extern const task_t* currents[MAX_CPU];
     task_t* ret=currents[cpu_id];
     _intr_open();
     return ret;
