@@ -329,7 +329,7 @@ static int blkfs_ilink(inode_t* parent,const char* name,inode_t* inode){
 static int blkfs_iunlink(inode_t* parent,const char* name){
     const filesystem* fs=parent->fs;
     device_t* dev=fs->dev;
-    yls_node* node=cur->ptr;
+    yls_node* node=parent->ptr;
     uint32_t offset=node->info;//Skip parent
 
     ssize_t(*const read )(device_t*,off_t,      void*,size_t)=dev->ops->read;
