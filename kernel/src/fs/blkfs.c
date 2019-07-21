@@ -327,26 +327,27 @@ static int blkfs_ilink(inode_t* parent,const char* name,inode_t* inode){
 }
 
 static int blkfs_iunlink(inode_t* parent,const char* name){
-    const filesystem* fs=cur->fs;
+    const filesystem* fs=parent->fs;
     device_t* dev=fs->dev;
     yls_node* node=cur->ptr;
     uint32_t offset=node->info;//Skip parent
 
     ssize_t(*const read )(device_t*,off_t,      void*,size_t)=dev->ops->read;
+    ssize_t(*const write)(device_t*,off_t,const void*,size_t)=fs->dev->ops->write;
 
-    if(path[0]=='.'){
+    if(name[0]=='.'){
         return -1;
     }else{
         offset+=4;
         while(offset){
-            int len=strlen(path);
+            int len=strlen(name);
             uint32_t blk_off;
             if(read(dev,offset,&blk_off,4)!=4||!blk_off){
                 //No more file in this directory
                 warn("No such file or directory");
                 return -1;
             }
-            if(block_cmp(dev,blk_off,path)){
+            if(block_cmp(dev,blk_off,name)){
                 //Mismatch
                 offset+=4;
                 if(offset%BLK_SZ==BLK_MEM){
