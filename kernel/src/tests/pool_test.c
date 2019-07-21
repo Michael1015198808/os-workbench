@@ -3,26 +3,25 @@
 #include <klib.h>
 
 #ifndef NO_TEST
-pool p1;
+pool p[2];
 void hello1(void *arg){
     void* get;
-    enqueue(&p1,arg);
     while(1){
+        enqueue(&p[0],arg);
         do{
-            get=dequeue(&p2);
+            get=dequeue(&p[1]);
         }while(!get);
         _putc(*(char*)get);
-        enqueue(&p1,arg);
     }
 }
 void hello2(void *arg){
     void* get;
     while(1){
         do{
-            get=dequeue(&p1);
+            get=dequeue(&p[0]);
         }while(!get);
         _putc(*(char*)get);
-        enqueue(&p2,arg);
+        enqueue(&p[1],arg);
     }
 }
 void queue_test_init(void){
