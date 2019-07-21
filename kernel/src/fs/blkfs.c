@@ -289,7 +289,7 @@ static inode_t* blkfs_ifind(inode_t* cur,const char* path,int flags){
                     return NULL;
                 }
             }
-            if(blk_off!=YLS_WIPE&&block_cmp(fs->dev,blk_off,layer)){
+            if(blk_off==YLS_WIPE||block_cmp(fs->dev,blk_off,layer)){
                 //Mismatch
                 offset+=4;
                 if(offset%BLK_SZ==BLK_MEM){
@@ -346,7 +346,7 @@ static int blkfs_iunlink(inode_t* parent,const char* name){
                 warn("No such file or directory");
                 return -1;
             }
-            if(blk_off!=YLS_WIPE&&block_cmp(dev,blk_off,name)){
+            if(blk_off==YLS_WIPE||block_cmp(dev,blk_off,name)){
                 //Mismatch
                 offset+=4;
                 if(offset%BLK_SZ==BLK_MEM){
