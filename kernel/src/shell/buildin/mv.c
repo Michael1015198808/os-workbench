@@ -12,8 +12,8 @@ int mysh_mv(void *args[]){
             return -1;
         }
         int ret=0;
-        if((ret=mysh_cp(args)))return ret;
-        if((ret=mysh_unlink(args)))return ret;
+        if(( ret=mysh_cp(args)     ))return ret;
+        if(( ret=mysh_unlink(args) ))return ret;
         return 0;
     }else{
         fprintf(2,"Missing operand\nUsage: mv SOURCE DEST\n  or:  mv FILE DIRECTORY\n");

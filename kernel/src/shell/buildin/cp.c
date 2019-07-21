@@ -24,7 +24,7 @@ int mysh_mv(void *args[]){
             strcat(dest,"/");
             strcat(dest,args[1]+get_last_slash(args[1])+1);
         }
-        if(ret=vfs->link(args[1],dest)){
+        if(( ret=vfs->link(args[1],dest) )){
             error_print("");
             return ret;
         }
