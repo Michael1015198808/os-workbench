@@ -6,7 +6,12 @@
 
 int mysh_unlink(void *args[]){
     if(args[1]&&!args[2]){
-        return vfs->unlink(args[1]);
+        int ret=vfs->unlink(args[1]);
+        if(ret){
+            printf("unlink failed!\n");
+        }
+        error_print(" cannot unlink '%s': ",args[i]);
+        return ret;
     }else{
         fprintf(2,"Missing operand\nUsage: unlink FILE\n");
     }

@@ -120,6 +120,7 @@ static inline inode_t* get_parent(const char**s,char* new_parent){
         return vfs_lookup(new_parent,O_RDONLY);
     }
 }
+
 int vfs_link(const char *oldpath, const char *newpath){
     const char* const ori_newpath=newpath;
     char new_parent[0x100];
@@ -127,23 +128,36 @@ int vfs_link(const char *oldpath, const char *newpath){
     inode_t* parent=get_parent(&newpath,new_parent);
 
     if(!parent){
-        fprintf(2,"link: No such file or directory %s",new_parent);
+        warn("No such file or directory %s",new_parent);
     }else if(parent->ops->find(parent,newpath,O_RDONLY)){
-        fprintf(2,"link: cannot create link '%s' to '%s': File exist\n",ori_newpath,oldpath);
+        warn("cannot create link '%s' to '%s': File exist\n",ori_newpath,oldpath);
     }else{
         inode_t* old=vfs_lookup(oldpath,O_RDONLY);
         if(!old){
-            fprintf(2,"link: %s does not exists\n",oldpath);
+            warn("%s does not exists\n",oldpath);
         }else if(parent->fs!=old->fs){
-            fprintf(2,"link: %s and %s are not from the same filesystem\n",oldpath,ori_newpath);
+            warn("%s and %s are not from the same filesystem\n",oldpath,ori_newpath);
         }else{
             return parent->ops->link(parent,newpath,old);
         }
     }
     return -1;
 }
+
 int vfs_unlink(const char *path){
-    TODO();
+    const char* const ori_path=path;
+    char new_parent[0x100];
+
+    inode_t* parent=get_parent(&path,new_parent);
+
+    if(!parent){
+        warn("No such file or directory",new_parent);
+    }else if(parent->ops->find(parent,path,O_RDONLY)){
+        return parent->ops->unlink(parent,path);
+    }else{
+        warn("No such file or directory",new_parent);
+    }
+    return -1;
 }
 static inline int vfs_open_real(const char *path,int flags){
     task_t* current=get_cur();
