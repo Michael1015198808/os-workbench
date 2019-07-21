@@ -113,7 +113,7 @@ int vfs_link(const char *oldpath, const char *newpath){
     int len=get_last_slash(newpath);
     strncpy(new_parent,newpath,len);
     inode_t* parent=vfs_lookup(new_parent,O_RDONLY);
-    if(parent->ops->find(newpath+len,O_RDONLY)){
+    if(parent->ops->find(parent,newpath+len,O_RDONLY)){
         fprintf(2,"link: cannot create link '%s' to '%s': File exist\n",newpath,oldpath);
     }else{
         inode_t* old=vfs_lookup(old_path,O_RDONLY);
