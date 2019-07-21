@@ -107,6 +107,7 @@ static inline void kfree_real(void *ptr) {
     if(to_free->fence!=0x13579ace){
         printf("Fence at %x changed to %x!\n",&to_free->fence,to_free->fence);
     }
+    to_free->fence=0xeca97531;//Alert if multi-free
     for(  ;
             p!=&free_list[cpu_id];
             prevp=p,
