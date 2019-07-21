@@ -50,6 +50,10 @@ int snprintf(char *out, size_t n, const char *fmt, ...) {
 //Added by Michael
 //Should work as an assistant.
 
+static line isalpha(char c){
+    return (c>='a'&&c<='z')||
+           (c>='A'&&c<='Z');
+}
 //Wrapped by vsnprintf
 inline static int vsnprintf_real(char *out, size_t n, const char *fmt, va_list ap){
 #define output(A) \
@@ -62,7 +66,6 @@ inline static int vsnprintf_real(char *out, size_t n, const char *fmt, va_list a
     }
     size_t cnt=0;
     int i=0;
-    double d;
     const char *p, *sval;
     char fill,num[10];
     int ival,fill_width;
@@ -144,28 +147,28 @@ inline static int vsnprintf_real(char *out, size_t n, const char *fmt, va_list a
                         }
                     }
                     break;
-                case 'f':
+                case 'f':{
                     dval = va_arg(ap, double);
-                    d=10000;
+                    double d=1;
+                    while(dval>d)d*=10;
                     while (d > 0.001) {
-                        int j = (int) dval / d;
+                        int j = (int)( dval / d);
                         output(j + '0');
-                        dval -= ((int) dval / d) * d;
+                        dval -= j * d;
                         d /= 10;
                     }
                     break;
+                }
                 case 's':
                     for (sval = va_arg(ap, char * ); *sval != '\0'; ++sval) {
                         output(*sval);
                     }
                     break;
                 default:
-                    if (*p < '0' || *p > '9') {
-                        output(*p);
-                        char *s="Not realized";
-                        size_t len=strlen(s);
-                        for(i=0;i<len;++i){
-                            output(s[i]);
+                    if (isalpha(*p)) {
+                        _putc(*p);
+                        for(char* c="Not realized";*c;++c){
+                            _putc(*c);
                         }
                         assert(0);
                     }
