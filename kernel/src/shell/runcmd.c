@@ -76,7 +76,7 @@ static inline void run_list_cmd(struct cmd* cmd){
     task_t* son=pmm->alloc(sizeof(task_t));
     kmt->create(son,"fork-and-run",(task_fun)runcmd,lcmd->left);
 
-    kmt->wait(lcmd->left);
+    kmt->wait(son);
     kmt->teardown(son);
     pmm->free(son);
 
