@@ -13,6 +13,7 @@
 
 int runcmd(struct cmd *cmd);
 static inline void run_redir_cmd(struct cmd* cmd);
+static inline void run_list_cmd (struct cmd* cmd);
 static inline void run_pipe_cmd (struct cmd* cmd);
 static inline void run_back_cmd (struct cmd* cmd);
 /*
@@ -43,7 +44,7 @@ int runcmd(struct cmd *cmd){
             break;
 
         case LIST:
-            TODO();
+            run_list_cmd(cmd);
             /*
             lcmd = (struct listcmd*)cmd;
             if(fork1() == 0)
@@ -65,6 +66,7 @@ int runcmd(struct cmd *cmd){
     exit();
     return -1;
 }
+
 static inline void run_redir_cmd(struct cmd* cmd){
     struct redircmd* rcmd = (struct redircmd*)cmd;
     vfs->close(rcmd->fd);
@@ -74,6 +76,18 @@ static inline void run_redir_cmd(struct cmd* cmd){
         exit();
     }
     runcmd(rcmd->cmd);
+}
+
+static inline void run_list_cmd(struct cmd* cmd){
+    lcmd = (struct listcmd*)cmd;
+    task_t* son=pmm->alloc(sizeof(task_t));
+    kmt->create(son,"fork-and-run",(task_fun)runcmd,lcmd->left);
+
+    kmt->wait(lcmd->left);
+    kmt->tearwodn(son);
+    pmm->free(son);
+
+    runcmd(lcmd->right);
 }
 
 static inline void run_pipe_cmd(struct cmd *cmd){
