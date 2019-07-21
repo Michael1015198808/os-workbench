@@ -29,7 +29,7 @@ static struct Command{
     pair(test   ,"A test command. Now is used to test pipe"),
     pair(link   ,"Call the link function to create a link named FILE2 to an existing FILE1."),
     pair(unlink ,"Call the unlink function to remove the specified FILE."),
-    pair(rm     ,"Remove (unlink) the FILE(s)."},
+    pair(rm     ,"Remove (unlink) the FILE(s)."),
 };
 
 int exec_buildin(const char* file,void* args[],int *is_buildin){
