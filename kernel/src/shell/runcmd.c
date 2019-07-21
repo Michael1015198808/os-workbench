@@ -61,6 +61,7 @@ int runcmd(struct cmd *cmd){
             run_back_cmd(cmd);
             break;
         }
+    pmm->free(cmd);
     exit();
     return -1;
 }
