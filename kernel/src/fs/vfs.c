@@ -130,7 +130,7 @@ int vfs_link(const char *oldpath, const char *newpath){
     if(!parent){
         warn("No such file or directory %s",new_parent);
     }else if(parent->ops->find(parent,newpath,O_RDONLY)){
-        warn("cannot create link '%s' to '%s': File exist\n",ori_newpath,oldpath);
+        warn("File exist\n",ori_newpath,oldpath);
     }else{
         inode_t* old=vfs_lookup(oldpath,O_RDONLY);
         if(!old){

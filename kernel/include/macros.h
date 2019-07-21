@@ -40,6 +40,7 @@
 
 #define warn(fmt,...) \
     do { \
+        report_if(1); \
         sprintf(get_cur()->err,fmt, ##__VA_ARGS__); \
     }while(0)
     
