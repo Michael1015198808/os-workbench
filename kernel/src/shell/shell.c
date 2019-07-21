@@ -36,6 +36,7 @@ void mysh(void *name) {
             kmt->create(son,"mysh",fork_and_run,input);
             kmt->wait(son);
             kmt->teardown(son);
+            pmm->free(son);
         }else{
             void* cd_args[2]={input};
             if(input[2]=='\0'){
