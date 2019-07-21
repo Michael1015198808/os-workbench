@@ -17,6 +17,11 @@ void* dequeue(pool* p){
 void enqueue(pool* p,void* mem){
     pthread_mutex_lock(&p->lk);
 
+    while((p->tail+1)%POOL_LEN==p->head){
+        pthread_mutex_unlock(&p->lk);
+        _yield();
+        pthread_mutex_lock(&p->lk);
+    }
     p->mem[p->tail]=mem;
     ++p->tail;
     if(p->tail==POOL_LEN)p->tail=0;
