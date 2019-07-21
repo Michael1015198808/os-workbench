@@ -52,8 +52,8 @@ void receiver(void* arg){
     }
 }
 void queue_test_init(void){
-    kmt->create(pmm->alloc(sizeof(task_t)),"hello1"  ,queue1  ,"a"    );
-    kmt->create(pmm->alloc(sizeof(task_t)),"hello2"  ,queue2  ,"b"    );
+    kmt->create(pmm->alloc(sizeof(task_t)),"hello1"  ,queue1  ,"("    );
+    kmt->create(pmm->alloc(sizeof(task_t)),"hello2"  ,queue2  ,")"    );
     kmt->create(pmm->alloc(sizeof(task_t)),"pusher1" ,pusher  ,"ABCDE");
     kmt->create(pmm->alloc(sizeof(task_t)),"pusher2" ,pusher  ,"abcde");
     kmt->create(pmm->alloc(sizeof(task_t)),"receiver",receiver,NULL   );
