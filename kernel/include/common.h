@@ -89,13 +89,13 @@ typedef struct List{
     struct List* next;
 }list_t;
 
+#define POOL_LEN 20
 typedef struct{
     pthread_mutex_t lk;
     void* mem[POOL_LEN];
     volatile int head,tail;
 }pool;
 
-#define POOL_LEN 20
 typedef struct semaphore {
     char *name;
     volatile int value;
