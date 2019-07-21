@@ -145,7 +145,6 @@ int vfs_link(const char *oldpath, const char *newpath){
 }
 
 int vfs_unlink(const char *path){
-    const char* const ori_path=path;
     char new_parent[0x100];
 
     inode_t* parent=get_parent(&path,new_parent);
