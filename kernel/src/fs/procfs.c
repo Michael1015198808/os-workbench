@@ -359,7 +359,7 @@ static ssize_t meminfo_read(vfile_t* file,char* buf,size_t size){
     rate*=100;
     sprintf(info,"MemTotal: %10d kB\nMemUsed:  %10d kB(%f%%)\n",num[0],num[1],rate);
     file->offset+=
-        (nread=snprintf(buf,size,info+file->offset));
+        (nread=snprintf(buf,size,"%s",info+file->offset));
     return nread;
 }
 static ssize_t uptime_read(vfile_t* file,char* buf,size_t size){
