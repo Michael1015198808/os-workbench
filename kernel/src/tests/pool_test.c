@@ -4,7 +4,7 @@
 
 #ifndef NO_TEST
 pool p[2];
-void hello1(void *arg){
+void queue1(void *arg){
     void* get;
     while(1){
         enqueue(&p[0],arg);
@@ -14,7 +14,7 @@ void hello1(void *arg){
         _putc(*(char*)get);
     }
 }
-void hello2(void *arg){
+void queue2(void *arg){
     void* get;
     while(1){
         do{
@@ -25,8 +25,8 @@ void hello2(void *arg){
     }
 }
 void queue_test_init(void){
-    kmt->create(pmm->alloc(sizeof(task_t)), "hello1", hello1, (void*)'a');
-    kmt->create(pmm->alloc(sizeof(task_t)), "hello2", hello2, (void*)'b');
+    kmt->create(pmm->alloc(sizeof(task_t)), "hello1", queue1, (void*)'a');
+    kmt->create(pmm->alloc(sizeof(task_t)), "hello2", queue2, (void*)'b');
 }
 #endif
 
