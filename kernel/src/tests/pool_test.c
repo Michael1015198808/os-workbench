@@ -38,6 +38,7 @@ void receiver(void* arg){
         do{
             get=dequeue(p+2);
         }while(!get);
+        _putc(*get);
         if(*get-'a'<5&&*get-'a'>=0){
             Assert('a'+a==*get,"Test failed!");
             ++a;
