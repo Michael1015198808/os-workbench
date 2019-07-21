@@ -354,7 +354,10 @@ static ssize_t meminfo_read(vfile_t* file,char* buf,size_t size){
 
     void mem_query(uint32_t num[3]);
     mem_query(num);
-    sprintf(info,"MemTotal: %10d kB\nMemFree:  %10d kB\n",num[0],num[1]);
+    double rate=num[1];
+    rate/=num[0];
+    rate*=100;
+    sprintf(info,"MemTotal: %10d kB\nMemUsed:  %10d kB(%.2lf)\n",num[0],num[1],rate);
     file->offset+=
         (nread=snprintf(buf,size,info+file->offset));
     return nread;
