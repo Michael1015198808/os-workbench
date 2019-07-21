@@ -112,13 +112,13 @@ int vfs_rmdir(const char *path){
 static inline get_parent(const char**s){
     const char* path=*s;
     int len=get_last_slash(path)+1;
+    s=path+len;
     if(len==0){
-        parent=get_cur()->cur_dir;
+        return get_cur()->cur_dir;
     }else{
         strncpy(new_parent,path,len);
-        parent=vfs_lookup(new_parent,O_RDONLY);
+        return vfs_lookup(new_parent,O_RDONLY);
     }
-    s=path;
 }
 int vfs_link(const char *oldpath, const char *newpath){
     char new_parent[0x100];
