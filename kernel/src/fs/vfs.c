@@ -112,7 +112,7 @@ int vfs_rmdir(const char *path){
 static inline get_parent(const char**s){
     const char* path=*s;
     int len=get_last_slash(path)+1;
-    s=path+len;
+    *s=path+len;
     if(len==0){
         return get_cur()->cur_dir;
     }else{
