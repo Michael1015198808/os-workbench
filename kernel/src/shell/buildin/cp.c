@@ -10,7 +10,6 @@ int mysh_cp(void *args[]){
             fprintf(2,"To much operand\nUsage: mv SOURCE DEST\n  or:  mv FILE DIRECTORY\n");
             return -1;
         }
-        int ret=0;
         char dest[0x100];
         if(vfs->access(args[2],O_RDONLY|O_DIRECTORY)){
             if(vfs->access(args[2],O_RDONLY|O_CREAT)){
