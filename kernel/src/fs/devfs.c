@@ -131,12 +131,12 @@ static ssize_t devfs_irmdir(const char* name){
     return -1;
 }
 
-static ssize_t devfs_ilink(const char* name, inode_t* inode){
+static ssize_t devfs_ilink(inode_t* parent,const char* name, inode_t* inode){
     fprintf(STDERR,"cannot create file ‘%s’: Read-only filesystem\n",name);
     return -1;
 }
 
-static ssize_t devfs_iunlink(const char* name){
+static ssize_t devfs_iunlink(inode_t* parent,const char* name){
     fprintf(STDERR,"cannot remove file ‘%s’: Read-only filesystem\n",name);
     return -1;
 }
