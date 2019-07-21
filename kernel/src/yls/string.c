@@ -136,7 +136,7 @@ uint32_t find_end(device_t* dev,uint32_t off){
 uint32_t new_end(device_t* dev,uint32_t off){
     uint32_t end=find_end(dev,off);
     end+=4;
-    if(end%=BLK_SZ==BLK_MEM){
+    if(end%BLK_SZ==BLK_MEM){
         TODO();
         uint32_t new_end=new_block(dev);
         dev->ops->write(dev,end,&new_end,4);
