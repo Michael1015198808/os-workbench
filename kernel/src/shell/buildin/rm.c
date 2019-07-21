@@ -4,7 +4,7 @@
 #include <yls.h>
 #include <dir.h>
 
-int mysh_unlink(void *args[]){
+int mysh_rm(void *args[]){
     for(int i=1;args[i];++i){
         vfs->unlink(args[i]);
     }
