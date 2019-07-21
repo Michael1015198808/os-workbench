@@ -95,6 +95,8 @@ typedef struct{
     void* mem[POOL_LEN];
     volatile int head,tail;
 }pool;
+void* dequeue(pool* p);
+void enqueue(pool* p,void* mem);
 
 typedef struct semaphore {
     char *name;
