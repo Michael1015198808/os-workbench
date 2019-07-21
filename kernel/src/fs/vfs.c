@@ -136,8 +136,8 @@ int vfs_link(const char *oldpath, const char *newpath){
         inode_t* old=vfs_lookup(oldpath,O_RDONLY);
         if(!old){
             warn("%s does not exists",oldpath);
-        }else if(parent->fs!=old->fs){
-            warn("%s and %s are not from the same filesystem",oldpath,ori_newpath);
+        }else if(parent->fs->dev!=old->fs->dev){
+            warn("Invalid cross-device link");
         }else{
             return parent->ops->link(parent,newpath,old);
         }
