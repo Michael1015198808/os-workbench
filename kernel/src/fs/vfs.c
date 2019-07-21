@@ -31,7 +31,7 @@ static inode_t* vfs_root=NULL;
 inode_t* vfs_lookup(const char* path,int flags);
 void vfs_init(void){
     blkfs[0].ops->init  (blkfs+0    ,"ramdisk0" ,dev_lookup("ramdisk0") );
-  //blkfs[1].ops->init  (blkfs+1    ,"ramdisk1" ,dev_lookup("ramdisk1") );
+    blkfs[1].ops->init  (blkfs+1    ,"ramdisk1" ,dev_lookup("ramdisk1") );
     devfs.ops->init     (&devfs     ,"devfs"    ,NULL                   );
     procfs.ops->init    (&procfs    ,"procfs"   ,NULL                   );
 
