@@ -132,6 +132,7 @@ int vfs_link(const char *oldpath, const char *newpath){
     }else if(parent->ops->find(parent,newpath,O_RDONLY)){
         warn("File exist\n",ori_newpath,oldpath);
     }else{
+        clear_warn();//Clear warn for finding 
         inode_t* old=vfs_lookup(oldpath,O_RDONLY);
         if(!old){
             warn("%s does not exists\n",oldpath);

@@ -40,10 +40,12 @@
 
 #define warn(fmt,...) \
     do { \
-        report_if(1); \
         sprintf(get_cur()->err,fmt, ##__VA_ARGS__); \
     }while(0)
     
+#define clear_warn() \
+    (get_cur()->err[0]='\0',(void)0)
+
 #define error(fmt,...) \
     do { \
         char warn_str[0x100]; \
