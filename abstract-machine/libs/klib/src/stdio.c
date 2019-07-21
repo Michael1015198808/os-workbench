@@ -175,12 +175,14 @@ inline static int vsnprintf_real(char *out, size_t n, const char *fmt, va_list a
                     }
                     break;
                 default:
-                    _putc(*p);
                     if (isalpha(*p)) {
+                        _putc(*p);
                         for(char* c="Not realized";*c;++c){
                             _putc(*c);
                         }
                         assert(0);
+                    }else{
+                        output(*p);
                     }
             }
         //}while(0);
