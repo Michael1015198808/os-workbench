@@ -130,14 +130,14 @@ int vfs_link(const char *oldpath, const char *newpath){
     if(!parent){
         warn("No such file or directory %s",new_parent);
     }else if(parent->ops->find(parent,newpath,O_RDONLY)){
-        warn("File exist\n",ori_newpath,oldpath);
+        warn("File exist",ori_newpath,oldpath);
     }else{
         clear_warn();//Clear warn for finding 
         inode_t* old=vfs_lookup(oldpath,O_RDONLY);
         if(!old){
-            warn("%s does not exists\n",oldpath);
+            warn("%s does not exists",oldpath);
         }else if(parent->fs!=old->fs){
-            warn("%s and %s are not from the same filesystem\n",oldpath,ori_newpath);
+            warn("%s and %s are not from the same filesystem",oldpath,ori_newpath);
         }else{
             return parent->ops->link(parent,newpath,old);
         }
