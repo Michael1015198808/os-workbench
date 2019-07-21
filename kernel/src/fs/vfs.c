@@ -111,7 +111,7 @@ int vfs_rmdir(const char *path){
 int vfs_link(const char *oldpath, const char *newpath){
     const char new_parent[0x100];
     int len=get_last_slash(newpath);
-    strncpy(new_parent,get_last_slash,len);
+    strncpy(new_parent,newpath,len);
     inode_t* parent=vfs_lookup(new_parent,O_RDONLY);
     if(parent->ops->find(newpath+len,O_RDONLY)){
         fprintf(2,"link: cannot create link '%s' to '%s': File exist\n",newpath,oldpath);
