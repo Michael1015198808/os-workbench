@@ -29,7 +29,14 @@ volatile int ncli[MAX_CPU],intena[MAX_CPU];
     }while(0)
 
 typedef void(*task_fun)(void*);
-task_t* get_cur(void);
+
+inline task_t* get_cur(void){
+    _intr_close();
+    int cpu_id=_cpu();
+    task_t* ret=currents[cpu_id];
+    _intr_open();
+    return ret;
+}
 
 int fprintf(int fd, const char *fmt, ...);
 void warning(const char*);
