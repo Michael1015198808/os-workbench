@@ -111,13 +111,24 @@ int vfs_rmdir(const char *path){
 int vfs_link(const char *oldpath, const char *newpath){
     char new_parent[0x100];
     int len=get_last_slash(newpath);
-    strncpy(new_parent,newpath,len);
-    inode_t* parent=vfs_lookup(new_parent,O_RDONLY);
-    if(parent->ops->find(parent,newpath+len,O_RDONLY)){
+
+    inode_t* parent=NULL;
+    if(len==-1){
+        parent=get_cur()->cur_dir;
+    }else{
+        strncpy(new_parent,newpath,len);
+        parent=vfs_lookup(new_parent,O_RDONLY);
+    }
+
+    if(!parent){
+        fprintf(2,"link: No such file or directory %s",new_parent);
+    }else if(parent->ops->find(parent,newpath+len,O_RDONLY)){
         fprintf(2,"link: cannot create link '%s' to '%s': File exist\n",newpath,oldpath);
     }else{
         inode_t* old=vfs_lookup(oldpath,O_RDONLY);
-        if(parent->fs!=old->fs){
+        if(!old){
+            fprintf(2,"link: %s does not exists\n",oldpath);
+        }else if(parent->fs!=old->fs){
             fprintf(2,"link: %s and %s are not from the same filesystem\n",oldpath,newpath);
         }else{
             return parent->ops->link(parent,newpath+len,old);
