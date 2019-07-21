@@ -108,30 +108,36 @@ int vfs_mkdir(const char* path){
 int vfs_rmdir(const char *path){
     TODO();
 }
-int vfs_link(const char *oldpath, const char *newpath){
-    char new_parent[0x100];
-    int len=get_last_slash(newpath)+1;
 
-    inode_t* parent=NULL;
+static inline get_parent(const char**s){
+    const char* path=*s;
+    int len=get_last_slash(path)+1;
     if(len==0){
         parent=get_cur()->cur_dir;
     }else{
-        strncpy(new_parent,newpath,len);
+        strncpy(new_parent,path,len);
         parent=vfs_lookup(new_parent,O_RDONLY);
     }
+    s=path;
+}
+int vfs_link(const char *oldpath, const char *newpath){
+    char new_parent[0x100];
+    const char* const ori_newpath=newpath;
+
+    inode_t* parent=get_parent(&newpath);
 
     if(!parent){
         fprintf(2,"link: No such file or directory %s",new_parent);
-    }else if(parent->ops->find(parent,newpath+len,O_RDONLY)){
-        fprintf(2,"link: cannot create link '%s' to '%s': File exist\n",newpath,oldpath);
+    }else if(parent->ops->find(parent,newpath,O_RDONLY)){
+        fprintf(2,"link: cannot create link '%s' to '%s': File exist\n",ori_newpath,oldpath);
     }else{
         inode_t* old=vfs_lookup(oldpath,O_RDONLY);
         if(!old){
             fprintf(2,"link: %s does not exists\n",oldpath);
         }else if(parent->fs!=old->fs){
-            fprintf(2,"link: %s and %s are not from the same filesystem\n",oldpath,newpath);
+            fprintf(2,"link: %s and %s are not from the same filesystem\n",oldpath,ori_newpath);
         }else{
-            return parent->ops->link(parent,newpath+len,old);
+            return parent->ops->link(parent,newpath,old);
         }
     }
     return -1;
