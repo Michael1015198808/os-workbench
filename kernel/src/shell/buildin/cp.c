@@ -23,6 +23,7 @@ int mysh_cp(void *args[]){
             strcat(dest,"/");
             strcat(dest,args[1]+get_last_slash(args[1])+1);
         }
+        clear_warn();
         int fd[2],nbyte=0;
         char buf[0x110];
         fd[0]=vfs->open(args[1],O_RDONLY);
