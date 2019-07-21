@@ -24,10 +24,14 @@ int mysh_cp(void *args[]){
             strcat(dest,"/");
             strcat(dest,args[1]+get_last_slash(args[1])+1);
         }
-        if(( ret=vfs->link(args[1],dest) )){
-            error_print("");
-            return ret;
+        int fd[2],nbyte=0;
+        char buf[0x110];
+        fd[0]=vfs->open(args[1],O_RDONLY);
+        fd[1]=vfs->open(args[2],O_WRONLY|O_CREATE);
+        while(( nbyte=vfs->read(fd[0],buf,0x100) )){
+            vfs->write(fd[1],buf,nbyte);
         }
+        error_print("");
         return 0;
     }else{
         fprintf(2,"Missing operand\nUsage: mv SOURCE DEST\n  or:  mv FILE DIRECTORY\n");
