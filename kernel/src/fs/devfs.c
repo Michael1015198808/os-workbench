@@ -167,6 +167,7 @@ static inode_t* devfs_ifind(inode_t* cur,const char* path,int flags){
                     path+=strlen(devices[i]->name);
                 }
             }
+            if(!next)return NULL;
         }
     }
     return vfs_find(next,path,flags);
