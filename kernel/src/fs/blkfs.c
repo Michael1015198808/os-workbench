@@ -106,20 +106,21 @@ static ssize_t inline blkfs_ireaddir(vfile_t* file,char* buf,size_t size){
     ssize_t ret=0;
 
     filesystem* fs  =file->inode->fs;
-    uint32_t fd_off =file->offset;
+#define fd_off (file->offset)
     yls_node* node  =file->inode->ptr;
     uint32_t off=node->info;
 
     switch(node->type){
         case YLS_DIR:
             {
+                uint32_t dir;
                 do{
-                    if(block_read(fs->dev,off,fd_off,(void*)&off,4)!=4)return 0;
-                    if(off==0)return 0;//find_block failed or reached the end
-                    file->offset+=4;
-                }while(off==YLS_WIPE);
+                    if(block_read(fs->dev,off,fd_off,(void*)&dir,4)!=4)return 0;
+                    if(dir==0)return 0;//find_block failed or reached the end
+                    fd_off+=4;
+                }while(dir==YLS_WIPE);
 
-                ssize_t nread=block_read(fs->dev,off,4,buf,size);
+                ssize_t nread=block_read(fs->dev,dir,4,buf,size);
                 ret+=nread;
                 return ret;
             }
