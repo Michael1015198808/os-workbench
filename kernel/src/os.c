@@ -65,7 +65,6 @@ static void os_init() {
     dev->init();
     vfs->init();
 
-    TEST_REQUIREMENT();
     kmt->create(pmm->alloc(sizeof(task_t)),"shell1",mysh,"/dev/tty1");
     kmt->create(pmm->alloc(sizeof(task_t)),"shell2",mysh,"/dev/tty2");
     kmt->create(pmm->alloc(sizeof(task_t)),"shell3",mysh,"/dev/tty3");
