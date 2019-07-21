@@ -72,7 +72,7 @@ static inline void run_redir_cmd(struct cmd* cmd){
 }
 
 static inline void run_list_cmd(struct cmd* cmd){
-    listcmd* lcmd = (struct listcmd*)cmd;
+    struct listcmd* lcmd = (struct listcmd*)cmd;
     task_t* son=pmm->alloc(sizeof(task_t));
     kmt->create(son,"fork-and-run",(task_fun)runcmd,lcmd->left);
 
