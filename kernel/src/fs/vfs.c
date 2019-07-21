@@ -109,7 +109,7 @@ int vfs_rmdir(const char *path){
     TODO();
 }
 
-static inline get_parent(const char**s){
+static inline inode_t* get_parent(const char**s){
     const char* path=*s;
     int len=get_last_slash(path)+1;
     *s=path+len;
