@@ -13,6 +13,8 @@ handler(mkdir);
 handler(sleep);
 handler(touch);
 handler(test);
+handler(link);
+handler(unlink);
 
 int exec_buildin(const char* file,void* args[],int *is_buildin);
 

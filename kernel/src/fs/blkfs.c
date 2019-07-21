@@ -308,6 +308,45 @@ static inode_t* blkfs_ifind(inode_t* cur,const char* path,int flags){
 
     return next->ops->find(next,path,flags);
 }
+
+    const filesystem* fs=cur->fs;
+    device_t* dev=fs->dev;
+
+    ssize_t(*const write)(device_t*,off_t,const void*,size_t)=fs->dev->ops->write;
+
+    write(dev,offset,&off,4);
+
+    int id=(inode-INODE_START)/0x10;
+    *(yls_node*)fs->inodes[id].ptr=file;
+
+    write(dev,off,&id,4);
+    write(dev,off+4,filename,strlen(filename));
+    uint32_t parent_id=get_id(cur);
+    write(dev,file.info,&parent_id,4);
+    return fs->inodes+id;
+}
+
+static int blkfs_ilink(inode_t* parent,const char* name,inode_t* inode){
+    const filesystem* fs=parent->fs;
+    device_t* dev=fs->dev;
+    yls_node* node=parent->ptr;
+    ssize_t(*const write)(device_t*,off_t,const void*,size_t)=fs->dev->ops->write;
+
+    uint32_t off=new_block(dev),id=get_id(inode);
+
+    uint32_t offset=find_end(dev,node->info+4);
+    write(dev,offset,&off,4);
+
+    write(dev,off,&id,4);
+    write(dev,off+4,filename,strlen(filename));
+
+    return 0;
+}
+
+static int blkfs_unlink(const char* name){
+    TODO();
+}
+
 static inodeops_t blkfs_iops={
     .open   =blkfs_iopen,
     .close  =blkfs_iclose,
@@ -318,9 +357,9 @@ static inodeops_t blkfs_iops={
     /*
     .mkdir  =blkfs_imkdir,
     .rmdir  =blkfs_rmdir,
+    */
     .link   =blkfs_ilink,
     .unlink =blkfs_iunlink,
-    */
     .find   =blkfs_ifind,
 };
 

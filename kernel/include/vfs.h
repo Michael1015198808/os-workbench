@@ -99,8 +99,8 @@ struct inodeops {
   off_t (*lseek)(vfile_t *file, off_t offset, int whence);
   int (*mkdir)(const char *name);
   int (*rmdir)(const char *name);
-  int (*link)(const char *name, inode_t *inode);
-  int (*unlink)(const char *name);
+  int (*link)(  inode_t*, const char *name,inode_t*);
+  int (*unlink)(inode_t*, const char *name);
   inode_t* (*find)(inode_t* cur,const char* name,int flags);
 };
 

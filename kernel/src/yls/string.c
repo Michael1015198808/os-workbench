@@ -115,15 +115,16 @@ uint32_t new_inode(device_t* dev){
 }
 //Find end of info
 uint32_t find_end(device_t* dev,uint32_t off){
-    TODO();
     uint32_t read;
     while(1){
-        for(int i=0;i<OFFS_PER_MEM;++i,off+=4){
+        do{
             dev->ops->read(dev,off,&read,4);
             if(read==0){
                 return off;
             }
-        }
+            off+=4;
+        }while(off&0x80!=BLK_MEM);
+        TODO();
         dev->ops->read(dev,off,&read,4);
         if(read==0){
             dev->ops->write(dev,off,&read,4);
