@@ -11,6 +11,7 @@
         exit(); \
     }while(0)
 
+extern void fork_and_run(void *input);
 int runcmd(struct cmd *cmd);
 static inline void run_redir_cmd(struct cmd* cmd);
 static inline void run_list_cmd (struct cmd* cmd);
@@ -72,7 +73,7 @@ static inline void run_redir_cmd(struct cmd* cmd){
 static inline void run_list_cmd(struct cmd* cmd){
     struct listcmd* lcmd = (struct listcmd*)cmd;
     task_t* son=pmm->alloc(sizeof(task_t));
-    kmt->create(son,"fork-and-run",(task_fun)runcmd,lcmd->left);
+    kmt->create(son,"fork-and-run",(task_fun)fork_and_run,lcmd->left);
 
     kmt->wait(son);
     kmt->teardown(son);
@@ -96,12 +97,12 @@ static inline void run_pipe_cmd(struct cmd *cmd){
     current->fd[pipefd[1]]=NULL;
 
     task_t* sons=pmm->alloc(sizeof(task_t)*2);
-    kmt->create(sons+0,"fork-and-run",(task_fun)runcmd,pcmd->left);
+    kmt->create(sons+0,"fork-and-run",(task_fun)fork_and_run,pcmd->left);
     current->fd[1]=backup;
 
     current->fd[0]=current->fd[pipefd[0]];
     current->fd[pipefd[0]]=NULL;
-    kmt->create(sons+1,"fork-and-run",(task_fun)runcmd,pcmd->right);
+    kmt->create(sons+1,"fork-and-run",(task_fun)fork_and_run,pcmd->right);
 
     kmt->wait(sons+0);
     kmt->teardown(sons+0);
@@ -112,5 +113,5 @@ static inline void run_pipe_cmd(struct cmd *cmd){
 
 static inline void run_back_cmd(struct cmd* cmd){
     struct backcmd* bcmd = (struct backcmd*)cmd;
-    kmt->create(pmm->alloc(sizeof(task_t)),NULL,(task_fun)runcmd,bcmd->cmd);
+    kmt->create(pmm->alloc(sizeof(task_t)),NULL,(task_fun)fork_and_run,bcmd->cmd);
 }

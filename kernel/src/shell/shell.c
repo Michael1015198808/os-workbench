@@ -5,7 +5,7 @@
 #include <shell.h>
 #include <vfs.h>
 
-static void fork_and_run(void *input){
+void fork_and_run(void *input){
     //Wrapper
     runcmd(input);
     exit();
