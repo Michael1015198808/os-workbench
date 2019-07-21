@@ -13,6 +13,7 @@ int mysh_mv(void *args[]){
         }
         int ret=0;
         if(( ret=mysh_cp(args)     ))return ret;
+        args[2]=NULL;//To pass parameter check of mysh_unlink
         if(( ret=mysh_unlink(args) ))return ret;
         return 0;
     }else{
