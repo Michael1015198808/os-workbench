@@ -15,6 +15,7 @@ handler(touch);
 handler(test);
 handler(link);
 handler(unlink);
+handler(rm);
 
 int exec_buildin(const char* file,void* args[],int *is_buildin);
 
