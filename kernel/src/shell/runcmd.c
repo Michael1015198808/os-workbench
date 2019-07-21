@@ -34,9 +34,8 @@ int runcmd(struct cmd *cmd){
 
         case EXEC:
             ecmd = (struct execcmd*)cmd;
-            if(ecmd->argv[0] == 0)
-                exit();
-            vfs->exec(ecmd->argv[0], (void**)(ecmd->argv));
+            if(ecmd->argv[0])
+                vfs->exec(ecmd->argv[0], (void**)(ecmd->argv));
             break;
 
         case REDIR:
@@ -56,8 +55,7 @@ int runcmd(struct cmd *cmd){
             break;
         }
     pmm->free(cmd);
-    exit();
-    return -1;
+    return 0;
 }
 
 static inline void run_redir_cmd(struct cmd* cmd){
