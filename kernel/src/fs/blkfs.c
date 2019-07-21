@@ -326,7 +326,7 @@ static int blkfs_ilink(inode_t* parent,const char* name,inode_t* inode){
     return 0;
 }
 
-static int blkfs_unlink(const char* name){
+static int blkfs_iunlink(inode_t* parent,const char* name){
     TODO();
 }
 
