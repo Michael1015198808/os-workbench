@@ -45,14 +45,7 @@ int runcmd(struct cmd *cmd){
 
         case LIST:
             run_list_cmd(cmd);
-            /*
-            lcmd = (struct listcmd*)cmd;
-            if(fork1() == 0)
-            runcmd(lcmd->left);
-            wait();
-            runcmd(lcmd->right);
             break;
-            */
 
         case PIPE:
             run_pipe_cmd(cmd);
@@ -79,7 +72,7 @@ static inline void run_redir_cmd(struct cmd* cmd){
 }
 
 static inline void run_list_cmd(struct cmd* cmd){
-    lcmd = (struct listcmd*)cmd;
+    listcmd* lcmd = (struct listcmd*)cmd;
     task_t* son=pmm->alloc(sizeof(task_t));
     kmt->create(son,"fork-and-run",(task_fun)runcmd,lcmd->left);
 
