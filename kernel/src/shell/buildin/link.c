@@ -6,6 +6,7 @@
 
 int mysh_link(void *args[]){
     if(args[1]&&args[2]&&!args[3]){
+        get_cur()->err[0]='\0';
         int ret=vfs->link(args[1],args[2]);
         error_print("cannot create link '%s' to '%s': ",args[2],args[1]);
         return ret;
