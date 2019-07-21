@@ -10,12 +10,11 @@ volatile int intr_idx=0;
 pthread_mutex_t intr_lk=PTHREAD_MUTEX_INITIALIZER;
 char intr_log_string[66000];
 pthread_mutex_t log_lk=PTHREAD_MUTEX_INITIALIZER;
-void report_if(int);
 void _intr_close(){
     int int_on=_intr_read();
     cli();
     int cpu_id=_cpu();
-    report_if(ncli[cpu_id]<0);
+    Assert(ncli[cpu_id]>=0,"Int count is wrong!");
     intena[cpu_id]|=int_on;
     ++ncli[cpu_id];
 }
@@ -28,7 +27,7 @@ void _intr_open(){
             sti();
         }
     }
-    report_if(ncli[cpu_id]<0);
+    Assert(ncli[cpu_id]>=0,"Int is already open!");
 }
 /*
 void intr_close(){

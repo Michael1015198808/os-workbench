@@ -102,6 +102,7 @@ int vfs_mkdir(const char* path){
         warn("cannot create directory '%s': File exists",path);
         return -1;
     }else{
+        clear_warn();
         return vfs_lookup(path,O_RDONLY|O_CREAT|O_DIRECTORY)!=NULL;
     }
 }
