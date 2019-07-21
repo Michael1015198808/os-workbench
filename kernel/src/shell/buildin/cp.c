@@ -4,7 +4,7 @@
 #include <yls.h>
 #include <dir.h>
 
-int mysh_mv(void *args[]){
+int mysh_cp(void *args[]){
     if(args[1]&&args[2]){
         if(args[3]){
             fprintf(2,"To much operand\nUsage: mv SOURCE DEST\n  or:  mv FILE DIRECTORY\n");

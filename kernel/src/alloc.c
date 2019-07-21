@@ -40,7 +40,6 @@ header *global_alloc_real(size_t size){
         return ret;
     }else{
         printf("No free space!\n");
-        report_if(1);
         return NULL;
     }
 }
@@ -107,7 +106,6 @@ static inline void kfree_real(void *ptr) {
             *to_free=(header*)(ptr-sizeof(header));
     if(to_free->fence!=0x13579ace){
         printf("Fence at %x changed to %x!\n",&to_free->fence,to_free->fence);
-        report_if(1);
     }
     for(  ;
             p!=&free_list[cpu_id];

@@ -98,5 +98,4 @@ typedef struct semaphore {
 }semaphore_t;
 #endif
 
-void report_if(int);
 void mysh(void*);

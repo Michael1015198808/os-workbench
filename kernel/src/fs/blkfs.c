@@ -301,7 +301,6 @@ static inode_t* blkfs_ifind(inode_t* cur,const char* path,int flags){
                     read(fs->dev,offset,&offset,4);
                 }
             }else{
-                report_if(1);
                 path+=layer_len;
                 read(fs->dev,blk_off,&id,4);
                 next=fs->inodes+id;

@@ -68,7 +68,6 @@ static _Context* kmt_context_save(_Event ev, _Context *c){
         current->context=*c;
         current->ncli=ncli[cpu_id];
         current->intena=intena[cpu_id];
-        report_if(current->ncli<0);
     }
     return NULL;
 }
@@ -228,7 +227,6 @@ void kmt_spin_unlock(spinlock_t *lk){
     if(lk->locked){
         if(lk->owner!=current){
             local_log("Lock[%s] isn't held by this routine!\n",lk->name);
-            report_if(1);
         }else{
             if(--lk->reen==0){
                 lk->owner=NULL;
