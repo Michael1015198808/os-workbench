@@ -16,6 +16,7 @@ int mysh_mv(void *args[]){
                 error_print("cannot move file '%s' to '%s' : ",args[1],args[2]);
             }else{
                 strcpy(dest,args[2]);
+                vfs->unlink(args[2]);
             }
         }else{
             strcpy(dest,args[2]);
