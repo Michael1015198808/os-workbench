@@ -4,7 +4,7 @@
 #include <dir.h>
 
 typedef struct{
-    volatile int head,tail,open;
+    volatile int head,tail,rcnt,wcnt;
     void* mem;
 }pipe_t;
 
@@ -13,7 +13,8 @@ int pipe(int pipefd[2]) {
     pipe_t* p=pmm->alloc(sizeof(pipe_t));
     p->head =0;
     p->tail =0;
-    p->open =1;
+    p->rcnt =1;
+    p->wcnt =1;
     p->mem  =pmm->alloc(0x100);
 
     inode_t* inode=pmm->alloc(sizeof(inode_t));

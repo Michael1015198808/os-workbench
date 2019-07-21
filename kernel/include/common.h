@@ -50,6 +50,7 @@ typedef struct inode inode_t;
 #define TASK_SLEEP      1
 #define TASK_RUNNING    2
 #define TASK_ZOMBIE     4
+#define TASK_NOWAIT     8
 #define FD_NUM 16
 typedef struct task{
     //int32_t id;
@@ -87,6 +88,12 @@ typedef struct List{
     task_t* task;
     struct List* next;
 }list_t;
+
+typedef struct{
+    pthread_mutex_t lk;
+    void* mem[POOL_LEN];
+    volatile int head,tail;
+}pool;
 
 #define POOL_LEN 20
 typedef struct semaphore {

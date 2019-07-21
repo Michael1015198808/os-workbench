@@ -112,9 +112,48 @@ void idle(void *arg){
     while(1)_yield();
 }
 
+pool ctx_queue={
+    .lk=0,
+    .head=0,
+    .tail=0,
+};
+
+void* dequeue(pool* p){
+    pthread_mutex_lock(&p->lk);
+
+    void* ret=NULL;
+    if(p->head!=p->tail){
+        ret=p->mem[head];
+        ++p->head;
+        if(p->head==POOL_LEN)p->head=0;
+    }
+
+    pthread_mutex_unlock(&p->lk);
+    return ret;
+}
+
+void enqueue(pool* p,void* mem){
+    pthread_mutex_lock(&p->lk);
+
+    p->mem[tail]=mem;
+    ++p->tail;
+    if(p->tail==POOL_LEN)p->tail=0;
+
+    pthread_mutex_unlock(&p->lk);
+}
+
+static _Context* kmt_context_clean(_Event ev, _Context *c){
+    task_t* task=dequeue(&ctx_queue);
+    if(task){
+        pmm->free(task);
+    }
+    return NULL;
+}
+
 void kmt_init(void){
     os->on_irq(INT_MIN, _EVENT_NULL, kmt_context_save);
     os->on_irq(INT_MAX, _EVENT_NULL, kmt_context_switch);
+    //os->on_irq(INT_MAX, _EVENT_NULL, kmt_context_clean);
     for(int i=0;i<_ncpu();++i){
         idles[i].attr=TASK_RUNABLE;
         idles[i].running=0;
@@ -303,8 +342,13 @@ void inline exit_real(task_t* cur){
             vfs->close(i);
         }
     }
+    _intr_close();
     set_flag(cur,TASK_ZOMBIE);
+    if((cur->attr)&TASK_NOWAIT){
+        enqueue(&ctx_queue,cur);
+    }
     _yield();
+    _intr_open();
 }
 
 void warning(const char* warn){
