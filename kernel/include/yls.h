@@ -11,7 +11,7 @@ int block_read      (device_t* dev,uint32_t off,uint32_t shift,char* s         ,
 uint32_t new_block  (device_t* dev);
 uint32_t new_inode  (device_t* dev);
 uint32_t find_end   (device_t* dev,uint32_t off                 );
-uint32_t new_end    (device_t* dev,uint32_t off                 );
+uint32_t find_empty (device_t* dev,uint32_t off                 );
 int   find_block    (device_t* dev,uint32_t*fd_off,uint32_t* off);
 uint32_t block_len  (device_t* dev,uint32_t off);
 
@@ -24,6 +24,7 @@ int find_path   (device_t* dev,inode_t* cur,const char* s);
 #define YLS_DIR  0
 #define YLS_FILE 1
 #define YLS_MNT  2
+#define YLS_WIPE 0x3f3f3f3f
 
 union yls_node{
     struct{

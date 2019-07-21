@@ -133,16 +133,23 @@ uint32_t find_end(device_t* dev,uint32_t off){
     }
 }
 
-uint32_t new_end(device_t* dev,uint32_t off){
-    uint32_t end=find_end(dev,off);
-    end+=4;
-    if(end%BLK_SZ==BLK_MEM){
+uint32_t find_empty(device_t* dev,uint32_t off){
+    uint32_t read;
+    while(1){
+        do{
+            dev->ops->read(dev,off,&read,4);
+            if(read==0||read==YLS_WIPE){
+                return off;
+            }
+            off+=4;
+        }while((off%BLK_SZ)!=BLK_MEM);
         TODO();
-        uint32_t new_end=new_block(dev);
-        dev->ops->write(dev,end,&new_end,4);
-        end=new_end;
+        dev->ops->read(dev,off,&read,4);
+        if(read==0){
+            dev->ops->write(dev,off,&read,4);
+            return read;
+        }
     }
-    return end;
 }
 
 int find_block(device_t* dev,uint32_t* fd_off,uint32_t* off){
