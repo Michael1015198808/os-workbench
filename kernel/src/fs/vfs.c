@@ -109,22 +109,22 @@ int vfs_rmdir(const char *path){
     TODO();
 }
 
-static inline inode_t* get_parent(const char**s){
+static inline inode_t* get_parent(const char**s,char* new_parent){
     const char* path=*s;
     int len=get_last_slash(path)+1;
     *s=path+len;
     if(len==0){
         return get_cur()->cur_dir;
     }else{
-        char new_parent[0x100];
         strncpy(new_parent,path,len);
         return vfs_lookup(new_parent,O_RDONLY);
     }
 }
 int vfs_link(const char *oldpath, const char *newpath){
     const char* const ori_newpath=newpath;
+    char new_parent[0x100];
 
-    inode_t* parent=get_parent(&newpath);
+    inode_t* parent=get_parent(&newpath,new_parent);
 
     if(!parent){
         fprintf(2,"link: No such file or directory %s",new_parent);
