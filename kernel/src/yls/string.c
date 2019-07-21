@@ -123,7 +123,7 @@ uint32_t find_end(device_t* dev,uint32_t off){
                 return off;
             }
             off+=4;
-        }while(off&0x80!=BLK_MEM);
+        }while((off&0x80)!=BLK_MEM);
         TODO();
         dev->ops->read(dev,off,&read,4);
         if(read==0){
