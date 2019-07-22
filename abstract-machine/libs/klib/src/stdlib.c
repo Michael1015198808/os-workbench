@@ -12,7 +12,7 @@ void srand(unsigned int seed) {
 
 static inline int atoi8(const char* nptr){
     int ret=0;
-    for(nptr+=1;*nptr;++nptr){
+    for(;*nptr;++nptr){
         ret*=8;
         ret+=*nptr-'0';
     };
@@ -21,16 +21,16 @@ static inline int atoi8(const char* nptr){
 
 static inline int atoi10(const char* nptr){
     int ret=0;
-    for(nptr+=0;*nptr;++nptr){
+    for(;*nptr;++nptr){
         ret*=10;
         ret+=*nptr-'0';
     };
     return ret;
 }
 
-static inline int atoi16(const char* nptr){
+int atoi16(const char* nptr){
     int ret=0;
-    for(nptr+=2;*nptr;++nptr){
+    for(;*nptr;++nptr){
         ret*=16;
         if(*nptr>='0'&&*nptr<='9'){
             ret+=*nptr-'0';
@@ -46,9 +46,9 @@ static inline int atoi16(const char* nptr){
 int atoi(const char* nptr){
     if(nptr[0]=='0'){
         if(nptr[1]=='x'){
-            return atoi16(nptr);
+            return atoi16(nptr+2);
         }else{
-            return atoi8(nptr);
+            return atoi8(nptr+1);
         }
     }else{
         switch(nptr[0]){
