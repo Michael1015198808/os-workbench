@@ -186,7 +186,7 @@ static inode_t* devfs_rootifind(inode_t* cur,const char* path,int flags){
                 (path[len]=='/' || path[len]==' ') ){
 
                 next=devfs.inodes+i;
-                path+=
+                path+=len;
             }
         }
         if(!next)return NULL;
