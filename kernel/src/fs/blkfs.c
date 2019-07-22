@@ -20,7 +20,8 @@ static void blkfs_init(filesystem* fs,const char* name,device_t* dev){
 
     uint32_t check=0;
     dev->ops->read(dev,0,&check,4);
-    if(check&0xff<0xff){
+    if((check&0xff)<0xff){
+        printf("%s is empty, initializing...\n",name);
         //Empty ramdisk
         if(yls_init(dev)){
             fprintf(2,"Something wrong happened when initializing %s\n",name);
