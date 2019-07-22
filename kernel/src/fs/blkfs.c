@@ -18,6 +18,15 @@ static void blkfs_init(filesystem* fs,const char* name,device_t* dev){
     fs->inodes=pmm->alloc(sizeof(inode_t)*(INODE_END-INODE_START)/0x8);
     fs->root  =fs->inodes;
 
+    uint32_t check=0;
+    dev->ops->read(dev,0,&check,4);
+    if(check&0xff<0xff){
+        //Empty ramdisk
+        if(yls_init(dev)){
+            fprintf(2,"Something wrong happened when initializing %s\n",name);
+        }
+    }
+
     for(int i=0;INODE_START+i*sizeof(yls_node)<INODE_END;++i){
         fs->inodes[i].ptr=pmm->alloc(16);
         fs->dev->ops->read(fs->dev,

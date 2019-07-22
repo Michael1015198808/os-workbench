@@ -17,10 +17,10 @@ static inline int set_color_real(void *args[],device_t* tty,uint32_t* colors){
     }
     if(args[1]&&args[2]&&!args[3]){
         if(len[0]==2){
-            if(!strcmp(args[1],"bg")){
+            if(!strcmp(args[1],"bg")||!strcmp(args[1],"BG")){
                 colors[1]=atoi16(args[2]);
                 return 0;
-            }else if(!strcmp(args[1],"fg")){
+            }else if(!strcmp(args[1],"fg")||!strcmp(args[1],"FG")){
                 colors[0]=atoi16(args[2]);
                 return 0;
             }
