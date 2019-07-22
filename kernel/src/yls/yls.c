@@ -5,7 +5,7 @@
 #include <dir.h>
 static inline ssize_t write(device_t* dev,off_t offset,uint32_t to_write,size_t count){
     uint32_t tmp=to_write;
-    dev->ops->write(dev,offset,&tmp,4);
+    return dev->ops->write(dev,offset,&tmp,4);
 }
 
 int yls_init(device_t* dev){
@@ -18,7 +18,7 @@ int yls_init(device_t* dev){
         .size=8,
         .type=YLS_DIR,
     };
-    block root_name{
+    block root_name={
         .mem="/",
         .next=0,
     };
