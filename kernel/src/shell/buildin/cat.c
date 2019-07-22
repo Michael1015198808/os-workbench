@@ -12,6 +12,7 @@ static void single_cat(int fd,char buf[0x208],char* file){
     if(nread==EISDIR){
         warn("Is a directory");
     }
+    error_print("%s: ",file);
 }
 
 int mysh_cat(void *args[]){
@@ -25,7 +26,6 @@ int mysh_cat(void *args[]){
                 if(fd>0){
                     single_cat(fd,buf,args[i]);
                 }
-                error_print("%s: ",args[i]);
             }else{
                 single_cat(0,buf,NULL);
             }
