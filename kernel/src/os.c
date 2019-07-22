@@ -66,8 +66,7 @@ static void os_init() {
     vfs->init();
 
     kmt->create(pmm->alloc(sizeof(task_t)),"shell1",mysh,"/dev/tty1");
-    printf("%d\n",strncmp("123","124",2));
-    while(1);
+    _yield();
     kmt->create(pmm->alloc(sizeof(task_t)),"shell2",mysh,"/dev/tty2");
     kmt->create(pmm->alloc(sizeof(task_t)),"shell3",mysh,"/dev/tty3");
     kmt->create(pmm->alloc(sizeof(task_t)),"shell4",mysh,"/dev/tty4");
