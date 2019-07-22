@@ -70,8 +70,9 @@ struct texture {
   uint32_t pixels[TEXTURE_W * TEXTURE_H];
 } __attribute__((packed));
 
-#define DEFAULT_BG 0x300A24
-#define DEFAULT_FG 0xffffff
+#define DEFAULT_BG 0x00300A24
+#define DEFAULT_FG 0x00ffffff
+#define NO_COLOR   0x01000000
 struct sprite {
   uint16_t texture, x, y;
   unsigned int display: 4;

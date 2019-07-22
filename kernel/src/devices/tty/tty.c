@@ -6,8 +6,8 @@ struct character tty_defaultch() {
   return (struct character) {
         .metadata = 0,
         .ch = '\0',
-        .fg=DEFAULT_FG,
-        .bg=DEFAULT_BG,
+        .fg=NO_COLOR,
+        .bg=NO_COLOR,
   };
 }
 

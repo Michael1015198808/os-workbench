@@ -13,6 +13,7 @@ static inline int set_color_real(void *args[],device_t* tty,uint32_t* colors){
     if(!args[1]){
             colors[0]=DEFAULT_FG;
             colors[1]=DEFAULT_BG;
+            return 0;
     }
     if(args[1]&&args[2]&&!args[3]){
         if(len[0]==2){
