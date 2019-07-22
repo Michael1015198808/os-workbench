@@ -181,9 +181,12 @@ static inode_t* devfs_rootifind(inode_t* cur,const char* path,int flags){
         }
     }else{
         for(int i=0;i<devices_cnt;++i){
-            if(strcmp(devices[i]->name, path)==0){
+            int len=strlen(devices[i]->name);
+            if( strncmp(devices[i]->name, path,len)==0&&
+                (path[len]=='/' || path[len]==' ') ){
+
                 next=devfs.inodes+i;
-                path+=strlen(devices[i]->name);
+                path+=
             }
         }
         if(!next)return NULL;
