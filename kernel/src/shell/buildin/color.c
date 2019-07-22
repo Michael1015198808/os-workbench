@@ -9,7 +9,6 @@ static inline int set_color_real(void *args[],device_t* tty,uint32_t* colors){
     int len[2]={
         strlen(args[1]),strlen(args[2])
     };
-    printf("%d,%d\n",len[0],len[1]);
 
     if(args[1]&&args[2]&&!args[3]){
         if(len[0]==6&&len[1]==6){
