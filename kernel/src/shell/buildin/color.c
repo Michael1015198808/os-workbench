@@ -5,7 +5,7 @@ void tty_set_color(device_t* dev,uint32_t* colors);
 void tty_get_color(device_t* dev,uint32_t* colors);
 extern uint32_t atoi16(const char* nptr);
 
-int set_color(void *args[],device_t* tty,uint32_t* colors){
+static inline int set_color_real(void *args[],device_t* tty,uint32_t* colors){
     int len[2]={
         strlen(args[0]),strlen(args[1])
     };
