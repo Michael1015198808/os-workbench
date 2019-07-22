@@ -280,7 +280,7 @@ static inode_t* procfs_ifind(inode_t* cur,const char* path,int flags){
                 for(int i=2;i>=0;--i){
                     int len=strlen(per_task_info[i]);
                     if(!strncmp(path,per_task_info[i],len)){
-                        next=procfs.inodes+p[0]+i;
+                        next=cur+i;
                         path+=len;
                         break;
                     }
