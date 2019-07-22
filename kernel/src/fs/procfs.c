@@ -265,7 +265,7 @@ static inode_t* procfs_ifind(inode_t* cur,const char* path,int flags){
         }
     }else{
         uint8_t *p=cur->ptr;
-        if(p[0]==PROC_DIR){
+        if(p[1]==PROC_DIR){
             if(path[0]=='.'){
                 if(path[1]=='.'){
                     //.. for parent
