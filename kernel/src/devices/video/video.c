@@ -8,8 +8,6 @@ extern uint8_t TERM_FONT[];
 
 static void texture_fill(struct texture *tx, int top, uint8_t *bits, uint32_t fg, uint32_t bg) {
   uint32_t *px = tx->pixels;
-  tx->fg=fg;
-  tx->bg=bg;
   for (int y = 0; y < TEXTURE_H; y++)
     for (int x = 0; x < TEXTURE_W; x++) {
       int bitmask = top ? bits[y + TEXTURE_H] : bits[y];
