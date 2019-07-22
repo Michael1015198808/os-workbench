@@ -87,7 +87,7 @@ static inline _Context* kmt_context_switch_real(_Event ev, _Context *c){
             current=NULL;
             return &idles[cpu_id].context;
         }
-    }while(tasks[new]->attr ||
+    }while((tasks[new]->attr& ~TASK_NOWAIT) ||
            pthread_mutex_trylock(&tasks[new]->running));
 
     current=tasks[new];
