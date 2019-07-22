@@ -123,7 +123,7 @@ static _Context* kmt_context_clean(_Event ev, _Context *c){
     if(task){
         if(task->attr&TASK_RUNNING);
         pmm->free(task);
-        enqueue(&ctx,task);
+        enqueue(&ctx_queue,task);
     }
     return NULL;
 }
