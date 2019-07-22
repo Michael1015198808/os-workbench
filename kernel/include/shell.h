@@ -18,6 +18,7 @@ handler(unlink);
 handler(rm);
 handler(mv);
 handler(cp);
+handler(color);
 
 int exec_buildin(const char* file,void* args[],int *is_buildin);
 

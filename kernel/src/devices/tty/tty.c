@@ -234,10 +234,10 @@ devops_t tty_ops = {
   .write = tty_write,
 };
 
-void tty_get_color(device_t* dev,uint32_t* fg,uint32_t* bg){
+void tty_get_color(device_t* dev,uint32_t* colors){
     tty_t* tty= dev->ptr;
-    *fg=tty->fg;
-    *bg=tty->bg;
+    colors[0]=tty->fg;
+    colors[1]=tty->bg;
 }
 void tty_set_color(device_t* dev,uint32_t fg,uint32_t bg){
     tty_t* tty= dev->ptr;
