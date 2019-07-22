@@ -31,6 +31,7 @@ int mysh_ls(void *args[]){
             for(i=1;args[i];++i){
                 fprintf(STDOUT,"%s:\n",args[i]);
                 single_ls(args[i],&err);
+                error_print("%s: ",args[i]);
                 if(args[i+1]){std_write("\n");}
             }
         }else{
