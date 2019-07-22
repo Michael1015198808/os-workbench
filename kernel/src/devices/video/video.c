@@ -75,8 +75,6 @@ ssize_t fb_write(device_t *dev, off_t offset, const void *buf, size_t count) {
     if (fb->info->current != info->current) {
       fb->info->current = info->current;
     }
-    fb->info->fg = info->fg;
-    fb->info->bg = info->bg;
   } else if (offset < SPRITE_BRK) {
     memcpy(((uint8_t *)fb->textures) + offset, buf, count);
   } else {
