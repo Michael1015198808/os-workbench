@@ -239,10 +239,10 @@ void tty_get_color(device_t* dev,uint32_t* colors){
     colors[0]=tty->fg;
     colors[1]=tty->bg;
 }
-void tty_set_color(device_t* dev,uint32_t fg,uint32_t bg){
+void tty_set_color(device_t* dev,uint32_t* colors){
     tty_t* tty= dev->ptr;
-    tty->fg   = fg;
-    tty->bg   = bg;
+    tty->fg   = colors[0];
+    tty->bg   = colors[1];
     struct display_info info = {
       .current = tty->display,
     };
