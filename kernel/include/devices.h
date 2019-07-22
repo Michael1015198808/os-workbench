@@ -112,8 +112,8 @@ extern char keymap[], keymap_shift[];
 
 #define TERM_FONT font_sans
 
-void tty_get_color(device_t* dev,uint32_t* fg,uint32_t* bg);
-void tty_set_color(device_t* dev,uint32_t  fg,uint32_t bg );
+void tty_get_color(device_t* dev,uint32_t*);
+void tty_set_color(device_t* dev,uint32_t*);
 int isatty(int fd);
 
 #endif
