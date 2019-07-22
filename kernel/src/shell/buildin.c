@@ -32,6 +32,7 @@ static struct Command{
     pair(rm     ,"Remove (unlink) the FILE(s)."),
     pair(mv     ,"Rename SOURCE to DEST, or move SOURCE to DIRECTORY."),
     pair(cp     ,"Copy SOURCE to DEST, or copy SOURCE to DIRECTORY."),
+    pair(color  ,"Set color of current terminal."),
 };
 
 int exec_buildin(const char* file,void* args[],int *is_buildin){
