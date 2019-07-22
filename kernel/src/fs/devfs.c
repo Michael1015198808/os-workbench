@@ -12,7 +12,7 @@ extern const device_t *devices[];
 extern const size_t devices_cnt;
 
 
-static inodeops_t devfs_iops;
+static inodeops_t devfs_iops,devfs_rootiops;
 static void devfs_init(filesystem* fs,const char* name,device_t *dev){
     fs->name  =name;
     fs->dev   =dev;
