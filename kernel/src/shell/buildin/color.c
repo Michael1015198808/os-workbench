@@ -28,7 +28,7 @@ int mysh_color(void *args[]){
 
     tty_get_color(tty,colors);
     int ret=set_color_real(args,tty,colors);
-    tty_set_color(tty,colors[0],colors[1]);
+    tty_set_color(tty,colors);
 
     return ret;
 }
