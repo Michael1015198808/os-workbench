@@ -91,7 +91,7 @@ static ssize_t devfs_rootiread(vfile_t* file,char* buf,size_t size){
 }
 
 static ssize_t devfs_ireaddir(vfile_t* file,char* buf,size_t size){
-    warn("Not a directory\n");
+    warn("Not a directory");
     return 0;
 }
 
@@ -155,9 +155,9 @@ static inode_t* devfs_ifind(inode_t* cur,const char* path,int flags){
     if(*path){
         while(*path=='/')++path;
         if(*path){
-            warn("No such file or directory\n");
+            warn("No such file or directory");
         }else{
-            warn("Not a directory\n");
+            warn("Not a directory");
         }
     }else{
         return cur;
