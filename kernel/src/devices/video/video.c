@@ -3,6 +3,8 @@
 #define NTEXTURE 16384
 #define NSPRITE  16384
 
+#define DEFAULT_BG 0x300A24
+#define DEFAULT_FG 0xffffff
 static sem_t fb_sem;
 extern uint8_t TERM_FONT[];
 
@@ -20,11 +22,11 @@ static void texture_fill(struct texture *tx, int top, uint8_t *bits, uint32_t fg
 static void font_load(fb_t *fb, uint8_t *font) {
   for (int ch = 0; ch < 256; ch++) {
     texture_fill(&fb->textures[ch * 2 + 1], 0, &font[16 * ch],
-            0xffffff,
-            0x300A24);
+            DEFAULT_FG,
+            DEFAULT_BG);
     texture_fill(&fb->textures[ch * 2 + 2], 1, &font[16 * ch],
-            0xffffff,
-            0x300A24);
+            DEFAULT_FG,
+            DEFAULT_BG);
   }
 }
 
@@ -40,8 +42,6 @@ int fb_init(device_t *dev) {
     .num_textures = NTEXTURE,
     .num_sprites = NSPRITE,
     .current = 0,
-    .fg = 0xffffff,
-    .bg = 0x300A24,
   };
   kmt->sem_init(&fb_sem, dev->name, 1);
   font_load(fb, TERM_FONT);
@@ -56,19 +56,15 @@ ssize_t fb_read(device_t *dev, off_t offset, void *buf, size_t count) {
   return 0;
 }
 
-void reload_color(struct texture* tx,uint32_t fg,uint32_t bg){
-  uint32_t ori_fg=tx->fg;
-  uint32_t ori_bg=tx->bg;
-  uint32_t *px = tx->pixels;
-
+void reload_color(uint32_t* dst,const uint32_t* src,uint32_t fg,uint32_t bg){
   for (int y = 0; y < TEXTURE_H; y++)
     for (int x = 0; x < TEXTURE_W; x++) {
-        if(*px==ori_fg)*px=fg;
-        else if(*px==ori_bg)*px=bg;
-        ++px;
+        if(*src==DEFAULT_FG)*dst=fg;
+        else if(*src==DEFAULT_BG)*dst=bg;
+        else Assert(0,"source texture contains unrecognized color!");
+        ++dst;
+        ++src;
     }
-  tx->fg=fg;
-  tx->bg=bg;
 }
 
 ssize_t fb_write(device_t *dev, off_t offset, const void *buf, size_t count) {
@@ -89,15 +85,20 @@ ssize_t fb_write(device_t *dev, off_t offset, const void *buf, size_t count) {
       .w = TEXTURE_W,
       .h = TEXTURE_H,
     };
+    uint32_t pixels[TEXTURE_W * TEXTURE_H];
+
     for (struct sprite *sp = (struct sprite *)buf; sp < (struct sprite *)(buf + count); sp++) {
       if (sp->texture > 0 && sp->display == fb->info->current) {
         ctl.x = sp->x;
         ctl.y = sp->y;
-        if(fb->info->fg!=fb->textures[sp->texture].fg ||
-           fb->info->bg!=fb->textures[sp->texture].bg){
-            reload_color(&fb->textures[sp->texture],fb->info->fg,fb->info->bg);
+        if(sp->fg!=fb->DEFAULT_FG ||
+           sp->bg!=fb->DEFAULT_BG ){
+
+            ctl.pixels = pixels;
+            reload_color(pixels,fb->textures[sp->texture].pixels,sp->fg,sp->bg);
+        }else{
+            ctl.pixels = fb->textures[sp->texture].pixels;
         }
-        ctl.pixels = fb->textures[sp->texture].pixels;
         _io_write(_DEV_VIDEO, _DEVREG_VIDEO_FBCTL, &ctl, sizeof(ctl));
       }
     }

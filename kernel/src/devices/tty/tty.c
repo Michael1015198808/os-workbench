@@ -96,9 +96,11 @@ static void tty_render(tty_t *tty) {
         int draw = (ch == tty->cursor) ? 0xdb : ch->ch;
         struct sprite sp[2] = {
           { .x = x * 8, .y = y * 16, .z = 0,
-            .display = tty->display, .texture = draw * 2 + 1, },
+            .display = tty->display, .texture = draw * 2 + 1,
+            .fg=tty->fg,.bg=tty->bg },
           { .x = x * 8, .y = y * 16 + 8, .z = 0,
-            .display = tty->display, .texture = draw * 2 + 2, },
+            .display = tty->display, .texture = draw * 2 + 2,
+            .fg=tty->fg,.bg=tty->bg },
         };
         tty->fbdev->ops->write(tty->fbdev, SPRITE_BRK, &sp, sizeof(sp));
         }
@@ -266,8 +268,6 @@ void tty_task(void *arg) {
 
           struct display_info info = {
             .current = tty->display,
-            .fg = tty->fg,
-            .bg = tty->bg,
           };
           tty_mark_all(tty);
           fb->ops->write(fb, 0, &info, sizeof(struct display_info));

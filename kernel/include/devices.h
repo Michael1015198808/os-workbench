@@ -64,7 +64,6 @@ struct display_info {
   uint32_t num_displays;
   uint32_t current;
   uint32_t num_textures, num_sprites;
-  uint32_t fg,bg;
 };
 
 struct texture {
@@ -76,6 +75,7 @@ struct sprite {
   uint16_t texture, x, y;
   unsigned int display: 4;
   unsigned int z: 12;
+  uint32_t fg,bg;
 } __attribute__((packed));
 
 typedef struct {
