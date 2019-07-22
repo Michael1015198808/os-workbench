@@ -3,8 +3,6 @@
 #define NTEXTURE 16384
 #define NSPRITE  16384
 
-#define DEFAULT_BG 0x300A24
-#define DEFAULT_FG 0xffffff
 static sem_t fb_sem;
 extern uint8_t TERM_FONT[];
 

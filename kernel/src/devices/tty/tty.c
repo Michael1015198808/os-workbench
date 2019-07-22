@@ -3,7 +3,12 @@
 #define TTY_COOK_BUF_SZ 1024
 
 struct character tty_defaultch() {
-  return (struct character) { .metadata = 0, .ch = '\0' };
+  return (struct character) {
+        .metadata = 0,
+        .ch = '\0',
+        .fg=DEFAULT_FG,
+        .bg=DEFAULT_BG,
+  };
 }
 
 // tty state changes

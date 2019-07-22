@@ -67,10 +67,11 @@ struct display_info {
 };
 
 struct texture {
-  uint32_t fg,bg;//For multi-color
   uint32_t pixels[TEXTURE_W * TEXTURE_H];
 } __attribute__((packed));
 
+#define DEFAULT_BG 0x300A24
+#define DEFAULT_FG 0xffffff
 struct sprite {
   uint16_t texture, x, y;
   unsigned int display: 4;
