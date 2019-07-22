@@ -59,6 +59,8 @@ static inline void tty_upd_backsp(tty_t *tty) {
 
 static inline void tty_upd_putc(tty_t *tty, char ch) {
   tty->cursor->ch = ch;
+  tty->cursor->fg = tty->fg;
+  tty->cursor->bg = tty->bg;
   tty->cursor++;
 }
 
@@ -97,10 +99,10 @@ static void tty_render(tty_t *tty) {
         struct sprite sp[2] = {
           { .x = x * 8, .y = y * 16, .z = 0,
             .display = tty->display, .texture = draw * 2 + 1,
-            .fg=tty->fg,.bg=tty->bg },
+            .fg=ch->fg,.bg=ch->bg },
           { .x = x * 8, .y = y * 16 + 8, .z = 0,
             .display = tty->display, .texture = draw * 2 + 2,
-            .fg=tty->fg,.bg=tty->bg },
+            .fg=ch->fg,.bg=ch->bg },
         };
         tty->fbdev->ops->write(tty->fbdev, SPRITE_BRK, &sp, sizeof(sp));
         }

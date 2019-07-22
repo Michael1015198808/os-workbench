@@ -90,6 +90,7 @@ typedef struct {
 struct character {
   uint32_t metadata;
   unsigned char ch;
+  uint32_t fg,bg;
 };
 
 struct tty_queue {
