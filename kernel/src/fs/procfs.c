@@ -20,9 +20,9 @@ static const char* other_info[]={
     "uptime",
 };
 const char* per_task_info[]={
-    "",
     "pwd",
     "name",
+    "",
 };
 
 void other_info_init(filesystem* fs);
@@ -147,10 +147,10 @@ static ssize_t procfs_ireaddir(vfile_t* file,char* buf,size_t size){
         }else{
             if(file->offset<3){
                 file->offset+=
-                    (nread=snprintf(buf,size,per_task_info[1]+file->offset));
+                    (nread=snprintf(buf,size,per_task_info[0]+file->offset));
             }else if(file->offset<7){
                 file->offset+=
-                    (nread=snprintf(buf,size,per_task_info[2]+(file->offset-3)));
+                    (nread=snprintf(buf,size,per_task_info[1]+(file->offset-3)));
             }
         }
     }
