@@ -121,7 +121,9 @@ pool ctx_queue={
 static _Context* kmt_context_clean(_Event ev, _Context *c){
     task_t* task=dequeue(&ctx_queue);
     if(task){
+        if(task->attr&TASK_RUNNING);
         pmm->free(task);
+        enqueue(&ctx,task);
     }
     return NULL;
 }
@@ -129,7 +131,7 @@ static _Context* kmt_context_clean(_Event ev, _Context *c){
 void kmt_init(void){
     os->on_irq(INT_MIN, _EVENT_NULL, kmt_context_save);
     os->on_irq(INT_MAX, _EVENT_NULL, kmt_context_switch);
-    //os->on_irq(INT_MAX, _EVENT_NULL, kmt_context_clean);
+    os->on_irq(INT_MAX, _EVENT_NULL, kmt_context_clean);
     for(int i=0;i<_ncpu();++i){
         idles[i].attr=TASK_RUNABLE;
         idles[i].running=0;
