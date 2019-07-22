@@ -89,8 +89,8 @@ ssize_t fb_write(device_t *dev, off_t offset, const void *buf, size_t count) {
       if (sp->texture > 0 && sp->display == fb->info->current) {
         ctl.x = sp->x;
         ctl.y = sp->y;
-        if(sp->fg!=fb->DEFAULT_FG ||
-           sp->bg!=fb->DEFAULT_BG ){
+        if(sp->fg!=DEFAULT_FG ||
+           sp->bg!=DEFAULT_BG ){
 
             ctl.pixels = pixels;
             reload_color(pixels,fb->textures[sp->texture].pixels,sp->fg,sp->bg);
