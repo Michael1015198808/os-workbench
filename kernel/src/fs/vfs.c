@@ -108,7 +108,7 @@ int vfs_mkdir(const char* path){
         return -1;
     }else{
         clear_warn();
-        return vfs_lookup(path,O_RDONLY|O_CREAT|O_DIRECTORY)!=NULL;
+        return vfs_lookup(path,O_RDONLY|O_CREAT|O_DIRECTORY)==NULL;
     }
 }
 
