@@ -121,9 +121,8 @@ pool ctx_queue={
 static _Context* kmt_context_clean(_Event ev, _Context *c){
     task_t* task=dequeue(&ctx_queue);
     if(task){
-        if(task->attr&TASK_RUNNING);
-        pmm->free(task);
-        enqueue(&ctx_queue,task);
+        if(task->attr&TASK_RUNNING)enqueue(&ctx_queue,task);
+        else pmm->free(task);
     }
     return NULL;
 }
