@@ -5,13 +5,13 @@
 #include <shell.h>
 #include <vfs.h>
 
-void fork_and_run_raw(void* input){
-    fork_and_run(parsecmd(input));
-}
 void fork_and_run(void *input){
     //Wrapper
     runcmd(input);
     exit();
+}
+void fork_and_run_raw(void* input){
+    fork_and_run(parsecmd(input));
 }
 inode_t* vfs_lookup(const char* path,int flags);
 
