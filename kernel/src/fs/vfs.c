@@ -7,7 +7,7 @@
 
 #define this_fd current->fd[fd]
 
-struct mount_tab{
+struct{
     const char* path;
     inode_t backup;
 }mount_table[20];
@@ -78,7 +78,6 @@ int vfs_unmount_real(const char *path){
         if(!strcmp(path,mount_table[i].path)){
             --mount_table_cnt;
             *vfs_lookup(path,O_RDONLY|O_DIRECTORY)=mount_table[i].backup;
-
             mount_table[i]=mount_table[mount_table_cnt];
             return 0;
         }
