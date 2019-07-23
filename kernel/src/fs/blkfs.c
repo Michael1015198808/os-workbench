@@ -205,7 +205,7 @@ static inline uint32_t get_id(const inode_t* cur){
 static inline void add_inode(const filesystem* fs,const uint32_t id,const yls_node* node){
     fs->inodes[id].ptr=(void*)node;
     device_t* dev=fs->dev;
-    dev->ops->write(dev,INODE_START+id*sizeof(inode_t),node,sizeof(*node));
+    dev->ops->write(dev,INODE_START+id*sizeof(*node),node,sizeof(*node));
 }
 
 static inline inode_t* new_direc(
@@ -376,7 +376,7 @@ static int blkfs_iunlink(inode_t* parent,const char* name){
             }else{
                 uint32_t id,type;
                 read(dev,blk_off,&id,4);
-                read(dev,INODE_START+id*sizeof(inode_t)+offsetof(yls_node,type),&type,0);
+                read(dev,INODE_START+id*sizeof(yls_node)+offsetof(yls_node,type),&type,0);
                 if(type==YLS_DIR){
                     warn("It's a directory!\n");
                 }else{
