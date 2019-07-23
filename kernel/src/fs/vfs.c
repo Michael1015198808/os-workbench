@@ -131,6 +131,7 @@ int vfs_rmdir(const char *path){
     }else{
         warn("No such file or directory",new_parent);
     }
+    return 0;
 }
 
 int vfs_link(const char *oldpath, const char *newpath){
