@@ -1,7 +1,6 @@
 #include <devices.h>
 #include <common.h>
 #include <vfs.h>
-#include <fs.h>
 /*
  * devfs_init
  * devfs_lookup
@@ -145,10 +144,6 @@ static ssize_t devfs_ilink(inode_t* parent,const char* name, inode_t* inode){
 static ssize_t devfs_iunlink(inode_t* parent,const char* name){
     fprintf(STDERR,"cannot remove file '%s': Read-only filesystem\n",name);
     return -1;
-}
-
-static int is_dir(inode_t* cur){
-    return cur==devfs.root;
 }
 
 static inode_t* devfs_ifind(inode_t* cur,const char* path,int flags){
