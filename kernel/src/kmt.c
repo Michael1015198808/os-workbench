@@ -201,6 +201,11 @@ int kmt_create(task_t *task, const char *name, void (*entry)(void*), void *arg){
 //All security check should be done by caller
 //This function directly clear the task
 void kmt_teardown(task_t *task){
+    for(int i=0;i<FD_NUM;++i){
+        if(task->fd[i]){
+            vfs->close(i);
+        }
+    }
     tasks[task->pid]=NULL;
     pmm->free(task->name);
 }
@@ -308,11 +313,6 @@ void kmt_sem_signal(sem_t *sem){
 }
 
 void inline exit_real(task_t* cur){
-    for(int i=0;i<FD_NUM;++i){
-        if(cur->fd[i]){
-            vfs->close(i);
-        }
-    }
     _intr_close();
     set_flag(cur,TASK_ZOMBIE);
     tasks[cur->pid]=NULL;
@@ -336,7 +336,6 @@ void exit(void){
 void kmt_wait(task_t* task){
     while(task->attr&TASK_ZOMBIE)_yield();
     pthread_mutex_lock(&task->running);
-    pthread_mutex_unlock(&task->running);
 }
 
 MODULE_DEF(kmt) {
