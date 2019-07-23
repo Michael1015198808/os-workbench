@@ -320,6 +320,7 @@ void inline exit_real(task_t* cur){
     }
     _intr_close();
     set_flag(cur,TASK_ZOMBIE);
+    tasks[cur->pid]=NULL;
     if(cur->attr&TASK_NOWAIT){
         enqueue(&ctx_queue,cur);
     }
