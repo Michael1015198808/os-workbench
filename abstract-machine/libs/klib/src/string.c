@@ -2,7 +2,6 @@
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 
-static uint8_t buffer[0x5000];
 size_t strlen(const char *s) {
     size_t i=0;
     while(s[i]!='\0'){
@@ -105,15 +104,18 @@ int memcmp(const void* s1, const void* s2, size_t n){
     return 0;
 }
 
-void *memmove(void *dest, const void *src, size_t n){
-    pthread_mutex_t lk=PTHREAD_MUTEX_INITIALIZER;
-    pthread_mutex_lock(&lk);
-    if(n>sizeof(buffer)){
-        printf("%s %d:want to move memory larger than memmove's buf(%x bytes)!\n",__FILE__,__LINE__,n);
+void *memmove(void* dest, const void* src, size_t n){
+    char* _dest=dest;
+    const char* _src =src ;
+    if(dest>src){
+        for(int i=n-1;i>=0;++i){
+            _dest[i]=_src[i];
+        }
+    }else{
+        for(int i=0;i<n;++i){
+            _dest[i]=_src[i];
+        }
     }
-    memcpy(buffer,src,n);
-    memcpy(dest,buffer,n);
-    pthread_mutex_unlock(&lk);
     return dest;
 }
 
