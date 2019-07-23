@@ -152,7 +152,7 @@ static int is_dir(inode_t* cur){
 }
 
 static inode_t* devfs_ifind(inode_t* cur,const char* path,int flags){
-    if(*path){
+    if(*path||(flags&O_DIRECTORY)){
         while(*path=='/')++path;
         if(*path){
             warn("No such file or directory");
