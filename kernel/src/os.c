@@ -59,7 +59,7 @@ void yield_test(void *dummy){
     _putc('\n');
     while(1);
 }
-void mysh(void *name) {
+void fake_sh(void *name) {
     vfs->chdir("/");
     int old_time=uptime();
     while (1) {
