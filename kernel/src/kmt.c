@@ -321,10 +321,10 @@ void inline exit_real(task_t* cur){
     }
     _intr_close();
     set_flag(cur,TASK_ZOMBIE);
-    if((cur->attr)&TASK_NOWAIT){
-        enqueue(&ctx_queue,cur);
+    while(!(cur->attr)&TASK_NOWAIT){
+        _yield();
     }
-    _yield();
+    enqueue(&ctx_queue,cur);
     _intr_open();
 }
 
@@ -339,7 +339,7 @@ void exit(void){
     exit_real(cur);
 }
 
-void kmt_wait(task_t *task){
+void kmt_wait(task_t* task){
     while(!(task->attr&TASK_ZOMBIE))_yield();
 }
 

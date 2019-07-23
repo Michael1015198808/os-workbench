@@ -115,6 +115,12 @@ static inline void run_back_cmd(struct cmd* cmd){
     struct backcmd* bcmd = (struct backcmd*)cmd;
     task_t* son=pmm->alloc(sizeof(task_t));
     kmt->create(son,"fork-and-run",(task_fun)fork_and_run,bcmd->cmd);
-    uintptr_t p=(uintptr_t)&son->attr;
-    asm volatile("lock or %1,(%0)"::"r"(p),"g"(TASK_NOWAIT));
+    pthread_mutex_lock(&son->running);
+    if(son->attr==TASK_ZOMBIE){
+        pmm->free(son);
+    }else{
+        uintptr_t p=(uintptr_t)&son->attr;
+        asm volatile("lock or %1,(%0)"::"r"(p),"g"(TASK_NOWAIT));
+    }
+    pthread_mutex_unlock(&son->running);
 }
