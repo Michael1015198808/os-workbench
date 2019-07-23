@@ -176,7 +176,7 @@ static ssize_t blkfs_iwrite(vfile_t* file,const char* buf,size_t size){
                 ssize_t nwrite=block_write(fs->dev,off,fd_off,buf,size);
                 file->offset+=nwrite;
                 if(file->offset>fsize){
-                    node->size=file->offset;
+                    update_size(file,file->offset);
                 }
                 return nwrite;
             }
