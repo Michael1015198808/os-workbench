@@ -91,6 +91,7 @@ int vfs_unmount(const char* path){
     pthread_mutex_unlock(&mount_table_lk);
     return ret;
 }
+
 inode_t* vfs_lookup(const char* path,int flags){
     inode_t* start=NULL;
     if(*path=='/'){
@@ -100,6 +101,7 @@ inode_t* vfs_lookup(const char* path,int flags){
     }
     return start->ops->find(start,path,flags);
 }
+
 int vfs_mkdir(const char* path){
     if(vfs_lookup(path,O_RDONLY)){
         warn("cannot create directory '%s': File exists",path);
