@@ -24,10 +24,19 @@ void mysh(void *name) {
             Assert(temp==i,"fd of %s should be %d, instead of %d!\n",std_name[i],i,temp);
         }
     }
+
+    uint32_t ori_colors[2],prompt_colors[2];
+    tty_get_color(tty,ori_colors);
+    prompt_colors[1]=ori_colors[1];
+    prompt_colors[0]=0x00006fb8;
+    device_t* tty=get_cur()->fd[STDOUT]->inode->ptr;
+
     vfs->chdir("/");
     while (1) {
         char input[0x100], prompt[0x100];
+        tty_set_color(tty,prompt_colors);
         sprintf(prompt, "(%s) [%s] $ ", name,cur->pwd);
+        tty_set_color(tty,ori_colors);
         int nread;
         do{
             std_write(prompt);
