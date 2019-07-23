@@ -116,5 +116,5 @@ static inline void run_back_cmd(struct cmd* cmd){
     task_t* son=pmm->alloc(sizeof(task_t));
     kmt->create(son,NULL,(task_fun)fork_and_run,bcmd->cmd);
     uintptr_t p=(uintptr_t)&son->attr;
-    asm volatile("lock or %1,(%0)"::"r"(p),"g"(~(TASK_NOWAIT)));
+    asm volatile("lock or %1,(%0)"::"r"(p),"g"(TASK_NOWAIT));
 }
