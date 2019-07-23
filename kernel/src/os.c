@@ -69,6 +69,7 @@ void mysh(void *name) {
         old_time=uptime();
 
         task_t* son=pmm->alloc(sizeof(task_t));
+void fork_and_run_raw(void* input);
         kmt->create(son,"mysh",fork_and_run_raw,input);
         kmt->wait(son);
         kmt->teardown(son);
