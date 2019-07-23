@@ -369,7 +369,7 @@ static int blkfs_iunlink(inode_t* parent,const char* name){
             }else{
                 uint32_t id,type;
                 read(dev,blk_off,&id,0);
-                read(dev,INODE_START+id*sizeof(inode_t)+offsetof(align,yls_node),&type,0);
+                read(dev,INODE_START+id*sizeof(inode_t)+offsetof(yls_node,type),&type,0);
                 if(type==YLS_DIR){
                     warn("It's a directory!\n");
                 }else{
