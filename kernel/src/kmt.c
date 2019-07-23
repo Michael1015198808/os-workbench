@@ -203,7 +203,7 @@ int kmt_create(task_t *task, const char *name, void (*entry)(void*), void *arg){
 //All security check should be done by caller
 //This function directly clear the task
 void kmt_teardown(task_t *task){
-    for(int i=0;i<40;++i){
+    for(int i=0;i<0x40;++i){
         if(tasks[i]==task){
             tasks[i]=NULL;
         }
