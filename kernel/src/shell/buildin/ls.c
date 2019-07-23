@@ -23,6 +23,7 @@ static inline void single_ls(const char* path,int* err){
 
     volatile int stop_val=0;
     while((nread=vfs->readdir(fd,buf,sizeof(buf)))>0){
+        while(stop_val);
         if(tty_mode){
             strcpy(file+len,buf);
             if(vfs->access(file,O_DIRECTORY)){
@@ -35,7 +36,6 @@ static inline void single_ls(const char* path,int* err){
                 std_write("\n");
                 cnt=0;
             }
-            while(stop_val);
             cnt+=fprintf(STDOUT,"%s  ",buf);
         }else{
             fprintf(STDOUT,"%s\n",buf);
