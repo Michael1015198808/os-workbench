@@ -186,8 +186,12 @@ static inode_t* devfs_rootifind(inode_t* cur,const char* path,int flags){
                 path+=len;
             }
         }
-        if(!next)return NULL;
+        if(!next){
+            warn("No such file or directory");
+            return NULL;
+        }
     }
+
     return vfs_find(next,path,flags);
 }
 //.func_name=dev_ifunc_name
