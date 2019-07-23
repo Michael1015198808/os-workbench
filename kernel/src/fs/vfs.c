@@ -107,7 +107,17 @@ int vfs_mkdir(const char* path){
     }
 }
 int vfs_rmdir(const char *path){
-    TODO();
+    char new_parent[0x100];
+
+    inode_t* parent=get_parent(&path,new_parent);
+
+    if(!parent){
+        warn("No such file or directory",new_parent);
+    }else if(parent->ops->find(parent,path,O_RDONLY)){
+        return parent->ops->rmdir(parent,path);
+    }else{
+        warn("No such file or directory",new_parent);
+    }
 }
 
 static inline inode_t* get_parent(const char**s,char* new_parent){

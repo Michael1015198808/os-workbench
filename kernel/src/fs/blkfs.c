@@ -195,6 +195,53 @@ static off_t blkfs_ilseek(vfile_t* file,off_t offset,int whence){
     BARRIER();
 }
 
+static int blkfs_irmdir(inode_t* parent,const char* name){
+    const filesystem* fs=parent->fs;
+    device_t* dev=fs->dev;
+    yls_node* node=parent->ptr;
+    uint32_t offset=node->info;//Skip parent
+
+    ssize_t(*const read )(device_t*,off_t,      void*,size_t)=dev->ops->read;
+    ssize_t(*const write)(device_t*,off_t,const void*,size_t)=fs->dev->ops->write;
+
+    if(name[0]=='.'){
+        return -1;
+    }else{
+        offset+=4;
+        while(offset){
+            uint32_t blk_off;
+            if(read(dev,offset,&blk_off,4)!=4||!blk_off){
+                //No more file in this directory
+                warn("No such file or directory");
+                return -1;
+            }
+            if(blk_off==YLS_WIPE||block_cmp(dev,blk_off,name)){
+                //Mismatch
+                offset+=4;
+                if(offset%BLK_SZ==BLK_MEM){
+                    //Find next offset
+                    read(dev,offset,&offset,4);
+                }
+            }else{
+                uint32_t id,type;
+                read(dev,blk_off,&id,4);
+                read(dev,INODE_START+id*sizeof(yls_node)+offsetof(yls_node,type),&type,4);
+                if(type!=YLS_DIR){
+                    warn("Not a directory!");
+                    return -1;
+                }else{
+                    //TODO: refcnt
+                    uint32_t wipe=YLS_WIPE;
+                    write(dev,offset,&wipe,4);
+                    return 0;
+                }
+            }
+        }
+    }
+
+    return -1;
+}
+
 static inline uint32_t get_id(const inode_t* cur){
     const filesystem* fs=cur->fs;
     uint32_t ret=cur-fs->inodes;
@@ -378,7 +425,7 @@ static int blkfs_iunlink(inode_t* parent,const char* name){
                 read(dev,blk_off,&id,4);
                 read(dev,INODE_START+id*sizeof(yls_node)+offsetof(yls_node,type),&type,4);
                 if(type==YLS_DIR){
-                    warn("It's a directory!\n");
+                    warn("It's a directory!");
                     return -1;
                 }else{
                     //TODO: refcnt
@@ -402,8 +449,8 @@ static inodeops_t blkfs_iops={
     .lseek  =blkfs_ilseek,
     /*
     .mkdir  =blkfs_imkdir,
-    .rmdir  =blkfs_rmdir,
     */
+    .rmdir  =blkfs_irmdir,
     .link   =blkfs_ilink,
     .unlink =blkfs_iunlink,
     .find   =blkfs_ifind,

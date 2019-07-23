@@ -1,19 +1,18 @@
-#include <devices.h>
-#include <klib.h>
-#include <vfs.h>
-#include <yls.h>
 #include <dir.h>
+#include <klib.h>
+#include <devices.h>
+#include <vfs.h>
 
-int mysh_rm(void *args[]){
+int mysh_rmdir(void *args[]){
     if(args[1]){
         for(int i=1;args[i];++i){
-            vfs->unlink(args[i]);
+            vfs->rmdir(args[i]);
             error_print(" cannot remove '%s': ",args[i]);
         }
         return 0;
     }else{
-        fprintf(2,"Usage: rm [FILE]\n");
+        fprintf(2,"Usage: rmdir [FILE]\n");
         return -1;
     }
+    return 0;
 }
-
