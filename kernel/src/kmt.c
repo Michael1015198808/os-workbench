@@ -149,15 +149,13 @@ int kmt_create(task_t *task, const char *name, void (*entry)(void*), void *arg){
         return 0;
     }
     *task=(task_t){
-        .attr   =TASK_SLEEP,
+        .attr   =TASK_RUNABLE,
         .ncli   =0,
         .intena =0,
         .pid    =0,//Handle later
         .name   =NULL,//Handle later
         .running=0,
     };
-    Assert(add_task(task)==0,"Create task %s failed!\n",name);
-    local_log("create (%d)%s\n",task->pid,name);
     copy_name(task->name,name);
     task_t* cur=get_cur();
 
@@ -195,7 +193,8 @@ int kmt_create(task_t *task, const char *name, void (*entry)(void*), void *arg){
         task->fence2[i]=0xeca97531;
     }
 #endif
-    task->attr=TASK_RUNABLE;
+    Assert(add_task(task)==0,"Create task %s failed!\n",name);
+    local_log("create (%d)%s\n",task->pid,name);
     return 0;
 }
 

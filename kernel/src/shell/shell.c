@@ -34,9 +34,7 @@ void mysh(void *name) {
     vfs->chdir("/");
     while (1) {
         char input[0x100], prompt[0x100];
-        tty_set_color(tty,prompt_colors);
         sprintf(prompt, "(%s) [%s] $ ", name,cur->pwd);
-        tty_set_color(tty,ori_colors);
         int nread;
         do{
             std_write(prompt);

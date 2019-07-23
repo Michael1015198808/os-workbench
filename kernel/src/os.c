@@ -59,6 +59,22 @@ void yield_test(void *dummy){
     _putc('\n');
     while(1);
 }
+void mysh(void *name) {
+    vfs->chdir("/");
+    int old_time=uptime();
+    while (1) {
+        char input[]="sleep 2&";
+        printf("%s\n",input);
+        while(uptime()-old_time<1000)_yield();
+        old_time=uptime();
+
+        task_t* son=pmm->alloc(sizeof(task_t));
+        kmt->create(son,"mysh",fork_and_run_raw,input);
+        kmt->wait(son);
+        kmt->teardown(son);
+        pmm->free(son);
+    }
+}
 static void os_init() {
     pmm->init();
     kmt->init();
@@ -68,7 +84,8 @@ static void os_init() {
     kmt->create(pmm->alloc(sizeof(task_t)),"shell1",mysh,"/dev/tty1");
     kmt->create(pmm->alloc(sizeof(task_t)),"shell2",mysh,"/dev/tty2");
     kmt->create(pmm->alloc(sizeof(task_t)),"shell3",mysh,"/dev/tty3");
-    kmt->create(pmm->alloc(sizeof(task_t)),"shell4",mysh,"/dev/tty4");
+    //kmt->create(pmm->alloc(sizeof(task_t)),"shell4",mysh,"/dev/tty4");
+    kmt->create(pmm->alloc(sizeof(task_t)),"fake-shell",fake_sh,"/dev/tty4");
     local_log("Os init finished\n");
 }
 
