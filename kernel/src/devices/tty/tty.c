@@ -243,11 +243,6 @@ void tty_set_color(device_t* dev,uint32_t* colors){
     tty_t* tty= dev->ptr;
     tty->fg   = colors[0];
     tty->bg   = colors[1];
-    struct display_info info = {
-      .current = tty->display,
-    };
-  device_t *fb = dev_lookup("fb");
-    fb->ops->write(fb, 0, &info, sizeof(struct display_info));
 }
 
 void tty_task(void *arg) {
