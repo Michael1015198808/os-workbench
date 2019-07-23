@@ -193,6 +193,11 @@ static ssize_t procfs_iunlink(inode_t* parent,const char* name){
     return -1;
 }
 
+int is_dir(inode_t* inode){
+    uint8_t *p=inode->ptr;
+    return inode==procfs.root || (p && p[1]==PROC_DIR);
+}
+
 static inode_t* procfs_rootifind(inode_t* cur,const char* path,int flags){
     inode_t* next=NULL;
 
@@ -322,7 +327,7 @@ static inodeops_t procfs_rootiops={
     .rmdir  =procfs_irmdir,
     .link   =procfs_ilink,
     .unlink =procfs_iunlink,
-    .find   =procfs_ifind,
+    .find   =procfs_rootifind,
 };
 static inodeops_t procfs_taskiops={
     .open   =procfs_iopen,
@@ -335,7 +340,7 @@ static inodeops_t procfs_taskiops={
     .rmdir  =procfs_irmdir,
     .link   =procfs_ilink,
     .unlink =procfs_iunlink,
-    .find   =procfs_ifind,
+    .find   =procfs_taskifind,
 };
 static inodeops_t procfs_iops={
     .open   =procfs_iopen,
