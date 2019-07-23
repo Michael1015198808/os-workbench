@@ -66,9 +66,9 @@ static void os_init() {
     vfs->init();
 
     kmt->create(pmm->alloc(sizeof(task_t)),"shell1",mysh,"/dev/tty1");
-    kmt->create(pmm->alloc(sizeof(task_t)),"shell2",mysh,"/dev/tty2");
-    kmt->create(pmm->alloc(sizeof(task_t)),"shell3",mysh,"/dev/tty3");
-    kmt->create(pmm->alloc(sizeof(task_t)),"shell4",mysh,"/dev/tty4");
+    //kmt->create(pmm->alloc(sizeof(task_t)),"shell2",mysh,"/dev/tty2");
+    //kmt->create(pmm->alloc(sizeof(task_t)),"shell3",mysh,"/dev/tty3");
+    //kmt->create(pmm->alloc(sizeof(task_t)),"shell4",mysh,"/dev/tty4");
     local_log("Os init finished\n");
 }
 
