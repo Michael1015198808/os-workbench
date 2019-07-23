@@ -118,7 +118,7 @@ static inline void run_back_cmd(struct cmd* cmd){
     pthread_mutex_lock(&son->running);
     if((son->attr&TASK_ZOMBIE)){
         while(son->attr&TASK_RUNNING);
-        pmm->free(son);
+        //pmm->free(son);
     }else{
         uintptr_t p=(uintptr_t)&son->attr;
         asm volatile("lock or %1,(%0)"::"r"(p),"g"(TASK_NOWAIT));
