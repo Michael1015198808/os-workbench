@@ -53,6 +53,7 @@ static fsops_t blkfs_ops={
     .lookup=blkfs_lookup,
     .close =blkfs_close,
 };
+
 static inline void update_size(vfile_t* file,uint32_t newsize){
     filesystem* fs=file->inode->fs;
     device_t* dev =fs->dev;
@@ -348,10 +349,10 @@ static inode_t* blkfs_ifind(inode_t* cur,const char* path,int flags){
         }
     }else{
         offset+=4;
+        char layer[0x100];
+        int layer_len=get_first_layer(path);
+        strncpy(layer,path,layer_len);
         while(offset){
-            char layer[0x100];
-            int layer_len=get_first_layer(path);
-            strncpy(layer,path,layer_len);
             uint32_t blk_off;
             if(read(fs->dev,offset,&blk_off,4)!=4||!blk_off){
                 //No more file in this directory
