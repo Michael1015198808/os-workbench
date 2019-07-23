@@ -27,6 +27,8 @@ const char* per_task_info[]={
 
 void other_info_init(filesystem* fs);
 
+static inodeops_t procfs_rootiops;
+static inodeops_t procfs_taskiops;
 static inodeops_t procfs_iops;
 static uint8_t num[2]={0,0};
 
@@ -42,7 +44,7 @@ static void procfs_init(filesystem* fs,const char* name,device_t *dev){
     *fs->root =(inode_t){
             .ptr   =num,
             .fs    =fs,
-            .ops   =&procfs_iops,
+            .ops   =&procfs_rootiops,
         };
     for(int i=0;i<0x40;++i){
         for(int j=0;j<3;++j){
@@ -51,7 +53,11 @@ static void procfs_init(filesystem* fs,const char* name,device_t *dev){
             uint8_t *p=fs->inodes[idx].ptr;
             p[0]=i;p[1]=j;
             fs->inodes[idx].fs=fs;
-            fs->inodes[idx].ops=&procfs_iops;
+            if(j==0){
+                fs->inodes[idx].ops=&procfs_taskiops;
+            }else{
+                fs->inodes[idx].ops=&procfs_iops;
+            }
         }
     }
     other_info_init(fs);
@@ -90,71 +96,65 @@ static int procfs_iclose(vfile_t* file){
     return 0;
 }
 
+static ssize_t procfs_rootiread(vfile_t* file,char* buf,size_t size){
+    return EISDIR;
+}
+
 static ssize_t procfs_iread(vfile_t* file,char* buf,size_t size){
     ssize_t nread=0;
     uint8_t* p=file->inode->ptr;
     task_t* task=tasks[p[0]];
-    if(file->inode==procfs.root){
-        nread=EISDIR;
-    }else{
-        if(task){
-            switch(p[1]){
-                case PROC_DIR:
-                    nread=EISDIR;
-                    break;
-                case PROC_PWD:
-                    file->offset+=
-                        (nread+=snprintf(buf,size,task->pwd+file->offset));
-                    break;
-                case PROC_NAME:
-                    file->offset+=
-                        (nread+=snprintf(buf,size,task->name+file->offset));
-                    break;
-                default:
-                    warn(":Unknown file type");
-                    break;
-            }
+    if(task){
+        switch(p[1]){
+            case PROC_DIR:
+                BARRIER();
+                break;
+            case PROC_PWD:
+                file->offset+=
+                    (nread+=snprintf(buf,size,task->pwd+file->offset));
+                break;
+            case PROC_NAME:
+                file->offset+=
+                    (nread+=snprintf(buf,size,task->name+file->offset));
+                break;
+            default:
+                warn(":Unknown file type");
+                break;
         }
     }
     return nread;
 }
 
-static ssize_t procfs_ireaddir(vfile_t* file,char* buf,size_t size){
-    ssize_t nread;
-    if(file->inode==procfs.root){
-        nread=0;
-        while(file->offset<0x40&&!tasks[file->offset]){
-            ++file->offset;
-        }
-        if(file->offset<0x40){
-            nread=sprintf(buf,"%d",file->offset);
-            ++file->offset;
-        }else if(file->offset-0x40<LEN(other_info)){
-            nread=sprintf(buf,"%s",other_info[file->offset-0x40]);
-            ++file->offset;
-        }
-    }else{
-        nread=0;
-        uint8_t* p=file->inode->ptr;
-        if(p==NULL){
-            warn("Not a directory");
-        }else if(p[1]){
-            if(p[0]<0x40){
-                warn("Not a directory");
-            }else{
-                warn("Can't recognize this file!");
-            }
-        }else{
-            if(file->offset<3){
-                file->offset+=
-                    (nread=snprintf(buf,size,per_task_info[1]+file->offset));
-            }else if(file->offset<7){
-                file->offset+=
-                    (nread=snprintf(buf,size,per_task_info[2]+(file->offset-3)));
-            }
-        }
+static ssize_t procfs_rootireaddir(vfile_t* file,char* buf,size_t size){
+    ssize_t nread=0;
+    while(file->offset<0x40&&!tasks[file->offset]){
+        ++file->offset;
+    }
+    if(file->offset<0x40){
+        nread=sprintf(buf,"%d",file->offset);
+        ++file->offset;
+    }else if(file->offset-0x40<LEN(other_info)){
+        nread=sprintf(buf,"%s",other_info[file->offset-0x40]);
+        ++file->offset;
     }
     return nread;
+}
+
+static ssize_t procfs_taskireaddir(vfile_t* file,char* buf,size_t size){
+    ssize_t nread=0;
+    uint8_t* p=file->inode->ptr;
+    if(file->offset<3){
+        file->offset+=
+            (nread=snprintf(buf,size,per_task_info[1]+file->offset));
+    }else if(file->offset<7){
+        file->offset+=
+            (nread=snprintf(buf,size,per_task_info[2]+(file->offset-3)));
+    }
+    return nread;
+}
+static ssize_t procfs_ireaddir(vfile_t* file,char* buf,size_t size){
+    warn("Not a directory");
+    return 0;
 }
 
 static ssize_t procfs_iwrite(vfile_t* file,const char* buf,size_t size){
@@ -199,92 +199,94 @@ int is_dir(inode_t* inode){
     return inode==procfs.root || (p && p[1]==PROC_DIR);
 }
 
-static inode_t* procfs_ifind(inode_t* cur,const char* path,int flags){
+static inode_t* procfs_rootifind(inode_t* cur,const char* path,int flags){
     inode_t* next=NULL;
 
     do{ 
         inode_t* inode=cur;
-        if(*path=='/'){ 
-            while(*path=='/')++path; 
-            if(!is_dir(inode)){ 
-                warn("Not a directory"); 
-                return NULL; 
-            } 
-        } 
+        while(*path=='/')++path; 
         if(!*path){ 
-            if((flags & O_DIRECTORY) && !is_dir(inode)){ 
-                warn("Not a directory"); 
-                return NULL; 
-            } 
-            else return (inode_t*)inode; 
-        } 
+            return (inode_t*)inode; 
+        }
+    }while(0);
+
+    int i;
+    char num[3];
+    for(i=0;i<3;++i){
+        if(*path>='0'&&*path<='9'){
+            num[i]=*path;
+            ++path;
+        }else{
+            num[i]='\0';
+            break;
+        }
+    }
+    if(i==0){
+        //A word
+        for(int i=0;i<LEN(other_info);++i){
+            int len=strlen(other_info[i]);
+            if(!strncmp(path,other_info[i],len)){
+                next=fs->inodes+(0x40*3+i);
+                path+=len;
+                break;
+            }
+        }
+        if(path[0]=='.'){
+            if(path[1]=='.'){
+                //.. for parent
+                next=procfs.root_parent;
+                path+=2;
+            }else{
+                //. for current
+                next=cur;
+                ++path;
+            }
+        }
+    }else if(i<3){
+        //A proper pid
+        int id=atoi(num);
+        if(tasks[id]){
+            id*=3;
+            next=procfs.inodes+id;
+        }
+    }
+    const filesystem* fs=cur->fs;
+
+    return next->ops->find(next,path,flags);
+}
+
+static inode_t* procfs_taskifind(inode_t* cur,const char* path,int flags){
+    inode_t* next=NULL;
+
+    do{ 
+        inode_t* inode=cur;
+        while(*path=='/')++path; 
+        if(!*path){ 
+            return (inode_t*)inode; 
+        }
     }while(0);
 
     const filesystem* fs=cur->fs;
 
-    if(cur==procfs.root){
-        int i;
-        char num[3];
-        for(i=0;i<3;++i){
-            if(*path>='0'&&*path<='9'){
-                num[i]=*path;
-                ++path;
-            }else{
-                num[i]='\0';
-                break;
-            }
-        }
-        if(i==0){
-            //A word
-            for(int i=0;i<LEN(other_info);++i){
-                int len=strlen(other_info[i]);
-                if(!strncmp(path,other_info[i],len)){
-                    next=fs->inodes+(0x40*3+i);
-                    path+=len;
-                    break;
-                }
-            }
-            if(path[0]=='.'){
-                if(path[1]=='.'){
-                    //.. for parent
-                    next=procfs.root_parent;
-                    path+=2;
-                }else{
-                    //. for current
-                    next=cur;
-                    ++path;
-                }
-            }
-        }else if(i<3){
-            //A proper pid
-            int id=atoi(num);
-            if(tasks[id]){
-                id*=3;
-                next=procfs.inodes+id;
-            }
+    uint8_t *p=cur->ptr;
+    Assert(p[1]==PROC_DIR);
+    if(path[0]=='.'){
+        if(path[1]=='.'){
+            //.. for parent
+            next=procfs.root;
+            path+=2;
+        }else{
+            //. for current
+            next=cur;
+            ++path;
         }
     }else{
-        uint8_t *p=cur->ptr;
-        if(p[1]==PROC_DIR){
-            if(path[0]=='.'){
-                if(path[1]=='.'){
-                    //.. for parent
-                    next=procfs.root;
-                    path+=2;
-                }else{
-                    //. for current
-                    next=cur;
-                    ++path;
-                }
-            }else{
-                for(int i=2;i>=0;--i){
-                    int len=strlen(per_task_info[i]);
-                    if(!strncmp(path,per_task_info[i],len)){
-                        next=cur+i;
-                        path+=len;
-                        break;
-                    }
-                }
+        for(int i=2;i>=0;--i){
+            int len=strlen(per_task_info[i]);
+            if(!strncmp(path,per_task_info[i],len)){
+                next=cur+i;
+                path+=len;
+                break;
             }
         }
     }
@@ -296,9 +298,52 @@ static inode_t* procfs_ifind(inode_t* cur,const char* path,int flags){
     return next->ops->find(next,path,flags);
 }
 
+static inode_t* procfs_ifind(inode_t* cur,const char* path,int flags){
+    do{ 
+        inode_t* inode=cur;
+        if(*path=='/'){
+            warn("Not a directory");
+            return NULL;
+        }
+        if(!*path){
+            if(flags & O_DIRECTORY){
+                warn("Not a directory");
+                return NULL;
+            }
+            else return (inode_t*)inode;
+        }
+    }while(0);
 
-//.func_name=dev_ifunc_name
-//i for inode
+    warn("No such a file or directory"); 
+    return NULL; 
+}
+
+static inodeops_t procfs_rootiops={
+    .open   =procfs_iopen,
+    .close  =procfs_iclose,
+    .read   =procfs_rootiread,
+    .readdir=procfs_rootireaddir,
+    .write  =procfs_iwrite,
+    .lseek  =procfs_ilseek,
+    .mkdir  =procfs_imkdir,
+    .rmdir  =procfs_irmdir,
+    .link   =procfs_ilink,
+    .unlink =procfs_iunlink,
+    .find   =procfs_ifind,
+};
+static inodeops_t procfs_taskiops={
+    .open   =procfs_iopen,
+    .close  =procfs_iclose,
+    .read   =procfs_rootiread,
+    .readdir=procfs_taskireaddir,
+    .write  =procfs_iwrite,
+    .lseek  =procfs_ilseek,
+    .mkdir  =procfs_imkdir,
+    .rmdir  =procfs_irmdir,
+    .link   =procfs_ilink,
+    .unlink =procfs_iunlink,
+    .find   =procfs_ifind,
+};
 static inodeops_t procfs_iops={
     .open   =procfs_iopen,
     .close  =procfs_iclose,
