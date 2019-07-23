@@ -321,11 +321,10 @@ void inline exit_real(task_t* cur){
     }
     _intr_close();
     set_flag(cur,TASK_ZOMBIE);
-    while(!(cur->attr&TASK_NOWAIT)){
-        _yield();
+    if(cur->attr&TASK_NOWAIT){
+        enqueue(&ctx_queue,cur);
     }
-    enqueue(&ctx_queue,cur);
-    _intr_open();
+    _yield();
 }
 
 void warning(const char* warn){
