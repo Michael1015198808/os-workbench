@@ -127,12 +127,12 @@ static ssize_t devfs_ilseek(vfile_t* file,off_t offset,int whence){
     BARRIER();
 }
 
-static ssize_t devfs_imkdir(const char* name){
+static ssize_t devfs_imkdir(inode_t* inode,const char* name){
     fprintf(STDERR,"cannot create directory '%s': Read-only filesystem\n",name);
     return -1;
 }
 
-static ssize_t devfs_irmdir(const char* name){
+static ssize_t devfs_irmdir(inode_t* inode,const char* name){
     fprintf(STDERR,"cannot remove directory '%s': Read-only filesystem\n",name);
     return -1;
 }
