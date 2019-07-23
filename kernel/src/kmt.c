@@ -204,11 +204,6 @@ int kmt_create(task_t *task, const char *name, void (*entry)(void*), void *arg){
 //All security check should be done by caller
 //This function directly clear the task
 void kmt_teardown(task_t *task){
-    for(int i=0;i<FD_NUM;++i){
-        if(task->fd[i]){
-            vfs->close(i);
-        }
-    }
     pmm->free(task->name);
 }
 
@@ -326,6 +321,11 @@ void warning(const char* warn){
 void exit(void){
     intr_close();
     task_t* cur=get_cur();
+    for(int i=0;i<FD_NUM;++i){
+        if(cur->fd[i]){
+            vfs->close(i);
+        }
+    }
     set_flag(cur,TASK_ZOMBIE);
     tasks[cur->pid]=NULL;
     if(cur->attr&TASK_NOWAIT){
