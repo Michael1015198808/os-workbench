@@ -7,7 +7,7 @@ ifeq ($(ARCH),)
 export ARCH := x86-qemu
 endif
 
-PREBUILD := git initrd
+PREBUILD := git
 include $(AM_HOME)/Makefile.app
 include ../Makefile.lab
 
