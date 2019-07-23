@@ -193,11 +193,6 @@ static ssize_t procfs_iunlink(inode_t* parent,const char* name){
     return -1;
 }
 
-int is_dir(inode_t* inode){
-    uint8_t *p=inode->ptr;
-    return inode==procfs.root || (p && p[1]==PROC_DIR);
-}
-
 static inode_t* procfs_rootifind(inode_t* cur,const char* path,int flags){
     inode_t* next=NULL;
 
@@ -265,8 +260,6 @@ static inode_t* procfs_taskifind(inode_t* cur,const char* path,int flags){
             return (inode_t*)inode; 
         }
     }while(0);
-
-    const filesystem* fs=cur->fs;
 
     uint8_t *p=cur->ptr;
     Assert(p[1]==PROC_DIR);
