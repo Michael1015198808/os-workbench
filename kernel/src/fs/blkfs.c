@@ -250,7 +250,7 @@ static inline uint32_t get_id(const inode_t* cur){
 }
 
 static inline void add_inode(const filesystem* fs,const uint32_t id,const yls_node* node){
-    fs->inodes[id].ptr=(void*)node;
+    *(yls_node*)fs->inodes[id].ptr=*node;
     device_t* dev=fs->dev;
     dev->ops->write(dev,INODE_START+id*sizeof(*node),node,sizeof(*node));
 }
