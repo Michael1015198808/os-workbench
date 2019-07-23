@@ -94,9 +94,7 @@ static inline _Context* kmt_context_switch_real(_Event ev, _Context *c){
 
     for(int i=0;i<4;++i){
         if(current->fence1[i]!=0x13579ace||current->fence2[i]!=0xeca97531){
-            log("Stack over/under flow!\n");
-            printf("%d\n",i);
-            printf("%s\n",current->name);
+            log("Stack over/under flow!\ntask: %s\n",current->name);
             while(1);
         }
     }
@@ -341,7 +339,7 @@ void exit(void){
 }
 
 void kmt_wait(task_t* task){
-    while(task->attr==TASK_RUNNING||!(task->attr&TASK_ZOMBIE))_yield();
+    while((task->attr==TASK_RUNNING)||!(task->attr&TASK_ZOMBIE))_yield();
 }
 
 MODULE_DEF(kmt) {
