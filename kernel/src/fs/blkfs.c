@@ -53,6 +53,14 @@ static fsops_t blkfs_ops={
     .lookup=blkfs_lookup,
     .close =blkfs_close,
 };
+static inline void update_size(file_t* file,uint32_t newsize){
+    filesystem* fs=file->fs;
+    device_t* dev =fs->dev;
+    uint32_t  id  =file->inode-fs->inodes;
+
+    ((yls_node*)file->inode->ptr)->size=newsize;
+    dev->ops->write(dev,INODE_START+id*sizeof(*node)+offsetof(yls_node,size),&newsize,4);
+}
 
 static int blkfs_iopen(vfile_t* file,int flags){
     file->lk=PTHREAD_MUTEX_INITIALIZER;
@@ -65,7 +73,7 @@ static int blkfs_iopen(vfile_t* file,int flags){
         if(  (flags & O_WRONLY)&&
             !(flags & O_RDONLY)&&
             !(flags & O_APPEND) ){
-            ((yls_node*)file->inode->ptr)->size=0;
+            update_size(file,0);
         }
     }
     file->flags=flags;
