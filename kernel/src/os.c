@@ -21,61 +21,12 @@ static irq_handler irq_guard={
     .next=&irq_guard
 };
 
-sem_t echo_sem;
-void echo_test(void *arg){
-    while(1){
-        printf("%c",((char*)arg)[0]);
-        kmt->sem_wait(&echo_sem);
-        _yield();
-    }
-}
-void sem_test(void *arg){
-    while(1){
-        printf("~");
-        kmt->sem_signal(&echo_sem);
-        _yield();
-    }
-}
-
 #define CURRENT_TEST queue_test
 #define TEST_NAME(idx) TO_STRING(CURRENT_TEST) TO_STRING(idx)
 #define TEST_REQUIREMENT() \
     void MACRO_CONCAT(MACRO_SELF(CURRENT_TEST),_init)(void); \
     MACRO_CONCAT(MACRO_SELF(CURRENT_TEST),_init)()
 
-static spinlock_t yield_lk;
-void yield_test(void *dummy){
-    kmt->spin_lock(&yield_lk);
-    _putc('0'+_cpu());
-    _putc('0'+_intr_read());
-    _putc('\n');
-    _yield();
-    _putc('0'+_cpu());
-    _putc('0'+_intr_read());
-    _putc('\n');
-    kmt->spin_unlock(&yield_lk);
-    _putc('0'+_cpu());
-    _putc('0'+_intr_read());
-    _putc('\n');
-    while(1);
-}
-void fake_sh(void *name) {
-    vfs->chdir("/");
-    int old_time=uptime();
-    while (1) {
-        char input[]="sleep 3&";
-        printf("%s\n",input);
-        while(uptime()-old_time<500)_yield();
-        old_time=uptime();
-
-        task_t* son=pmm->alloc(sizeof(task_t));
-void fork_and_run_raw(void* input);
-        kmt->create(son,"mysh",fork_and_run_raw,input);
-        kmt->wait(son);
-        kmt->teardown(son);
-        pmm->free(son);
-    }
-}
 static void os_init() {
     pmm->init();
     kmt->init();
