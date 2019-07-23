@@ -46,6 +46,9 @@
 #define clear_warn() \
     (get_cur()->err[0]='\0',(void)0)
 
+#define error_clear() \
+    (get_cur()->err[0]='\0',(void)0)
+
 #define error(fmt,...) \
     do { \
         char warn_str[0x100]; \

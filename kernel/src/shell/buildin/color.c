@@ -1,8 +1,6 @@
 #include <devices.h>
 #include <vfs.h>
 
-void tty_set_color(device_t* dev,uint32_t* colors);
-void tty_get_color(device_t* dev,uint32_t* colors);
 extern uint32_t atoi16(const char* nptr);
 
 static inline int set_color_real(void *args[],device_t* tty,uint32_t* colors){

@@ -43,6 +43,10 @@ int fprintf(int fd, const char *fmt, ...);
 void warning(const char*);
 void exit(void);
 
+typedef struce device device_t;
+void tty_set_color(device_t* dev,uint32_t* colors);
+void tty_get_color(device_t* dev,uint32_t* colors);
+
 typedef struct vfile vfile_t;
 typedef struct inode inode_t;
 

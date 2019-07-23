@@ -9,15 +9,27 @@ static inline void single_ls(const char* path,int* err){
     int cnt=0,len=strlen(path);
     int tty_mode=isatty(STDOUT);
     char buf[200],file[200];
-    strcpy(file,path);
-    if(path[len-1]!='/'){
-        file[len++]='/';
+    uint32_t ori_colors[2],dir_colors[2];
+    device_t* tty=get_cur()->fd[STDOUT]->inode->ptr;
+    if(tty_mode){
+        tty_get_color(tty,ori_colors);
+        dir_colors[1]=ori_colors[1];
+        dir_colors[0]=0x00006fb8;
+        strcpy(file,path);
+        if(path[len-1]!='/'){
+            file[len++]='/';
+        }
     }
 
     while((nread=vfs->readdir(fd,buf,sizeof(buf)))>0){
         if(tty_mode){
             strcpy(file+len,buf);
-            vfs->access(file,O_DIRECTORY);
+            if(vfs->access(file,O_DIRECTORY)){
+                tty_set_color(tty,ori_colors);
+            }else{
+                tty_set_color(tty,dir_colors);
+            }
+            error_clear();
             if(cnt+strlen(buf)>80){
                 std_write("\n");
                 cnt=0;
@@ -33,7 +45,6 @@ static inline void single_ls(const char* path,int* err){
     vfs->close(fd);
     if(cnt)
         std_write("\n");
-    error_print("%s: ",path);
 }
 
 int mysh_ls(void *args[]){
