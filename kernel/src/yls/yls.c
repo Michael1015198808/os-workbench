@@ -10,7 +10,7 @@ static inline ssize_t write(device_t* dev,off_t offset,uint32_t to_write,size_t 
 
 int yls_init(device_t* dev){
 
-    write(dev,0,0xff,4);
+    uint8_t bitmap[0x40]={0xff};
 
     yls_node root_inode={
         .refcnt=1,
@@ -25,5 +25,12 @@ int yls_init(device_t* dev){
     dev->ops->write(dev,0x040,&root_inode,sizeof(root_inode));
     dev->ops->write(dev,0x400,&root_name,sizeof(root_name));
 
+    rd_t* rd=dev->ptr;
+    uint32_t id=(rd->end-rd->start)/0x80;
+    for(int i=id/8;i<0x40;++i){
+        bitmap[i]=0xff;
+    }
+
+    write(dev,0,bitmap,sizeof(bitmap));
     return 0;
 }
