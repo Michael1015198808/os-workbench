@@ -22,7 +22,7 @@
 #define MACRO_CONCAT(_arg1,_arg2) MACRO_CONCAT_REAL(_arg1,_arg2)
 #define TO_STRING(_arg)     MACRO_VALUE(_arg)
 
-#define _LOCAL
+//#define _LOCAL
 
 #ifdef _LOCAL
     #define local_log(...) log(__VA_ARGS__)
