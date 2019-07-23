@@ -335,7 +335,7 @@ void exit(void){
 }
 
 void kmt_wait(task_t* task){
-    while(task->attr&TASK_ZOMBIE)_yield();
+    while(!(task->attr&TASK_ZOMBIE))_yield();
     pthread_mutex_lock(&task->running);
 }
 
