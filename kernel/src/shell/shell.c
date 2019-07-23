@@ -5,6 +5,9 @@
 #include <shell.h>
 #include <vfs.h>
 
+void fork_and_run_raw(void* input){
+    fork_and_run(parsecmd(input));
+}
 void fork_and_run(void *input){
     //Wrapper
     runcmd(input);
@@ -34,7 +37,7 @@ void mysh(void *name) {
         printf("%s\n",input);
         if( strncmp("cd",input,2) || (input[2]!='\0'&&input[2]!=' ') ){
             task_t* son=pmm->alloc(sizeof(task_t));
-            kmt->create(son,"mysh",fork_and_run,parsecmd(input));
+            kmt->create(son,"mysh",fork_and_run_raw,input);
             kmt->wait(son);
             kmt->teardown(son);
             pmm->free(son);
