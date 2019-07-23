@@ -201,6 +201,13 @@ static inline uint32_t get_id(const inode_t* cur){
     Assert(fs->inodes+ret==cur,"get_id returns a wrong number");
     return ret;
 }
+
+static inline void add_inode(filesystem* fs,uint32_t id,yls_node* node){
+    fs->inodes[id].ptr=node;
+    device_t* dev=fs->dev;
+    dev->ops->write(dev,INODE_START+id*sizeof(inode),&node,sizeof(node));
+}
+
 static inline inode_t* new_direc(
         const inode_t* cur,uint32_t offset,const char* filename,int flags){
     const filesystem* fs=cur->fs;
@@ -218,7 +225,7 @@ static inline inode_t* new_direc(
     write(dev,offset,&off,4);
 
     int id=(inode-INODE_START)/0x10;
-    *(yls_node*)fs->inodes[id].ptr=file;
+    add_inode(fs,id,file);
 
     write(dev,off,&id,4);
     write(dev,off+4,filename,strlen(filename));
@@ -244,7 +251,7 @@ static inline inode_t* new_file(
     write(dev,offset,&off,4);
 
     int id=(inode-INODE_START)/0x10;
-    *(yls_node*)fs->inodes[id].ptr=file;
+    add_inode(fs,id,file);
 
     write(dev,off,&id,4);
     write(dev,off+4,filename,strlen(filename));
