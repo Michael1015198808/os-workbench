@@ -27,7 +27,7 @@ int mysh_cp(void *args[]){
         int fd[2],nbyte=0;
         char buf[0x110];
         fd[0]=vfs->open(args[1],O_RDONLY);
-        fd[1]=vfs->open(args[2],O_WRONLY|O_CREATE);
+        fd[1]=vfs->open(dest,O_WRONLY|O_CREAT);
         while(( nbyte=vfs->read(fd[0],buf,0x100) )){
             vfs->write(fd[1],buf,nbyte);
         }
