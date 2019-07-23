@@ -341,7 +341,7 @@ void exit(void){
 }
 
 void kmt_wait(task_t* task){
-    while(!(task->attr&TASK_ZOMBIE))_yield();
+    while(task->attr==TASK_RUNNING||!(task->attr&TASK_ZOMBIE))_yield();
 }
 
 MODULE_DEF(kmt) {
