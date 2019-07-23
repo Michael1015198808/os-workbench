@@ -164,6 +164,7 @@ static inode_t* devfs_rootifind(inode_t* cur,const char* path,int flags){
     inode_t* next=NULL;
 
     while(*path=='/')++path;
+    if(!*path)return cur;
 
     if(path[0]=='.'){
         if(path[1]=='.'){
