@@ -10,6 +10,7 @@ handler(cd);
 handler(wc);
 handler(ls);
 handler(mkdir);
+handler(rmdir);
 handler(sleep);
 handler(touch);
 handler(test);

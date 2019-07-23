@@ -33,6 +33,7 @@ static struct Command{
     pair(mv     ,"Rename SOURCE to DEST, or move SOURCE to DIRECTORY."),
     pair(cp     ,"Copy SOURCE to DEST, or copy SOURCE to DIRECTORY."),
     pair(color  ,"Set color of current terminal."),
+    pair(rmdir  ,"Remove the DIRECTORY(ies), if they are empty."),
 };
 
 int exec_buildin(const char* file,void* args[],int *is_buildin){
