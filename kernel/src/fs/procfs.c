@@ -1,7 +1,6 @@
 #include <devices.h>
 #include <common.h>
 #include <vfs.h>
-#include <fs.h>
 /*
  * procfs_init
  * procfs_lookup
@@ -191,11 +190,6 @@ static ssize_t procfs_ilink(inode_t* parent,const char* name, inode_t* inode){
 static ssize_t procfs_iunlink(inode_t* parent,const char* name){
     fprintf(STDERR,"cannot remove file ‘%s’: Read-only filesystem\n",name);
     return -1;
-}
-
-int is_dir(inode_t* inode){
-    uint8_t *p=inode->ptr;
-    return inode==procfs.root || (p && p[1]==PROC_DIR);
 }
 
 static inode_t* procfs_rootifind(inode_t* cur,const char* path,int flags){
