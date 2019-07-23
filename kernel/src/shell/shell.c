@@ -25,12 +25,6 @@ void mysh(void *name) {
         }
     }
 
-    uint32_t ori_colors[2],prompt_colors[2];
-    device_t* tty=get_cur()->fd[STDOUT]->inode->ptr;
-    tty_get_color(tty,ori_colors);
-    prompt_colors[1]=ori_colors[1];
-    prompt_colors[0]=0x00006fb8;
-
     vfs->chdir("/");
     while (1) {
         char input[0x100], prompt[0x100];
