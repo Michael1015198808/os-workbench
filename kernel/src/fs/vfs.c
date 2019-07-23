@@ -7,7 +7,7 @@
 
 #define this_fd current->fd[fd]
 
-struct{
+struct mount_tab{
     const char* path;
     inode_t backup;
 }mount_table[20];
@@ -47,8 +47,9 @@ int vfs_access(const char *path, int mode){
 
 //Paths end up without / is also support
 int vfs_mount(const char *path, filesystem *fs){
+    pthread_mutex_lock(&mount_table_lk);
+
     if(strcmp(path,"/")){
-        pthread_mutex_lock(&mount_table_lk);
         inode_t* origin=vfs_lookup(path,O_RDONLY|O_DIRECTORY);
         //Replace origin inode at path
         if(origin==NULL){
@@ -59,9 +60,7 @@ int vfs_mount(const char *path, filesystem *fs){
             .backup=*origin,
         };
         *origin =*fs->root;
-        fs->root=origin;
         ++mount_table_cnt;
-        pthread_mutex_unlock(&mount_table_lk);
 
         char root_parent[0x100];
         strcpy(root_parent,path);
@@ -70,18 +69,23 @@ int vfs_mount(const char *path, filesystem *fs){
     }else{
         vfs_root=fs->root_parent=fs->root;
     }
+
+    pthread_mutex_unlock(&mount_table_lk);
     return 0;
 }
 int vfs_unmount_real(const char *path){
     for(int i=0;i<mount_table_cnt;++i){
         if(!strcmp(path,mount_table[i].path)){
             --mount_table_cnt;
-            TODO();
+            *vfs_lookup(path,O_RDONLY|O_DIRECTORY)=mount_table[i].backup;
+
+            mount_table[i]=mount_table[mount_table_cnt];
             return 0;
         }
     }
     return -1;
 }
+
 int vfs_unmount(const char* path){
     pthread_mutex_lock(&mount_table_lk);
     int ret=vfs_unmount_real(path);
