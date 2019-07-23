@@ -142,7 +142,6 @@ static ssize_t procfs_rootireaddir(vfile_t* file,char* buf,size_t size){
 
 static ssize_t procfs_taskireaddir(vfile_t* file,char* buf,size_t size){
     ssize_t nread=0;
-    uint8_t* p=file->inode->ptr;
     if(file->offset<3){
         file->offset+=
             (nread=snprintf(buf,size,per_task_info[1]+file->offset));
