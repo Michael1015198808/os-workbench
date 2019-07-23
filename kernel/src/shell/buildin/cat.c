@@ -14,7 +14,7 @@ static inline void single_cat_real(int fd,char buf[0x208],char* file){
     }
 }
 static void single_cat(int fd,char buf[0x208],char* file){
-    if(fd>0){
+    if(fd>=0){
         single_cat_real(fd,buf,file);
     }
     error_print("%s: ",file);
