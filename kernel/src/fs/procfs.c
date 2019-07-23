@@ -173,22 +173,22 @@ static ssize_t procfs_ilseek(vfile_t* file,off_t offset,int whence){
 }
 
 static ssize_t procfs_imkdir(inode_t* inode,const char* name){
-    fprintf(STDERR,"cannot create directory ‘%s’: Read-only filesystem\n",name);
+    fprintf(STDERR,"cannot create directory '%s': Read-only filesystem\n",name);
     return -1;
 }
 
 static ssize_t procfs_irmdir(inode_t* inode,const char* name){
-    fprintf(STDERR,"cannot remove directory ‘%s’: Read-only filesystem\n",name);
+    fprintf(STDERR,"cannot remove directory '%s': Read-only filesystem\n",name);
     return -1;
 }
 
 static ssize_t procfs_ilink(inode_t* parent,const char* name, inode_t* inode){
-    fprintf(STDERR,"cannot create file ‘%s’: Read-only filesystem\n",name);
+    fprintf(STDERR,"cannot create file '%s': Read-only filesystem\n",name);
     return -1;
 }
 
 static ssize_t procfs_iunlink(inode_t* parent,const char* name){
-    fprintf(STDERR,"cannot remove file ‘%s’: Read-only filesystem\n",name);
+    fprintf(STDERR,"cannot remove file '%s': Read-only filesystem\n",name);
     return -1;
 }
 
