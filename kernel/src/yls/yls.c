@@ -31,6 +31,6 @@ int yls_init(device_t* dev){
         bitmap[i]=0xff;
     }
 
-    write(dev,0,bitmap,sizeof(bitmap));
+    dev->ops->write(dev,0,bitmap,sizeof(bitmap));
     return 0;
 }
