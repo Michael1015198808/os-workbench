@@ -6,15 +6,26 @@
 static inline void single_ls(const char* path,int* err){
     int fd=vfs->open(path,O_RDONLY | O_DIRECTORY),nread=0;
     if(fd<0){error_print("%s: ",path);return;}
-    int cnt=0;
-    char buf[200];
+    int cnt=0,len=strlen(path);
+    int tty_mode=isatty(STDOUT);
+    char buf[200],file[200];
+    strcpy(file,path);
+    if(path[len-1]!='/'){
+        file[len++]='/';
+    }
 
     while((nread=vfs->readdir(fd,buf,sizeof(buf)))>0){
-        if(cnt+strlen(buf)>80){
-            std_write("\n");
-            cnt=0;
+        if(tty_mode){
+            strcpy(file+len,buf);
+            vfs->access(file,O_DIRECTORY);
+            if(cnt+strlen(buf)>80){
+                std_write("\n");
+                cnt=0;
+            }
+            cnt+=fprintf(STDOUT,"%s  ",buf);
+        }else{
+            fprintf(STDOUT,"%s\n",buf);
         }
-        cnt+=fprintf(STDOUT,"%s  ",buf);
     }
     if(nread<0){
         *err=-1;
