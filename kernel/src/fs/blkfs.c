@@ -54,7 +54,7 @@ static fsops_t blkfs_ops={
     .close =blkfs_close,
 };
 static inline void update_size(vfile_t* file,uint32_t newsize){
-    filesystem* fs=file->fs;
+    filesystem* fs=file->inode->fs;
     device_t* dev =fs->dev;
     uint32_t  id  =file->inode-fs->inodes;
 
