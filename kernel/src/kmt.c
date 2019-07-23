@@ -122,7 +122,10 @@ static _Context* kmt_context_clean(_Event ev, _Context *c){
     task_t* task=dequeue(&ctx_queue);
     if(task){
         if(pthread_mutex_trylock(&task->running))enqueue(&ctx_queue,task);
-        else pmm->free(task);
+        else{
+            kmt->teardown(task);
+            pmm->free(task);
+        }
     }
     return NULL;
 }
@@ -206,7 +209,6 @@ void kmt_teardown(task_t *task){
             vfs->close(i);
         }
     }
-    tasks[task->pid]=NULL;
     pmm->free(task->name);
 }
 
@@ -313,13 +315,7 @@ void kmt_sem_signal(sem_t *sem){
 }
 
 void inline exit_real(task_t* cur){
-    _intr_close();
-    set_flag(cur,TASK_ZOMBIE);
-    tasks[cur->pid]=NULL;
-    if(cur->attr&TASK_NOWAIT){
-        enqueue(&ctx_queue,cur);
-    }
-    _yield();
+    TODO();
 }
 
 void warning(const char* warn){
@@ -330,7 +326,12 @@ void warning(const char* warn){
 void exit(void){
     intr_close();
     task_t* cur=get_cur();
-    exit_real(cur);
+    set_flag(cur,TASK_ZOMBIE);
+    tasks[cur->pid]=NULL;
+    if(cur->attr&TASK_NOWAIT){
+        enqueue(&ctx_queue,cur);
+    }
+    _yield();
 }
 
 void kmt_wait(task_t* task){
