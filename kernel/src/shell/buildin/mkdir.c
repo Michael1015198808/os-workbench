@@ -8,7 +8,7 @@ int mysh_mkdir(void *args[]){
     if(args[1]){
         for(int i=1;args[i];++i){
             if(vfs->mkdir(args[i])){
-                error_print("");
+                error_print("%s: ",args[i]);
             }
         }
         return 0;
