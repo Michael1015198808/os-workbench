@@ -42,6 +42,7 @@ static inline void single_ls(const char* path,int* err){
     if(nread<0){
         *err=-1;
     }
+    tty_set_color(tty,ori_colors);
     vfs->close(fd);
     if(cnt)
         std_write("\n");
