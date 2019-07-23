@@ -106,6 +106,19 @@ int vfs_mkdir(const char* path){
         return vfs_lookup(path,O_RDONLY|O_CREAT|O_DIRECTORY)!=NULL;
     }
 }
+
+static inline inode_t* get_parent(const char**s,char* new_parent){
+    const char* path=*s;
+    int len=get_last_slash(path)+1;
+    *s=path+len;
+    if(len==0){
+        return get_cur()->cur_dir;
+    }else{
+        strncpy(new_parent,path,len);
+        return vfs_lookup(new_parent,O_RDONLY);
+    }
+}
+
 int vfs_rmdir(const char *path){
     char new_parent[0x100];
 
@@ -117,18 +130,6 @@ int vfs_rmdir(const char *path){
         return parent->ops->rmdir(parent,path);
     }else{
         warn("No such file or directory",new_parent);
-    }
-}
-
-static inline inode_t* get_parent(const char**s,char* new_parent){
-    const char* path=*s;
-    int len=get_last_slash(path)+1;
-    *s=path+len;
-    if(len==0){
-        return get_cur()->cur_dir;
-    }else{
-        strncpy(new_parent,path,len);
-        return vfs_lookup(new_parent,O_RDONLY);
     }
 }
 
