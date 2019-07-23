@@ -379,6 +379,7 @@ static int blkfs_iunlink(inode_t* parent,const char* name){
                 read(dev,INODE_START+id*sizeof(yls_node)+offsetof(yls_node,type),&type,4);
                 if(type==YLS_DIR){
                     warn("It's a directory!\n");
+                    return -1;
                 }else{
                     //TODO: refcnt
                     uint32_t wipe=YLS_WIPE;
