@@ -367,10 +367,17 @@ static int blkfs_iunlink(inode_t* parent,const char* name){
                     read(dev,offset,&offset,4);
                 }
             }else{
-                uint32_t wipe=YLS_WIPE;
-                write(dev,offset,&wipe,4);
-                //TODO: refcnt
-                return 0;
+                uint32_t id,type;
+                read(dev,blk_off,&id,0);
+                read(dev,INODE_START+id*sizeof(inode_t)+offsetof(type,yls_node),&type,0);
+                if(type==YLS_DIR){
+                    warn("It's a directory!\n");
+                }else{
+                    //TODO: refcnt
+                    uint32_t wipe=YLS_WIPE;
+                    write(dev,offset,&wipe,4);
+                    return 0;
+                }
             }
         }
     }
