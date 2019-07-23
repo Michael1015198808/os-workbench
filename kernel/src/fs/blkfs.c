@@ -59,7 +59,7 @@ static inline void update_size(vfile_t* file,uint32_t newsize){
     uint32_t  id  =file->inode-fs->inodes;
 
     ((yls_node*)file->inode->ptr)->size=newsize;
-    dev->ops->write(dev,INODE_START+id*sizeof(*node)+offsetof(yls_node,size),&newsize,4);
+    dev->ops->write(dev,INODE_START+id*sizeof(yls_node)+offsetof(yls_node,size),&newsize,4);
 }
 
 static int blkfs_iopen(vfile_t* file,int flags){
