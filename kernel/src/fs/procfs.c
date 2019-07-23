@@ -246,6 +246,11 @@ static inode_t* procfs_rootifind(inode_t* cur,const char* path,int flags){
         }
     }
 
+    if(!next){
+        warn("No such a file or directory");
+        return NULL;
+    }
+
     return next->ops->find(next,path,flags);
 }
 
@@ -273,7 +278,7 @@ static inode_t* procfs_taskifind(inode_t* cur,const char* path,int flags){
             ++path;
         }
     }else{
-        for(int i=2;i>=0;--i){
+        for(int i=2;i>0;--i){
             int len=strlen(per_task_info[i]);
             if(!strncmp(path,per_task_info[i],len)){
                 next=cur+i;
