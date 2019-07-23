@@ -195,11 +195,11 @@ static ssize_t procfs_iunlink(inode_t* parent,const char* name){
 static inode_t* procfs_rootifind(inode_t* cur,const char* path,int flags){
     inode_t* next=NULL;
 
-    do{ 
+    do{
         inode_t* inode=cur;
-        while(*path=='/')++path; 
-        if(!*path){ 
-            return (inode_t*)inode; 
+        while(*path=='/')++path;
+        if(!*path){
+            return (inode_t*)inode;
         }
     }while(0);
 
@@ -252,11 +252,11 @@ static inode_t* procfs_rootifind(inode_t* cur,const char* path,int flags){
 static inode_t* procfs_taskifind(inode_t* cur,const char* path,int flags){
     inode_t* next=NULL;
 
-    do{ 
+    do{
         inode_t* inode=cur;
-        while(*path=='/')++path; 
-        if(!*path){ 
-            return (inode_t*)inode; 
+        while(*path=='/')++path;
+        if(!*path){
+            return (inode_t*)inode;
         }
     }while(0);
 
@@ -283,15 +283,15 @@ static inode_t* procfs_taskifind(inode_t* cur,const char* path,int flags){
         }
     }
 
-    if(!next){ 
-        warn("No such a file or directory"); 
-        return NULL; 
-    } 
+    if(!next){
+        warn("No such a file or directory");
+        return NULL;
+    }
     return next->ops->find(next,path,flags);
 }
 
 static inode_t* procfs_ifind(inode_t* cur,const char* path,int flags){
-    do{ 
+    do{
         inode_t* inode=cur;
         if(*path=='/'){
             warn("Not a directory");
@@ -306,8 +306,8 @@ static inode_t* procfs_ifind(inode_t* cur,const char* path,int flags){
         }
     }while(0);
 
-    warn("No such a file or directory"); 
-    return NULL; 
+    warn("No such a file or directory");
+    return NULL;
 }
 
 static inodeops_t procfs_rootiops={
