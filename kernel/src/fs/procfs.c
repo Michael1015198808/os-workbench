@@ -210,6 +210,8 @@ static inode_t* procfs_rootifind(inode_t* cur,const char* path,int flags){
         }
     }while(0);
 
+    const filesystem* fs=cur->fs;
+
     int i;
     char num[3];
     for(i=0;i<3;++i){
@@ -250,7 +252,6 @@ static inode_t* procfs_rootifind(inode_t* cur,const char* path,int flags){
             next=procfs.inodes+id;
         }
     }
-    const filesystem* fs=cur->fs;
 
     return next->ops->find(next,path,flags);
 }
