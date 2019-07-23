@@ -201,13 +201,8 @@ int kmt_create(task_t *task, const char *name, void (*entry)(void*), void *arg){
 //All security check should be done by caller
 //This function directly clear the task
 void kmt_teardown(task_t *task){
-    for(int i=0;i<0x40;++i){
-        if(tasks[i]==task){
-            tasks[i]=NULL;
-        }
-    }
+    tasks[task->pid]=NULL;
     pmm->free(task->name);
-    return;
 }
 
 void kmt_spin_init(spinlock_t *lk, const char *name){
@@ -339,7 +334,8 @@ void exit(void){
 }
 
 void kmt_wait(task_t* task){
-    while((task->attr==TASK_RUNNING)||!(task->attr&TASK_ZOMBIE))_yield();
+    while(task->attr&TASK_ZOMBIE)_yield();
+    while(pthread_mutex_lock(&task->running))_yield();
 }
 
 MODULE_DEF(kmt) {

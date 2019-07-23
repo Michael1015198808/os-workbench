@@ -63,9 +63,9 @@ void fake_sh(void *name) {
     vfs->chdir("/");
     int old_time=uptime();
     while (1) {
-        char input[]="sleep 2&";
+        char input[]="sleep 3&";
         printf("%s\n",input);
-        while(uptime()-old_time<1000)_yield();
+        while(uptime()-old_time<500)_yield();
         old_time=uptime();
 
         task_t* son=pmm->alloc(sizeof(task_t));
