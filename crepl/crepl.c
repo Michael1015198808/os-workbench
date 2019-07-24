@@ -26,7 +26,7 @@
     fprintf(stderr,"Line %3d: " format,__LINE__, __VA_ARGS__)
 #define my_write(_fd,_str) \
     write(_fd,_str,strlen(_str))
-char *cmd=NULL,out[16],src[16];
+char *cmd=NULL,out[16],src[8];
 char *cflags[]={
     "gcc",
     "-fPIC",
