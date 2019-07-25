@@ -28,12 +28,13 @@ static void blkfs_init(filesystem* fs,const char* name,device_t* dev){
         }
     }
 
-    for(int i=0;INODE_START+i*sizeof(yls_node)<INODE_END;++i){
-        fs->inodes[i].ptr=pmm->alloc(16);
+    const uint32_t yls_size=sizeof(yls_node);
+    for(int i=0;INODE_START+i*yls_size<INODE_END;++i){
+        fs->inodes[i].ptr=pmm->alloc(yls_size);
         fs->dev->ops->read(fs->dev,
-                INODE_START+i*sizeof(yls_node),
+                INODE_START+i*yls_size,
                 fs->inodes[i].ptr,
-                sizeof(yls_node));
+                yls_size);
         fs->inodes[i].fs=fs;
         fs->inodes[i].ops=&blkfs_iops;
     }
