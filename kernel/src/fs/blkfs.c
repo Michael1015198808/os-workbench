@@ -11,11 +11,13 @@
  *                 \ops(blkfs_iops)
  */
 
+const uint32_t yls_size=sizeof(yls_node);
+
 static inodeops_t blkfs_iops;
 static void blkfs_init(filesystem* fs,const char* name,device_t* dev){
     fs->name  =name;
     fs->dev   =dev;
-    fs->inodes=pmm->alloc(sizeof(inode_t)*(INODE_END-INODE_START)/0x8);
+    fs->inodes=pmm->alloc(sizeof(inode_t)*(INODE_END-INODE_START)/yls_size);
     fs->root  =fs->inodes;
 
     uint32_t check=0;
@@ -28,7 +30,6 @@ static void blkfs_init(filesystem* fs,const char* name,device_t* dev){
         }
     }
 
-    const uint32_t yls_size=sizeof(yls_node);
     for(int i=0;INODE_START+i*yls_size<INODE_END;++i){
         fs->inodes[i].ptr=pmm->alloc(yls_size);
         fs->dev->ops->read(fs->dev,
