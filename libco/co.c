@@ -103,7 +103,7 @@ void co_yield() {
         do{
             next_co=rand()%MAX_ROUTINES;
         }while(!(routines[next_co].stat&CO_ALIVE));
-        co_jmp(&routines[next_co].tar_buf);
+        co_jmp(routines+next_co);
     }
 }
 
