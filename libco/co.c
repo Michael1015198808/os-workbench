@@ -89,7 +89,8 @@ struct co* co_start(const char *name, func_t func, void *arg) {
     pool[pool_idx++]=current-routines;
     longjmp(ret_buf,1);
   }
-  return NULL;//will not reach here
+  Assert(0,"Should not reach here!\n");//will not reach here
+  return NULL;
 }
 
 static void co_jmp(struct co* co){
