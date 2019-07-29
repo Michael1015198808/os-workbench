@@ -28,7 +28,7 @@ struct co {
       };
       uint8_t stack[STACK_SIZE];
       //stack should provide room for entry parameters
-    }
+    };
 }routines[MAX_ROUTINES],*current;
 
 static int pool[MAX_ROUTINES];
