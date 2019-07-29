@@ -9,20 +9,27 @@
   #define SP "%%esp"
 #elif defined(__x86_64__)
   #define SP "%%rsp"
+#else
+  _Static_assert(0,"Unknown Machine Type!");
 #endif
-#define set_sp(__target) asm volatile("mov %0," SP : : "g"(__target));
-#define get_sp(__target) asm volatile("mov " SP",%0" : "=g"(__target) :);
+
+#define set_sp(__target) asm volatile("mov " "%0," SP : : "g"(__target) )
+#define get_sp(__target) asm volatile("mov " SP ",%0" : "=g"(__target) :)
 #define MAX_ROUTINES 100
 
 struct co {
 #define KB *(1<<10)
 #define STACK_SIZE (4 KB)
-    uint8_t stack[STACK_SIZE];
-    //stack should provide room for entry parameters
-    jmp_buf tar_buf;
 #define CO_ALIVE (1<<0)
-    uint8_t stat;
-}routines[MAX_ROUTINES] __attribute__((aligned(16))),*current;
+    union{
+      struct{
+        jmp_buf tar_buf;
+        uint8_t stat;
+      };
+      uint8_t stack[STACK_SIZE];
+      //stack should provide room for entry parameters
+    }
+}routines[MAX_ROUTINES],*current;
 
 static int pool[MAX_ROUTINES];
 //pool[0,idx) records indexes of
