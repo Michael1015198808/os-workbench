@@ -3,6 +3,13 @@
 #include <stdint.h>
 #include <setjmp.h>
 #include "co.h"
+#define Assert(cond,...) \
+    do{ \
+        if(!(cond)){ \
+            fprintf(stderr, __VA_ARGS__); \
+            exit(-1); \
+        } \
+    }while(0)
 
 #define log() printf("Line %d:\n",__LINE__)
 #if defined(__i386__)
@@ -32,19 +39,17 @@ struct co {
 }routines[MAX_ROUTINES],*current;
 
 static int pool[MAX_ROUTINES];
+static int pool_idx=0;
 //pool[0,idx) records indexes of
 //available space for routines.
-static int pool_idx=0;
-struct co* new_co(){
-    if(pool_idx<=0){
-        fflush(stdout);
-        fprintf(stderr,"pool overflow!\n");
-        fflush(stderr);
-    }
+
+static struct co* new_co(){
+    Assert(pool_idx>0,"pool underflow!\n");
     --pool_idx;
     routines[pool[pool_idx]].stat=CO_ALIVE;
     return &routines[pool[pool_idx]];
 }
+
 void co_init() {
     int i;
     pool_idx=MAX_ROUTINES;
@@ -87,6 +92,10 @@ struct co* co_start(const char *name, func_t func, void *arg) {
   return NULL;//will not reach here
 }
 
+static void co_jmp(struct co* co){
+    current=co;
+    longjmp(co->tar_buf,1);
+}
 
 void co_yield() {
     if(!setjmp(current->tar_buf)){
@@ -94,16 +103,14 @@ void co_yield() {
         do{
             next_co=rand()%MAX_ROUTINES;
         }while(!(routines[next_co].stat&CO_ALIVE));
-        current=&routines[next_co];
-        longjmp(routines[next_co].tar_buf,1);
+        co_jmp(&routines[next_co].tar_buf);
     }
 }
 
 void co_wait(struct co *thd) {
   if(!setjmp(ret_buf)){
     while(thd->stat&CO_ALIVE){
-      current=thd;
-      longjmp(thd->tar_buf,1); 
+        co_jmp(thd);
     }
   }
   thd->stat=0;
