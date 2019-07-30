@@ -57,30 +57,29 @@ typedef struct Proc Proc;
 struct{
     int (*cmp)(const Proc*,const Proc*);
     unsigned int show_pids:1;
-}print_flag={
-    0
-};
+}print_flag={};
 
 void add_sonpro(Proc* pp,pid_t pid){
+    int (*const cmp)(const Proc*,const Proc*)=print_flag.cmp;
     if(pp->son==NULL){
         pp->son=info[pid];
     }else{
         //Insert sort
-        if(print_flag.cmp(pp->son,info[pid])>0){
+        if(cmp(pp->son,info[pid])>0){
             info[pid]->bro=pp->son;
             pp->son=info[pid];
             return;
         }
-        if(print_flag.show_pids==0&&pp->son->cnt!=0&&print_flag.cmp(pp->son,info[pid])==0){
+        if(print_flag.show_pids==0 && pp->son->cnt!=0 && cmp(pp->son,info[pid])==0){
             ++pp->son->cnt;
             return;
         }
         Proc *l=pp->son,*r=l->bro;
-        while(r && print_flag.cmp(r,info[pid])<0){
+        while(r && cmp(r,info[pid])<0){
             l=r;
             r=l->bro;
         };
-        if(print_flag.show_pids==0 && r && r->cnt!=0 && print_flag.cmp(r,info[pid])==0){
+        if(print_flag.show_pids==0 && r && r->cnt!=0 && cmp(r,info[pid])==0){
             ++r->cnt;
             return;
         }
@@ -287,7 +286,7 @@ int main(int argc, char *argv[]) {
 //The oldest version is copied from https://stackoverflow.com/questions/8149569/scan-a-directory-to-find-files-in-c
 //2 library functions refer to the primal code
 void version(void){
-    puts("pstree 1.0");
+    puts("pstree 2.0");
     puts("Copyright (C) 2019-2019 Michael Yan");
     exit(0);
 }
@@ -302,11 +301,10 @@ int alpha(const Proc* p1,const Proc* p2){
     return strcmp(p1->name,p2->name);
 }
 int num(const Proc* p1,const Proc* p2){
-    if(strcmp(p1->name,p2->name)){
-        return p1->pid>p2->pid?1:-1;
-    }else{
-        return 0;
+    if(print_flag.show_pids || strcmp(p1->name,p2->name) ){
+        return p1->pid - p2->pid;
     }
+    return 0;
 }
 void numeric_sort(void){
     print_flag.cmp=num;
