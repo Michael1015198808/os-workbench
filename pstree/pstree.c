@@ -88,10 +88,13 @@ void add_sonpro(Proc* pp,pid_t pid){
 }
 void init_pid(int pid){
     Assert(info[pid]=malloc(sizeof(Proc)),"malloc size for Proc failed!");
-    info[pid]->son=info[pid]->bro=NULL;
-    info[pid]->pid=pid;
-    info[pid]->name=NULL;
-    info[pid]->cnt=0;
+    *info[pid]=(Proc){
+        .son=NULL,
+        .bro=NULL,
+        .pid=pid,
+        .name=NULL,
+        .cnt=0,
+    };
 }
 
 void make_tree(void){
