@@ -1,4 +1,3 @@
-#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdint.h>
 #include <ctype.h>
@@ -9,6 +8,7 @@
 #include <dirent.h>
 #include <string.h>
 #include <sys/stat.h>
+int asprintf(char **strp,const char*,...);
 /*
 Support args in forms like '-np' or '-n -p'
 and assert properly.
