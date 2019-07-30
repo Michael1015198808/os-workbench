@@ -69,8 +69,7 @@ void add_sonpro(Proc* pp,pid_t pid){
             info[pid]->bro=pp->son;
             pp->son=info[pid];
             return;
-        }
-        if(print_flag.show_pids==0 && pp->son->cnt!=0 && cmp(pp->son,info[pid])==0){
+        }else if(pp->son->cnt!=0 && cmp(pp->son,info[pid])==0){
             ++pp->son->cnt;
             return;
         }
@@ -78,8 +77,8 @@ void add_sonpro(Proc* pp,pid_t pid){
         while(r && cmp(r,info[pid])<0){
             l=r;
             r=l->bro;
-        };
-        if(print_flag.show_pids==0 && r && r->cnt!=0 && cmp(r,info[pid])==0){
+        }
+        if(r && r->cnt!=0 && cmp(r,info[pid])==0){
             ++r->cnt;
             return;
         }
