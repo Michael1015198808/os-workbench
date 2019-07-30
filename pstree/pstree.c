@@ -65,21 +65,21 @@ void add_sonpro(Proc* pp,pid_t pid){
         pp->son=info[pid];
     }else{
         //Insert sort
-        if(cmp(pp->son,info[pid])>0){
+        if(print_flag.cmp(pp->son,info[pid])>0){
             info[pid]->bro=pp->son;
             pp->son=info[pid];
             return;
         }
-        if(print_flag.show_pids==0&&pp->son->cnt!=0&&cmp(pp->son,info[pid])==0){
+        if(print_flag.show_pids==0&&pp->son->cnt!=0&&print_flag.cmp(pp->son,info[pid])==0){
             ++pp->son->cnt;
             return;
         }
         Proc *l=pp->son,*r=l->bro;
-        while(r && cmp(r,info[pid])<0){
+        while(r && print_flag.cmp(r,info[pid])<0){
             l=r;
             r=l->bro;
         };
-        if(print_flag.show_pids==0 && r && r->cnt!=0 && cmp(r,info[pid])==0){
+        if(print_flag.show_pids==0 && r && r->cnt!=0 && print_flag.cmp(r,info[pid])==0){
             ++r->cnt;
             return;
         }
