@@ -264,6 +264,7 @@ int arg_matched(const char* const arg){
                 }
                 if(j==LEN(single_dash_arg_list)) return 0;
             }
+            return 1;
         }
     }
 
