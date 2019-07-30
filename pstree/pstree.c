@@ -283,23 +283,22 @@ int main(int argc, char *argv[]) {
     }
     make_tree();
     print_tree(info[1],1);
-    putchar('\n');
     return 0;
 }
+
 //The oldest version is copied from https://stackoverflow.com/questions/8149569/scan-a-directory-to-find-files-in-c
-//I only refer 2 library functions from the primal code
+//2 library functions refer to the primal code
 void version(void){
     puts("pstree 1.0");
     puts("Copyright (C) 2019-2019 Michael Yan");
     exit(0);
 }
 int digit_judge(char* s){
-    while((*s)!='\0'){
-        if(!isdigit(*s))return 0;
-        //Use library function to improve robustness
+    //Use library function to improve robustness
+    while(isdigit(*s)){
         ++s;
     }
-    return 1;
+    return *s=='\0';
 }
 int alpha(const Proc* p1,const Proc* p2){
     return strcmp(p1->name,p2->name);
@@ -312,7 +311,6 @@ int num(const Proc* p1,const Proc* p2){
     }
 }
 void numeric_sort(void){
-    int num(const Proc*,const Proc*);
     print_flag.cmp=num;
 }
 void show_pids(void){
