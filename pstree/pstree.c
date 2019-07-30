@@ -11,17 +11,22 @@
 /*
 Support args in forms like '-np' or '-n -p'
 and assert properly.
-Two method to handle when scan some process that isn't alive. 
+Two method to handle when scan some process that isn't alive.
 Perfect format(At least perfect on my PC)
 merge process with same names.
  */
 #define IGNORE_PRO_EXIT
 //Ignore the processes that are not existing when open
 //comment it to allow error report
+
+#define RED "\33[1;31m"
+#define ORI "\33[0m"
+#define LEN(_array) ( sizeof(_array)/sizeof(_array[0]) )
+
 #define Assert(_con,_fmt,...) \
 do{\
     if(!(_con)){\
-        fprintf(stderr,"Assertion failed:\nLine: %d" _fmt, __LINE__ ,##__VA_ARGS__);\
+        fprintf(stderr,RED "Assertion failed:\nLine: %d" _fmt, __LINE__ ,##__VA_ARGS__);\
         assert(0);\
     }\
 }while(0)
@@ -31,13 +36,8 @@ do{\
             _str, sizeof(_str)-1, __VA_ARGS__ \
                 )>0, "process's name is too long")
 
-#define RED "\33[1;31m"
-#define ORI "\33[0m"
-#define LEN(_array) ( sizeof(_array)/sizeof(_array[0]) )
 
 int digit_judge(char*);
-#define maxn 100
-char buf[maxn];
 struct Proc{
     pid_t pid;
     uint8_t cnt;//Used to merge
@@ -100,11 +100,11 @@ void make_tree(void){
     struct dirent *entry;
     char filename[50],proname[50];
     FILE* fp=NULL;
-    Assert(  (dp = opendir("/proc")) ,  "Can not open /proc\n");
+    Assert( (dp = opendir("/proc")) , "Can not open /proc\n");
     Assert( chdir("/proc")==0 ,"Can not cd to /proc");
-    while((entry = readdir(dp)) ) {
-        if(digit_judge(entry->d_name)) {
-            safe_printf(filename,"%s%s",entry->d_name,"/status");
+    while((entry = readdir(dp)) ){
+        if(digit_judge(entry->d_name)){
+            safe_printf(filename,"%s/status",entry->d_name);
 #ifdef IGNORE_PRO_EXIT
             if((fp=fopen(filename,"r"))==NULL)continue;
 #else
@@ -113,12 +113,14 @@ void make_tree(void){
             fscanf(fp,"Name:\t%s",proname);
 
             pid_t pid,ppid;
-            while(fscanf(fp,"Pid:\t%d",&pid)!=1)fgets(buf,100,fp);
+#define MAXN 100
+            char buf[MAXN];
+            while(fscanf(fp,"Pid:\t%d",&pid)!=1)fgets(buf,MAXN,fp);
             if(info[pid]==NULL){init_pid(pid);}
             if(info[pid]->name==NULL)info[pid]->name=malloc(strlen(proname)+1);
             strcpy(info[pid]->name,proname);
 
-            while(fscanf(fp,"PPid:\t%d",&ppid)!=1)fgets(buf,100,fp);
+            while(fscanf(fp,"PPid:\t%d",&ppid)!=1)fgets(buf,MAXN,fp);
             if(ppid>0){
                 if(info[ppid]==NULL){init_pid(ppid);}
                 add_sonpro(info[ppid],pid);
@@ -127,10 +129,10 @@ void make_tree(void){
 
             DIR* tasks;
             struct dirent* task_entry;
-            safe_printf(filename,"%s%s",entry->d_name,"/task");
+            safe_printf(filename,"%s/task",entry->d_name);
             Assert( (tasks= opendir(filename)) ,  "Can not open /proc/%s\n",filename);
             while((task_entry = readdir(tasks)) != NULL) {if(digit_judge(task_entry->d_name)) {
-                safe_printf(filename,"%s%s%s%s",entry->d_name,"/task/",task_entry->d_name,"/status");
+                safe_printf(filename,"%s/task/%s/status",entry->d_name,task_entry->d_name);
 #ifdef IGNORE_PRO_EXIT
                 if((fp=fopen(filename,"r"))==NULL)continue;
 #else
@@ -139,7 +141,7 @@ void make_tree(void){
                 fscanf(fp,"Name:\t%s",proname);
                 pid_t ppid=pid;
                 pid_t pid;
-                while(fscanf(fp,"Pid:\t%d",&pid)!=1)fgets(buf,100,fp);
+                while(fscanf(fp,"Pid:\t%d",&pid)!=1)fgets(buf,MAXN,fp);
                 if(pid!=ppid){
                     if(info[pid]==NULL){init_pid(pid);}
                     if(info[pid]->name==NULL){
@@ -173,15 +175,10 @@ void print_tree(const Proc *const p,int is_first){
     if(is_first==0){
     //judge if this node shares the same line with its father
     //if not,print the pattern for indent
-        int i,j;
-        for(i=0;i<depth;++i){
-            for(j=0;j<blank_len[i];++j){
-                putchar(' ');
-            }
-            printf("%s",bar_exist[i]!=0?"│ ":"  ");
-        }
-        for(j=0;j<blank_len[depth];++j){
-            putchar(' ');
+        for(int i=0;i<=depth;++i){
+            printf("%*s",blank_len[i]," ");
+            if(i<depth)
+                printf("%s",bar_exist[i]!=0?"│ ":"  ");
         }
         if(p->bro!=NULL){printf("├─");}
         else{printf("└─");delete_bar();}
@@ -275,7 +272,7 @@ int arg_matched(const char* const arg){
 int main(int argc, char *argv[]) {
     int alpha(const Proc*,const Proc*);
     print_flag.cmp=alpha;
-    for (int i = 1; i < argc; i++) {
+    for(int i=1; i<argc; ++i){
         if(!arg_matched(argv[i])){
             printf("Unsupported arg(s):" RED "%s\n" ORI,argv[i]);
             exit(0);
