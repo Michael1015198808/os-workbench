@@ -243,11 +243,10 @@ struct{
 //ares with -- here
 
 int arg_matched(const char* const arg){
-    int j=1;
     if(arg[0]=='-'){
         if(arg[1]=='-'){
             //args with --
-            for(j=0;j<LEN(two_dash_arg_list);++j){
+            for(int j=0;j<LEN(two_dash_arg_list);++j){
                 if(!strcmp(two_dash_arg_list[j].arg_name,arg)){
                     two_dash_arg_list[j].handler();
                     return 1;
@@ -255,6 +254,7 @@ int arg_matched(const char* const arg){
             }
         }else{
             //args with -
+            int j=1;
             for(int k=1;arg[k];++k){
                 for(j=0;j<LEN(single_dash_arg_list);++j){
                     if(single_dash_arg_list[j].arg_name==arg[k]){
@@ -262,7 +262,7 @@ int arg_matched(const char* const arg){
                         break;
                     }
                 }
-                return 0;
+                if(j==LEN(single_dash_arg_list)) return 0;
             }
         }
     }
@@ -276,7 +276,7 @@ int main(int argc, char *argv[]) {
     cmp=alpha;
     for (int i = 1; i < argc; i++) {
         if(!arg_matched(argv[i])){
-            printf("Unsupported arg(s):\33[1;31m%s\33[0m\n",argv[i]);
+            printf("Unsupported arg(s):" RED "%s\n" ORI,argv[i]);
             exit(0);
         }
     }
