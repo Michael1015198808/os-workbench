@@ -147,15 +147,14 @@ void make_tree(void){
                 if(pid!=ppid){
                     if(info[pid]==NULL){init_pid(pid);}
                     if(info[pid]->name==NULL){
-                        info[pid]->name=malloc(strlen(proname)+3);
-                        sprintf(info[pid]->name,"{%s}",proname);
+                        asprintf(&info[pid]->name,"{%s}",proname);
                         info[pid]->cnt=1;
                     }
                     add_sonpro(info[ppid],pid);
                     fclose(fp);
                 }
-            }
-        }}
+            }}
+        }
     }
     closedir(dp);
 }
