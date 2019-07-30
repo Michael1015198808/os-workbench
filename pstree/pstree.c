@@ -134,7 +134,7 @@ void make_tree(void){
             struct dirent* task_entry;
             safe_printf(filename,"%s/task",entry->d_name);
             Assert( (tasks= opendir(filename)) ,  "Can not open /proc/%s\n",filename);
-            while((task_entry = readdir(tasks)) != NULL) {if(digit_judge(task_entry->d_name)) {
+            while( (task_entry = readdir(tasks)) ){ if(digit_judge(task_entry->d_name)){
                 safe_printf(filename,"%s/task/%s/status",entry->d_name,task_entry->d_name);
 #ifdef IGNORE_PRO_EXIT
                 if((fp=fopen(filename,"r"))==NULL)continue;
@@ -159,9 +159,8 @@ void make_tree(void){
     }
     closedir(dp);
 }
-//static unsigned int bar_len=strlen("│");
-//since the bar is more than 1 byte
-int blank_len[20]={},bar_exist[20]={};
+#define MAX_DEP 20
+int blank_len[MAX_DEP]={},bar_exist[MAX_DEP]={};
 int depth=-1;
 
 void print_tree(const Proc *const p,int is_first){
