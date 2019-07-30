@@ -229,7 +229,7 @@ struct{
     {"--version",version},
     {"--numeric-sort",numeric_sort},
     {"--show-pids",show_pids},
-    {"-log",bug_fix_log},
+    {"--log",bug_fix_log},
     {"\0",NULL}//To make format more beautiful
 };
 struct{
