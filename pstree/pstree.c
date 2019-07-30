@@ -33,6 +33,7 @@ do{\
 
 #define RED "\33[1;31m"
 #define ORI "\33[0m"
+#define LEN(_array) ( sizeof(_array)/sizeof(_array[0]) )
 
 int digit_judge(char*);
 #define maxn 100
@@ -240,52 +241,41 @@ struct{
     {'p',show_pids}
 };
 //ares with -- here
+
+int arg_matched(const char* const arg){
+    int j=1;
+    if(arg[0]=='-'){
+        if(arg[1]=='-'){
+            //args with --
+            for(j=0;j<LEN(two_dash_arg_list);++j){
+                if(!strcmp(two_dash_arg_list[j].arg_name,arg)){
+                    two_dash_arg_list[j].handler();
+                    return 1;
+                }
+            }
+        }else{
+            //args with -
+            for(int k=1;arg[k];++k){
+                for(j=0;j<LEN(single_dash_arg_list);++j){
+                    if(single_dash_arg_list[j].arg_name==arg[k]){
+                        single_dash_arg_list[j].handler();
+                        break;
+                    }
+                }
+                return 0;
+            }
+        }
+    }
+
+    //Successful matches returns half-way
+    return 0;
+}
+
 int main(int argc, char *argv[]) {
     int alpha(Proc*,Proc*);
     cmp=alpha;
     for (int i = 1; i < argc; i++) {
-        int j=1;
-        if(argv[i][0]=='-'){
-            if(argv[i][1]=='-'){
-                //args with --
-                for(j=0;j<sizeof(two_dash_arg_list)/sizeof(two_dash_arg_list[0]);++j){
-                    if(!strcmp(two_dash_arg_list[j].arg_name,argv[i])){
-                        two_dash_arg_list[j].handler();
-                        break;
-                    }
-                }
-                if(j==sizeof(two_dash_arg_list)/sizeof(two_dash_arg_list[0])){
-                    printf("Unsupported arg(s):\33[1;31m%s\33[0m\n",argv[i]);
-                    exit(0);
-                }
-            }else{
-                int k,len=strlen(argv[i]);//prevent multi-call speed up
-                for(k=1;k<len;++k){
-                    for(j=0;j<sizeof(single_dash_arg_list)/sizeof(single_dash_arg_list[0]);++j){
-                        if(single_dash_arg_list[j].arg_name==argv[i][k]){
-                            single_dash_arg_list[j].handler();
-                            break;
-                        }
-                    }
-                    if(j==sizeof(single_dash_arg_list)/sizeof(single_dash_arg_list[0])){
-                        printf("Unsupported arg(s):");
-                        int l;
-                        for(l=0;l<k;++l){
-                            putchar(argv[i][l]);
-                        }
-                        printf("\33[1;31m");
-                        putchar(argv[i][l]);
-                        printf("\33[0m");
-                        while(++l<=len){
-                            putchar(argv[i][l]);
-                        }
-                        putchar('\n');
-                        exit(0);
-                    }
-                }
-                //args with -
-            }
-        }else{
+        if(!arg_matched(argv[i])){
             printf("Unsupported arg(s):\33[1;31m%s\33[0m\n",argv[i]);
             exit(0);
         }
