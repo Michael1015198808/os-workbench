@@ -101,7 +101,7 @@ void make_tree(void){
     char filename[50],proname[50];
     FILE* fp=NULL;
     Assert( (dp = opendir("/proc")) , "Can not open /proc\n");
-    Assert( chdir("/proc")==0 ,"Can not cd to /proc");
+    Assert( chdir("/proc")==0 ,"Can not cd to /proc\n");
     while((entry = readdir(dp)) ){
         if(digit_judge(entry->d_name)){
             safe_printf(filename,"%s/status",entry->d_name);
@@ -117,8 +117,7 @@ void make_tree(void){
             char buf[MAXN];
             while(fscanf(fp,"Pid:\t%d",&pid)!=1)fgets(buf,MAXN,fp);
             if(info[pid]==NULL){init_pid(pid);}
-            if(info[pid]->name==NULL)info[pid]->name=malloc(strlen(proname)+1);
-            strcpy(info[pid]->name,proname);
+            if(info[pid]->name==NULL)sscanf(proname,"%ms",&info[pid]->name);
 
             while(fscanf(fp,"PPid:\t%d",&ppid)!=1)fgets(buf,MAXN,fp);
             if(ppid>0){
@@ -161,8 +160,8 @@ void make_tree(void){
 //since the bar is more than 1 byte
 int blank_len[20]={},bar_exist[20]={};
 int depth=-1;
-void print_tree(const Proc *const p,int is_first){
 
+void print_tree(const Proc *const p,int is_first){
 //Due to different coding like UTF-8, the output maybe different
 //I've tried my best to make every line in output correctly inter-
 //sect. If it's not so in judge computer, PLZ contact me.
@@ -200,7 +199,6 @@ void print_tree(const Proc *const p,int is_first){
 
     if(p->son==NULL){putchar('\n');return;}
 
-
     blank_len[++depth]=len+1;
     bar_exist[depth]= (p->son->bro!=NULL);
     //print its sons
@@ -215,6 +213,7 @@ void print_tree(const Proc *const p,int is_first){
     --depth;
     return;
 }
+
 void version(void);
 void numeric_sort(void);
 void show_pids(void);
