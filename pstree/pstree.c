@@ -96,7 +96,7 @@ void make_tree(void){
     FILE* fp=NULL;
     Assert(  (dp = opendir("/proc")) ,  "Can not open /proc\n");
     Assert( chdir("/proc")==0 ,"Can not cd to /proc");
-    while(entry = readdir(dp) ) {
+    while((entry = readdir(dp)) ) {
         if(digit_judge(entry->d_name)) {
             Assert(snprintf(filename,sizeof(filename)-1,"%s%s",entry->d_name,"/status")>0,"process's name is too long");
 #ifdef IGNORE_PRO_EXIT
