@@ -18,10 +18,10 @@ merge process with same names.
 #define IGNORE_PRO_EXIT
 //Ignore the processes that are not existing when open
 //comment it to allow error report
-#define test(_con,...) \
+#define Assert(_con,_fmt,...) \
 do{\
     if(!(_con)){\
-        fprintf(stderr,__VA_ARGS__);\
+        fprintf(stderr,"Assertion failed:\nLine: %d" _fmt, __LINE__ ##__VA_ARGS__);\
         assert(0);\
     }\
 }while(0)
@@ -69,11 +69,11 @@ void add_sonpro(Proc* pp,pid_t pid){
             return;
         }
         Proc *l=pp->son,*r=l->bro;
-        while(r!=NULL&&cmp(r,info[pid])<0){
+        while(r && cmp(r,info[pid])<0){
             l=r;
             r=l->bro;
         };
-        if(print_flag.show_pids==0&&r!=NULL&&r->cnt!=0&&cmp(r,info[pid])==0){
+        if(print_flag.show_pids==0 && r && r->cnt!=0 && cmp(r,info[pid])==0){
             ++r->cnt;
             return;
         }
@@ -82,7 +82,7 @@ void add_sonpro(Proc* pp,pid_t pid){
     }
 }
 void init_pid(int pid){
-    test(info[pid]=malloc(sizeof(Proc)),"malloc size for Proc failed!");
+    Assert(info[pid]=malloc(sizeof(Proc)),"malloc size for Proc failed!");
     info[pid]->son=info[pid]->bro=NULL;
     info[pid]->pid=pid;
     info[pid]->name=NULL;
@@ -94,15 +94,15 @@ void make_tree(void){
     struct dirent *entry;
     char filename[50],proname[50];
     FILE* fp=NULL;
-    test(  ((dp = opendir("/proc")) != NULL),  "Can not open /proc\n");
-    test((chdir("/proc")==0),"Can not cd to /proc");
-    while((entry = readdir(dp)) != NULL) {
+    Assert(  (dp = opendir("/proc")) ,  "Can not open /proc\n");
+    Assert( chdir("/proc")==0 ,"Can not cd to /proc");
+    while(entry = readdir(dp) ) {
         if(digit_judge(entry->d_name)) {
-            sprintf(filename,"%s%s",entry->d_name,"/status");
+            Assert(snprintf(filename,sizeof(filename)-1,"%s%s",entry->d_name,"/status")>0,"process's name is too long");
 #ifdef IGNORE_PRO_EXIT
             if((fp=fopen(filename,"r"))==NULL)continue;
 #else
-            test((fp=fopen(filename,"r"))!=NULL,"Can not open %s\n",filename);
+            Assert((fp=fopen(filename,"r")),"Can not open %s\n",filename);
 #endif
             fscanf(fp,"Name:\t%s",proname);
 
@@ -121,14 +121,14 @@ void make_tree(void){
 
             DIR* tasks;
             struct dirent* task_entry;
-            sprintf(filename,"%s%s",entry->d_name,"/task");
-            test(  ((tasks= opendir(filename)) != NULL),  "Can not open /proc/%s\n",filename);
+            Assert(snprintf(filename,"%s%s",entry->d_name,"/task")>0,"process's name is too long");
+            Assert( (tasks= opendir(filename)) ,  "Can not open /proc/%s\n",filename);
             while((task_entry = readdir(tasks)) != NULL) {if(digit_judge(task_entry->d_name)) {
-                sprintf(filename,"%s%s%s%s",entry->d_name,"/task/",task_entry->d_name,"/status");
+                Assert(sprintf(filename,"%s%s%s%s",entry->d_name,"/task/",task_entry->d_name,"/status")>0,"process's name is too long");
 #ifdef IGNORE_PRO_EXIT
                 if((fp=fopen(filename,"r"))==NULL)continue;
 #else
-                test((fp=fopen(filename,"r"))!=NULL,"Can not open %s\n",filename);
+                Assert(fp=fopen(filename,"r") ,"Can not open %s\n",filename);
 #endif
                 fscanf(fp,"Name:\t%s",proname);
                 pid_t ppid=pid;
@@ -153,7 +153,7 @@ void make_tree(void){
 //since the bar is more than 1 byte
 int blank_len[20]={},bar_exist[20]={};
 int depth=-1;
-void print_tree(const Proc const *p,int is_first){
+void print_tree(const Proc *const p,int is_first){
 
 //Due to different coding like UTF-8, the output maybe different
 //I've tried my best to make every line in output correctly inter-
