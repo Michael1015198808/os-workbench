@@ -202,15 +202,15 @@ void print_tree(const Proc *const p,int is_first){
 
 
     blank_len[++depth]=len+1;
-    bar_exist[depth]=p->son->bro!=NULL;
+    bar_exist[depth]= (p->son->bro!=NULL);
     //print its sons
     print_tree(p->son,1);
     //The first son shares the same line, so do not need to print pattern
-    Proc* current=p->son->bro;
-    while(current!=NULL){
-        bar_exist[depth]=current->bro!=NULL;
-        print_tree(current,0);
-        current=current->bro;
+    for(Proc* cur=p->son->bro;
+            cur;
+            cur=cur->bro){
+        bar_exist[depth]=cur->bro!=NULL;
+        print_tree(cur,0);
     }
     --depth;
     return;
