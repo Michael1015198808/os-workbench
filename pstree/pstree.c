@@ -28,7 +28,7 @@ do{\
 
 #define safe_printf(_str , ...) \
     Assert(snprintf( \
-            _str, sizeof(_str)-1, __VA_ARGS__, \
+            _str, sizeof(_str)-1, __VA_ARGS__ \
                 )>0, "process's name is too long")
 
 #define RED "\33[1;31m"
