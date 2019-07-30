@@ -121,7 +121,7 @@ void make_tree(void){
 
             DIR* tasks;
             struct dirent* task_entry;
-            Assert(snprintf(filename,"%s%s",entry->d_name,"/task")>0,"process's name is too long");
+            Assert(snprintf(filename,sizeof(filename),"%s%s",entry->d_name,"/task")>0,"process's name is too long");
             Assert( (tasks= opendir(filename)) ,  "Can not open /proc/%s\n",filename);
             while((task_entry = readdir(tasks)) != NULL) {if(digit_judge(task_entry->d_name)) {
                 Assert(snprintf(filename,sizeof(filename)-1,"%s%s%s%s",entry->d_name,"/task/",task_entry->d_name,"/status")>0,"process's name is too long");
