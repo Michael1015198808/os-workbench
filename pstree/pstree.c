@@ -26,12 +26,14 @@ do{\
     }\
 }while(0)
 
+#define RED "\33[1;31m"
+#define ORI "\33[0m"
+
 int digit_judge(char*);
 #define maxn 100
 char buf[maxn];
-struct Node;
 struct{
-unsigned int show_pids:1;
+    unsigned int show_pids:1;
 }print_flag={
     0
 };
@@ -41,7 +43,7 @@ struct Proc{
     char* name;//The name of the Proc
     struct Proc *son;//The first son of the Proc
     struct Proc *bro;//The list of son of Proc's father
-}*info[50000];//TODO: dynamic map
+}*info[1<<16];
 //     bro     bro    bro     bro
 //Proc*-->Proc*-->...-->Proc*|-->NULL(forbidden)
 //  ^                        |
@@ -49,17 +51,14 @@ struct Proc{
 //  |                        |
 //Proc*                      |
 typedef struct Proc Proc;
-typedef struct List List;
-typedef struct Node Node;
 
 int (*cmp)(Proc*,Proc*);
-int num(Proc*,Proc*);
-int alpha(Proc*,Proc*);
 
 void add_sonpro(Proc* pp,pid_t pid){
     if(pp->son==NULL){
         pp->son=info[pid];
     }else{
+        //Insert sort
         if(cmp(pp->son,info[pid])>0){
             info[pid]->bro=pp->son;
             pp->son=info[pid];
@@ -237,9 +236,9 @@ struct{
 };
 //ares with -- here
 int main(int argc, char *argv[]) {
-    int i;
+    int alpha(Proc*,Proc*);
     cmp=alpha;
-    for (i = 1; i < argc; i++) {
+    for (int i = 1; i < argc; i++) {
         int j=1;
         if(argv[i][0]=='-'){
             if(argv[i][1]=='-'){
@@ -251,7 +250,7 @@ int main(int argc, char *argv[]) {
                     }
                 }
                 if(j==sizeof(two_dash_arg_list)/sizeof(two_dash_arg_list[0])){
-                    printf("\33[1;31mUnsupported arg(s):%s\33[0m\n",argv[i]);
+                    printf("Unsupported arg(s):\33[1;31m%s\33[0m\n",argv[i]);
                     exit(0);
                 }
             }else{
@@ -282,7 +281,7 @@ int main(int argc, char *argv[]) {
                 //args with -
             }
         }else{
-            printf("\33[1;31mUnsupported arg(s):%s\33[0m\n",argv[i]);
+            printf("Unsupported arg(s):\33[1;31m%s\33[0m\n",argv[i]);
             exit(0);
         }
     }
@@ -318,6 +317,7 @@ int num(Proc* p1,Proc* p2){
     }
 }
 void numeric_sort(void){
+    int num(Proc*,Proc*);
     cmp=num;
 }
 void show_pids(void){
