@@ -26,6 +26,11 @@ do{\
     }\
 }while(0)
 
+#define safe_printf(_str , ...) \
+    Assert(snprintf( \
+            _str, sizeof(_str)-1, __VA_ARGS__, \
+                )>0, "process's name is too long")
+
 #define RED "\33[1;31m"
 #define ORI "\33[0m"
 
@@ -98,7 +103,7 @@ void make_tree(void){
     Assert( chdir("/proc")==0 ,"Can not cd to /proc");
     while((entry = readdir(dp)) ) {
         if(digit_judge(entry->d_name)) {
-            Assert(snprintf(filename,sizeof(filename)-1,"%s%s",entry->d_name,"/status")>0,"process's name is too long");
+            safe_printf(filename,"%s%s",entry->d_name,"/status");
 #ifdef IGNORE_PRO_EXIT
             if((fp=fopen(filename,"r"))==NULL)continue;
 #else
@@ -121,10 +126,10 @@ void make_tree(void){
 
             DIR* tasks;
             struct dirent* task_entry;
-            Assert(snprintf(filename,sizeof(filename),"%s%s",entry->d_name,"/task")>0,"process's name is too long");
+            safe_printf(filename,"%s%s",entry->d_name,"/task");
             Assert( (tasks= opendir(filename)) ,  "Can not open /proc/%s\n",filename);
             while((task_entry = readdir(tasks)) != NULL) {if(digit_judge(task_entry->d_name)) {
-                Assert(snprintf(filename,sizeof(filename)-1,"%s%s%s%s",entry->d_name,"/task/",task_entry->d_name,"/status")>0,"process's name is too long");
+                safe_printf(filename,"%s%s%s%s",entry->d_name,"/task/",task_entry->d_name,"/status");
 #ifdef IGNORE_PRO_EXIT
                 if((fp=fopen(filename,"r"))==NULL)continue;
 #else
