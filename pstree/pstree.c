@@ -21,7 +21,7 @@ merge process with same names.
 #define Assert(_con,_fmt,...) \
 do{\
     if(!(_con)){\
-        fprintf(stderr,"Assertion failed:\nLine: %d" _fmt, __LINE__ ##__VA_ARGS__);\
+        fprintf(stderr,"Assertion failed:\nLine: %d" _fmt, __LINE__ ,##__VA_ARGS__);\
         assert(0);\
     }\
 }while(0)
