@@ -1,3 +1,4 @@
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdint.h>
 #include <ctype.h>
@@ -18,14 +19,6 @@ merge process with same names.
 #define IGNORE_PRO_EXIT
 //Ignore the processes that are not existing when open
 //comment it to allow error report
-
-#ifdef IGNORE_PRO_EXIT
-    #define safe_open(_filename,_flags) \
-        if((fp=fopen(filename,"r"))==NULL)continue;
-#else
-    #define safe_open(_filename,_flags) \
-        Assert((fp=fopen(filename,"r")),"Can not open %s\n",filename);
-#endif
 
 #define RED "\33[1;31m"
 #define ORI "\33[0m"
@@ -112,16 +105,22 @@ void make_tree(void){
     Assert( chdir("/proc")==0 ,"Can not cd to /proc\n");
     while((entry = readdir(dp)) ){
         if(digit_judge(entry->d_name)){
+            pid_t pid,ppid;
+
             safe_printf(filename,"%s/status",entry->d_name);
-            safe_open(filename,"r");
+#ifdef IGNORE_PRO_EXIT
+            if((fp=fopen(filename,"r"))==NULL)continue;
+#else
+            Assert((fp=fopen(filename,"r")),"Can not open %s\n",filename);
+#endif
+
             fscanf(fp,"Name:\t%s",proname);
 
-            pid_t pid,ppid;
 #define MAXN 100
             char buf[MAXN];
             while(fscanf(fp,"Pid:\t%d",&pid)!=1)fgets(buf,MAXN,fp);
             if(info[pid]==NULL){init_pid(pid);}
-            if(info[pid]->name==NULL)sscanf(proname,"%ms",&info[pid]->name);
+            if(info[pid]->name==NULL)asprintf(&info[pid]->name,"%s",proname);
 
             while(fscanf(fp,"PPid:\t%d",&ppid)!=1)fgets(buf,MAXN,fp);
             if(ppid>0){
@@ -136,8 +135,11 @@ void make_tree(void){
             Assert( (tasks= opendir(filename)) ,  "Can not open /proc/%s\n",filename);
             while((task_entry = readdir(tasks)) != NULL) {if(digit_judge(task_entry->d_name)) {
                 safe_printf(filename,"%s/task/%s/status",entry->d_name,task_entry->d_name);
-                safe_open(filename,"r");
-
+#ifdef IGNORE_PRO_EXIT
+                if((fp=fopen(filename,"r"))==NULL)continue;
+#else
+                Assert(fp=fopen(filename,"r") ,"Can not open %s\n",filename);
+#endif
                 fscanf(fp,"Name:\t%s",proname);
                 pid_t ppid=pid;
                 pid_t pid;
