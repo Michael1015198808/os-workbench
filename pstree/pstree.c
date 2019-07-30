@@ -19,6 +19,14 @@ merge process with same names.
 //Ignore the processes that are not existing when open
 //comment it to allow error report
 
+#ifdef IGNORE_PRO_EXIT
+    #define safe_open(_filename,_flags) \
+        if((fp=fopen(filename,"r"))==NULL)continue;
+#else
+    #define safe_open(_filename,_flags) \
+        Assert((fp=fopen(filename,"r")),"Can not open %s\n",filename);
+#endif
+
 #define RED "\33[1;31m"
 #define ORI "\33[0m"
 #define LEN(_array) ( sizeof(_array)/sizeof(_array[0]) )
@@ -105,11 +113,7 @@ void make_tree(void){
     while((entry = readdir(dp)) ){
         if(digit_judge(entry->d_name)){
             safe_printf(filename,"%s/status",entry->d_name);
-#ifdef IGNORE_PRO_EXIT
-            if((fp=fopen(filename,"r"))==NULL)continue;
-#else
-            Assert((fp=fopen(filename,"r")),"Can not open %s\n",filename);
-#endif
+            safe_open(filename,"r");
             fscanf(fp,"Name:\t%s",proname);
 
             pid_t pid,ppid;
@@ -132,11 +136,8 @@ void make_tree(void){
             Assert( (tasks= opendir(filename)) ,  "Can not open /proc/%s\n",filename);
             while((task_entry = readdir(tasks)) != NULL) {if(digit_judge(task_entry->d_name)) {
                 safe_printf(filename,"%s/task/%s/status",entry->d_name,task_entry->d_name);
-#ifdef IGNORE_PRO_EXIT
-                if((fp=fopen(filename,"r"))==NULL)continue;
-#else
-                Assert(fp=fopen(filename,"r") ,"Can not open %s\n",filename);
-#endif
+                safe_open(filename,"r");
+
                 fscanf(fp,"Name:\t%s",proname);
                 pid_t ppid=pid;
                 pid_t pid;
