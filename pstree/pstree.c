@@ -38,11 +38,6 @@ do{\
 int digit_judge(char*);
 #define maxn 100
 char buf[maxn];
-struct{
-    unsigned int show_pids:1;
-}print_flag={
-    0
-};
 struct Proc{
     pid_t pid;
     uint8_t cnt;//Used to merge
@@ -58,7 +53,12 @@ struct Proc{
 //Proc*                      |
 typedef struct Proc Proc;
 
-int (*cmp)(Proc*,Proc*);
+struct{
+    int (*cmp)(const Proc*,const Proc*);
+    unsigned int show_pids:1;
+}print_flag={
+    0
+};
 
 void add_sonpro(Proc* pp,pid_t pid){
     if(pp->son==NULL){
@@ -273,15 +273,14 @@ int arg_matched(const char* const arg){
 }
 
 int main(int argc, char *argv[]) {
-    int alpha(Proc*,Proc*);
-    cmp=alpha;
+    int alpha(const Proc*,const Proc*);
+    print_flag.cmp=alpha;
     for (int i = 1; i < argc; i++) {
         if(!arg_matched(argv[i])){
             printf("Unsupported arg(s):" RED "%s\n" ORI,argv[i]);
             exit(0);
         }
     }
-    //puts("args handled");
     make_tree();
     print_tree(info[1],1);
     putchar('\n');
@@ -302,10 +301,10 @@ int digit_judge(char* s){
     }
     return 1;
 }
-int alpha(Proc* p1,Proc* p2){
+int alpha(const Proc* p1,const Proc* p2){
     return strcmp(p1->name,p2->name);
 }
-int num(Proc* p1,Proc* p2){
+int num(const Proc* p1,const Proc* p2){
     if(strcmp(p1->name,p2->name)){
         return p1->pid>p2->pid?1:-1;
     }else{
@@ -313,8 +312,8 @@ int num(Proc* p1,Proc* p2){
     }
 }
 void numeric_sort(void){
-    int num(Proc*,Proc*);
-    cmp=num;
+    int num(const Proc*,const Proc*);
+    print_flag.cmp=num;
 }
 void show_pids(void){
     print_flag.show_pids=1;
