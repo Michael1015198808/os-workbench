@@ -103,7 +103,7 @@ int main(int argc, char *argv[],char *envp[]) {
     double time_cost;
     time_t oldtime=0,newtime;
     while(fgets(s,sizeof(s),stdin)>0){
-        if(time(&newtime)>oldtime||regexec(&exit_pat,s,1,&match_info,0)!=REG_NOMATCH){
+        if(regexec(&exit_pat,s,1,&match_info,0)!=REG_NOMATCH||time(&newtime)>oldtime){
             oldtime=newtime;
             sort();
             display();
