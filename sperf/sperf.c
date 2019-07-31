@@ -46,7 +46,7 @@ int main(int argc, char *argv[],char *envp[]) {
   Assert(argc>1,"spref: usage: spref PROG [ARGS]");
   //Create pipes
   int pipes[2];
-  Assert(pipe(pipes),"Build pipe failed!");
+  Assert(pipe(pipes)==0,"Build pipe failed!");
   //compile regexs
   Assert( (
     regcomp(&name,"^[a-zA-Z]*_*[a-zA-Z]*[0-9]*\\(",REG_EXTENDED) ||
