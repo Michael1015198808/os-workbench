@@ -107,7 +107,7 @@ int main(int argc, char *argv[],char *envp[]) {
             oldtime=newtime;
             sort();
             display();
-            if(match_info.rm_so!=-1){
+            if(match_info.rm_so>0){
                 //returned
                 printf("%s ",argv[1]);
                 printf("%s\n",s+match_info.rm_so);
