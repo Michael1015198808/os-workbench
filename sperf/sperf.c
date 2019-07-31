@@ -110,6 +110,8 @@ int main(int argc, char *argv[],char *envp[]) {
             display();
         }
         if(regexec(&exit_pat,s,1,&match_info,0)!=REG_NOMATCH){
+            sort();
+            display();
             s[match_info.rm_eo]='\0';
             printf("%s :%s\n",argv[1],s+match_info.rm_so);
             return 0;
