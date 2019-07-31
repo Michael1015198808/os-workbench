@@ -104,20 +104,15 @@ int main(int argc, char *argv[],char *envp[]) {
     double time_cost;
     time_t oldtime=0,newtime;
     while(fgets(s,sizeof(s),stdin)>0){
-        if(waitpid(pid,NULL,WNOHANG)>0){
-            //returned
-            while(regexec(&exit_pat,s,1,&match_info,0)==REG_NOMATCH){
-                fgets(s,sizeof(s),stdin);
-            }
-            s[match_info.rm_eo]='\0';
-            printf("%s :",argv[1]);
-            printf("%s\n",s+match_info.rm_so);
-            return 0;
-        }
         if(time(&newtime)>oldtime){
             oldtime=newtime;
             sort();
             display();
+        }
+        if(regexec(&exit_pat,s,1,&match_info,0)!=REG_NOMATCH){
+            s[match_info.rm_eo]='\0';
+            printf("%s :%s\n",argv[1],s+match_info.rm_so);
+            return 0;
         }
         //Get name of syscall
         if(regexec(&name,s,1,&match_info,0)==REG_NOMATCH){
