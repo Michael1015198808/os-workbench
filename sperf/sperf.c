@@ -165,7 +165,7 @@ void sort(void){
             ){
                 swap(r,q,q->next);
                 //r->.->q--..->p
-                r=r->next;
+                q=r->next;
             }else{
                 r=q;
                 q=q->next;
