@@ -110,7 +110,7 @@ int main(int argc, char *argv[],char *envp[]) {
             if(match_info.rm_so>0){
                 s[match_info.rm_eo]='\0';
                 //returned
-                printf("%s ",argv[1]);
+                printf("%s exited!:",argv[1]);
                 printf("%s\n",s+match_info.rm_so);
                 return 0;
             }
