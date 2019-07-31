@@ -103,11 +103,12 @@ int main(int argc, char *argv[],char *envp[]) {
     double time_cost;
     time_t oldtime=0,newtime;
     while(fgets(s,sizeof(s),stdin)>0){
-        if(regexec(&exit_pat,s,1,&match_info,0)!=REG_NOMATCH||time(&newtime)>oldtime){
+        int ret;
+        if((ret=regexec(&exit_pat,s,1,&match_info,0))!=REG_NOMATCH||time(&newtime)>oldtime){
             oldtime=newtime;
             sort();
             display();
-            if(match_info.rm_so>0){
+            if(ret!=REG_NOMATCH){
                 s[match_info.rm_eo]='\0';
                 //returned
                 printf("%s exited!:",argv[1]);
