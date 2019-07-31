@@ -104,10 +104,10 @@ int main(int argc, char *argv[],char *envp[]) {
     time_t oldtime=0,newtime;
     while(fgets(s,sizeof(s),stdin)>0){
         int ret;
+        display();
         if((ret=regexec(&exit_pat,s,1,&match_info,0))!=REG_NOMATCH||time(&newtime)>oldtime){
             oldtime=newtime;
             sort();
-            display();
             if(ret!=REG_NOMATCH){
                 s[match_info.rm_eo]='\0';
                 //returned
