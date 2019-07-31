@@ -106,14 +106,13 @@ int main(int argc, char *argv[],char *envp[]) {
     while(fgets(s,sizeof(s),stdin)>0){
         if(waitpid(pid,NULL,WNOHANG)>0){
             //returned
-            if(regexec(&exit_pat,s,1,&match_info,0)!=REG_NOMATCH){
-                s[match_info.rm_eo]='\0';
-                printf("%s :",argv[1]);
-                printf("%s\n",s+match_info.rm_so);
-                return 0;
-            }else{
-                Assert(0,"Child crashed");
+            while(regexec(&exit_pat,s,1,&match_info,0)==REG_NOMATCH){
+                fgets(s,sizeof(s),stdin);
             }
+            s[match_info.rm_eo]='\0';
+            printf("%s :",argv[1]);
+            printf("%s\n",s+match_info.rm_so);
+            return 0;
         }
         if(time(&newtime)>oldtime){
             oldtime=newtime;
