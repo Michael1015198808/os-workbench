@@ -7,17 +7,23 @@
 #include <time.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+int asprintf(char **strp,const char* fmt, ...);
+
+#define Assert(cond, _fmt, ...) \
+    do{ \
+        if(!(cond)){ \
+            fprintf(stderr, _fmt "\n" ##__VA_ARGS__); \
+        } \
+        exit(1); \
+    }while(0)
+
 #define err(...) \
     fprintf(stderr,__VA_ARGS__); \
-    stop();
-#define my_write(_fd,_str) \
-    write((_fd),(_str),strlen(_str))
+    exit(1)
+
 #define LEN(_array) \
     (sizeof(_array)/sizeof(_array[0]))
-void stop(void){
-  fflush(stdout);
-  exit(1);
-}
+
 typedef struct node{
     char *name;
     struct node *next;
@@ -27,7 +33,7 @@ node head={
   .name="\1\0",
   .next=&head,
   .time=0
-};
+};//guard
 
 double total=0.0;
 regex_t name,num,exit_pat;
@@ -37,26 +43,19 @@ void display(void);
 inline void swap(node*,node*,node*);
 int main(int argc, char *argv[],char *envp[]) {
   //Check arguments
-  if(argc==1){
-    err("sperf: must have PROG [ARGS]\n");
-  }
+  Assert(argc>1,"spref: usage: spref PROG [ARGS]");
   //Create pipes
   int pipes[2];
-  if(pipe(pipes)){
-    err("Build pipe failed!\n");
-  }
+  Assert(pipe(pipes),"Build pipe failed!");
   //compile regexs
-  if(
+  Assert( (
     regcomp(&name,"^[a-zA-Z]*_*[a-zA-Z]*[0-9]*\\(",REG_EXTENDED) ||
     regcomp(&num,"<[0-9\\.]*>\n",REG_EXTENDED)  ||
-    regcomp(&exit_pat,"exited with [0-9]* ",REG_EXTENDED) ){
-      err("Regexes compiled failed!\n");
-  }
+    regcomp(&exit_pat,"exited with [0-9]* ",REG_EXTENDED) ) == 0,
+          "Regexes compiled failed!\n");
   //Fork
   int ret=fork();
-  if(ret==-1){
-    err("Fork failed!\n");
-  }
+  Assert(ret>=0,"Fork failed!");
   if(ret==0){
   //Child process
     //Prepare file descriptors
@@ -74,20 +73,17 @@ int main(int argc, char *argv[],char *envp[]) {
         dup2(out,1);dup2(out,2);
     }
     //Prepare new_argv[]
-    char  file[32],*flags[]={"-T","-o",file};
-    sprintf(file,"/proc/%d/fd/%d",getppid(),pipes[1]);
+    char  *file,*flags[]={"-T","-o",file};
+    Assert(asprintf(&file,"/proc/%d/fd/%d",getppid(),pipes[1]),"No space for filename");
     const int new_argc=argc+LEN(flags);
-    char **new_argv=(char**)malloc(sizeof(void*)*(new_argc+1));
-    if(new_argv==NULL){
-      err("No space for new_argv\n");
-    }
+    char **new_argv=(char**)malloc(sizeof(void*)*(new_argc));
+    Assert(new_argv,"No space for new_argv");
+
     new_argv[0]="/usr/bin/strace";
-    int i;
-    for(i=0;i<LEN(flags);++i){
-        new_argv[i+1]=flags[i];
-    }
-    memcpy(new_argv+LEN(flags)+1,argv+1,argc*sizeof(void*));
-    new_argv[new_argc]=NULL;
+    memcpy(new_argv+1           ,LEN(flags),LEN(flags)*sizeof(void*));
+    memcpy(new_argv+LEN(flags)+1,    argv+1,  (argc-1)*sizeof(void*));
+    //new_argv[new_argc] == argv[argc] == NULL
+    Assert(new_argv[new_argc]==NULL,);
 
     execve("/usr/bin/strace",new_argv,envp);
 
@@ -97,6 +93,7 @@ int main(int argc, char *argv[],char *envp[]) {
     dup2(backup[0],1);dup2(backup[1],2);
     printf("%s:%d Should not reach here!\n",__FILE__,__LINE__);
     fflush(stdout);
+    return -1;
   }else{
     //Parent process
     dup2(pipes[0],0);
@@ -105,85 +102,82 @@ int main(int argc, char *argv[],char *envp[]) {
     double time_cost;
     time_t oldtime=0,newtime;
     while(fgets(s,sizeof(s),stdin)>0){
-      my_write(3,s);//Work as a tee
-      if(regexec(&exit_pat,s,1,&match_info,0)!=REG_NOMATCH){
-        //returned
-        sort();
-        display();
-        printf("%s ",argv[1]);
-        int i;
-        for(i=match_info.rm_so;i<match_info.rm_eo;++i){
-          putchar(s[i]);
+        if(time(&newtime)>oldtime||regexec(&exit_pat,s,1,&match_info,0)!=REG_NOMATCH){
+            oldtime=newtime;
+            sort();
+            display();
+            if(match_info.rm_so!=-1){
+                //returned
+                printf("%s ",argv[1]);
+                printf("%s\n",s+match_info.rm_so);
+            }
+            return 0;
         }
-        printf("\n");
-        return 0;
-      }
-      //Get name of syscall
-      if(regexec(&name,s,1,&match_info,0)==REG_NOMATCH){
-        continue;
-      }
-      strncpy(call,s+match_info.rm_so,match_info.rm_eo-match_info.rm_so);
-      call[match_info.rm_eo-match_info.rm_so-1]='\0';
-      //Get time of syscall
-      if(regexec(&num,s,1,&match_info,0)==REG_NOMATCH){
-        continue;
-      }
-      sscanf(s+match_info.rm_so+1,"%lf",&time_cost);
-      //Record 
-      node *p=&head,*q=NULL;
-      do{
-          q=p;
-          p=p->next;
-      }while(p!=&head&&strcmp(p->name,call)!=0);
-      if(strcmp(p->name,call)){
-        //before q----->p
-        //after  q-new->p
-        q->next=(node*)malloc(sizeof(node));
-        q->next->next=p;
-        q=q->next;
-        q->name=(char*)malloc(strlen(call)+1);
-        strcpy(q->name,call);
-        q->time=0.0;
-      }
-      q->time+=time_cost;
-      total+=time_cost;
-      if(time(&newtime)>oldtime){
-        oldtime=newtime;
-        sort();
-        display();
-      }
+        //Get name of syscall
+        if(regexec(&name,s,1,&match_info,0)==REG_NOMATCH){
+            continue;
+        }
+        strncpy(call, s+match_info.rm_so, match_info.rm_eo-match_info.rm_so );
+        call[match_info.rm_eo-match_info.rm_so-1]='\0';
+        //Get time of syscall
+        if(regexec(&num,s,1,&match_info,0)==REG_NOMATCH){
+            continue;
+        }
+        sscanf(s+match_info.rm_so+1,"%lf",&time_cost);
+        //Record 
+        node *p=&head,*q=NULL;
+        do{
+            q=p;
+            p=p->next;
+        }while(p!=&head&&strcmp(p->name,call)!=0);
+    
+        if(strcmp(p->name,call)){
+            //Not found
+            //before q----->p
+            //after  q-new->p
+            q->next=(node*)malloc(sizeof(node));
+            q->next->next=p;
+            q=q->next;
+            asprintf(&q->name,"%s",call);
+            q->time=0.0;
+        }
+        q->time+=time_cost;
+        total+=time_cost;
     }
+    err("error with fgets");
+    return -1;
   }
-  return 0;
 }
+
 void sort(void){
-  //bubble sort
-  node *p;
-  for(p=&head;p!=head.next;){
-      //r->q--..->p
-      node *q=head.next,*r=&head;
-      while(q!=p){
-        if(
-          (q->time)<
-          (q->next->time)
-        ){
-          swap(r,q,q->next);
-          q=r->next;
-        }else{
-          r=q;
-          q=q->next;
+    //bubble sort
+    node *p;
+    for(p=&head;p!=head.next;){
+        //r->q--..->p
+        node *q=head.next,*r=&head;
+        while(q!=p){
+            if(
+                (q->time)<
+                (q->next->time)
+            ){
+                swap(r,q,q->next);
+                //r->.->q--..->p
+                r=r->next;
+            }else{
+                r=q;
+                q=q->next;
+            }
         }
-      }
-      p=r;
-  }
+        p=r;
+    }
 }
+
 void display(void){
-  node *p=head.next;
   printf("\033[2J\033[39m\033[49mSyscalls:\n");
-  do{
-    printf("%20s:%10lfs(%.2lf%%)\n",p->name,p->time,p->time*100/total);
-    p=p->next;
-  }while(p!=&head);
+  for(node *p=head.next;p!=&head;p=p->next){
+    printf("%20s:%10lfs(%.2lf%%)\n",
+            p->name,p->time,p->time*100/total);
+  }
 }
 inline void swap(node *p,node *a,node *b){
     //before p->a->b->(b->next)
@@ -191,5 +185,4 @@ inline void swap(node *p,node *a,node *b){
     a->next=b->next;
     b->next=a;
     //after  p->b->a->(b->next)
-    return;
 }
