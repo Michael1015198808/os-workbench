@@ -1,4 +1,5 @@
 #include <sys/types.h>
+#include <sys/wait.h>
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
@@ -54,9 +55,9 @@ int main(int argc, char *argv[],char *envp[]) {
     regcomp(&exit_pat,"exited with [0-9]* ",REG_EXTENDED) ) == 0,
           "Regexes compiled failed!\n");
   //Fork
-  int ret=fork();
-  Assert(ret>=0,"Fork failed!");
-  if(ret==0){
+  int pid=fork();
+  Assert(pid>=0,"Fork failed!");
+  if(pid==0){
     //Child process
     //Prepare file descriptors
     int out = open("/dev/null", O_RDWR|O_APPEND, 0600);
@@ -103,18 +104,21 @@ int main(int argc, char *argv[],char *envp[]) {
     double time_cost;
     time_t oldtime=0,newtime;
     while(fgets(s,sizeof(s),stdin)>0){
-        int ret;
-        if((ret=regexec(&exit_pat,s,1,&match_info,0))!=REG_NOMATCH||time(&newtime)>oldtime){
+        if(waitpid(pid,NULL,WNOHANG)>0){
+            //returned
+            if(regexec(&exit_pat,s,1,&match_info,0)!=REG_NOMATCH){
+                s[match_info.rm_eo]='\0';
+                printf("%s :",argv[1]);
+                printf("%s\n",s+match_info.rm_so);
+                return 0;
+            }else{
+                Assert(0,"Child crashed");
+            }
+        }
+        if(time(&newtime)>oldtime){
             oldtime=newtime;
             sort();
             display();
-            if(ret!=REG_NOMATCH){
-                s[match_info.rm_eo]='\0';
-                //returned
-                printf("%s exited!:",argv[1]);
-                printf("%s\n",s+match_info.rm_so);
-                return 0;
-            }
         }
         //Get name of syscall
         if(regexec(&name,s,1,&match_info,0)==REG_NOMATCH){
