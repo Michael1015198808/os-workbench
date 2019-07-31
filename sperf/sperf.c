@@ -126,13 +126,13 @@ int main(int argc, char *argv[],char *envp[]) {
         if(regexec(&num,s,1,&match_info,0)==REG_NOMATCH){
             continue;
         }
-        sscanf(s+match_info.rm_so+1,"%lf",&time_cost);
+        time_cost=atof(s+match_info.rm_so+1);
         //Record 
         node *p=&head,*q=NULL;
         do{
             q=p;
             p=p->next;
-        }while(p!=&head&&strcmp(p->name,call)!=0);
+        }while(p!=&head && strcmp(p->name,call)!=0);
     
         if(strcmp(p->name,call)){
             //Not found
