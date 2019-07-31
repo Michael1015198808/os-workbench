@@ -22,7 +22,7 @@ int asprintf(char **strp,const char* fmt, ...);
     exit(1)
 
 #define LEN(_array) \
-    (sizeof(_array)/sizeof(_array[0]))
+    (sizeof(_array)/sizeof(_array[0]) )
 
 typedef struct node{
     char *name;
@@ -80,8 +80,8 @@ int main(int argc, char *argv[],char *envp[]) {
     Assert(new_argv,"No space for new_argv");
 
     new_argv[0]="/usr/bin/strace";
-    memcpy(new_argv+1           ,LEN(flags),LEN(flags)*sizeof(void*));
-    memcpy(new_argv+LEN(flags)+1,    argv+1,  (argc-1)*sizeof(void*));
+    memcpy(new_argv+1           , flags,LEN(flags)*sizeof(void*));
+    memcpy(new_argv+LEN(flags)+1,argv+1,  (argc-1)*sizeof(void*));
     //new_argv[new_argc] == argv[argc] == NULL
     Assert(new_argv[new_argc]==NULL,);
 
