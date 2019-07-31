@@ -111,8 +111,8 @@ int main(int argc, char *argv[],char *envp[]) {
                 //returned
                 printf("%s ",argv[1]);
                 printf("%s\n",s+match_info.rm_so);
+                return 0;
             }
-            return 0;
         }
         //Get name of syscall
         if(regexec(&name,s,1,&match_info,0)==REG_NOMATCH){
