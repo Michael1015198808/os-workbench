@@ -13,8 +13,8 @@ int asprintf(char **strp,const char* fmt, ...);
     do{ \
         if(!(cond)){ \
             fprintf(stderr, _fmt "\n" ##__VA_ARGS__); \
+            exit(1); \
         } \
-        exit(1); \
     }while(0)
 
 #define err(...) \
