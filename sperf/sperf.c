@@ -57,7 +57,7 @@ int main(int argc, char *argv[],char *envp[]) {
   int ret=fork();
   Assert(ret>=0,"Fork failed!");
   if(ret==0){
-  //Child process
+    //Child process
     //Prepare file descriptors
     int out = open("/dev/null", O_RDWR|O_APPEND, 0600);
     int backup[2];
@@ -76,12 +76,12 @@ int main(int argc, char *argv[],char *envp[]) {
     char  *file,*flags[]={"-T","-o",file};
     Assert(asprintf(&file,"/proc/%d/fd/%d",getppid(),pipes[1]),"No space for filename");
     const int new_argc=argc+LEN(flags);
-    char **new_argv=(char**)malloc(sizeof(void*)*(new_argc));
+    char **new_argv=(char**)malloc(sizeof(void*)*(new_argc+1));
     Assert(new_argv,"No space for new_argv");
 
     new_argv[0]="/usr/bin/strace";
     memcpy(new_argv+1           , flags,LEN(flags)*sizeof(void*));
-    memcpy(new_argv+LEN(flags)+1,argv+1,  (argc-1)*sizeof(void*));
+    memcpy(new_argv+LEN(flags)+1,argv+1,      argc*sizeof(void*));
     //new_argv[new_argc] == argv[argc] == NULL
     Assert(new_argv[new_argc]==NULL,);
 
