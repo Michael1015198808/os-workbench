@@ -73,8 +73,9 @@ int main(int argc, char *argv[],char *envp[]) {
         dup2(out,1);dup2(out,2);
     }
     //Prepare new_argv[]
-    char  *file,*flags[]={"-T","-o",file};
-    Assert(asprintf(&file,"/proc/%d/fd/%d",getppid(),pipes[1]),"No space for filename");
+    char  *file;
+    Assert(asprintf(&file,"/proc/%d/fd/%d",getppid(),pipes[1])>0,"No space for filename");
+    const char *const flags[]={"-T","-o",file};
     const int new_argc=argc+LEN(flags);
     char **new_argv=(char**)malloc(sizeof(void*)*(new_argc+1));
     Assert(new_argv,"No space for new_argv");
