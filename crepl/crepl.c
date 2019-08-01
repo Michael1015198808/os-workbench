@@ -66,8 +66,8 @@ char *cflags[]={
     src,
     NULL
 };
-inline void main_loop(const char* const cmd,const char** const envp);
-int main(int argc, char *argv[],const char **const envp) {
+inline void main_loop(const char* const cmd,char** envp);
+int main(int argc, char *argv[],char **envp) {
     while(1){
         //Input
         free(cmd);
@@ -83,7 +83,7 @@ int main(int argc, char *argv[],const char **const envp) {
     }
 }
 
-inline void main_loop(const char* const cmd,const char** const envp){
+inline void main_loop(const char* const cmd,char** envp){
     //Create temp file
     char file[]="XXXXXX";
     int fd=mkstemp(file);
