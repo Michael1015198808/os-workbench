@@ -46,6 +46,11 @@ int dprintf(int fd,const char* format,...);
 #else
     _Static_assert(0,"Unknown architecture");
 #endif
+int safe_fork(void){
+    int pid=fork();
+    Assert(pid>=0,"Fork failed!");
+    return pid;
+}
 
 char *cmd=NULL,out[12],src[7];
 char *cflags[]={
@@ -61,7 +66,8 @@ char *cflags[]={
     src,
     NULL
 };
-int main(int argc, char *argv[],char *envp[]) {
+inline void main_loop(const char* const cmd,const char** const envp);
+int main(int argc, char *argv[],char **envp) {
     while(1){
         //Input
         free(cmd);
@@ -69,71 +75,75 @@ int main(int argc, char *argv[],char *envp[]) {
         if(cmd&&*cmd){
             add_history(cmd);
         }
-        if(!strcmp("exit",cmd))return 0;
-
-        //Create temp file
-        char file[]="XXXXXX";
-        int fd=mkstemp(file);
-        if(fd<0){
-            log("%s","Can't create temporary file!\n");
+        if(strcmp("exit",cmd)){
+            main_loop(cmd,envp);
         }else{
-            int add_func=!strncmp("int",cmd,3);
-            if(add_func){
-                dprintf(fd,"%s",cmd);
-            }else{
-                dprintf(fd,"int __expr_wrapper(){return %s;}",cmd);
+            return 0;
+        }
+    }
+}
+
+inline void main_loop(const char* const cmd,const char** const envp){
+    //Create temp file
+    char file[]="XXXXXX";
+    int fd=mkstemp(file);
+    if(fd<0){
+        log("%s","Can't create temporary file!\n");
+    }else{
+        int add_func=!strncmp("int ",cmd,3);
+        if(add_func){
+            dprintf(fd,"%s",cmd);
+        }else{
+            dprintf(fd,"int __expr_wrapper(void){return %s;}",cmd);
+        }
+        close(fd);
+
+         //Compile and link
+        sprintf(out,"./%s.so",file);
+        if(safe_fork()==0){
+            strcpy(src,file);
+            execve(CC,cflags,envp);
+            err("call " CC " failed!\n");
+            exit(1);
+        }else{
+            int wstatus;
+            wait(&wstatus);
+            unlink(file);
+            if(wstatus!=0){
+                err("%d" ":%s",wstatus, "Compile error!\n");
+                return;
             }
 
-            //Compile and link
-            sprintf(out,"./%s.so",file);
-            int pid=fork();
-            Assert(pid>=0,"Fork failed!");
-            if(pid==0){
-                strcpy(src,file);
-                execve(CC,cflags,envp);
-                err("call " CC " failed!\n");
-                return -1;
-            }else{
-                int wstatus;
-                wait(&wstatus);
-                unlink(file);
-                if(wstatus!=0){
-                    err("%d" ":%s",wstatus, "Compile error!\n");
-                    continue;
+            if(add_func){
+                void *handle=dlopen(out, RTLD_LAZY|RTLD_GLOBAL);
+                unlink(out);
+                if(!handle){
+                    err("load failed!\n");
+                    return;
                 }
-                if(add_func){
+                //Add a function
+                printf("Added: %s\n",cmd);
+            }else{
+                //Calculate the value
+                if(safe_fork()==0){
                     void *handle=dlopen(out, RTLD_LAZY|RTLD_GLOBAL);
                     unlink(out);
                     if(!handle){
                         err("load failed!\n");
-                        continue;
+                        return;
                     }
-                    //Add a function
-                    printf("Added: %s\n",cmd);
+                    int (*fun)(void)= dlsym(handle, "__expr_wrapper");
+                    assert(fun);
+                    printf("(%s) == %d\n",cmd,fun());
+                    return 0;
                 }else{
-                    //Calculate the value
-                    int pid=fork();
-                    Assert(pid>=0,"Fork failed!");
-                    if(pid==0){
-                        void *handle=dlopen(out, RTLD_LAZY|RTLD_GLOBAL);
-                        unlink(out);
-                        if(!handle){
-                            err("load failed!\n");
-                            continue;
-                        }
-                        int (*fun)(void)= dlsym(handle, "__expr_wrapper");
-                        assert(fun);
-                        printf("(%s) == %d\n",cmd,fun());
-                        return 0;
-                    }else{
-                        wait(&wstatus);
-                        if(wstatus!=0){
-                            err("Something wrong with child process\n");
-                        }
+                    wait(&wstatus);
+                    if(wstatus!=0){
+                        err("Something wrong with child process\n");
                     }
                 }
             }
         }
     }
-    return 0;
 }
+
