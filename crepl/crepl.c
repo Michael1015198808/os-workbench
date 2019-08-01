@@ -93,7 +93,32 @@ inline void main_loop(const char* const cmd,char** envp){
     }else{
         int add_func=!strncmp("int ",cmd,3);
         if(add_func){
+            int remain=0;
+            for(char* c=cmd;*c;++c){
+                switch(*c){
+                    case '{':
+                        ++remain;
+                        break;
+                    case '}':
+                        --remain;
+                        if(remain<0){err("Too much }");return;}
+                        break;
+                }
+            }
             dprintf(fd,"%s",cmd);
+            while(remain>0){
+                char c=getchar();
+                write(fd,&c,1);
+                switch(c){
+                    case '{':
+                        ++remain;
+                        break;
+                    case '}':
+                        --remain;
+                        if(remain<0){err("Too much }");return;}
+                        break;
+                }
+            }
         }else{
             dprintf(fd,"int __expr_wrapper(void){return %s;}",cmd);
         }
