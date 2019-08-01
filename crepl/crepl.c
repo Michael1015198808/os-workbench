@@ -87,7 +87,7 @@ int main(int argc, char *argv[],char *envp[]) {
             //Compile and link
             sprintf(out,"./%s.so",file);
             int pid=fork();
-            if(pid<0)err("Fork failed!");
+            Assert(pid>=0,"Fork failed!");
             if(pid==0){
                 strcpy(src,file);
                 execve(CC,cflags,envp);
@@ -101,20 +101,33 @@ int main(int argc, char *argv[],char *envp[]) {
                     err("%d" ":%s",wstatus, "Compile error!\n");
                     continue;
                 }
-                void *handle=dlopen(out, RTLD_LAZY|RTLD_GLOBAL);
-                unlink(out);
-                if(!handle){
-                    err("load failed!\n");
-                    continue;
-                }
                 if(add_func){
+                    void *handle=dlopen(out, RTLD_LAZY|RTLD_GLOBAL);
+                    unlink(out);
+                    if(!handle){
+                        err("load failed!\n");
+                        continue;
+                    }
                     //Add a function
                     printf("Added: %s\n",cmd);
                 }else{
                     //Calculate the value
-                    int (*fun)(void)= dlsym(handle, "__expr_wrapper");
-                    assert(fun);
-                    printf("(%s) == %d\n",cmd,fun());
+                    int pid=fork();
+                    Assert(pid>=0,"Fork failed!");
+                    if(pid==0){
+                        void *handle=dlopen(out, RTLD_LAZY|RTLD_GLOBAL);
+                        unlink(out);
+                        if(!handle){
+                            err("load failed!\n");
+                            continue;
+                        }
+                        int (*fun)(void)= dlsym(handle, "__expr_wrapper");
+                        assert(fun);
+                        printf("(%s) == %d\n",cmd,fun());
+                        return 0;
+                    }else{
+                        wait((void*)&wstatus);
+                    }
                 }
             }
         }
