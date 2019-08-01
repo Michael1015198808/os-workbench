@@ -94,8 +94,8 @@ int main(int argc, char *argv[],char *envp[]) {
                 err("call " CC " failed!\n");
                 return -1;
             }else{
-                uint32_t wstatus;
-                wait((void*)&wstatus);
+                int wstatus;
+                wait(&wstatus);
                 unlink(file);
                 if(wstatus!=0){
                     err("%d" ":%s",wstatus, "Compile error!\n");
@@ -126,7 +126,10 @@ int main(int argc, char *argv[],char *envp[]) {
                         printf("(%s) == %d\n",cmd,fun());
                         return 0;
                     }else{
-                        wait((void*)&wstatus);
+                        wait(&wstatus);
+                        if(wstatus!=0){
+                            err("Something wrong with child process\n");
+                        }
                     }
                 }
             }
