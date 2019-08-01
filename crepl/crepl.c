@@ -94,7 +94,7 @@ inline void main_loop(const char* const cmd,char** envp){
         int add_func=!strncmp("int ",cmd,3);
         if(add_func){
             int remain=0;
-            for(char* c=cmd;*c;++c){
+            for(char* c=(char*)cmd;*c;++c){
                 switch(*c){
                     case '{':
                         ++remain;
