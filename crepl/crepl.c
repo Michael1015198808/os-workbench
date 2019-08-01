@@ -58,7 +58,7 @@ char *cflags[]={
     "-fPIC",
     MACHINE_OPTION,
     //"-Werror",
-    "-Wnoimplicit-function-declaration",
+    "-Wno-implicit-function-declaration",
     "-shared",
     "-x",
     "c",
