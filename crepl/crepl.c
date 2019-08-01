@@ -145,7 +145,7 @@ inline void main_loop(char* cmd,char** envp){
                     return;
                 }
                 //Add a function
-                printf("Added: %s\n",cmd);
+                printf("Added: %s\n",buffer);
             }else{
                 //Calculate the value
                 if(safe_fork()==0){
