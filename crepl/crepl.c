@@ -135,7 +135,7 @@ inline void main_loop(const char* const cmd,char** envp){
                     int (*fun)(void)= dlsym(handle, "__expr_wrapper");
                     assert(fun);
                     printf("(%s) == %d\n",cmd,fun());
-                    return 0;
+                    exit(0);
                 }else{
                     wait(&wstatus);
                     if(wstatus!=0){
