@@ -67,7 +67,7 @@ char *cflags[]={
     NULL
 };
 inline void main_loop(const char* const cmd,const char** const envp);
-int main(int argc, char *argv[],char **envp) {
+int main(int argc, char *argv[],const char **const envp) {
     while(1){
         //Input
         free(cmd);
