@@ -67,7 +67,7 @@ char *cflags[]={
     src,
     NULL
 };
-inline void main_loop(const char* const cmd,char** envp);
+inline void main_loop(char* cmd,char** envp);
 int main(int argc, char *argv[],char **envp) {
     while(1){
         //Input
@@ -84,41 +84,38 @@ int main(int argc, char *argv[],char **envp) {
     }
 }
 
-inline void main_loop(const char* const cmd,char** envp){
+char buffer[0x1000];
+inline void main_loop(char* cmd,char** envp){
     //Create temp file
     char file[]="XXXXXX";
     int fd=mkstemp(file);
     if(fd<0){
         log("%s","Can't create temporary file!\n");
     }else{
+        buffer[0]='\0';
         int add_func=!strncmp("int ",cmd,3);
         if(add_func){
             int remain=0;
-            for(char* c=(char*)cmd;*c;++c){
-                switch(*c){
-                    case '{':
-                        ++remain;
-                        break;
-                    case '}':
-                        --remain;
-                        if(remain<0){err("Too much }");return;}
-                        break;
+            do{
+                for(char* c=(char*)cmd;*c;++c){
+                    switch(*c){
+                        case '{':
+                            ++remain;
+                            break;
+                        case '}':
+                            --remain;
+                            if(remain<0){err("Too much }");return;}
+                            break;
+                    }
                 }
-            }
-            dprintf(fd,"%s",cmd);
-            while(remain>0){
-                char c=getchar();
-                write(fd,&c,1);
-                switch(c){
-                    case '{':
-                        ++remain;
-                        break;
-                    case '}':
-                        --remain;
-                        if(remain<0){err("Too much }");return;}
-                        break;
+                strcat(buffer,cmd);
+                if(remain==0){
+                    break;
                 }
-            }
+                cmd=readline("");
+                add_history(cmd);
+            }while(1);
+            dprintf(fd,"%s",buffer);
         }else{
             dprintf(fd,"int __expr_wrapper(void){return %s;}",cmd);
         }
