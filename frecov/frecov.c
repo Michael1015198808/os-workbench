@@ -101,8 +101,8 @@ uint32_t sector_per_fat(const bpb_t *p){
 }
 
 void *disk;
-long long get_off(void *p){
-    return p-disk;
+intptr_t get_off(void *p){
+    return (intptr_t)p-(intptr_t)disk;
 }
 
 typedef union bmp{
@@ -184,8 +184,10 @@ int main(int argc, char *argv[],char *envp[]) {
                 fs->bytes_per_sector);
 
     void *begin=((void*)e)-(2*fs->sectors_per_cluster*fs->bytes_per_sector);
-    while(e!=end){
-        if(e->attr==0xf){
+    for(;e!=end;++e){
+        if(e->attr!=0xf){
+            continue;
+        }else{
             long_entry_t *tmp=(void*)e;
             int idx=0;
             while(tmp->mark==0xf){
@@ -196,7 +198,7 @@ int main(int argc, char *argv[],char *envp[]) {
             char* file_name=full_file_name+strlen(RECOV_DIREC);
             do{
                 --tmp;
-#define print_file_name \
+#define print_file_name(NAME) \
                 do{ \
                     for(int i=0;i<len(tmp->NAME);++i){ \
                         file_name[idx++]=tmp->NAME[i]; \
@@ -206,15 +208,9 @@ int main(int argc, char *argv[],char *envp[]) {
                         } \
                     } \
                 }while(0)
-#define NAME name1
-                print_file_name;
-#undef NAME
-#define NAME name2
-                print_file_name;
-#undef NAME
-#define NAME name3
-                print_file_name;
-#undef NAME
+                print_file_name(name1);
+                print_file_name(name2);
+                print_file_name(name3);
             }while((void*)tmp!=(void*)old_e);
 outer:;
             if( (e->info[0]!=0xe5)&&//Deleted?
@@ -253,7 +249,6 @@ outer:;
                 if(pid==0){
                     char *new_argv[3]={"/usr/bin/sha1sum",full_file_name,NULL};
                     execve("/usr/bin/sha1sum",new_argv,envp);
-                    fflush(stdout);
                 }else if(pid<0){
                     fprintf(stderr,"Can't fork a thread to calculate sha1sum!\nSee %s:%d for more info.\n",__FILE__,__LINE__);
                     while(1);
@@ -261,8 +256,7 @@ outer:;
 #endif
             }
             memset(file_name,0,idx);
-        };
-        ++e;
+        }
     }
     close(fd);
     return 0;
