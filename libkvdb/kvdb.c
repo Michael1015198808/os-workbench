@@ -105,6 +105,7 @@ typedef struct string{
 
 typedef struct tab{
     uint32_t next,key,key_len,value,value_len;
+    //[key|value]_len is used for simplyfying
 }tab;
 
 #include "header.h"
@@ -188,6 +189,7 @@ void add_free_list(int fd,uint32_t cur){
     }
     safe_call(pwrite(fd,&prev,sizeof(uint32_t),sizeof(uint32_t)),==sizeof(uint32_t));
 }
+//get database's end and append
 static uint32_t get_end(int fd,uint32_t append){
     uint32_t ret,new_end;
     pread(fd,&ret,sizeof(uint32_t),offsetof(header,free_list.size));
