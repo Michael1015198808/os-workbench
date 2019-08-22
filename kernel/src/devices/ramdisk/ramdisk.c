@@ -2,7 +2,10 @@
 
 extern char initrd_start, initrd_end;
 
+devops_t rd_ops;
+
 int rd_init(device_t *dev) {
+  Assert(dev->ops==&rd_ops);
   rd_t *rd = dev->ptr;
   if (dev->id == 1) {
     rd->start = &initrd_start;
@@ -16,12 +19,14 @@ int rd_init(device_t *dev) {
 }
 
 ssize_t rd_read(device_t *dev, off_t offset, void *buf, size_t count) {
+  Assert(dev->ops==&rd_ops);
   rd_t *rd = dev->ptr;
   memcpy(buf, ((char *)rd->start) + offset, count);
   return count;
 }
 
 ssize_t rd_write(device_t *dev, off_t offset, const void *buf, size_t count) {
+  Assert(dev->ops==&rd_ops);
   rd_t *rd = dev->ptr;
   memcpy(((char *)rd->start) + offset, buf, count);
   return count;
