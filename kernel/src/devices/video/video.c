@@ -24,7 +24,7 @@ static void font_load(fb_t *fb, uint8_t *font) {
 }
 
 int fb_init(device_t *dev) {
-  Assert(dev->ops==fb_ops);
+  Assert(dev->ops==&fb_ops);
   fb_t *fb = dev->ptr;
   fb->info = pmm->alloc(sizeof(struct display_info));
   fb->textures = pmm->alloc(sizeof(struct texture) * NTEXTURE);
@@ -43,7 +43,7 @@ int fb_init(device_t *dev) {
 }
 
 ssize_t fb_read(device_t *dev, off_t offset, void *buf, size_t count) {
-  Assert(dev->ops==fb_ops);
+  Assert(dev->ops==&fb_ops);
   fb_t *fb = dev->ptr;
   if (offset != 0) return 0;
   if (count != sizeof(struct display_info)) return 0;
@@ -52,7 +52,7 @@ ssize_t fb_read(device_t *dev, off_t offset, void *buf, size_t count) {
 }
 
 ssize_t fb_write(device_t *dev, off_t offset, const void *buf, size_t count) {
-  Assert(dev->ops==fb_ops);
+  Assert(dev->ops==&fb_ops);
   fb_t *fb = dev->ptr;
   kmt->sem_wait(&fb_sem);
   if (offset == 0) {

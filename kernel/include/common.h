@@ -8,4 +8,11 @@ struct task {};
 struct spinlock {};
 struct semaphore {};
 
+#define Assert(cond) \
+    do{ \
+        if(!(cond)){ \
+            printf("%s:%d Assertion %s failed!\n",__FILE__,__LINE__, #cond); \
+            _halt(1); \
+        } \
+    }while(0)
 #endif
