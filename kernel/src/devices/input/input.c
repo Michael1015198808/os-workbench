@@ -96,7 +96,10 @@ void input_task(void *args) {
   }
 }
 
+devops_t input_ops;
+
 static int input_init(device_t *dev) {
+  Assert(dev->ops==&input_ops);
   input_t *in = dev->ptr;
   in->events = pmm->alloc(sizeof(in->events[0]) * NEVENTS);
   in->front = in->rear = 0;
@@ -109,6 +112,7 @@ static int input_init(device_t *dev) {
 }
 
 static ssize_t input_read(device_t *dev, off_t offset, void *buf, size_t count) {
+  Assert(dev->ops==&input_ops);
   struct input_event ev = pop_event(dev->ptr);
   if (count >= sizeof(ev)) {
     memcpy(buf, &ev, sizeof(ev));
@@ -119,6 +123,7 @@ static ssize_t input_read(device_t *dev, off_t offset, void *buf, size_t count) 
 }
 
 static ssize_t input_write(device_t *dev, off_t offset, const void *buf, size_t count) {
+  Assert(dev->ops==&input_ops);
   return 0;
 }
 
