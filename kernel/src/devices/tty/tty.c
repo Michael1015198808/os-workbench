@@ -163,7 +163,7 @@ static void tty_putc(tty_t *tty, char ch) {
 devops_t tty_ops;
 
 int tty_init(device_t *dev) {
-  Assert(dev->ops==tty_ops);
+  Assert(dev->ops==&tty_ops);
   tty_t *tty = dev->ptr;
   tty->fbdev = dev_lookup("fb");
   fb_t *fb = tty->fbdev->ptr;
@@ -188,7 +188,7 @@ int tty_init(device_t *dev) {
 }
 
 ssize_t tty_read(device_t *dev, off_t offset, void *buf, size_t count) {
-  Assert(dev->ops==tty_ops);
+  Assert(dev->ops==&tty_ops);
   tty_t *tty = dev->ptr;
   kmt->sem_wait(&tty->cooked);
   kmt->sem_wait(&tty->lock);
@@ -210,7 +210,7 @@ ssize_t tty_read(device_t *dev, off_t offset, void *buf, size_t count) {
 }
 
 ssize_t tty_write(device_t *dev, off_t offset, const void *buf, size_t count) {
-  Assert(dev->ops==tty_ops);
+  Assert(dev->ops==&tty_ops);
   tty_t *tty = dev->ptr;
   kmt->sem_wait(&tty->lock);
   for (size_t i = 0; i < count; i++) {
